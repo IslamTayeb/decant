@@ -4,13 +4,14 @@ import type { Plugin, PluginModule } from "@opencode-ai/plugin";
 import { tool } from "@opencode-ai/plugin/tool";
 
 import {
-  applyAssistantAnnotation,
+  applyAnnotationEnvelope,
   buildAnnotationSystemPrompt,
   buildCompactionPrompt,
   buildContextMapToolView,
   buildHistoricalOverview,
   buildPluginGuidanceSystemPrompt,
   buildSessionZoomText,
+  capturePendingRetroactiveMessage,
   mergeContextMaps,
   matchBlobIDsForQuery,
   parseAnnotationBlock,
@@ -28,7 +29,6 @@ import {
 } from "./storage";
 import { buildFallbackMapFromMessages } from "./core";
 import type {
-  AnnotationPayload,
   HistoricalSessionOverview,
   MessageLike,
   SessionLike,
@@ -78,6 +78,16 @@ const server: Plugin = async (ctx) => {
       } as never),
     );
     return sortMessagesChronologically(rows);
+  }
+
+  function findMessageForToolCall(messages: MessageLike[], callID: string) {
+    return [...messages]
+      .reverse()
+      .find((message) =>
+        message.parts.some(
+          (part) => part.type === "tool" && part.callID === callID,
+        ),
+      );
   }
 
   async function getMap(sessionID: string, directory?: string) {
@@ -389,6 +399,28 @@ const server: Plugin = async (ctx) => {
       if (!input.sessionID) return;
       output.env.OPENCODE_SESSION_ID = input.sessionID;
     },
+    "tool.execute.after": async (input) => {
+      if (await isChildSession(input.sessionID)) return;
+      const messages = await getMessages(input.sessionID);
+      const toolMessage = findMessageForToolCall(messages, input.callID);
+      if (!toolMessage || toolMessage.info.role !== "assistant") return;
+
+      const fallback = buildFallbackMapFromMessages({
+        sessionID: input.sessionID,
+        directory: ctx.directory,
+        worktree: ctx.worktree,
+        messages,
+      });
+      const suggestedBlobID = fallback.messages[toolMessage.info.id]?.blobID;
+      const currentMap = await getMap(input.sessionID);
+      const map = capturePendingRetroactiveMessage({
+        map: mergeContextMaps(currentMap, fallback),
+        messages,
+        messageID: toolMessage.info.id,
+        suggestedBlobID,
+      });
+      await writeContextMap(map);
+    },
     "experimental.chat.system.transform": async (input, output) => {
       if (!input.sessionID) return;
       const map = await getMap(input.sessionID);
@@ -425,11 +457,11 @@ const server: Plugin = async (ctx) => {
       const messages = await getMessages(input.sessionID);
       let map = await getMap(input.sessionID);
       if (parsed.annotation) {
-        map = applyAssistantAnnotation({
+        map = applyAnnotationEnvelope({
           map,
           messages,
           assistantMessageID: input.messageID,
-          annotation: parsed.annotation as AnnotationPayload,
+          annotation: parsed.annotation,
         });
       } else {
         map = mergeContextMaps(

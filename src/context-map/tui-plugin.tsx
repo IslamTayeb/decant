@@ -19,12 +19,7 @@ import {
   updateBlobFidelity,
   updateMessageControls,
 } from "./core";
-import {
-  readCommitMap,
-  readContextMap,
-  sessionMapPath,
-  writeContextMap,
-} from "./storage";
+import { readCommitMap, readContextMap, writeContextMap } from "./storage";
 import type {
   BlobEntry,
   BlobFidelity,
@@ -57,6 +52,18 @@ type HistoryState = {
   overview: HistoricalSessionOverview;
 };
 
+type MessageSection = {
+  id: string;
+  label: string;
+  blobID?: string;
+  fidelity?: BlobFidelity;
+  messageCount: number;
+  tokenEstimate: number;
+  lastActiveAt?: number;
+  messages: MessageEntry[];
+  pending?: boolean;
+};
+
 function blobColor(api: TuiPluginApi, index: number) {
   return api.theme.current[palette[index % palette.length]];
 }
@@ -69,6 +76,92 @@ function orderedBlobs(map?: ContextMapFile) {
 function orderedMessages(map?: ContextMapFile) {
   if (!map) return [] as MessageEntry[];
   return Object.values(map.messages).sort((a, b) => a.createdAt - b.createdAt);
+}
+
+function groupedMessages(map?: ContextMapFile) {
+  if (!map) return [] as MessageSection[];
+
+  const byBlob = new Map<string, MessageEntry[]>();
+  const unassigned: MessageEntry[] = [];
+  for (const message of orderedMessages(map)) {
+    if (message.blobID && map.blobs[message.blobID]) {
+      const items = byBlob.get(message.blobID) ?? [];
+      items.push(message);
+      byBlob.set(message.blobID, items);
+      continue;
+    }
+    unassigned.push(message);
+  }
+
+  const sections: MessageSection[] = map.blobOrder
+    .map((blobID) => {
+      const blob = map.blobs[blobID];
+      if (!blob) return undefined;
+      const messages = byBlob.get(blobID) ?? [];
+      if (messages.length === 0) return undefined;
+      return {
+        id: blobID,
+        label: blob.label,
+        blobID,
+        fidelity: blob.fidelity,
+        messageCount: messages.length,
+        tokenEstimate: messages.reduce(
+          (sum, item) => sum + item.tokenEstimate,
+          0,
+        ),
+        lastActiveAt: blob.lastActiveAt,
+        messages,
+      } satisfies MessageSection;
+    })
+    .filter(Boolean) as MessageSection[];
+
+  if (unassigned.length > 0) {
+    sections.push({
+      id: "__pending__",
+      label: "Pending / Unassigned",
+      messageCount: unassigned.length,
+      tokenEstimate: unassigned.reduce(
+        (sum, item) => sum + item.tokenEstimate,
+        0,
+      ),
+      lastActiveAt: unassigned[unassigned.length - 1]?.createdAt,
+      messages: unassigned,
+      pending: true,
+    });
+  }
+
+  return sections;
+}
+
+function flattenedMessages(sections: MessageSection[]) {
+  return sections.flatMap((section) => section.messages);
+}
+
+function sectionColorIndex(
+  map: ContextMapFile | undefined,
+  section: MessageSection,
+) {
+  if (!map) return 0;
+  if (!section.blobID) return map.blobOrder.length;
+  const index = map.blobOrder.indexOf(section.blobID);
+  return index === -1 ? map.blobOrder.length : index;
+}
+
+function formatRelativeTime(timestamp?: number) {
+  if (!timestamp) return "unknown";
+  const delta = Math.max(0, Date.now() - timestamp);
+  const minute = 60_000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
+  if (delta < minute) return "just now";
+  if (delta < hour) return `${Math.round(delta / minute)}m ago`;
+  if (delta < day) return `${Math.round(delta / hour)}h ago`;
+  return `${Math.round(delta / day)}d ago`;
+}
+
+function sourceLabel(map: ContextMapFile | undefined, message: MessageEntry) {
+  if (map?.pendingRetroactive[message.id]) return "pending";
+  return message.source === "annotation" ? "annotated" : "derived";
 }
 
 async function ensureHistoricalMap(api: TuiPluginApi, sessionID: string) {
@@ -236,6 +329,13 @@ function BlobRow(props: {
     "placeholder",
     "drop",
   ];
+  const labels: Record<BlobFidelity, string> = {
+    full: "Full",
+    summary: "Summaries",
+    compressed: "Compressed",
+    placeholder: "Stub",
+    drop: "Drop",
+  };
   return (
     <box
       flexDirection="column"
@@ -259,6 +359,13 @@ function BlobRow(props: {
         </text>
       </box>
       <text fg={theme().textMuted}>{props.blob.placeholder}</text>
+      <box flexDirection="row" gap={2}>
+        <text fg={theme().textMuted}>{props.blob.messageIDs.length} msgs</text>
+        <text fg={theme().textMuted}>
+          active {formatRelativeTime(props.blob.lastActiveAt)}
+        </text>
+        <text fg={theme().textMuted}>{props.blob.fidelitySource}</text>
+      </box>
       <box flexDirection="row" gap={1}>
         <For each={options}>
           {(fidelity) => (
@@ -279,12 +386,11 @@ function BlobRow(props: {
                     : theme().text
                 }
               >
-                {fidelity[0]}
+                {labels[fidelity]}
               </text>
             </box>
           )}
         </For>
-        <text fg={theme().textMuted}>{props.blob.fidelitySource}</text>
       </box>
     </box>
   );
@@ -292,8 +398,10 @@ function BlobRow(props: {
 
 function MessageRow(props: {
   api: TuiPluginApi;
+  map?: ContextMapFile;
   message: MessageEntry;
   selected: boolean;
+  colorIndex: number;
   onSelect: () => void;
   onToggleHidden: () => void;
   onSummary: () => void;
@@ -301,6 +409,8 @@ function MessageRow(props: {
   onInherit: () => void;
 }) {
   const theme = () => props.api.theme.current;
+  const tone = () => blobColor(props.api, props.colorIndex);
+  const badgeLabel = () => sourceLabel(props.map, props.message);
   return (
     <box
       flexDirection="column"
@@ -317,14 +427,24 @@ function MessageRow(props: {
       onMouseUp={props.onSelect}
     >
       <box flexDirection="row" justifyContent="space-between">
-        <text fg={theme().text}>
-          {props.message.id.slice(0, 10)} [{props.message.role}]
-        </text>
+        <box flexDirection="row" gap={1}>
+          <text fg={tone()}>■</text>
+          <text fg={theme().text}>{props.message.summary}</text>
+        </box>
         <text fg={theme().textMuted}>
           {props.message.hidden ? "hidden" : props.message.fidelityOverride}
         </text>
       </box>
-      <text fg={theme().textMuted}>{props.message.summary}</text>
+      <box flexDirection="row" gap={2}>
+        <text fg={theme().textMuted}>{props.message.role}</text>
+        <text fg={theme().textMuted}>{badgeLabel()}</text>
+        <text fg={theme().textMuted}>
+          ~{props.message.tokenEstimate.toLocaleString()} tok
+        </text>
+        <text fg={theme().textMuted}>
+          {formatRelativeTime(props.message.createdAt)}
+        </text>
+      </box>
       <box flexDirection="row" gap={1}>
         <box
           backgroundColor={theme().border}
@@ -333,7 +453,7 @@ function MessageRow(props: {
           onMouseUp={props.onToggleHidden}
         >
           <text fg={theme().text}>
-            {props.message.hidden ? "show" : "hide"}
+            {props.message.hidden ? "Show" : "Hide"}
           </text>
         </box>
         <box
@@ -342,7 +462,7 @@ function MessageRow(props: {
           paddingRight={1}
           onMouseUp={props.onInherit}
         >
-          <text fg={theme().text}>i</text>
+          <text fg={theme().text}>Inherit</text>
         </box>
         <box
           backgroundColor={theme().border}
@@ -350,7 +470,7 @@ function MessageRow(props: {
           paddingRight={1}
           onMouseUp={props.onFull}
         >
-          <text fg={theme().text}>f</text>
+          <text fg={theme().text}>Full</text>
         </box>
         <box
           backgroundColor={theme().border}
@@ -358,7 +478,7 @@ function MessageRow(props: {
           paddingRight={1}
           onMouseUp={props.onSummary}
         >
-          <text fg={theme().text}>s</text>
+          <text fg={theme().text}>Summary</text>
         </box>
       </box>
     </box>
@@ -375,7 +495,8 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
   );
 
   const blobs = createMemo(() => orderedBlobs(map()));
-  const messages = createMemo(() => orderedMessages(map()));
+  const sections = createMemo(() => groupedMessages(map()));
+  const messages = createMemo(() => flattenedMessages(sections()));
   const currentBlob = createMemo(
     () => blobs()[Math.min(blobIndex(), Math.max(0, blobs().length - 1))],
   );
@@ -386,6 +507,14 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
 
   const reload = async () => {
     setMap(await loadCurrentMap(props.api, props.sessionID));
+  };
+
+  const jumpToBlobMessages = (blobID?: string) => {
+    if (!blobID) return;
+    const targetIndex = messages().findIndex(
+      (message) => message.blobID === blobID,
+    );
+    if (targetIndex !== -1) setMessageIndex(targetIndex);
   };
 
   const setFidelity = async (fidelity: BlobFidelity) => {
@@ -461,6 +590,13 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
     void reload();
   });
 
+  createEffect(() => {
+    const maxIndex = Math.max(0, messages().length - 1);
+    if (messageIndex() > maxIndex) setMessageIndex(maxIndex);
+    const maxBlobIndex = Math.max(0, blobs().length - 1);
+    if (blobIndex() > maxBlobIndex) setBlobIndex(maxBlobIndex);
+  });
+
   useKeyboard((evt) => {
     if (!props.api.ui.dialog.open) return;
     if (evt.name === "escape" || evt.name === "q") {
@@ -479,6 +615,7 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
       evt.preventDefault();
       evt.stopPropagation();
       setTab("messages");
+      jumpToBlobMessages(currentBlob()?.id);
       return;
     }
     if (evt.name === "up" || evt.name === "k") {
@@ -538,6 +675,7 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
           }
           paddingLeft={1}
           paddingRight={1}
+          onMouseUp={() => setTab("blobs")}
         >
           <text
             fg={
@@ -557,6 +695,10 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
           }
           paddingLeft={1}
           paddingRight={1}
+          onMouseUp={() => {
+            setTab("messages");
+            jumpToBlobMessages(currentBlob()?.id);
+          }}
         >
           <text
             fg={
@@ -573,57 +715,151 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
         </text>
       </box>
       <Show when={tab() === "blobs"}>
-        <box flexDirection="column" gap={1}>
-          <For each={blobs()}>
-            {(blob, index) => (
-              <BlobRow
-                api={props.api}
-                blob={blob}
-                index={index()}
-                selected={index() === blobIndex()}
-                onSelect={() => setBlobIndex(index())}
-                onFidelity={(fidelity) => {
-                  setBlobIndex(index());
-                  void setFidelity(fidelity);
-                }}
-              />
-            )}
-          </For>
-        </box>
+        <Show
+          when={blobs().length > 0}
+          fallback={
+            <box paddingTop={1} paddingBottom={1}>
+              <text fg={props.api.theme.current.textMuted}>
+                No blobs yet. Send a few turns and the map will appear here.
+              </text>
+            </box>
+          }
+        >
+          <scrollbox
+            maxHeight={24}
+            verticalScrollbarOptions={{ visible: false }}
+          >
+            <box flexDirection="column" gap={1} paddingRight={1}>
+              <For each={blobs()}>
+                {(blob, index) => (
+                  <BlobRow
+                    api={props.api}
+                    blob={blob}
+                    index={index()}
+                    selected={index() === blobIndex()}
+                    onSelect={() => setBlobIndex(index())}
+                    onFidelity={(fidelity) => {
+                      setBlobIndex(index());
+                      void setFidelity(fidelity);
+                    }}
+                  />
+                )}
+              </For>
+            </box>
+          </scrollbox>
+        </Show>
       </Show>
       <Show when={tab() === "messages"}>
-        <box flexDirection="column" gap={1}>
-          <For each={messages()}>
-            {(message, index) => (
-              <MessageRow
-                api={props.api}
-                message={message}
-                selected={index() === messageIndex()}
-                onSelect={() => setMessageIndex(index())}
-                onToggleHidden={() => {
-                  setMessageIndex(index());
-                  void patchMessage("toggle_hidden");
+        <Show
+          when={sections().length > 0}
+          fallback={
+            <box paddingTop={1} paddingBottom={1}>
+              <text fg={props.api.theme.current.textMuted}>
+                No messages are available for the current map yet.
+              </text>
+            </box>
+          }
+        >
+          <scrollbox
+            maxHeight={24}
+            verticalScrollbarOptions={{ visible: false }}
+          >
+            <box flexDirection="column" gap={1} paddingRight={1}>
+              <For each={sections()}>
+                {(section) => {
+                  const colorIndex = sectionColorIndex(map(), section);
+                  return (
+                    <box flexDirection="column" gap={1}>
+                      <box
+                        flexDirection="row"
+                        justifyContent="space-between"
+                        paddingLeft={1}
+                        paddingRight={1}
+                        paddingTop={1}
+                      >
+                        <box flexDirection="row" gap={1}>
+                          <text fg={blobColor(props.api, colorIndex)}>■</text>
+                          <text fg={props.api.theme.current.text}>
+                            {section.label}
+                          </text>
+                          <Show when={section.fidelity}>
+                            <text fg={props.api.theme.current.textMuted}>
+                              [{section.fidelity}]
+                            </text>
+                          </Show>
+                        </box>
+                        <text fg={props.api.theme.current.textMuted}>
+                          {section.messageCount} msgs, ~
+                          {section.tokenEstimate.toLocaleString()} tok, active{" "}
+                          {formatRelativeTime(section.lastActiveAt)}
+                        </text>
+                      </box>
+                      <For each={section.messages}>
+                        {(message) => {
+                          const index = createMemo(() =>
+                            messages().findIndex(
+                              (candidate) => candidate.id === message.id,
+                            ),
+                          );
+                          return (
+                            <MessageRow
+                              api={props.api}
+                              map={map()}
+                              message={message}
+                              colorIndex={colorIndex}
+                              selected={currentMessage()?.id === message.id}
+                              onSelect={() => {
+                                const nextIndex = index();
+                                if (nextIndex !== -1)
+                                  setMessageIndex(nextIndex);
+                                if (message.blobID) {
+                                  const nextBlobIndex = blobs().findIndex(
+                                    (blob) => blob.id === message.blobID,
+                                  );
+                                  if (nextBlobIndex !== -1)
+                                    setBlobIndex(nextBlobIndex);
+                                }
+                              }}
+                              onToggleHidden={() => {
+                                const nextIndex = index();
+                                if (nextIndex !== -1)
+                                  setMessageIndex(nextIndex);
+                                void patchMessage("toggle_hidden");
+                              }}
+                              onSummary={() => {
+                                const nextIndex = index();
+                                if (nextIndex !== -1)
+                                  setMessageIndex(nextIndex);
+                                void patchMessage("summary");
+                              }}
+                              onFull={() => {
+                                const nextIndex = index();
+                                if (nextIndex !== -1)
+                                  setMessageIndex(nextIndex);
+                                void patchMessage("full");
+                              }}
+                              onInherit={() => {
+                                const nextIndex = index();
+                                if (nextIndex !== -1)
+                                  setMessageIndex(nextIndex);
+                                void patchMessage("inherit");
+                              }}
+                            />
+                          );
+                        }}
+                      </For>
+                    </box>
+                  );
                 }}
-                onSummary={() => {
-                  setMessageIndex(index());
-                  void patchMessage("summary");
-                }}
-                onFull={() => {
-                  setMessageIndex(index());
-                  void patchMessage("full");
-                }}
-                onInherit={() => {
-                  setMessageIndex(index());
-                  void patchMessage("inherit");
-                }}
-              />
-            )}
-          </For>
-        </box>
+              </For>
+            </box>
+          </scrollbox>
+        </Show>
       </Show>
       <text fg={props.api.theme.current.textMuted}>
-        Arrows or hjkl move, 1-5 set blob fidelity, x hide, s summary, f full, i
-        inherit, q close.
+        {tab() === "blobs"
+          ? "Arrows or hjkl move, 1-5 set blob fidelity, f toggles placeholder facts, q closes."
+          : "Arrows or hjkl move, x hide, s summary, f full, i inherit, q closes."}
       </text>
     </box>
   );

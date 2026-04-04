@@ -30,6 +30,24 @@ export const annotationSchema = z.object({
 });
 export type AnnotationPayload = z.infer<typeof annotationSchema>;
 
+export const retroactiveAnnotationItemSchema = z.object({
+  message_id: z.string().min(1),
+  blob: z.string().min(1),
+  message_summary: z.string().min(1),
+  key_facts: z.array(z.string().min(1)).optional().default([]),
+  blob_summary: z.string().min(1).optional(),
+  placeholder: z.string().min(1).optional(),
+});
+export type RetroactiveAnnotationItem = z.infer<
+  typeof retroactiveAnnotationItemSchema
+>;
+
+export const annotationEnvelopeSchema = z.object({
+  current: annotationSchema,
+  retroactive: z.array(retroactiveAnnotationItemSchema).optional().default([]),
+});
+export type AnnotationEnvelope = z.infer<typeof annotationEnvelopeSchema>;
+
 export type BlobEntry = {
   id: string;
   label: string;
@@ -69,6 +87,16 @@ export type ContextMapSettings = {
   toolHistoryCleanup: boolean;
 };
 
+export type PendingRetroactiveMessage = {
+  messageID: string;
+  summary: string;
+  toolNames: string[];
+  tokenEstimate: number;
+  createdAt: number;
+  suggestedBlobID?: string;
+  suggestedBlobLabel?: string;
+};
+
 export type ContextMapFile = {
   version: 1;
   sessionID: string;
@@ -83,6 +111,7 @@ export type ContextMapFile = {
   blobOrder: string[];
   blobs: Record<string, BlobEntry>;
   messages: Record<string, MessageEntry>;
+  pendingRetroactive: Record<string, PendingRetroactiveMessage>;
 };
 
 export type CommitMapEntry = {
@@ -130,11 +159,15 @@ export type MessageLike = {
   };
   parts: Array<{
     id: string;
+    sessionID?: string;
+    messageID?: string;
     type: string;
+    callID?: string;
     text?: string;
     filename?: string;
     url?: string;
     tool?: string;
+    metadata?: Record<string, unknown>;
     state?: {
       status?: string;
       title?: string;

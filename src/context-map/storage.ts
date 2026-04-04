@@ -49,6 +49,7 @@ export function createEmptyContextMap(input: {
     blobOrder: [],
     blobs: {},
     messages: {},
+    pendingRetroactive: {},
   };
 }
 
@@ -74,6 +75,11 @@ export async function readContextMap(input: {
       messages:
         parsed.messages && typeof parsed.messages === "object"
           ? parsed.messages
+          : {},
+      pendingRetroactive:
+        parsed.pendingRetroactive &&
+        typeof parsed.pendingRetroactive === "object"
+          ? parsed.pendingRetroactive
           : {},
     };
   } catch (error) {

@@ -115,7 +115,11 @@ async function main() {
     const map = JSON.parse(await fs.readFile(mapPath, "utf8")) as {
       blobOrder: string[];
       blobs: Record<string, { id: string; fidelity: string; summary: string }>;
-      messages: Record<string, unknown>;
+      messages: Record<
+        string,
+        { source?: string; blobID?: string; toolNames?: string[] }
+      >;
+      pendingRetroactive: Record<string, unknown>;
     };
     assert.ok(
       map.blobOrder.length >= 2,
@@ -149,6 +153,14 @@ async function main() {
         "context_map",
       ),
       "model did not call context_map",
+    );
+    const postContextToolMap = JSON.parse(
+      await fs.readFile(mapPath, "utf8"),
+    ) as typeof map;
+    assert.equal(
+      Object.keys(postContextToolMap.pendingRetroactive).length,
+      0,
+      "pending retroactive messages should be cleared after a tool-assisted text reply",
     );
 
     const compressReply = await prompt(

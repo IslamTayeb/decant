@@ -223,6 +223,7 @@ function buildSyntheticMap(): ContextMapFile {
       },
     },
     messages: {},
+    pendingRetroactive: {},
   };
 }
 

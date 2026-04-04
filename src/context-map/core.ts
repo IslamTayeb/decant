@@ -1,8 +1,10 @@
 import type { Part } from "@opencode-ai/sdk";
 
 import {
+  annotationEnvelopeSchema,
   annotationSchema,
   blobFidelitySchema,
+  type AnnotationEnvelope,
   type AnnotationPayload,
   type BlobEntry,
   type BlobFidelity,
@@ -13,6 +15,8 @@ import {
   type MessageEntry,
   type MessageLike,
   type MessageFidelity,
+  type PendingRetroactiveMessage,
+  type RetroactiveAnnotationItem,
   type SessionLike,
 } from "./types";
 
@@ -103,7 +107,14 @@ export function parseAnnotationBlock(text: string) {
     };
   const cleanText = text.replace(match[0], "").trim();
   try {
-    const parsed = annotationSchema.parse(JSON.parse(match[1]!));
+    const raw = JSON.parse(match[1]!);
+    const parsed =
+      raw && typeof raw === "object" && "current" in raw
+        ? annotationEnvelopeSchema.parse(raw)
+        : {
+            current: annotationSchema.parse(raw),
+            retroactive: [],
+          };
     return { cleanText, annotation: parsed };
   } catch (error) {
     return {
@@ -324,6 +335,7 @@ export function applyAssistantAnnotation(input: {
   messages: MessageLike[];
   assistantMessageID: string;
   annotation: AnnotationPayload;
+  excludedMessageIDs?: Set<string>;
 }) {
   const pending = pendingMessagesForAnnotation(
     input.messages,
@@ -343,6 +355,7 @@ export function applyAssistantAnnotation(input: {
   );
 
   for (const message of pending) {
+    if (input.excludedMessageIDs?.has(message.info.id)) continue;
     const createdAt = getMessageCreatedAt(message);
     const partTypes = message.parts.map((part) => part.type);
     const toolNames = extractToolNames(message.parts);
@@ -380,6 +393,163 @@ export function applyAssistantAnnotation(input: {
   }
 
   input.map.lastAnnotatedMessageID = input.assistantMessageID;
+  input.map.updatedAt = Date.now();
+  rebuildTotals(input.map);
+  return input.map;
+}
+
+function upsertBlobFromRetroactive(
+  map: ContextMapFile,
+  item: RetroactiveAnnotationItem,
+  createdAt: number,
+) {
+  const blobID = slugifyBlobLabel(item.blob);
+  const existing = map.blobs[blobID];
+  if (!existing) {
+    map.blobs[blobID] = createBlobEntry({
+      id: blobID,
+      label: blobID,
+      summary: item.blob_summary ?? item.message_summary,
+      placeholder:
+        item.placeholder ??
+        trimText(item.blob_summary ?? item.message_summary, 80),
+      keyFacts: item.key_facts,
+      createdAt,
+    });
+    map.blobOrder.push(blobID);
+  }
+
+  const blob = map.blobs[blobID];
+  if (item.blob_summary) blob.summary = item.blob_summary;
+  if (item.placeholder) blob.placeholder = item.placeholder;
+  blob.keyFacts = mergeUniqueStrings([...blob.keyFacts, ...item.key_facts]);
+  blob.lastActiveAt = Math.max(blob.lastActiveAt, createdAt);
+  return blob;
+}
+
+function applyRetroactiveAnnotationItem(input: {
+  map: ContextMapFile;
+  messages: MessageLike[];
+  item: RetroactiveAnnotationItem;
+}) {
+  const message = input.messages.find(
+    (candidate) => candidate.info.id === input.item.message_id,
+  );
+  if (!message) return false;
+
+  const createdAt = getMessageCreatedAt(message);
+  const blob = upsertBlobFromRetroactive(input.map, input.item, createdAt);
+  const current = input.map.messages[message.info.id];
+  const entry = createMessageEntry({
+    id: message.info.id,
+    role: message.info.role,
+    blobID: blob.id,
+    summary: input.item.message_summary,
+    keyFacts: input.item.key_facts,
+    hidden: current?.hidden,
+    hiddenSource: current?.hiddenSource,
+    fidelityOverride: current?.fidelityOverride,
+    fidelitySource: current?.fidelitySource,
+    tokenEstimate: estimateTokensFromParts(message.parts),
+    createdAt,
+    updatedAt: Date.now(),
+    source: "annotation",
+    partTypes: message.parts.map((part) => part.type),
+    toolNames: extractToolNames(message.parts),
+  });
+  assignMessageToBlob(input.map, blob.id, entry);
+  delete input.map.pendingRetroactive[message.info.id];
+  return true;
+}
+
+export function applyAnnotationEnvelope(input: {
+  map: ContextMapFile;
+  messages: MessageLike[];
+  assistantMessageID: string;
+  annotation: AnnotationEnvelope;
+}) {
+  const excluded = new Set<string>();
+  for (const item of input.annotation.retroactive) {
+    if (
+      applyRetroactiveAnnotationItem({
+        map: input.map,
+        messages: input.messages,
+        item,
+      })
+    ) {
+      excluded.add(item.message_id);
+    }
+  }
+
+  const pending = pendingMessagesForAnnotation(
+    input.messages,
+    input.map,
+    input.assistantMessageID,
+  );
+  const next = applyAssistantAnnotation({
+    map: input.map,
+    messages: input.messages,
+    assistantMessageID: input.assistantMessageID,
+    annotation: input.annotation.current,
+    excludedMessageIDs: excluded,
+  });
+
+  for (const message of pending) {
+    delete next.pendingRetroactive[message.info.id];
+  }
+
+  return next;
+}
+
+export function capturePendingRetroactiveMessage(input: {
+  map: ContextMapFile;
+  messages: MessageLike[];
+  messageID: string;
+  suggestedBlobID?: string;
+}) {
+  const message = input.messages.find(
+    (candidate) => candidate.info.id === input.messageID,
+  );
+  if (!message || message.info.role !== "assistant") return input.map;
+
+  const hasVisibleText = message.parts.some(
+    (part) => part.type === "text" && (part.text ?? "").trim().length > 0,
+  );
+  if (hasVisibleText) {
+    delete input.map.pendingRetroactive[input.messageID];
+    return input.map;
+  }
+
+  const createdAt = getMessageCreatedAt(message);
+  const current = input.map.messages[input.messageID];
+  const summary = current?.summary ?? deriveSummaryFromMessage(message);
+  const toolNames = extractToolNames(message.parts);
+  input.map.pendingRetroactive[input.messageID] = {
+    messageID: input.messageID,
+    summary,
+    toolNames,
+    tokenEstimate: estimateTokensFromParts(message.parts),
+    createdAt,
+    suggestedBlobID: input.suggestedBlobID,
+    suggestedBlobLabel: input.suggestedBlobID
+      ? input.map.blobs[input.suggestedBlobID]?.label
+      : undefined,
+  };
+
+  if (!current) {
+    input.map.messages[input.messageID] = createMessageEntry({
+      id: message.info.id,
+      role: message.info.role,
+      summary,
+      tokenEstimate: estimateTokensFromParts(message.parts),
+      createdAt,
+      updatedAt: Date.now(),
+      source: "derived",
+      partTypes: message.parts.map((part) => part.type),
+      toolNames,
+    });
+  }
+
   input.map.updatedAt = Date.now();
   rebuildTotals(input.map);
   return input.map;
@@ -490,6 +660,7 @@ export function mergeContextMaps(
     },
     blobs: { ...fresh.blobs },
     messages: { ...fresh.messages },
+    pendingRetroactive: { ...existing.pendingRetroactive },
   };
 
   for (const blobID of existing.blobOrder) {
@@ -530,6 +701,10 @@ export function mergeContextMaps(
     }
     merged.messages[messageID] = {
       ...next,
+      blobID:
+        prior.source === "annotation" && prior.blobID
+          ? prior.blobID
+          : next.blobID,
       hidden: prior.hidden,
       hiddenSource: prior.hiddenSource,
       fidelityOverride: prior.fidelityOverride,
@@ -539,6 +714,13 @@ export function mergeContextMaps(
       source: prior.source === "annotation" ? "annotation" : next.source,
     };
   }
+
+  merged.pendingRetroactive = Object.fromEntries(
+    Object.entries(merged.pendingRetroactive).filter(([messageID]) => {
+      const message = merged.messages[messageID];
+      return Boolean(message && message.source !== "annotation");
+    }),
+  );
 
   merged.updatedAt = Date.now();
   rebuildTotals(merged);
@@ -775,6 +957,29 @@ export function buildCurrentContextOverview(map: ContextMapFile, limit = 12) {
     .join("\n");
 }
 
+function buildPendingRetroactivePrompt(map: ContextMapFile, limit = 6) {
+  const pending = Object.values(map.pendingRetroactive)
+    .sort((a, b) => a.createdAt - b.createdAt)
+    .slice(0, limit);
+
+  if (pending.length === 0) {
+    return [
+      "There are no earlier unannotated assistant messages right now, so set retroactive to [].",
+    ];
+  }
+
+  return [
+    "Earlier assistant messages still need retroactive labeling. Include one retroactive item for each message_id listed below, even if it belongs to the same blob as the current response.",
+    ...pending.map((item) => {
+      const guess =
+        item.suggestedBlobLabel ?? item.suggestedBlobID ?? "unknown";
+      const tools =
+        item.toolNames.length > 0 ? ` tools=${item.toolNames.join(",")}` : "";
+      return `- message_id=${item.messageID} guessed_blob=${guess}${tools} summary=${item.summary}`;
+    }),
+  ];
+}
+
 export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
   return [
     "Context map plugin is active.",
@@ -797,14 +1002,16 @@ export function buildAnnotationSystemPrompt(map: ContextMapFile) {
     "Mandatory annotation requirement for this session:",
     "1. Write the normal user-facing response first.",
     "2. Immediately append exactly one <annotation>...</annotation> block after the response.",
-    "3. The annotation must contain valid JSON with exactly these keys: blob, is_new_blob, message_summary, blob_summary, placeholder, key_facts.",
+    "3. The annotation must contain valid JSON with top-level keys current and retroactive.",
     "4. Do not use markdown fences around the annotation. Do not explain the annotation. Do not skip it.",
     "5. blob must be a stable snake_case label. Reuse an existing blob whenever the conversation returns to an earlier topic.",
     "6. message_summary describes only this assistant message. blob_summary describes the running state of the whole blob so far.",
     "7. placeholder is a short 5-10 word stub. key_facts contains only facts or decisions worth preserving through compression.",
+    "8. current must contain the full annotation for this assistant response. retroactive must contain per-message annotations for any earlier pending assistant messages listed below.",
     "Required format:",
-    '<annotation>{"blob":"auth_debugging","is_new_blob":false,"message_summary":"Explained why the mutex failed and the queue replaced it.","blob_summary":"Investigated auth rate limiter race condition and switched from mutex to async queue after tests failed.","placeholder":"Debugging auth rate limiter race condition","key_facts":["mutex failed tests","async queue on line 42"]}</annotation>',
+    '<annotation>{"current":{"blob":"auth_debugging","is_new_blob":false,"message_summary":"Explained why the mutex failed and the queue replaced it.","blob_summary":"Investigated auth rate limiter race condition and switched from mutex to async queue after tests failed.","placeholder":"Debugging auth rate limiter race condition","key_facts":["mutex failed tests","async queue on line 42"]},"retroactive":[{"message_id":"msg_tool_1","blob":"auth_debugging","message_summary":"Ran auth concurrency tests and reproduced the mutex failure.","key_facts":["mutex failed tests"]}]}</annotation>',
     `Existing blob labels: ${labels}`,
+    ...buildPendingRetroactivePrompt(map),
   ].join("\n");
 }
 
@@ -895,6 +1102,15 @@ export function buildContextMapToolView(map: ContextMapFile) {
         token_estimate: message.tokenEstimate,
         source: message.source,
       })),
+    pending_retroactive: Object.values(map.pendingRetroactive)
+      .sort((a, b) => a.createdAt - b.createdAt)
+      .map((item) => ({
+        message_id: item.messageID,
+        summary: item.summary,
+        tool_names: item.toolNames,
+        suggested_blob_id: item.suggestedBlobID,
+        suggested_blob_label: item.suggestedBlobLabel,
+      })),
   };
 }
 
@@ -982,6 +1198,7 @@ export function buildFallbackMapFromMessages(input: {
     blobOrder: [],
     blobs: {},
     messages: {},
+    pendingRetroactive: {},
   };
 
   let currentBlobID: string | undefined;

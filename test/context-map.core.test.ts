@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  applyAnnotationEnvelope,
   applyAssistantAnnotation,
   buildFallbackMapFromMessages,
+  capturePendingRetroactiveMessage,
   parseAnnotationBlock,
   transformMessagesForContext,
   updateBlobFidelity,
@@ -37,14 +39,59 @@ function message(
   };
 }
 
+function toolOnlyMessage(
+  id: string,
+  tool: string,
+  createdAt: number,
+): MessageLike {
+  return {
+    info: {
+      id,
+      role: "assistant",
+      metadata: {
+        time: {
+          created: createdAt,
+        },
+      },
+    },
+    parts: [
+      {
+        id: `${id}-tool`,
+        type: "tool",
+        callID: `${id}-call`,
+        messageID: id,
+        tool,
+        state: {
+          status: "completed",
+          title: `Ran ${tool}`,
+          output: "ok",
+        },
+      },
+    ],
+  };
+}
+
 test("parseAnnotationBlock extracts annotation and strips visible text", () => {
   const parsed = parseAnnotationBlock(
     `Visible answer\n<annotation>{"blob":"auth_debugging","is_new_blob":false,"message_summary":"Found the race.","blob_summary":"Investigated auth race condition.","placeholder":"Auth race condition investigation","key_facts":["line 42"]}</annotation>`,
   );
 
   assert.equal(parsed.cleanText, "Visible answer");
-  assert.equal(parsed.annotation?.blob, "auth_debugging");
-  assert.deepEqual(parsed.annotation?.key_facts, ["line 42"]);
+  assert.equal(parsed.annotation?.current.blob, "auth_debugging");
+  assert.deepEqual(parsed.annotation?.current.key_facts, ["line 42"]);
+  assert.deepEqual(parsed.annotation?.retroactive, []);
+});
+
+test("parseAnnotationBlock supports current plus retroactive annotation envelope", () => {
+  const parsed = parseAnnotationBlock(
+    `Visible answer\n<annotation>{"current":{"blob":"docs_update","is_new_blob":false,"message_summary":"Updated docs.","blob_summary":"Updated onboarding docs.","placeholder":"Docs update","key_facts":["quickstart docs"]},"retroactive":[{"message_id":"msg-tool","blob":"auth_debugging","message_summary":"Ran auth concurrency tests.","key_facts":["mutex failed tests"]}]}</annotation>`,
+  );
+
+  assert.equal(parsed.annotation?.current.blob, "docs_update");
+  assert.equal(parsed.annotation?.retroactive[0]?.message_id, "msg-tool");
+  assert.deepEqual(parsed.annotation?.retroactive[0]?.key_facts, [
+    "mutex failed tests",
+  ]);
 });
 
 test("applyAssistantAnnotation assigns pending user and assistant messages to the annotated blob", () => {
@@ -238,4 +285,64 @@ test("buildFallbackMapFromMessages creates reusable blobs for repeated topics", 
   assert.equal(map.blobOrder.length, 2);
   assert.equal(map.blobs[map.blobOrder[0]!]!.messageIDs.length, 4);
   assert.equal(map.blobs[map.blobOrder[1]!]!.messageIDs.length, 2);
+});
+
+test("retroactive annotation captures tool-only messages and clears pending state", () => {
+  const user = message(
+    "msg-user",
+    "user",
+    "Investigate the auth race condition on line 42",
+    1,
+  );
+  const tool = toolOnlyMessage("msg-tool", "bash", 2);
+  const assistant = message(
+    "msg-assistant",
+    "assistant",
+    "The mutex failed tests, so the async queue stayed.",
+    3,
+  );
+  const map = createEmptyContextMap({ sessionID: "ses-test" });
+
+  capturePendingRetroactiveMessage({
+    map,
+    messages: [user, tool, assistant],
+    messageID: "msg-tool",
+    suggestedBlobID: "auth_debugging",
+  });
+
+  assert.equal(
+    map.pendingRetroactive["msg-tool"]?.suggestedBlobID,
+    "auth_debugging",
+  );
+
+  const next = applyAnnotationEnvelope({
+    map,
+    messages: [user, tool, assistant],
+    assistantMessageID: "msg-assistant",
+    annotation: {
+      current: {
+        blob: "auth_debugging",
+        is_new_blob: false,
+        message_summary:
+          "Explained that the mutex failed tests and the async queue remained the fix.",
+        blob_summary:
+          "Investigated the auth race and kept the async queue after the mutex failed tests.",
+        placeholder: "Auth race condition investigation",
+        key_facts: ["mutex failed tests", "async queue final fix"],
+      },
+      retroactive: [
+        {
+          message_id: "msg-tool",
+          blob: "auth_debugging",
+          message_summary:
+            "Ran the auth concurrency reproduction and confirmed the mutex failed tests.",
+          key_facts: ["mutex failed tests"],
+        },
+      ],
+    },
+  });
+
+  assert.equal(next.messages["msg-tool"]?.blobID, "auth_debugging");
+  assert.equal(next.messages["msg-tool"]?.source, "annotation");
+  assert.equal(next.pendingRetroactive["msg-tool"], undefined);
 });
