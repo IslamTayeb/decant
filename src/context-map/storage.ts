@@ -1,0 +1,133 @@
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+
+import type { CommitMapEntry, CommitMapFile, ContextMapFile } from "./types";
+
+const MAP_VERSION = 1 as const;
+
+function homeDir() {
+  return os.homedir();
+}
+
+export function contextMapRoot() {
+  return path.join(homeDir(), ".opencode", "context-maps");
+}
+
+export function sessionMapPath(sessionID: string) {
+  return path.join(contextMapRoot(), `${sessionID}.json`);
+}
+
+export function commitMapPath() {
+  return path.join(contextMapRoot(), "_commits.json");
+}
+
+export async function ensureContextMapRoot() {
+  await fs.mkdir(contextMapRoot(), { recursive: true });
+}
+
+export function createEmptyContextMap(input: {
+  sessionID: string;
+  directory?: string;
+  worktree?: string;
+  now?: number;
+}): ContextMapFile {
+  const now = input.now ?? Date.now();
+  return {
+    version: MAP_VERSION,
+    sessionID: input.sessionID,
+    directory: input.directory,
+    worktree: input.worktree,
+    createdAt: now,
+    updatedAt: now,
+    totalTokenEstimate: 0,
+    settings: {
+      placeholderIncludesKeyFacts: true,
+      placeholderIncludesKeyFactsSource: "default",
+      toolHistoryCleanup: true,
+    },
+    blobOrder: [],
+    blobs: {},
+    messages: {},
+  };
+}
+
+export async function readContextMap(input: {
+  sessionID: string;
+  directory?: string;
+  worktree?: string;
+}): Promise<ContextMapFile> {
+  try {
+    const raw = await fs.readFile(sessionMapPath(input.sessionID), "utf8");
+    const parsed = JSON.parse(raw) as Partial<ContextMapFile>;
+    const fallback = createEmptyContextMap(input);
+    return {
+      ...fallback,
+      ...parsed,
+      settings: {
+        ...fallback.settings,
+        ...(parsed.settings ?? {}),
+      },
+      blobOrder: Array.isArray(parsed.blobOrder) ? parsed.blobOrder : [],
+      blobs:
+        parsed.blobs && typeof parsed.blobs === "object" ? parsed.blobs : {},
+      messages:
+        parsed.messages && typeof parsed.messages === "object"
+          ? parsed.messages
+          : {},
+    };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    return createEmptyContextMap(input);
+  }
+}
+
+export async function writeContextMap(map: ContextMapFile) {
+  await ensureContextMapRoot();
+  await writeJsonAtomic(sessionMapPath(map.sessionID), map);
+}
+
+export async function readCommitMap(): Promise<CommitMapFile> {
+  try {
+    const raw = await fs.readFile(commitMapPath(), "utf8");
+    const parsed = JSON.parse(raw) as Partial<CommitMapFile>;
+    return {
+      version: MAP_VERSION,
+      updatedAt:
+        typeof parsed.updatedAt === "number" ? parsed.updatedAt : Date.now(),
+      entries:
+        parsed.entries && typeof parsed.entries === "object"
+          ? parsed.entries
+          : {},
+    };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    return {
+      version: MAP_VERSION,
+      updatedAt: Date.now(),
+      entries: {},
+    };
+  }
+}
+
+export async function writeCommitMap(file: CommitMapFile) {
+  await ensureContextMapRoot();
+  await writeJsonAtomic(commitMapPath(), file);
+}
+
+export async function recordCommitMapEntry(entry: CommitMapEntry) {
+  const file = await readCommitMap();
+  file.entries[entry.commitHash] = entry;
+  file.updatedAt = Date.now();
+  await writeCommitMap(file);
+}
+
+export async function removeContextMap(sessionID: string) {
+  await fs.rm(sessionMapPath(sessionID), { force: true });
+}
+
+async function writeJsonAtomic(filePath: string, value: unknown) {
+  const tmpPath = `${filePath}.tmp-${process.pid}-${Date.now()}`;
+  await fs.writeFile(tmpPath, JSON.stringify(value, null, 2));
+  await fs.rename(tmpPath, filePath);
+}
