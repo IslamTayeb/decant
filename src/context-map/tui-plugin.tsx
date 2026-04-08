@@ -858,8 +858,9 @@ const tui: TuiPlugin = async (api) => {
       api.ui.toast({ variant: "error", message: "No active session" });
       return;
     }
-    api.ui.dialog.replace(() => <MemMapDialog api={api} sessionID={id} />);
     api.ui.dialog.setSize("xlarge");
+    api.ui.dialog.replace(() => <MemMapDialog api={api} sessionID={id} />);
+    queueMicrotask(() => api.ui.dialog.setSize("xlarge"));
   };
 
   const openBlame = () => {
@@ -872,10 +873,11 @@ const tui: TuiPlugin = async (api) => {
           api.ui.dialog.clear();
           void runBlame(api, v)
             .then((h) => {
+              api.ui.dialog.setSize("xlarge");
               api.ui.dialog.replace(() => (
                 <HistoryDialog api={api} history={h} />
               ));
-              api.ui.dialog.setSize("xlarge");
+              queueMicrotask(() => api.ui.dialog.setSize("xlarge"));
             })
             .catch((e) =>
               api.ui.toast({
