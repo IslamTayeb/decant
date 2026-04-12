@@ -367,55 +367,67 @@ function MemMapDialog(props: {
     if (idx !== -1) setMi(idx);
   };
 
+  let writing = false;
+
   const setFidelity = async (f: BlobFidelity) => {
     const b = curBlob();
-    if (!b || !map()) return;
-    const next = structuredClone(map()!);
-    updateBlobFidelity({
-      map: next,
-      blobID: b.id,
-      fidelity: f,
-      source: "user",
-      force: true,
-    });
-    await writeContextMap(next);
-    setMap(next);
+    if (!b || !map() || writing) return;
+    writing = true;
+    try {
+      const next = structuredClone(map()!);
+      updateBlobFidelity({
+        map: next,
+        blobID: b.id,
+        fidelity: f,
+        source: "user",
+        force: true,
+      });
+      await writeContextMap(next);
+      setMap(next);
+    } finally {
+      writing = false;
+    }
   };
 
   const patchMsg = async (kind: "hide" | "auto" | "full" | "summary") => {
     const m = curMsg();
-    if (!m || !map()) return;
-    const next = structuredClone(map()!);
-    if (kind === "hide")
-      updateMessageControls({
-        map: next,
-        messageID: m.id,
-        hidden: !m.hidden,
-        source: "user",
-      });
-    else if (kind === "auto")
-      updateMessageControls({
-        map: next,
-        messageID: m.id,
-        fidelityOverride: "inherit",
-        source: "user",
-      });
-    else if (kind === "full")
-      updateMessageControls({
-        map: next,
-        messageID: m.id,
-        fidelityOverride: "full",
-        source: "user",
-      });
-    else if (kind === "summary")
-      updateMessageControls({
-        map: next,
-        messageID: m.id,
-        fidelityOverride: "summary",
-        source: "user",
-      });
-    await writeContextMap(next);
-    setMap(next);
+    if (!m || !map() || writing) return;
+    writing = true;
+    try {
+      const next = structuredClone(map()!);
+      if (kind === "hide")
+        updateMessageControls({
+          map: next,
+          messageID: m.id,
+          hidden: !m.hidden,
+          source: "user",
+        });
+      else if (kind === "auto")
+        updateMessageControls({
+          map: next,
+          messageID: m.id,
+          fidelityOverride: "inherit",
+          source: "user",
+        });
+      else if (kind === "full")
+        updateMessageControls({
+          map: next,
+          messageID: m.id,
+          fidelityOverride: "full",
+          source: "user",
+        });
+      else if (kind === "summary")
+        updateMessageControls({
+          map: next,
+          messageID: m.id,
+          fidelityOverride: "summary",
+          source: "user",
+        });
+      await writeContextMap(next);
+      setMap(next);
+    } finally {
+      writing = false;
+    }
   };
 
   createEffect(() => {
@@ -508,8 +520,7 @@ function MemMapDialog(props: {
         return;
       }
     }
-    // Swallow unhandled keys to prevent leakage to app
-    stop();
+    // Don't swallow unhandled keys -- let them reach the app
   });
 
   const t = () => props.api.theme.current;
@@ -829,6 +840,7 @@ function HistoryDialog(props: {
   });
 
   useKeyboard((evt) => {
+    if (!props.api.ui.dialog.open) return;
     const stop = () => {
       evt.preventDefault();
       evt.stopPropagation();
@@ -863,8 +875,7 @@ function HistoryDialog(props: {
       void load("full");
       return;
     }
-    // Swallow unhandled keys
-    stop();
+    // Don't swallow unhandled keys
   });
 
   const t = () => props.api.theme.current;
