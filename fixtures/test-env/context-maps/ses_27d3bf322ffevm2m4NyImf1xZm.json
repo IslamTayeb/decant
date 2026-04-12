@@ -1,0 +1,402 @@
+{
+  "version": 1,
+  "sessionID": "ses_27d3bf322ffevm2m4NyImf1xZm",
+  "directory": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "worktree": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "createdAt": 1776011779704,
+  "updatedAt": 1776015379704,
+  "totalTokenEstimate": 14040,
+  "lastAnnotatedMessageID": "msg_s5_14",
+  "lastActiveBlobID": "historical_decisions",
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "system",
+    "toolHistoryCleanup": true
+  },
+  "blobOrder": [
+    "project_overview",
+    "security_review",
+    "test_coverage_assessment",
+    "historical_decisions"
+  ],
+  "blobs": {
+    "project_overview": {
+      "id": "project_overview",
+      "label": "project_overview",
+      "summary": "Traced request flow: endpoints.ts → rate_limit_middleware → auth_middleware → service handlers. Main components: auth (token, queue, session), API (endpoints, users), config, middleware.",
+      "placeholder": "Project structure and request flow",
+      "keyFacts": [
+        "Entry point: handleRequest in endpoints.ts",
+        "Middleware chain: rate limit → auth → route handler",
+        "Four subsystems: auth, api, config, middleware"
+      ],
+      "fidelity": "compressed",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s5_1",
+        "msg_s5_2"
+      ],
+      "tokenEstimate": 2100,
+      "createdAt": 1776011779704,
+      "lastActiveAt": 1776011899704,
+      "commitHashes": []
+    },
+    "security_review": {
+      "id": "security_review",
+      "label": "security_review",
+      "summary": "Critical finding: tokens are unsigned base64 JSON — anyone can forge valid tokens. Rate limiting bypassable via X-Forwarded-For spoofing. No input validation on registration.",
+      "placeholder": "CRITICAL: unsigned tokens, header spoofing",
+      "keyFacts": [
+        "Tokens are base64 JSON with no signature — trivially forgeable",
+        "Rate limiting trusts X-Forwarded-For header — spoofable",
+        "No input validation on /register endpoint",
+        "Fix path: JWT signing for tokens, trusted proxy config for rate limiting"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s5_3",
+        "msg_s5_4",
+        "msg_s5_5",
+        "msg_s5_6"
+      ],
+      "tokenEstimate": 4380,
+      "createdAt": 1776011899704,
+      "lastActiveAt": 1776012139704,
+      "commitHashes": []
+    },
+    "test_coverage_assessment": {
+      "id": "test_coverage_assessment",
+      "label": "test_coverage_assessment",
+      "summary": "Auth has decent test coverage (token, queue, rate limiter). API has basic endpoint tests. Integration tests are shallow. Rate limiting had zero tests before recent work. No tests for config validation or middleware.",
+      "placeholder": "Test coverage: auth OK, rest shallow",
+      "keyFacts": [
+        "tests/auth/: 3 test files, decent coverage",
+        "tests/api/: 1 file, basic happy path only",
+        "tests/integration/: 1 file, doesn't test refresh or rate limiting",
+        "No tests for: config validation, middleware, session store"
+      ],
+      "fidelity": "summary",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s5_7",
+        "msg_s5_8"
+      ],
+      "tokenEstimate": 1680,
+      "createdAt": 1776012139704,
+      "lastActiveAt": 1776012259704,
+      "commitHashes": []
+    },
+    "historical_decisions": {
+      "id": "historical_decisions",
+      "label": "historical_decisions",
+      "summary": "Used session_lookup to review auth queue and token expiry decisions. Confirmed: queue migration was necessary (mutex deadlocks), clock skew fix added 5s grace, both well-tested. Compressed earlier topics with compress_blob.",
+      "placeholder": "Historical context from prior sessions",
+      "keyFacts": [
+        "Auth queue: mutex→queue due to deadlocks, well-documented",
+        "Clock skew: 5s grace period, comprehensive tests added",
+        "Used compress_blob to reduce project_overview topic"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s5_9",
+        "msg_s5_10",
+        "msg_s5_11",
+        "msg_s5_12",
+        "msg_s5_13",
+        "msg_s5_14"
+      ],
+      "tokenEstimate": 5880,
+      "createdAt": 1776012259704,
+      "lastActiveAt": 1776012619704,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_s5_1": {
+      "id": "msg_s5_1",
+      "role": "user",
+      "blobID": "project_overview",
+      "summary": "User request: Project overview, trace request handling flow",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776011839704,
+      "updatedAt": 1776011839704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s5_2": {
+      "id": "msg_s5_2",
+      "role": "assistant",
+      "blobID": "project_overview",
+      "summary": "Read README and directory structure. Traced handleRequest: rate limiting check → public route check → token validation → route handling. Components: src/auth (4 files), src/api (2 files), src/config (1 file), src/middleware (2 files).",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2000,
+      "createdAt": 1776011899704,
+      "updatedAt": 1776011899704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s5_3": {
+      "id": "msg_s5_3",
+      "role": "user",
+      "blobID": "security_review",
+      "summary": "User request: Security review of auth middleware and rate limiting",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776011959704,
+      "updatedAt": 1776011959704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s5_4": {
+      "id": "msg_s5_4",
+      "role": "assistant",
+      "blobID": "security_review",
+      "summary": "Critical: token_manager.ts encodes tokens as plain base64 JSON. No HMAC, no JWT signature. Any client can forge: Buffer.from(JSON.stringify(fakePayload)).toString('base64'). Rate limiting uses req.headers['x-forwarded-for'] which is client-controlled.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2400,
+      "createdAt": 1776012019704,
+      "updatedAt": 1776012019704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s5_5": {
+      "id": "msg_s5_5",
+      "role": "user",
+      "blobID": "security_review",
+      "summary": "User request: How severe is unsigned tokens? What's the fix path?",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 80,
+      "createdAt": 1776012079704,
+      "updatedAt": 1776012079704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s5_6": {
+      "id": "msg_s5_6",
+      "role": "assistant",
+      "blobID": "security_review",
+      "summary": "Severity: critical in production, acceptable in dev/demo. Fix: replace base64 encode/decode with JWT sign/verify using jose or jsonwebtoken library. Rate limiting fix: configure trusted proxy list, fall back to socket remote address.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1800,
+      "createdAt": 1776012139704,
+      "updatedAt": 1776012139704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s5_7": {
+      "id": "msg_s5_7",
+      "role": "user",
+      "blobID": "test_coverage_assessment",
+      "summary": "User request: Assess test coverage across the codebase",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 80,
+      "createdAt": 1776012199704,
+      "updatedAt": 1776012199704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s5_8": {
+      "id": "msg_s5_8",
+      "role": "assistant",
+      "blobID": "test_coverage_assessment",
+      "summary": "Surveyed tests/: auth/ has 3 files (token, queue, rate_limiter) with reasonable coverage. api/ has 1 file (endpoints) with happy path only. integration/ has 1 file that skips refresh. No middleware or config tests.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1600,
+      "createdAt": 1776012259704,
+      "updatedAt": 1776012259704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s5_9": {
+      "id": "msg_s5_9",
+      "role": "user",
+      "blobID": "historical_decisions",
+      "summary": "User request: Use session_lookup for 'auth queue' and 'token expiry' decisions",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012319704,
+      "updatedAt": 1776012319704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s5_10": {
+      "id": "msg_s5_10",
+      "role": "assistant",
+      "blobID": "historical_decisions",
+      "summary": "Found 2 relevant sessions via session_lookup. Auth queue investigation confirmed mutex deadlocks and documented rollback flag. Token expiry bugfix session traced the wrong turn (queue suspicion) and landed on clock skew fix.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2000,
+      "createdAt": 1776012379704,
+      "updatedAt": 1776012379704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "session_lookup"
+      ]
+    },
+    "msg_s5_11": {
+      "id": "msg_s5_11",
+      "role": "user",
+      "blobID": "historical_decisions",
+      "summary": "User request: Call context_map, compress done topics with compress_blob",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 80,
+      "createdAt": 1776012439704,
+      "updatedAt": 1776012439704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s5_12": {
+      "id": "msg_s5_12",
+      "role": "assistant",
+      "blobID": "historical_decisions",
+      "summary": "Context map shows 4 topics. Compressed project_overview to placeholder (already captured in summary). Security review and test coverage kept at full — still actively relevant.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 800,
+      "createdAt": 1776012499704,
+      "updatedAt": 1776012499704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "context_map",
+        "compress_blob"
+      ]
+    },
+    "msg_s5_13": {
+      "id": "msg_s5_13",
+      "role": "user",
+      "blobID": "historical_decisions",
+      "summary": "User request: Top 5 tech debt items by risk, and ONE thing to fix before production",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012559704,
+      "updatedAt": 1776012559704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s5_14": {
+      "id": "msg_s5_14",
+      "role": "assistant",
+      "blobID": "historical_decisions",
+      "summary": "Top 5: (1) unsigned tokens — critical, (2) session store leak — moderate, (3) no config validation — moderate, (4) rate limit header spoofing — moderate, (5) shallow integration tests. #1 to fix before production: token signing. Without it, any client can impersonate any user.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2800,
+      "createdAt": 1776012619704,
+      "updatedAt": 1776012619704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    }
+  },
+  "pendingRetroactive": {}
+}

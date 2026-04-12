@@ -1,0 +1,348 @@
+{
+  "version": 1,
+  "sessionID": "ses_27d3bf364ffe1s0lKUpmWDH1FT",
+  "directory": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "worktree": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "createdAt": 1776011779704,
+  "updatedAt": 1776015379704,
+  "totalTokenEstimate": 13870,
+  "lastAnnotatedMessageID": "msg_s0_12",
+  "lastActiveBlobID": "auth_testing",
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "system",
+    "toolHistoryCleanup": true
+  },
+  "blobOrder": [
+    "auth_queue_migration",
+    "session_store_leak",
+    "auth_testing"
+  ],
+  "blobs": {
+    "auth_queue_migration": {
+      "id": "auth_queue_migration",
+      "label": "auth_queue_migration",
+      "summary": "Investigated why token refresh uses an async queue instead of a mutex. The mutex caused deadlocks under 3+ concurrent refresh attempts because it held a lock while awaiting the token issuer. Queue serializes per-user without blocking.",
+      "placeholder": "Auth token refresh: mutex→queue migration",
+      "keyFacts": [
+        "Mutex caused deadlocks with 3+ concurrent refreshes",
+        "Queue serializes per userID via pending Map",
+        "Rollback flag exists in rate_limiter.ts comments",
+        "Queue coalesces: second request waits for first, then re-checks"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s0_1",
+        "msg_s0_2",
+        "msg_s0_3",
+        "msg_s0_4",
+        "msg_s0_5",
+        "msg_s0_6"
+      ],
+      "tokenEstimate": 6770,
+      "createdAt": 1776011779704,
+      "lastActiveAt": 1776012139704,
+      "commitHashes": []
+    },
+    "session_store_leak": {
+      "id": "session_store_leak",
+      "label": "session_store_leak",
+      "summary": "Discovered that cleanExpiredSessions in session_store.ts is never called by any module. The in-memory session Map grows unbounded in production. Need periodic cleanup or integration with token refresh.",
+      "placeholder": "Memory leak: session store never cleaned",
+      "keyFacts": [
+        "cleanExpiredSessions exists but is never imported",
+        "sessions Map grows unbounded in production",
+        "Fix: integrate cleanup with token refresh or add periodic timer"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s0_7",
+        "msg_s0_8"
+      ],
+      "tokenEstimate": 1480,
+      "createdAt": 1776012139704,
+      "lastActiveAt": 1776012259704,
+      "commitHashes": []
+    },
+    "auth_testing": {
+      "id": "auth_testing",
+      "label": "auth_testing",
+      "summary": "Wrote new queue tests for error handling and concurrent key execution. Updated architecture docs with queue migration details and session store cleanup.",
+      "placeholder": "Auth test coverage and docs updates",
+      "keyFacts": [
+        "New test: job throw doesn't break subsequent jobs",
+        "New test: different keys execute concurrently",
+        "architecture.md updated with queue migration and rollback flag"
+      ],
+      "fidelity": "summary",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s0_9",
+        "msg_s0_10",
+        "msg_s0_11",
+        "msg_s0_12"
+      ],
+      "tokenEstimate": 5620,
+      "createdAt": 1776012259704,
+      "lastActiveAt": 1776012499704,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_s0_1": {
+      "id": "msg_s0_1",
+      "role": "user",
+      "blobID": "auth_queue_migration",
+      "summary": "User request: Read rate_limiter.ts and queue.ts, explain token refresh and mutex vs queue decision",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 120,
+      "createdAt": 1776011839704,
+      "updatedAt": 1776011839704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s0_2": {
+      "id": "msg_s0_2",
+      "role": "assistant",
+      "blobID": "auth_queue_migration",
+      "summary": "Explained token refresh flow: loadCurrentToken → check needsRefresh → enqueueRefresh serializes per userID. Mutex held lock during async issueNewToken, causing deadlocks under concurrency.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1800,
+      "createdAt": 1776011899704,
+      "updatedAt": 1776011899704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s0_3": {
+      "id": "msg_s0_3",
+      "role": "user",
+      "blobID": "auth_queue_migration",
+      "summary": "User request: Trace middleware auto-refresh interaction with queue under 5 concurrent near-expired requests",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 150,
+      "createdAt": 1776011959704,
+      "updatedAt": 1776011959704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s0_4": {
+      "id": "msg_s0_4",
+      "role": "assistant",
+      "blobID": "auth_queue_migration",
+      "summary": "Traced auth_middleware.ts auto-refresh path: tokenNeedsRefresh triggers refreshToken, which enqueues. With 5 concurrent requests, first enters queue, others coalesce and wait. All get the refreshed token.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2400,
+      "createdAt": 1776012019704,
+      "updatedAt": 1776012019704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s0_5": {
+      "id": "msg_s0_5",
+      "role": "user",
+      "blobID": "auth_queue_migration",
+      "summary": "User request: Check test coverage for concurrent refresh scenarios",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012079704,
+      "updatedAt": 1776012079704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s0_6": {
+      "id": "msg_s0_6",
+      "role": "assistant",
+      "blobID": "auth_queue_migration",
+      "summary": "Reviewed queue.test.ts and rate_limiter.test.ts. Tests cover basic serialization but miss: error propagation across queued jobs, concurrent different-key execution, and coalescing return value correctness.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2200,
+      "createdAt": 1776012139704,
+      "updatedAt": 1776012139704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s0_7": {
+      "id": "msg_s0_7",
+      "role": "user",
+      "blobID": "session_store_leak",
+      "summary": "User request: Check if cleanExpiredSessions is called anywhere — possible memory leak",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 80,
+      "createdAt": 1776012199704,
+      "updatedAt": 1776012199704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s0_8": {
+      "id": "msg_s0_8",
+      "role": "assistant",
+      "blobID": "session_store_leak",
+      "summary": "Searched all imports: cleanExpiredSessions is never imported by any file. The sessions Map in session_store.ts grows without bound. Wrote a fix integrating cleanup into the token refresh path.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1400,
+      "createdAt": 1776012259704,
+      "updatedAt": 1776012259704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "msg_s0_9": {
+      "id": "msg_s0_9",
+      "role": "user",
+      "blobID": "auth_testing",
+      "summary": "User request: Write new queue tests for error handling and fix session store leak",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 120,
+      "createdAt": 1776012319704,
+      "updatedAt": 1776012319704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s0_10": {
+      "id": "msg_s0_10",
+      "role": "assistant",
+      "blobID": "auth_testing",
+      "summary": "Added two test cases to queue.test.ts: error isolation and concurrent different-key execution. Fixed session_store.ts with cleanup integration.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1600,
+      "createdAt": 1776012379704,
+      "updatedAt": 1776012379704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "msg_s0_11": {
+      "id": "msg_s0_11",
+      "role": "user",
+      "blobID": "auth_testing",
+      "summary": "User request: Update architecture docs and summarize everything about auth system",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012439704,
+      "updatedAt": 1776012439704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s0_12": {
+      "id": "msg_s0_12",
+      "role": "assistant",
+      "blobID": "auth_testing",
+      "summary": "Updated architecture.md with queue migration history, session store fix, rollback flag. Full summary: key files are rate_limiter.ts, queue.ts, session_store.ts, auth_middleware.ts. Remaining risks: unsigned tokens, no queue timeout.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 3800,
+      "createdAt": 1776012499704,
+      "updatedAt": 1776012499704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    }
+  },
+  "pendingRetroactive": {}
+}

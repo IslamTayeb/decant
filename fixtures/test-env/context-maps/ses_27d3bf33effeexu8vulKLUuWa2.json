@@ -1,0 +1,341 @@
+{
+  "version": 1,
+  "sessionID": "ses_27d3bf33effeexu8vulKLUuWa2",
+  "directory": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "worktree": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "createdAt": 1776011779704,
+  "updatedAt": 1776015379704,
+  "totalTokenEstimate": 11000,
+  "lastAnnotatedMessageID": "msg_s2_12",
+  "lastActiveBlobID": "docs_testing_gap",
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "system",
+    "toolHistoryCleanup": true
+  },
+  "blobOrder": [
+    "docs_audit",
+    "troubleshooting_guide",
+    "docs_testing_gap"
+  ],
+  "blobs": {
+    "docs_audit": {
+      "id": "docs_audit",
+      "label": "docs_audit",
+      "summary": "Audited all docs. Onboarding is incomplete (no quickstart, no auth queue mention). API reference misses rate limiting details. Architecture doc has vague 'Known Issues' section. Rate limiter code comments contain more history than the docs.",
+      "placeholder": "Documentation audit findings",
+      "keyFacts": [
+        "Onboarding: no quickstart, missing auth queue migration note",
+        "API reference: missing rate limiting endpoints and headers",
+        "Architecture: 'Known Issues' is vague, code comments are richer",
+        "README is bare — no structure, no getting started"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s2_1",
+        "msg_s2_2",
+        "msg_s2_3",
+        "msg_s2_4",
+        "msg_s2_5",
+        "msg_s2_6"
+      ],
+      "tokenEstimate": 6080,
+      "createdAt": 1776011779704,
+      "lastActiveAt": 1776012139704,
+      "commitHashes": []
+    },
+    "troubleshooting_guide": {
+      "id": "troubleshooting_guide",
+      "label": "troubleshooting_guide",
+      "summary": "Wrote troubleshooting.md covering 401 errors (clock skew), rate limiting 429s, concurrent refresh failures, and session store memory growth. Rewrote README with structure and getting started.",
+      "placeholder": "Troubleshooting guide and README rewrite",
+      "keyFacts": [
+        "troubleshooting.md covers 4 common issues with file references",
+        "README rewritten with directory structure and getting started",
+        "Onboarding updated with cross-references to all docs"
+      ],
+      "fidelity": "summary",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s2_7",
+        "msg_s2_8",
+        "msg_s2_9",
+        "msg_s2_10"
+      ],
+      "tokenEstimate": 2820,
+      "createdAt": 1776012139704,
+      "lastActiveAt": 1776012379704,
+      "commitHashes": []
+    },
+    "docs_testing_gap": {
+      "id": "docs_testing_gap",
+      "label": "docs_testing_gap",
+      "summary": "Integration test claims 'full auth flow' but doesn't test token refresh, rate limiting, or session management. Test coverage is shallow across the board.",
+      "placeholder": "Test coverage gaps found during docs review",
+      "keyFacts": [
+        "auth_flow.test.ts doesn't test token refresh path",
+        "No rate limiting tests existed before this work",
+        "src/utils/queue.ts used by auth but undocumented"
+      ],
+      "fidelity": "placeholder",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s2_11",
+        "msg_s2_12"
+      ],
+      "tokenEstimate": 2100,
+      "createdAt": 1776012379704,
+      "lastActiveAt": 1776012499704,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_s2_1": {
+      "id": "msg_s2_1",
+      "role": "user",
+      "blobID": "docs_audit",
+      "summary": "User request: Read all docs, overview what exists and what's missing",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 80,
+      "createdAt": 1776011839704,
+      "updatedAt": 1776011839704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s2_2": {
+      "id": "msg_s2_2",
+      "role": "assistant",
+      "blobID": "docs_audit",
+      "summary": "Three docs exist: onboarding (incomplete quickstart), api-reference (missing rate limiting), architecture (vague known issues). No troubleshooting guide. README is minimal.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1800,
+      "createdAt": 1776011899704,
+      "updatedAt": 1776011899704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s2_3": {
+      "id": "msg_s2_3",
+      "role": "user",
+      "blobID": "docs_audit",
+      "summary": "User request: Compare API reference with actual endpoints.ts, check architecture.md against source",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 120,
+      "createdAt": 1776011959704,
+      "updatedAt": 1776011959704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s2_4": {
+      "id": "msg_s2_4",
+      "role": "assistant",
+      "blobID": "docs_audit",
+      "summary": "API ref missing: /refresh endpoint, rate limiting headers, 429 response format. Architecture doc says 'rate limiting' but doesn't explain sliding window or per-user approach. Code comments in rate_limiter.ts have detailed mutex-to-queue history that docs lack.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2400,
+      "createdAt": 1776012019704,
+      "updatedAt": 1776012019704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s2_5": {
+      "id": "msg_s2_5",
+      "role": "user",
+      "blobID": "docs_audit",
+      "summary": "User request: Should code comment history in rate_limiter.ts live in architecture.md instead?",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 80,
+      "createdAt": 1776012079704,
+      "updatedAt": 1776012079704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s2_6": {
+      "id": "msg_s2_6",
+      "role": "assistant",
+      "blobID": "docs_audit",
+      "summary": "Yes — code comments are the best documentation of the mutex→queue migration but they're buried in source. Architecture.md should have a 'Decision Log' section. Code comments should reference the doc instead of duplicating the full story.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1600,
+      "createdAt": 1776012139704,
+      "updatedAt": 1776012139704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s2_7": {
+      "id": "msg_s2_7",
+      "role": "user",
+      "blobID": "troubleshooting_guide",
+      "summary": "User request: Write troubleshooting.md covering 401 errors, rate limiting, refresh failures, session store growth",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 120,
+      "createdAt": 1776012199704,
+      "updatedAt": 1776012199704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s2_8": {
+      "id": "msg_s2_8",
+      "role": "assistant",
+      "blobID": "troubleshooting_guide",
+      "summary": "Created docs/troubleshooting.md with four sections, each referencing specific source files. Covers: clock skew grace period (token_manager.ts), rate limiting headers (rate_limit_middleware.ts), queue serialization (queue.ts), session cleanup (session_store.ts).",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1400,
+      "createdAt": 1776012259704,
+      "updatedAt": 1776012259704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Edit"
+      ]
+    },
+    "msg_s2_9": {
+      "id": "msg_s2_9",
+      "role": "user",
+      "blobID": "troubleshooting_guide",
+      "summary": "User request: Rewrite README and update onboarding with cross-references",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012319704,
+      "updatedAt": 1776012319704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s2_10": {
+      "id": "msg_s2_10",
+      "role": "assistant",
+      "blobID": "troubleshooting_guide",
+      "summary": "Rewrote README.md with project description, directory structure, getting started steps, and doc links. Updated onboarding.md with cross-references to troubleshooting, architecture, and API reference.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1200,
+      "createdAt": 1776012379704,
+      "updatedAt": 1776012379704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "msg_s2_11": {
+      "id": "msg_s2_11",
+      "role": "user",
+      "blobID": "docs_testing_gap",
+      "summary": "User request: Check if integration test actually tests full auth flow, review doc priority",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012439704,
+      "updatedAt": 1776012439704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s2_12": {
+      "id": "msg_s2_12",
+      "role": "assistant",
+      "blobID": "docs_testing_gap",
+      "summary": "auth_flow.test.ts tests register→login→access but skips token refresh, rate limiting interaction, and session management. Prioritized doc changes: (1) architecture decision log, (2) API reference update, (3) troubleshooting guide, (4) queue utility docs.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2000,
+      "createdAt": 1776012499704,
+      "updatedAt": 1776012499704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    }
+  },
+  "pendingRetroactive": {}
+}

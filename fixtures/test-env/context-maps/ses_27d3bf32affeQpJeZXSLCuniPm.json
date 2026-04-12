@@ -1,0 +1,305 @@
+{
+  "version": 1,
+  "sessionID": "ses_27d3bf32affeQpJeZXSLCuniPm",
+  "directory": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "worktree": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "createdAt": 1776011779704,
+  "updatedAt": 1776015379704,
+  "totalTokenEstimate": 8520,
+  "lastAnnotatedMessageID": "msg_s4_10",
+  "lastActiveBlobID": "queue_test_migration",
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "system",
+    "toolHistoryCleanup": true
+  },
+  "blobOrder": [
+    "shared_queue_design",
+    "queue_migration",
+    "queue_test_migration"
+  ],
+  "blobs": {
+    "shared_queue_design": {
+      "id": "shared_queue_design",
+      "label": "shared_queue_design",
+      "summary": "src/auth/queue.ts and src/utils/queue.ts are nearly identical. Designed unified queue with keyed serialization, try/finally cleanup, TypeScript generics, and pendingJobCount diagnostic.",
+      "placeholder": "Queue deduplication and unified design",
+      "keyFacts": [
+        "auth/queue.ts and utils/queue.ts are duplicated",
+        "Only difference: auth version has key param, utils doesn't",
+        "Unified API: enqueueJob<T>(key, job) with try/finally cleanup",
+        "Added pendingJobCount() for monitoring integration"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s4_1",
+        "msg_s4_2",
+        "msg_s4_3",
+        "msg_s4_4"
+      ],
+      "tokenEstimate": 3600,
+      "createdAt": 1776011779704,
+      "lastActiveAt": 1776012019704,
+      "commitHashes": []
+    },
+    "queue_migration": {
+      "id": "queue_migration",
+      "label": "queue_migration",
+      "summary": "Migrated rate_limiter.ts from auth/queue to utils/queue. Updated call signature to include key param. Verified integration test conceptually still holds.",
+      "placeholder": "Auth code migration to shared queue",
+      "keyFacts": [
+        "rate_limiter.ts: import changed from ./queue to ../utils/queue",
+        "Call changed: enqueueRefresh(job) → enqueueJob(userID, job)",
+        "auth/queue.ts can be removed after migration"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s4_5",
+        "msg_s4_6"
+      ],
+      "tokenEstimate": 1300,
+      "createdAt": 1776012019704,
+      "lastActiveAt": 1776012139704,
+      "commitHashes": []
+    },
+    "queue_test_migration": {
+      "id": "queue_test_migration",
+      "label": "queue_test_migration",
+      "summary": "Created tests/utils/queue.test.ts with 5 test cases. Migrated relevant tests from auth queue tests. Verified auth/queue.ts safe to remove.",
+      "placeholder": "Queue test consolidation",
+      "keyFacts": [
+        "5 tests: serialization, concurrent keys, error isolation, cleanup, pendingJobCount",
+        "Auth queue tests that tested shared behavior moved to utils",
+        "auth/queue.ts confirmed safe to delete"
+      ],
+      "fidelity": "summary",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s4_7",
+        "msg_s4_8",
+        "msg_s4_9",
+        "msg_s4_10"
+      ],
+      "tokenEstimate": 3620,
+      "createdAt": 1776012139704,
+      "lastActiveAt": 1776012379704,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_s4_1": {
+      "id": "msg_s4_1",
+      "role": "user",
+      "blobID": "shared_queue_design",
+      "summary": "User request: Compare auth/queue.ts and utils/queue.ts, identify differences",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776011839704,
+      "updatedAt": 1776011839704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s4_2": {
+      "id": "msg_s4_2",
+      "role": "assistant",
+      "blobID": "shared_queue_design",
+      "summary": "Line-by-line comparison: both use Map<string, Promise>, both have the same coalescing logic. auth/queue uses a string key param, utils/queue doesn't. auth/queue has no error handling. Unified design should add try/finally and generics.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1800,
+      "createdAt": 1776011899704,
+      "updatedAt": 1776011899704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s4_3": {
+      "id": "msg_s4_3",
+      "role": "user",
+      "blobID": "shared_queue_design",
+      "summary": "User request: Design and write the unified queue utility",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776011959704,
+      "updatedAt": 1776011959704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s4_4": {
+      "id": "msg_s4_4",
+      "role": "assistant",
+      "blobID": "shared_queue_design",
+      "summary": "Wrote src/utils/queue.ts: enqueueJob<T>(key: string, job: () => Promise<T>), proper try/finally cleanup to always delete pending entry, pendingJobCount() for diagnostics. TypeScript generics preserve return type.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1600,
+      "createdAt": 1776012019704,
+      "updatedAt": 1776012019704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "msg_s4_5": {
+      "id": "msg_s4_5",
+      "role": "user",
+      "blobID": "queue_migration",
+      "summary": "User request: Update rate_limiter.ts to use shared queue, check for other callers",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012079704,
+      "updatedAt": 1776012079704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s4_6": {
+      "id": "msg_s4_6",
+      "role": "assistant",
+      "blobID": "queue_migration",
+      "summary": "Updated rate_limiter.ts import to ../utils/queue. Changed call from enqueueRefresh(userID, job) to enqueueJob(userID, job). Searched codebase: only rate_limiter.ts imports from either queue module.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1200,
+      "createdAt": 1776012139704,
+      "updatedAt": 1776012139704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "msg_s4_7": {
+      "id": "msg_s4_7",
+      "role": "user",
+      "blobID": "queue_test_migration",
+      "summary": "User request: Create shared queue tests, decide which auth tests to migrate",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012199704,
+      "updatedAt": 1776012199704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s4_8": {
+      "id": "msg_s4_8",
+      "role": "assistant",
+      "blobID": "queue_test_migration",
+      "summary": "Created tests/utils/queue.test.ts: (1) basic serialization, (2) different keys concurrent, (3) error isolation, (4) cleanup after error, (5) pendingJobCount accuracy. Moved 2 tests from auth queue, kept 1 auth-specific test.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1600,
+      "createdAt": 1776012259704,
+      "updatedAt": 1776012259704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "msg_s4_9": {
+      "id": "msg_s4_9",
+      "role": "user",
+      "blobID": "queue_test_migration",
+      "summary": "User request: Verify integration test, check changed files, call context_map",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 120,
+      "createdAt": 1776012319704,
+      "updatedAt": 1776012319704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s4_10": {
+      "id": "msg_s4_10",
+      "role": "assistant",
+      "blobID": "queue_test_migration",
+      "summary": "Integration test still valid: refreshToken → enqueueJob → issueNewToken chain preserved. All imports clean, no dead code. Context map shows 3 topics: design, migration, tests — all captured correctly.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1800,
+      "createdAt": 1776012379704,
+      "updatedAt": 1776012379704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    }
+  },
+  "pendingRetroactive": {}
+}

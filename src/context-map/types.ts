@@ -193,3 +193,19 @@ export type HistoricalSessionOverview = {
     activeForCommit: boolean;
   }>;
 };
+
+export type ContextPreviewBlob = {
+  id: string;
+  label: string;
+  fidelity: BlobFidelity;
+  rawTokens: number;
+  effectiveTokens: number;
+  messageCount: number;
+  effectiveLabel: string;
+};
+
+export type ContextPreview = {
+  blobs: ContextPreviewBlob[];
+  totalRaw: number;
+  totalEffective: number;
+};

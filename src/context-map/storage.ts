@@ -2,7 +2,15 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import type { CommitMapEntry, CommitMapFile, ContextMapFile } from "./types";
+import type {
+  BlobEntry,
+  CommitMapEntry,
+  CommitMapFile,
+  ContextMapFile,
+  ContextPreview,
+  MessageEntry,
+} from "./types";
+import { computeEffectiveTreatment } from "./core";
 
 const MAP_VERSION = 1 as const;
 
@@ -136,4 +144,60 @@ async function writeJsonAtomic(filePath: string, value: unknown) {
   const tmpPath = `${filePath}.tmp-${process.pid}-${Date.now()}`;
   await fs.writeFile(tmpPath, JSON.stringify(value, null, 2));
   await fs.rename(tmpPath, filePath);
+}
+
+// ── Debug log ─────────────────────────────────────────────────────────
+
+export function debugLogPath(sessionID: string) {
+  return path.join(contextMapRoot(), `${sessionID}.debug.json`);
+}
+
+export async function writeDebugLog(
+  map: ContextMapFile,
+  preview: ContextPreview,
+) {
+  await ensureContextMapRoot();
+  const logPath = debugLogPath(map.sessionID);
+
+  const messages = Object.values(map.messages)
+    .sort((a, b) => a.createdAt - b.createdAt)
+    .map((m) => {
+      const blob = m.blobID ? map.blobs[m.blobID] : undefined;
+      return {
+        id: m.id,
+        role: m.role,
+        blob_id: m.blobID,
+        blob_label: blob?.label,
+        blob_fidelity: blob?.fidelity,
+        summary: m.summary,
+        hidden: m.hidden,
+        hidden_source: m.hiddenSource,
+        fidelity_override: m.fidelityOverride,
+        fidelity_source: m.fidelitySource,
+        token_estimate: m.tokenEstimate,
+        source: m.source,
+        effective_treatment: computeEffectiveTreatment(m, blob),
+      };
+    });
+
+  const log = {
+    timestamp: new Date().toISOString(),
+    session_id: map.sessionID,
+    blobs: preview.blobs.map((b) => ({
+      id: b.id,
+      label: b.label,
+      fidelity: b.fidelity,
+      raw_tokens: b.rawTokens,
+      effective_tokens: b.effectiveTokens,
+      message_count: b.messageCount,
+      effective_label: b.effectiveLabel,
+    })),
+    messages,
+    totals: {
+      raw_tokens: preview.totalRaw,
+      effective_tokens: preview.totalEffective,
+    },
+  };
+
+  await writeJsonAtomic(logPath, log);
 }

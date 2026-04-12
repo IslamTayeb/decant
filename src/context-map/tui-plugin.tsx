@@ -16,6 +16,8 @@ import {
   buildPlaceholderText,
   buildSessionZoomText,
   buildFallbackMapFromMessages,
+  computeContextPreview,
+  formatTokens,
   updateBlobFidelity,
   updateMessageControls,
 } from "./core";
@@ -24,6 +26,7 @@ import type {
   BlobEntry,
   BlobFidelity,
   ContextMapFile,
+  ContextPreview,
   HistoricalSessionOverview,
   MessageEntry,
   MessageLike,
@@ -58,6 +61,13 @@ const BLOB_FIDELITY_LABEL: Record<BlobFidelity, string> = {
   summary: "Summaries",
   compressed: "Compressed",
   placeholder: "Placeholder",
+  drop: "Drop",
+};
+const FIDELITY_SHORT: Record<BlobFidelity, string> = {
+  full: "Full",
+  summary: "Summ",
+  compressed: "Comp",
+  placeholder: "Plch",
   drop: "Drop",
 };
 
@@ -146,7 +156,7 @@ function relTime(ts?: number) {
 }
 
 function trim(text: string, max: number) {
-  return text.length <= max ? text : `${text.slice(0, max - 1)}…`;
+  return text.length <= max ? text : `${text.slice(0, max - 1)}\u2026`;
 }
 
 async function loadMap(api: TuiPluginApi, sessionID: string) {
@@ -201,7 +211,7 @@ function ContextBar(props: { api: TuiPluginApi; map?: ContextMapFile }) {
         <For each={blobs()}>
           {(b, i) => (
             <text fg={color(props.api, i())}>
-              {"█".repeat(
+              {"\u2588".repeat(
                 Math.max(1, Math.round((b.tokenEstimate / total()) * W)),
               )}
             </text>
@@ -211,8 +221,8 @@ function ContextBar(props: { api: TuiPluginApi; map?: ContextMapFile }) {
       <For each={blobs()}>
         {(b, i) => (
           <text fg={props.api.theme.current.textMuted}>
-            <span style={{ fg: color(props.api, i()) }}>■</span> {b.label}{" "}
-            {Math.round((b.tokenEstimate / total()) * 100)}% [
+            <span style={{ fg: color(props.api, i()) }}>{"\u25A0"}</span>{" "}
+            {b.label} {Math.round((b.tokenEstimate / total()) * 100)}% [
             {BLOB_FIDELITY_LABEL[b.fidelity]}]
           </text>
         )}
@@ -232,13 +242,90 @@ function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
     mc();
     void loadMap(props.api, props.sessionID).then(setMap);
   });
+
+  const preview = createMemo(() => {
+    const m = map();
+    return m ? computeContextPreview(m) : undefined;
+  });
+
+  const contextLimit = createMemo(() => {
+    const msgs = props.api.state.session.messages(props.sessionID);
+    const last = [...msgs]
+      .reverse()
+      .find(
+        (m) =>
+          m.role === "assistant" &&
+          (m as any).tokens &&
+          (m as any).tokens.output > 0,
+      ) as
+      | { providerID?: string; modelID?: string; tokens?: { output: number } }
+      | undefined;
+    if (!last?.providerID || !last?.modelID) return 0;
+    const provider = props.api.state.provider.find(
+      (p) => p.id === last.providerID,
+    );
+    const model = provider?.models?.[last.modelID!] as
+      | { limit?: { context?: number } }
+      | undefined;
+    return model?.limit?.context ?? 0;
+  });
+
+  const blobs = createMemo(() => orderedBlobs(map()));
+  const barW = 34; // fits 37-char sidebar content width
+
   return (
-    <Show when={map() && orderedBlobs(map()).length > 0}>
+    <Show when={map() && blobs().length > 0}>
       <box flexDirection="column" gap={1}>
         <text fg={props.api.theme.current.text}>
           <b>Mem Map</b>
         </text>
-        <ContextBar api={props.api} map={map()} />
+
+        {/* Post-transform context bar */}
+        <Show when={preview()}>
+          <box flexDirection="column">
+            <box flexDirection="row">
+              <For each={preview()!.blobs}>
+                {(b, i) => {
+                  const pct =
+                    b.effectiveTokens / Math.max(1, preview()!.totalEffective);
+                  const w = Math.max(
+                    b.effectiveTokens > 0 ? 1 : 0,
+                    Math.round(pct * barW),
+                  );
+                  return (
+                    <text fg={color(props.api, i())}>{"\u2588".repeat(w)}</text>
+                  );
+                }}
+              </For>
+              <Show when={preview()!.totalEffective === 0}>
+                <text fg={props.api.theme.current.textMuted}>
+                  {"\u2591".repeat(barW)}
+                </text>
+              </Show>
+            </box>
+
+            {/* Per-blob one-liner */}
+            <For each={preview()!.blobs}>
+              {(b, i) => (
+                <text fg={props.api.theme.current.textMuted}>
+                  <span style={{ fg: color(props.api, i()) }}>{"\u25A0"}</span>{" "}
+                  {trim(b.label, 14)} {FIDELITY_SHORT[b.fidelity]}{" "}
+                  {b.effectiveLabel}
+                </text>
+              )}
+            </For>
+
+            {/* Context usage */}
+            <text fg={props.api.theme.current.textMuted}>
+              {"~"}
+              {formatTokens(preview()!.totalEffective)}
+              {contextLimit() > 0
+                ? ` / ${formatTokens(contextLimit())} (${Math.round((preview()!.totalEffective / contextLimit()) * 100)}%)`
+                : " tok in-context"}
+            </text>
+          </box>
+        </Show>
+
         <text fg={props.api.theme.current.textMuted}>
           {props.api.keybind.print("plugin.mem_map_open")} open
         </text>
@@ -249,7 +336,11 @@ function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
 
 // ── Main dialog (/mem-map) ────────────────────────────────────────────
 
-function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
+function MemMapDialog(props: {
+  api: TuiPluginApi;
+  sessionID: string;
+  close: () => void;
+}) {
   const [map, setMap] = createSignal<ContextMapFile>();
   const [tab, setTab] = createSignal<Tab>("blobs");
   const [bi, setBi] = createSignal(0); // blob index
@@ -339,14 +430,13 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
   });
 
   useKeyboard((evt) => {
-    if (!props.api.ui.dialog.open) return;
     const stop = () => {
       evt.preventDefault();
       evt.stopPropagation();
     };
     if (evt.name === "escape" || evt.name === "q") {
       stop();
-      props.api.ui.dialog.clear();
+      props.close();
       return;
     }
     if (evt.name === "tab") {
@@ -370,18 +460,56 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
       return;
     }
     if (tab() === "blobs") {
-      if (evt.name === "1") void setFidelity("full");
-      if (evt.name === "2") void setFidelity("summary");
-      if (evt.name === "3") void setFidelity("compressed");
-      if (evt.name === "4") void setFidelity("placeholder");
-      if (evt.name === "5") void setFidelity("drop");
+      if (evt.name === "1") {
+        stop();
+        void setFidelity("full");
+        return;
+      }
+      if (evt.name === "2") {
+        stop();
+        void setFidelity("summary");
+        return;
+      }
+      if (evt.name === "3") {
+        stop();
+        void setFidelity("compressed");
+        return;
+      }
+      if (evt.name === "4") {
+        stop();
+        void setFidelity("placeholder");
+        return;
+      }
+      if (evt.name === "5") {
+        stop();
+        void setFidelity("drop");
+        return;
+      }
     }
     if (tab() === "messages") {
-      if (evt.name === "x") void patchMsg("hide");
-      if (evt.name === "a") void patchMsg("auto");
-      if (evt.name === "f") void patchMsg("full");
-      if (evt.name === "s") void patchMsg("summary");
+      if (evt.name === "x") {
+        stop();
+        void patchMsg("hide");
+        return;
+      }
+      if (evt.name === "a") {
+        stop();
+        void patchMsg("auto");
+        return;
+      }
+      if (evt.name === "f") {
+        stop();
+        void patchMsg("full");
+        return;
+      }
+      if (evt.name === "s") {
+        stop();
+        void patchMsg("summary");
+        return;
+      }
     }
+    // Swallow unhandled keys to prevent leakage to app
+    stop();
   });
 
   const t = () => props.api.theme.current;
@@ -460,7 +588,7 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
                             fg: sel() ? t().text : color(props.api, idx()),
                           }}
                         >
-                          {sel() ? ">" : "■"}
+                          {sel() ? ">" : "\u25A0"}
                         </span>{" "}
                         {blob.label}{" "}
                         <span style={{ fg: t().textMuted }}>
@@ -523,7 +651,9 @@ function MemMapDialog(props: { api: TuiPluginApi; sessionID: string }) {
                   return (
                     <box flexDirection="column">
                       <text fg={t().text}>
-                        <span style={{ fg: color(props.api, ci) }}>■</span>{" "}
+                        <span style={{ fg: color(props.api, ci) }}>
+                          {"\u25A0"}
+                        </span>{" "}
                         <b>{sec.label}</b>{" "}
                         <span style={{ fg: t().textMuted }}>
                           {sec.count} msgs ~{sec.tokens.toLocaleString()} tok
@@ -641,7 +771,11 @@ type HistoryState = {
   overview: HistoricalSessionOverview;
 };
 
-function HistoryDialog(props: { api: TuiPluginApi; history: HistoryState }) {
+function HistoryDialog(props: {
+  api: TuiPluginApi;
+  history: HistoryState;
+  close: () => void;
+}) {
   const [bi, setBi] = createSignal(0);
   const [zoom, setZoom] = createSignal<"placeholder" | "compressed" | "full">(
     "placeholder",
@@ -695,14 +829,13 @@ function HistoryDialog(props: { api: TuiPluginApi; history: HistoryState }) {
   });
 
   useKeyboard((evt) => {
-    if (!props.api.ui.dialog.open) return;
     const stop = () => {
       evt.preventDefault();
       evt.stopPropagation();
     };
     if (evt.name === "escape" || evt.name === "q") {
       stop();
-      props.api.ui.dialog.clear();
+      props.close();
       return;
     }
     if (evt.name === "up" || evt.name === "k") {
@@ -715,9 +848,23 @@ function HistoryDialog(props: { api: TuiPluginApi; history: HistoryState }) {
       setBi((v) => Math.min(blobs().length - 1, v + 1));
       return;
     }
-    if (evt.name === "1") void load("placeholder");
-    if (evt.name === "2") void load("compressed");
-    if (evt.name === "3") void load("full");
+    if (evt.name === "1") {
+      stop();
+      void load("placeholder");
+      return;
+    }
+    if (evt.name === "2") {
+      stop();
+      void load("compressed");
+      return;
+    }
+    if (evt.name === "3") {
+      stop();
+      void load("full");
+      return;
+    }
+    // Swallow unhandled keys
+    stop();
   });
 
   const t = () => props.api.theme.current;
@@ -764,7 +911,7 @@ function HistoryDialog(props: { api: TuiPluginApi; history: HistoryState }) {
                             fg: sel() ? t().text : color(props.api, idx()),
                           }}
                         >
-                          {sel() ? ">" : "■"}
+                          {sel() ? ">" : "\u25A0"}
                         </span>{" "}
                         {b.label}
                       </text>
@@ -859,7 +1006,16 @@ const tui: TuiPlugin = async (api) => {
       return;
     }
     api.ui.dialog.setSize("xlarge");
-    api.ui.dialog.replace(() => <MemMapDialog api={api} sessionID={id} />);
+    api.ui.dialog.replace(
+      () => (
+        <MemMapDialog
+          api={api}
+          sessionID={id}
+          close={() => api.ui.dialog.clear()}
+        />
+      ),
+      () => {},
+    );
     queueMicrotask(() => api.ui.dialog.setSize("xlarge"));
   };
 
@@ -874,9 +1030,16 @@ const tui: TuiPlugin = async (api) => {
           void runBlame(api, v)
             .then((h) => {
               api.ui.dialog.setSize("xlarge");
-              api.ui.dialog.replace(() => (
-                <HistoryDialog api={api} history={h} />
-              ));
+              api.ui.dialog.replace(
+                () => (
+                  <HistoryDialog
+                    api={api}
+                    history={h}
+                    close={() => api.ui.dialog.clear()}
+                  />
+                ),
+                () => {},
+              );
               queueMicrotask(() => api.ui.dialog.setSize("xlarge"));
             })
             .catch((e) =>
@@ -917,6 +1080,7 @@ const tui: TuiPlugin = async (api) => {
       },
     },
   });
+
   api.lifecycle.onDispose(() => {});
 };
 

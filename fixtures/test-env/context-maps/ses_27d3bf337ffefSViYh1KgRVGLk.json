@@ -1,0 +1,412 @@
+{
+  "version": 1,
+  "sessionID": "ses_27d3bf337ffefSViYh1KgRVGLk",
+  "directory": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "worktree": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "createdAt": 1776011779704,
+  "updatedAt": 1776015379704,
+  "totalTokenEstimate": 15540,
+  "lastAnnotatedMessageID": "msg_s3_14",
+  "lastActiveBlobID": "monitoring_design",
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "system",
+    "toolHistoryCleanup": true
+  },
+  "blobOrder": [
+    "clock_skew_investigation",
+    "queue_suspicion",
+    "clock_skew_fix",
+    "monitoring_design"
+  ],
+  "blobs": {
+    "clock_skew_investigation": {
+      "id": "clock_skew_investigation",
+      "label": "clock_skew_investigation",
+      "summary": "Users reporting intermittent 401 errors with fresh tokens around refresh boundaries. Root cause: isTokenExpired uses strict Date.now() comparison with no tolerance for clock skew between client and server.",
+      "placeholder": "Bug: intermittent 401s from clock skew",
+      "keyFacts": [
+        "401 errors cluster around token refresh boundaries",
+        "isTokenExpired: payload.expiresAt < Date.now() — no tolerance",
+        "Network latency during refresh round-trip exacerbates the issue",
+        "tokenNeedsRefresh buffer (60s) doesn't account for skew"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s3_1",
+        "msg_s3_2",
+        "msg_s3_3",
+        "msg_s3_4"
+      ],
+      "tokenEstimate": 4240,
+      "createdAt": 1776011779704,
+      "lastActiveAt": 1776012019704,
+      "commitHashes": []
+    },
+    "queue_suspicion": {
+      "id": "queue_suspicion",
+      "label": "queue_suspicion",
+      "summary": "Initially suspected the refresh queue might cause 401s: if token expires while request waits in queue, it would get rejected. Investigation confirmed queue coalesces correctly — second request waits for first then re-checks. Queue is not the issue.",
+      "placeholder": "Wrong turn: suspected queue, confirmed OK",
+      "keyFacts": [
+        "Hypothesis: token expires while waiting in queue → 401",
+        "Investigation: queue coalesces, second request gets refreshed token",
+        "Conclusion: queue works correctly, issue is purely clock skew"
+      ],
+      "fidelity": "compressed",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s3_5",
+        "msg_s3_6"
+      ],
+      "tokenEstimate": 1900,
+      "createdAt": 1776012019704,
+      "lastActiveAt": 1776012139704,
+      "commitHashes": []
+    },
+    "clock_skew_fix": {
+      "id": "clock_skew_fix",
+      "label": "clock_skew_fix",
+      "summary": "Fixed isTokenExpired with configurable grace period (default 5s). Added clockSkewGraceMs to config. Updated tokenNeedsRefresh to account for grace. Wrote tests for boundary conditions.",
+      "placeholder": "Fix: 5s grace period for clock skew",
+      "keyFacts": [
+        "isTokenExpired now: expiresAt < Date.now() - graceMs",
+        "New config: clockSkewGraceMs (default 5000)",
+        "tokenNeedsRefresh uses refreshBufferMs + graceMs",
+        "Tests: exact boundary, within grace, outside grace, custom values"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s3_7",
+        "msg_s3_8",
+        "msg_s3_9",
+        "msg_s3_10"
+      ],
+      "tokenEstimate": 3800,
+      "createdAt": 1776012139704,
+      "lastActiveAt": 1776012379704,
+      "commitHashes": []
+    },
+    "monitoring_design": {
+      "id": "monitoring_design",
+      "label": "monitoring_design",
+      "summary": "Designed metrics approach: track refresh counts, 401 rates by cause, and clock skew observations via X-Server-Time response header. Identified other timing assumptions in the codebase.",
+      "placeholder": "Monitoring design for timing bugs",
+      "keyFacts": [
+        "Track: refresh count, 401 rate by cause, skew observations",
+        "X-Server-Time header helps clients detect clock skew",
+        "Other timing risks: session store maxAge, rate limit window"
+      ],
+      "fidelity": "summary",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s3_11",
+        "msg_s3_12",
+        "msg_s3_13",
+        "msg_s3_14"
+      ],
+      "tokenEstimate": 5600,
+      "createdAt": 1776012379704,
+      "lastActiveAt": 1776012619704,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_s3_1": {
+      "id": "msg_s3_1",
+      "role": "user",
+      "blobID": "clock_skew_investigation",
+      "summary": "User request: Users report intermittent 401s with fresh tokens. Investigate token_manager.ts",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 120,
+      "createdAt": 1776011839704,
+      "updatedAt": 1776011839704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s3_2": {
+      "id": "msg_s3_2",
+      "role": "assistant",
+      "blobID": "clock_skew_investigation",
+      "summary": "Read token_manager.ts. isTokenExpired does strict comparison: expiresAt < Date.now(). No tolerance for clock skew. tokenNeedsRefresh uses 60s buffer but doesn't account for server-client clock difference.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1200,
+      "createdAt": 1776011899704,
+      "updatedAt": 1776011899704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s3_3": {
+      "id": "msg_s3_3",
+      "role": "user",
+      "blobID": "clock_skew_investigation",
+      "summary": "User request: Trace full path from middleware through refresh. Where could timing issues occur?",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 120,
+      "createdAt": 1776011959704,
+      "updatedAt": 1776011959704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s3_4": {
+      "id": "msg_s3_4",
+      "role": "assistant",
+      "blobID": "clock_skew_investigation",
+      "summary": "Traced: auth_middleware detects near-expiry → calls refreshToken → queue serializes → issueNewToken → return. Window of vulnerability: between middleware check and queue completion, another request could see the old token as expired. Network latency widens this window.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2800,
+      "createdAt": 1776012019704,
+      "updatedAt": 1776012019704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s3_5": {
+      "id": "msg_s3_5",
+      "role": "user",
+      "blobID": "queue_suspicion",
+      "summary": "User request: Could this be a queue issue? Token expires while waiting in queue?",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012079704,
+      "updatedAt": 1776012079704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s3_6": {
+      "id": "msg_s3_6",
+      "role": "assistant",
+      "blobID": "queue_suspicion",
+      "summary": "Investigated queue.ts: when a pending promise exists for the same key, subsequent calls await it then re-execute. The refreshed token is returned to all waiters. Queue is not the issue.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1800,
+      "createdAt": 1776012139704,
+      "updatedAt": 1776012139704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s3_7": {
+      "id": "msg_s3_7",
+      "role": "user",
+      "blobID": "clock_skew_fix",
+      "summary": "User request: Write fix for clock skew in token_manager.ts with configurable grace period",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012199704,
+      "updatedAt": 1776012199704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s3_8": {
+      "id": "msg_s3_8",
+      "role": "assistant",
+      "blobID": "clock_skew_fix",
+      "summary": "Modified isTokenExpired: expiresAt < Date.now() - clockSkewGraceMs. Added clockSkewGraceMs (default 5000) to AppConfig in settings.ts. Updated tokenNeedsRefresh to use combined buffer.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1600,
+      "createdAt": 1776012259704,
+      "updatedAt": 1776012259704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "msg_s3_9": {
+      "id": "msg_s3_9",
+      "role": "user",
+      "blobID": "clock_skew_fix",
+      "summary": "User request: Write tests for the fix and add integration test for near-expiry auth flow",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012319704,
+      "updatedAt": 1776012319704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s3_10": {
+      "id": "msg_s3_10",
+      "role": "assistant",
+      "blobID": "clock_skew_fix",
+      "summary": "Added 5 test cases to token.test.ts: exact boundary, within grace, outside grace, custom grace, interaction with refresh buffer. Added integration test simulating near-expiry token through full middleware flow.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2000,
+      "createdAt": 1776012379704,
+      "updatedAt": 1776012379704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "msg_s3_11": {
+      "id": "msg_s3_11",
+      "role": "user",
+      "blobID": "monitoring_design",
+      "summary": "User request: Design metrics for refresh counts, 401 rates, clock skew detection",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012439704,
+      "updatedAt": 1776012439704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s3_12": {
+      "id": "msg_s3_12",
+      "role": "assistant",
+      "blobID": "monitoring_design",
+      "summary": "Proposed three instrumentation points: (1) refreshToken wrapper in rate_limiter.ts for refresh counts, (2) auth_middleware.ts for 401 categorization, (3) X-Server-Time response header in endpoints.ts for client-side skew detection.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2200,
+      "createdAt": 1776012499704,
+      "updatedAt": 1776012499704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "Read",
+        "Edit"
+      ]
+    },
+    "msg_s3_13": {
+      "id": "msg_s3_13",
+      "role": "user",
+      "blobID": "monitoring_design",
+      "summary": "User request: Summarize the bug investigation and scan for other timing assumptions",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012559704,
+      "updatedAt": 1776012559704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s3_14": {
+      "id": "msg_s3_14",
+      "role": "assistant",
+      "blobID": "monitoring_design",
+      "summary": "Full timeline: report → investigate → wrong turn (queue) → root cause (clock skew) → fix (grace period) → tests → monitoring. Other timing risks found: session store maxAge uses Date.now() without skew tolerance, rate limit window resets could drift.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 3200,
+      "createdAt": 1776012619704,
+      "updatedAt": 1776012619704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    }
+  },
+  "pendingRetroactive": {}
+}

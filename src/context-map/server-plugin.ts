@@ -12,6 +12,7 @@ import {
   buildPluginGuidanceSystemPrompt,
   buildSessionZoomText,
   capturePendingRetroactiveMessage,
+  computeContextPreview,
   mergeContextMaps,
   matchBlobIDsForQuery,
   parseAnnotationBlock,
@@ -26,6 +27,7 @@ import {
   readContextMap,
   sessionMapPath,
   writeContextMap,
+  writeDebugLog,
 } from "./storage";
 import { buildFallbackMapFromMessages } from "./core";
 import type {
@@ -475,6 +477,9 @@ const server: Plugin = async (ctx) => {
         );
       }
       await writeContextMap(map);
+      // Write debug log for inspection
+      const preview = computeContextPreview(map);
+      await writeDebugLog(map, preview).catch(() => undefined);
     },
     "experimental.session.compacting": async (input, output) => {
       const map = await getMap(input.sessionID);

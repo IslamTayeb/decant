@@ -10,6 +10,8 @@ import {
   type BlobFidelity,
   type CommitMapEntry,
   type ContextMapFile,
+  type ContextPreview,
+  type ContextPreviewBlob,
   type ControlSource,
   type HistoricalSessionOverview,
   type MessageEntry,
@@ -1344,4 +1346,90 @@ export function summarizeToolState(part: Extract<Part, { type: "tool" }>) {
     return trimText(`Tool ${part.tool} failed: ${part.state.error}`, 180);
   }
   return trimText(`Tool ${part.tool}: ${part.state.status}`, 180);
+}
+
+// ── Context preview (for sidebar and debug log) ───────────────────────
+
+export function formatTokens(n: number): string {
+  if (n < 1000) return `${n}`;
+  return `${(n / 1000).toFixed(1)}k`;
+}
+
+export function computeContextPreview(map: ContextMapFile): ContextPreview {
+  const blobs: ContextPreviewBlob[] = [];
+  let totalRaw = 0;
+  let totalEffective = 0;
+
+  for (const blobID of map.blobOrder) {
+    const blob = map.blobs[blobID];
+    if (!blob || blob.messageIDs.length === 0) continue;
+
+    const msgCount = blob.messageIDs.length;
+    const raw = blob.tokenEstimate;
+    totalRaw += raw;
+
+    let effective: number;
+    let effectiveLabel: string;
+
+    switch (blob.fidelity) {
+      case "full": {
+        const visibleCount = blob.messageIDs.filter((id) => {
+          const m = map.messages[id];
+          return m && !m.hidden;
+        }).length;
+        const visibleTokens = blob.messageIDs.reduce((sum, id) => {
+          const m = map.messages[id];
+          return sum + (m && !m.hidden ? m.tokenEstimate : 0);
+        }, 0);
+        effective = visibleTokens;
+        effectiveLabel = `${visibleCount} msgs ${formatTokens(effective)}`;
+        break;
+      }
+      case "summary":
+        effective = Math.min(raw, msgCount * 60);
+        effectiveLabel = `${msgCount} summaries`;
+        break;
+      case "compressed":
+        effective = Math.min(raw, 150);
+        effectiveLabel = "1 paragraph";
+        break;
+      case "placeholder":
+        effective = Math.min(raw, 30);
+        effectiveLabel = "stub";
+        break;
+      case "drop":
+        effective = 0;
+        effectiveLabel = "dropped";
+        break;
+    }
+
+    totalEffective += effective;
+    blobs.push({
+      id: blobID,
+      label: blob.label,
+      fidelity: blob.fidelity,
+      rawTokens: raw,
+      effectiveTokens: effective,
+      messageCount: msgCount,
+      effectiveLabel,
+    });
+  }
+
+  return { blobs, totalRaw, totalEffective };
+}
+
+export function computeEffectiveTreatment(
+  msg: MessageEntry,
+  blob?: BlobEntry,
+): string {
+  if (!blob) return "unassigned";
+  if (blob.fidelity === "drop") return "dropped";
+  if (blob.fidelity === "placeholder") return "placeholder-stub";
+  if (blob.fidelity === "compressed") return "compressed-paragraph";
+  if (msg.hidden) return "hidden";
+  if (blob.fidelity === "summary") {
+    return msg.fidelityOverride === "full" ? "kept-full" : "summarized";
+  }
+  if (msg.fidelityOverride === "summary") return "summarized";
+  return "kept-full";
 }

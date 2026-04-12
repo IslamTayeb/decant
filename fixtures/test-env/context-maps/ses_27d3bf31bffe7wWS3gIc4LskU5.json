@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "sessionID": "ses_27d3bf31bffe7wWS3gIc4LskU5",
+  "directory": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "worktree": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/mem-mould-context-map-manual-gTIXk8/demo-repo",
+  "createdAt": 1776011779704,
+  "updatedAt": 1776015379704,
+  "totalTokenEstimate": 11540,
+  "lastAnnotatedMessageID": "msg_s6_12",
+  "lastActiveBlobID": "code_archaeology",
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "system",
+    "toolHistoryCleanup": true
+  },
+  "blobOrder": [
+    "session_discovery",
+    "auth_migration_history",
+    "code_archaeology"
+  ],
+  "blobs": {
+    "session_discovery": {
+      "id": "session_discovery",
+      "label": "session_discovery",
+      "summary": "Used session_lookup to discover 6 prior sessions: auth investigation, rate limiting, docs overhaul, token expiry bug, queue refactor, cross-cutting review. Built a map of what work was done.",
+      "placeholder": "Discovered 6 prior sessions via lookup",
+      "keyFacts": [
+        "6 prior sessions cover auth, rate limiting, docs, bugfix, refactor, review",
+        "Auth and bugfix sessions have the most critical decisions",
+        "Queue was refactored from auth-specific to shared utility"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s6_1",
+        "msg_s6_2",
+        "msg_s6_3",
+        "msg_s6_4"
+      ],
+      "tokenEstimate": 2960,
+      "createdAt": 1776011779704,
+      "lastActiveAt": 1776012019704,
+      "commitHashes": []
+    },
+    "auth_migration_history": {
+      "id": "auth_migration_history",
+      "label": "auth_migration_history",
+      "summary": "Reconstructed full auth migration timeline from code comments and context maps: v1 mutex → deadlocks under concurrency → v2 async queue → refactored to shared utility. Rollback flag documented.",
+      "placeholder": "Auth migration: mutex→queue→shared timeline",
+      "keyFacts": [
+        "v1: mutex per userID, deadlocked with 3+ concurrent refreshes",
+        "v2: async queue, serializes per key, coalesces waiting requests",
+        "v3: refactored to shared utils/queue.ts with generic interface",
+        "Rollback flag in rate_limiter.ts: revert to mutex with 500ms timeout"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s6_5",
+        "msg_s6_6",
+        "msg_s6_7",
+        "msg_s6_8"
+      ],
+      "tokenEstimate": 3580,
+      "createdAt": 1776012019704,
+      "lastActiveAt": 1776012259704,
+      "commitHashes": []
+    },
+    "code_archaeology": {
+      "id": "code_archaeology",
+      "label": "code_archaeology",
+      "summary": "Used blame_lookup on rate_limiter.ts:42. Docs are partially outdated: architecture.md was updated but onboarding still references old structure. Open questions about queue timeout and session cleanup scheduling.",
+      "placeholder": "Blame lookup and docs freshness check",
+      "keyFacts": [
+        "blame_lookup on line 42 maps to auth queue investigation session",
+        "architecture.md updated but onboarding still references old info",
+        "Open: queue has no timeout, session cleanup has no scheduler"
+      ],
+      "fidelity": "full",
+      "fidelitySource": "default",
+      "messageIDs": [
+        "msg_s6_9",
+        "msg_s6_10",
+        "msg_s6_11",
+        "msg_s6_12"
+      ],
+      "tokenEstimate": 5000,
+      "createdAt": 1776012259704,
+      "lastActiveAt": 1776012499704,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_s6_1": {
+      "id": "msg_s6_1",
+      "role": "user",
+      "blobID": "session_discovery",
+      "summary": "User request: I'm new. Use session_lookup to find all recorded sessions",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 80,
+      "createdAt": 1776011839704,
+      "updatedAt": 1776011839704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s6_2": {
+      "id": "msg_s6_2",
+      "role": "assistant",
+      "blobID": "session_discovery",
+      "summary": "Found 6 sessions via session_lookup. Auth queue investigation (13 msgs, 3 blobs), API rate limiting (6 blobs), Documentation overhaul, Token expiry bugfix (4 blobs), Queue refactor, Cross-cutting review.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1600,
+      "createdAt": 1776011899704,
+      "updatedAt": 1776011899704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "session_lookup"
+      ]
+    },
+    "msg_s6_3": {
+      "id": "msg_s6_3",
+      "role": "user",
+      "blobID": "session_discovery",
+      "summary": "User request: Search for 'auth' and 'bug' sessions specifically",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 80,
+      "createdAt": 1776011959704,
+      "updatedAt": 1776011959704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s6_4": {
+      "id": "msg_s6_4",
+      "role": "assistant",
+      "blobID": "session_discovery",
+      "summary": "Auth sessions: 'Auth queue investigation' covers mutex→queue migration. Bug sessions: 'Token expiry clock skew bug' covers intermittent 401s. Both have rich context maps with key decisions documented.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1200,
+      "createdAt": 1776012019704,
+      "updatedAt": 1776012019704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "session_lookup"
+      ]
+    },
+    "msg_s6_5": {
+      "id": "msg_s6_5",
+      "role": "user",
+      "blobID": "auth_migration_history",
+      "summary": "User request: Read rate_limiter.ts history comments, explain full migration story",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012079704,
+      "updatedAt": 1776012079704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s6_6": {
+      "id": "msg_s6_6",
+      "role": "assistant",
+      "blobID": "auth_migration_history",
+      "summary": "Rate_limiter.ts comments document: v1 mutex held lock during async token issuing, caused deadlocks. v2 switched to queue. Rollback flag: revert to mutex with shorter timeout (500ms) and retry. Queue approach is stable.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2000,
+      "createdAt": 1776012139704,
+      "updatedAt": 1776012139704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s6_7": {
+      "id": "msg_s6_7",
+      "role": "user",
+      "blobID": "auth_migration_history",
+      "summary": "User request: Read auth/queue.ts and utils/queue.ts — which is current, which is legacy?",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 80,
+      "createdAt": 1776012199704,
+      "updatedAt": 1776012199704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s6_8": {
+      "id": "msg_s6_8",
+      "role": "assistant",
+      "blobID": "auth_migration_history",
+      "summary": "utils/queue.ts is the current shared implementation with generics and pendingJobCount. auth/queue.ts is the legacy version that should be deleted (rate_limiter.ts was migrated to utils/queue in the refactor session).",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1400,
+      "createdAt": 1776012259704,
+      "updatedAt": 1776012259704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool"
+      ],
+      "toolNames": [
+        "Read"
+      ]
+    },
+    "msg_s6_9": {
+      "id": "msg_s6_9",
+      "role": "user",
+      "blobID": "code_archaeology",
+      "summary": "User request: Call context_map, blame_lookup on rate_limiter.ts:42, check docs freshness",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012319704,
+      "updatedAt": 1776012319704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s6_10": {
+      "id": "msg_s6_10",
+      "role": "assistant",
+      "blobID": "code_archaeology",
+      "summary": "Context map shows 2 topics so far. blame_lookup on rate_limiter.ts:42 maps to auth queue investigation session — the enqueueRefresh call was added there. Docs: architecture.md was updated with queue migration, but onboarding.md still has stale info.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1800,
+      "createdAt": 1776012379704,
+      "updatedAt": 1776012379704,
+      "source": "annotation",
+      "partTypes": [
+        "text",
+        "tool",
+        "tool",
+        "tool"
+      ],
+      "toolNames": [
+        "context_map",
+        "blame_lookup",
+        "Read"
+      ]
+    },
+    "msg_s6_11": {
+      "id": "msg_s6_11",
+      "role": "user",
+      "blobID": "code_archaeology",
+      "summary": "User request: Write timeline of major changes, identify open questions and risks",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 100,
+      "createdAt": 1776012439704,
+      "updatedAt": 1776012439704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_s6_12": {
+      "id": "msg_s6_12",
+      "role": "assistant",
+      "blobID": "code_archaeology",
+      "summary": "Timeline: (1) initial build with mutex auth, (2) mutex→queue migration after deadlocks, (3) rate limiting implementation, (4) clock skew bugfix, (5) queue refactor to shared utility, (6) docs overhaul. Open questions: queue has no timeout (stuck job blocks forever), session cleanup needs a scheduler not just cleanup-on-refresh.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 3000,
+      "createdAt": 1776012499704,
+      "updatedAt": 1776012499704,
+      "source": "annotation",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    }
+  },
+  "pendingRetroactive": {}
+}
