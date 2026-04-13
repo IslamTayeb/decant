@@ -313,8 +313,8 @@ function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
               {(b, i) => (
                 <text fg={props.api.theme.current.textMuted}>
                   <span style={{ fg: color(props.api, i()) }}>{"\u25A0"}</span>{" "}
-                  {trim(b.label, 14)} {FIDELITY_SHORT[b.fidelity]}{" "}
-                  {b.effectiveLabel}
+                  {trim(b.label, 14)} {FIDELITY_SHORT[b.fidelity]} ~
+                  {formatTokens(b.effectiveTokens)}
                 </text>
               )}
             </For>
