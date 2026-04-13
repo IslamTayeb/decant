@@ -49,10 +49,10 @@ type Tab = "blobs" | "messages";
 
 // ── Fidelity labels (user-facing) ──────────────────────────────────────
 
+// User-selectable fidelity levels (compressed hidden from UI)
 const BLOB_FIDELITY_KEYS: BlobFidelity[] = [
   "full",
   "summary",
-  "compressed",
   "placeholder",
   "drop",
 ];
@@ -240,8 +240,11 @@ function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
   const mc = createMemo(
     () => props.api.state.session.messages(props.sessionID).length,
   );
+  const dialogOpen = createMemo(() => props.api.ui.dialog.open);
   createEffect(() => {
     mc();
+    // Also reload when dialog closes (user may have changed fidelity)
+    dialogOpen();
     void loadMap(props.api, props.sessionID).then(setMap);
   });
 
@@ -495,15 +498,10 @@ function MemMapDialog(props: {
       }
       if (evt.name === "3") {
         stop();
-        void setFidelity("compressed");
-        return;
-      }
-      if (evt.name === "4") {
-        stop();
         void setFidelity("placeholder");
         return;
       }
-      if (evt.name === "5") {
+      if (evt.name === "4") {
         stop();
         void setFidelity("drop");
         return;
@@ -667,7 +665,7 @@ function MemMapDialog(props: {
             </box>
           </scrollbox>
         </Show>
-        <text fg={t().textMuted}>j/k navigate 1-5 set fidelity q close</text>
+        <text fg={t().textMuted}>j/k navigate 1-4 set fidelity q close</text>
       </Show>
 
       {/* Messages tab */}
