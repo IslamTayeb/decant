@@ -197,33 +197,35 @@ async function ensureHistorical(api: TuiPluginApi, sessionID: string) {
 // ── Context bar (shared between sidebar and dialogs) ──────────────────
 
 function ContextBar(props: { api: TuiPluginApi; map?: ContextMapFile }) {
-  const blobs = createMemo(() => orderedBlobs(props.map));
-  const total = createMemo(() =>
-    Math.max(
-      1,
-      blobs().reduce((s, b) => s + b.tokenEstimate, 0),
-    ),
+  const preview = createMemo(() =>
+    props.map ? computeContextPreview(props.map) : undefined,
+  );
+  const totalEffective = createMemo(() =>
+    Math.max(1, preview()?.totalEffective ?? 0),
   );
   const W = 50;
   return (
     <box flexDirection="column">
       <box flexDirection="row">
-        <For each={blobs()}>
+        <For each={preview()?.blobs ?? []}>
           {(b, i) => (
             <text fg={color(props.api, i())}>
               {"\u2588".repeat(
-                Math.max(1, Math.round((b.tokenEstimate / total()) * W)),
+                Math.max(
+                  b.effectiveTokens > 0 ? 1 : 0,
+                  Math.round((b.effectiveTokens / totalEffective()) * W),
+                ),
               )}
             </text>
           )}
         </For>
       </box>
-      <For each={blobs()}>
+      <For each={preview()?.blobs ?? []}>
         {(b, i) => (
           <text fg={props.api.theme.current.textMuted}>
             <span style={{ fg: color(props.api, i()) }}>{"\u25A0"}</span>{" "}
-            {b.label} {Math.round((b.tokenEstimate / total()) * 100)}% [
-            {BLOB_FIDELITY_LABEL[b.fidelity]}]
+            {b.label} {Math.round((b.effectiveTokens / totalEffective()) * 100)}
+            % [{BLOB_FIDELITY_LABEL[b.fidelity]}]
           </text>
         )}
       </For>
