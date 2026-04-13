@@ -278,22 +278,12 @@ function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
   const blobs = createMemo(() => orderedBlobs(map()));
   const barW = 34; // fits 37-char sidebar content width
 
-  const debugInfo = createMemo(() => {
-    const m = map();
-    if (!m) return "map: null";
-    return `${m.blobOrder.length} blobs, ${Object.keys(m.messages).length} msgs`;
-  });
-
   return (
     <box flexDirection="column" gap={1}>
-      <text fg={props.api.theme.current.text}>
-        <b>Mem Map</b> {debugInfo()}
-      </text>
-      <text fg={props.api.theme.current.textMuted}>
-        sid: {props.sessionID.slice(0, 20)}
-      </text>
-
       <Show when={map() && blobs().length > 0}>
+        <text fg={props.api.theme.current.text}>
+          <b>Mem Map</b>
+        </text>
         {/* Post-transform context bar */}
         <Show when={preview()}>
           <box flexDirection="column">
@@ -339,11 +329,11 @@ function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
             </text>
           </box>
         </Show>
-      </Show>
 
-      <text fg={props.api.theme.current.textMuted}>
-        {props.api.keybind.print("plugin.mem_map_open")} open
-      </text>
+        <text fg={props.api.theme.current.textMuted}>
+          {props.api.keybind.print("plugin.mem_map_open")} open
+        </text>
+      </Show>
     </box>
   );
 }
@@ -508,25 +498,36 @@ function MemMapDialog(props: {
       }
     }
     if (tab() === "messages") {
-      if (evt.name === "x") {
-        stop();
-        void patchMsg("hide");
-        return;
-      }
-      if (evt.name === "a") {
-        stop();
-        void patchMsg("auto");
-        return;
-      }
-      if (evt.name === "f") {
-        stop();
-        void patchMsg("full");
-        return;
-      }
-      if (evt.name === "s") {
-        stop();
-        void patchMsg("summary");
-        return;
+      // Disable per-message controls when blob is placeholder/drop
+      const curBlobEntry = curMsg()?.blobID
+        ? map()?.blobs[curMsg()!.blobID!]
+        : undefined;
+      if (
+        curBlobEntry?.fidelity === "placeholder" ||
+        curBlobEntry?.fidelity === "drop"
+      ) {
+        // Only allow navigation, not modification
+      } else {
+        if (evt.name === "x") {
+          stop();
+          void patchMsg("hide");
+          return;
+        }
+        if (evt.name === "a") {
+          stop();
+          void patchMsg("auto");
+          return;
+        }
+        if (evt.name === "f") {
+          stop();
+          void patchMsg("full");
+          return;
+        }
+        if (evt.name === "s") {
+          stop();
+          void patchMsg("summary");
+          return;
+        }
       }
     }
     // Don't swallow unhandled keys -- let them reach the app
@@ -544,6 +545,28 @@ function MemMapDialog(props: {
     if (!p) return 0;
     return p.blobs.find((b) => b.id === blobID)?.effectiveTokens ?? 0;
   };
+
+  // Override-aware fidelity label: [Summary +2 full] or [Full +1 hidden]
+  const blobFidelityTag = (blob: BlobEntry) => {
+    const m = map();
+    if (!m) return `[${BLOB_FIDELITY_LABEL[blob.fidelity]}]`;
+    const overrides: Record<string, number> = {};
+    for (const msgID of blob.messageIDs) {
+      const msg = m.messages[msgID];
+      if (!msg) continue;
+      if (msg.hidden) overrides.hidden = (overrides.hidden ?? 0) + 1;
+      else if (msg.fidelityOverride !== "inherit")
+        overrides[msg.fidelityOverride] =
+          (overrides[msg.fidelityOverride] ?? 0) + 1;
+    }
+    const parts = Object.entries(overrides).map(([k, v]) => `+${v} ${k}`);
+    const base = BLOB_FIDELITY_LABEL[blob.fidelity];
+    return parts.length > 0 ? `[${base} ${parts.join(" ")}]` : `[${base}]`;
+  };
+
+  // Is the current blob in a collapsed state where per-message controls don't apply?
+  const blobIsCollapsed = (blob?: BlobEntry) =>
+    blob?.fidelity === "placeholder" || blob?.fidelity === "drop";
 
   return (
     <box
@@ -627,8 +650,9 @@ function MemMapDialog(props: {
                           {blob.messageIDs.length} msgs{" "}
                           {relTime(blob.lastActiveAt)}{" "}
                           {blob.fidelity !== "full"
-                            ? `(${formatTokens(blob.tokenEstimate)} raw)`
+                            ? `(${formatTokens(blob.tokenEstimate)} raw) `
                             : ""}
+                          {blobFidelityTag(blob)}
                         </span>
                       </text>
                       <text fg={t().textMuted}> {blob.placeholder}</text>
@@ -690,9 +714,13 @@ function MemMapDialog(props: {
                         </span>{" "}
                         <b>{sec.label}</b>{" "}
                         <span style={{ fg: t().textMuted }}>
-                          {sec.count} msgs ~{sec.tokens.toLocaleString()} tok
-                          {sec.fidelity
-                            ? `  [${BLOB_FIDELITY_LABEL[sec.fidelity]}]`
+                          {sec.count} msgs ~
+                          {formatTokens(
+                            sec.blobID ? effectiveTok(sec.blobID) : sec.tokens,
+                          )}{" "}
+                          tok
+                          {sec.blobID && map()?.blobs[sec.blobID]
+                            ? `  ${blobFidelityTag(map()!.blobs[sec.blobID]!)}`
                             : ""}
                         </span>
                       </text>
@@ -702,18 +730,30 @@ function MemMapDialog(props: {
                             msgs().findIndex((m) => m.id === msg.id),
                           );
                           const sel = () => curMsg()?.id === msg.id;
+                          const collapsed = () =>
+                            blobIsCollapsed(
+                              sec.blobID ? map()?.blobs[sec.blobID] : undefined,
+                            );
                           const badge = () => {
-                            const parts: string[] = [];
-                            if (msg.hidden) parts.push("hidden");
-                            if (msg.fidelityOverride !== "inherit")
-                              parts.push(
-                                msg.fidelityOverride === "summary"
-                                  ? "summary"
-                                  : "full",
-                              );
-                            return parts.length > 0
-                              ? ` [${parts.join(",")}]`
-                              : "";
+                            if (msg.hidden) return " [hidden]";
+                            if (collapsed()) return "";
+                            const blobF = sec.fidelity ?? "full";
+                            if (
+                              msg.fidelityOverride === "full" &&
+                              blobF !== "full"
+                            )
+                              return " [F override]";
+                            if (
+                              msg.fidelityOverride === "summary" &&
+                              blobF !== "summary"
+                            )
+                              return " [S override]";
+                            if (
+                              blobF === "summary" &&
+                              msg.fidelityOverride === "inherit"
+                            )
+                              return " [S]";
+                            return "";
                           };
                           return (
                             <box
@@ -726,15 +766,27 @@ function MemMapDialog(props: {
                                 if (idx() !== -1) setMi(idx());
                               }}
                             >
-                              <text fg={sel() ? t().text : t().textMuted}>
+                              <text
+                                fg={
+                                  collapsed()
+                                    ? t().border
+                                    : sel()
+                                      ? t().text
+                                      : t().textMuted
+                                }
+                              >
                                 {sel() ? ">" : " "}{" "}
                                 {msg.role === "user" ? "U" : "A"}{" "}
                                 {trim(msg.summary, 80)}
-                                <span style={{ fg: t().warning }}>
+                                <span
+                                  style={{
+                                    fg: msg.hidden ? t().error : t().warning,
+                                  }}
+                                >
                                   {badge()}
                                 </span>
                               </text>
-                              <Show when={sel()}>
+                              <Show when={sel() && !collapsed()}>
                                 <box
                                   flexDirection="row"
                                   gap={1}
@@ -775,6 +827,12 @@ function MemMapDialog(props: {
                                     <text fg={t().text}>s:Summary</text>
                                   </box>
                                 </box>
+                              </Show>
+                              <Show when={sel() && collapsed()}>
+                                <text fg={t().border} paddingLeft={3}>
+                                  blob is {sec.fidelity} -- set blob to Full or
+                                  Summary first
+                                </text>
                               </Show>
                             </box>
                           );
@@ -1029,8 +1087,6 @@ async function runBlame(
 // ── Plugin entry ──────────────────────────────────────────────────────
 
 const tui: TuiPlugin = async (api) => {
-  api.ui.toast({ variant: "info", message: "mem-mould TUI plugin loaded" });
-
   const keys: TuiKeybindSet = api.keybind.create({
     plugin_mem_map_open: "<leader>'",
   });
