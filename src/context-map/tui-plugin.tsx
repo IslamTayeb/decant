@@ -620,7 +620,13 @@ function MemMapDialog(props: {
         >
           <scrollbox
             maxHeight={16}
-            verticalScrollbarOptions={{ visible: false }}
+            verticalScrollbarOptions={{
+              trackOptions: {
+                backgroundColor: t().backgroundElement,
+                foregroundColor: t().border,
+              },
+            }}
+            viewportOptions={{ paddingRight: 1 }}
           >
             <box flexDirection="column">
               <For each={blobs()}>
@@ -700,7 +706,13 @@ function MemMapDialog(props: {
         >
           <scrollbox
             maxHeight={16}
-            verticalScrollbarOptions={{ visible: false }}
+            verticalScrollbarOptions={{
+              trackOptions: {
+                backgroundColor: t().backgroundElement,
+                foregroundColor: t().border,
+              },
+            }}
+            viewportOptions={{ paddingRight: 1 }}
           >
             <box flexDirection="column">
               <For each={secs()}>
@@ -981,7 +993,13 @@ function HistoryDialog(props: {
         <box flexDirection="column" width="40%">
           <scrollbox
             maxHeight={14}
-            verticalScrollbarOptions={{ visible: false }}
+            verticalScrollbarOptions={{
+              trackOptions: {
+                backgroundColor: t().backgroundElement,
+                foregroundColor: t().border,
+              },
+            }}
+            viewportOptions={{ paddingRight: 1 }}
           >
             <box flexDirection="column">
               <For each={blobs()}>
@@ -1024,7 +1042,13 @@ function HistoryDialog(props: {
           </text>
           <scrollbox
             maxHeight={12}
-            verticalScrollbarOptions={{ visible: false }}
+            verticalScrollbarOptions={{
+              trackOptions: {
+                backgroundColor: t().backgroundElement,
+                foregroundColor: t().border,
+              },
+            }}
+            viewportOptions={{ paddingRight: 1 }}
           >
             <box
               border
