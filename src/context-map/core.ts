@@ -31,21 +31,31 @@ const STOP_WORDS = new Set([
   "before",
   "being",
   "between",
+  "called",
+  "check",
   "could",
   "does",
   "each",
+  "explain",
+  "find",
   "from",
   "have",
   "into",
   "just",
+  "look",
+  "make",
   "more",
   "now",
   "only",
   "over",
+  "read",
   "same",
+  "search",
   "should",
+  "show",
   "some",
   "switch",
+  "tell",
   "than",
   "that",
   "their",
@@ -1283,9 +1293,32 @@ function findBestBlobForSummary(map: ContextMapFile, summary: string) {
 }
 
 function labelFromSummary(summary: string, index: number) {
-  const words = [...keywordSet(summary)].slice(0, 4);
+  // Try to extract a file path as the primary subject
+  const fileMatch = summary.match(
+    /(?:src|tests|docs|lib|packages)\/[\w./-]+\.[\w]+/,
+  );
+  if (fileMatch) {
+    // Use the filename without extension as the label base
+    const filePath = fileMatch[0];
+    const parts = filePath.split("/");
+    const filename = parts[parts.length - 1]!.replace(/\.\w+$/, "");
+    // Add parent dir for context if it exists
+    const parent = parts.length > 1 ? parts[parts.length - 2] : undefined;
+    const label = parent ? `${parent}_${filename}` : filename;
+    return label.slice(0, 30);
+  }
+
+  // Strip common prompt prefixes to get at the actual subject
+  const stripped = summary
+    .replace(
+      /^(read|write|update|check|explain|look at|search|find|create|fix|debug|trace|review|run|add|remove|show|list|compare|design|implement)\s+/i,
+      "",
+    )
+    .replace(/^(the|a|an|all|any|if|whether|how|why|what)\s+/i, "");
+
+  const words = [...keywordSet(stripped)].slice(0, 3);
   if (words.length === 0) return `topic_${index}`;
-  return words.join("_");
+  return words.join("_").slice(0, 30);
 }
 
 function mergeBlobSummary(current: string, next: string) {

@@ -359,37 +359,104 @@ async function main() {
   }
 
   function elaborateFact(fact: string): string {
+    // Specific matches
     if (fact.includes("mutex") || fact.includes("deadlock"))
       return "Under load testing with 3+ concurrent refresh attempts, the mutex would hold while awaiting the token issuer (a network call), causing a cascading queue of blocked requests that eventually timed out.";
-    if (fact.includes("queue") && fact.includes("serializ"))
-      return "The `pending` Map stores one Promise per active key. When a second request arrives for the same key, it awaits the existing Promise rather than starting a new refresh — effectively coalescing duplicate work.";
-    if (fact.includes("rollback"))
-      return "The flag is documented in code comments: `// Rollback flag: if queue causes issues, revert to mutex with 500ms timeout and retry logic.` This suggests the team wasn't fully confident in the queue approach at deployment time.";
     if (fact.includes("coalesce"))
       return "This is the key correctness property: the second caller gets the result of the first caller's refresh, not a stale token. Without this, the queue would serialize requests but still return expired tokens to waiters.";
-    if (fact.includes("clock skew") || fact.includes("grace"))
-      return "NTP typically keeps clocks within 1-2 seconds, but edge cases exist: VM migration, container restart, poor NTP configuration. The 5-second default provides reasonable coverage without being so large that truly expired tokens are accepted.";
+    if (fact.includes("rollback"))
+      return "The flag is documented in code comments: `// Rollback flag: if queue causes issues, revert to mutex with 500ms timeout and retry logic.` This suggests the team wasn't fully confident in the queue approach at deployment time.";
     if (
       fact.includes("unsigned") ||
       fact.includes("forge") ||
-      fact.includes("base64")
+      fact.includes("no signature")
     )
-      return "Any client can decode the token with `atob()`, modify the payload (e.g., change roles to `['admin']`), and re-encode it. There's no signature to detect tampering. This is the highest-priority security issue in the codebase.";
+      return "Any client can decode the token with `atob()`, modify the payload (e.g., change roles to `['admin']`), and re-encode it. There's no signature to detect tampering.";
     if (fact.includes("never") && fact.includes("import"))
       return "The function exists in the module's export list but `grep -r` across the entire codebase shows zero import statements for it. This means the sessions Map grows monotonically for the lifetime of the process.";
-    if (fact.includes("memory") || fact.includes("leak"))
-      return "In a long-running server handling 1000 logins/day, after 30 days the Map would contain ~30,000 entries (each a few hundred bytes) — roughly 10-20MB of leaked memory. Not catastrophic, but it adds up and the cleanup function already exists.";
-    if (fact.includes("sliding window"))
-      return "Unlike fixed windows that reset at clock boundaries (allowing 2x burst at the boundary), sliding windows provide consistent rate limiting regardless of when requests arrive within the window.";
-    if (fact.includes("header") || fact.includes("X-RateLimit"))
-      return "These headers are standardized in the IETF draft `draft-ietf-httpapi-ratelimit-headers`. Including them helps well-behaved clients back off gracefully instead of hammering the server until they get a 429.";
-    if (fact.includes("per-user") || fact.includes("per-IP"))
-      return "Per-IP rate limiting is easily circumvented by using multiple IPs (proxies, VPNs). Per-user limiting ties the rate to the authenticated identity, which is much harder to spoof — but requires a valid token, so the IP fallback handles unauthenticated abuse.";
+    if (
+      fact.includes("clock skew") ||
+      fact.includes("grace") ||
+      fact.includes("NTP")
+    )
+      return "NTP typically keeps clocks within 1-2 seconds, but edge cases exist: VM migration, container restart, poor NTP configuration. The 5-second default provides reasonable coverage.";
     if (fact.includes("dynamic import"))
-      return "The `await import(...)` inside the request handler means Node.js resolves the module on every request. While V8 caches resolved modules, the async overhead and microtask scheduling add unnecessary latency — especially under high concurrency.";
-    if (fact.includes("test") && fact.includes("coverage"))
-      return "Test coverage isn't just about lines executed — it's about scenarios exercised. A test that hits every line in the happy path still misses: error handling, concurrency, timeout, and boundary conditions.";
-    return "This is a significant detail that should be documented and tracked.";
+      return "The `await import(...)` inside the request handler means Node.js resolves the module on every request. While V8 caches resolved modules, the async overhead and microtask scheduling add unnecessary latency.";
+
+    // Broader category matches
+    if (
+      fact.includes("401") ||
+      fact.includes("expir") ||
+      (fact.includes("token") && fact.includes("refresh"))
+    )
+      return "This timing-sensitive behavior means that even a small delay or clock mismatch can cause valid requests to fail authentication, especially under load when refresh latency increases.";
+    if (
+      fact.includes("queue") ||
+      fact.includes("serializ") ||
+      fact.includes("pending")
+    )
+      return "The serialization mechanism ensures only one operation runs per key at a time, preventing duplicate work and race conditions while still allowing different keys to proceed concurrently.";
+    if (
+      fact.includes("test") ||
+      fact.includes("coverage") ||
+      fact.includes("auth_flow")
+    )
+      return "Without targeted tests for this scenario, regressions could slip through CI undetected. The gap between what the test name claims and what it actually exercises creates a false sense of security.";
+    if (
+      fact.includes("config") ||
+      fact.includes("Config") ||
+      fact.includes("setting")
+    )
+      return "Having this as a configurable value means operators can tune it per-deployment without code changes, which is essential for environments with different network characteristics or security requirements.";
+    if (
+      fact.includes("doc") ||
+      fact.includes("README") ||
+      fact.includes("onboarding") ||
+      fact.includes("architecture")
+    )
+      return "Documentation that falls out of sync with the code is worse than no documentation — it actively misleads new contributors and creates debugging dead-ends when the described behavior doesn't match reality.";
+    if (
+      fact.includes("import") ||
+      fact.includes("migrat") ||
+      fact.includes("refactor")
+    )
+      return "This migration needs careful sequencing: update imports, verify no remaining references to the old module, run the full test suite, then remove the old file. Skipping any step risks runtime import failures.";
+    if (
+      fact.includes("endpoint") ||
+      fact.includes("middleware") ||
+      fact.includes("handler") ||
+      fact.includes("subsystem")
+    )
+      return "Understanding this flow is critical for debugging — when a request fails, you need to know which layer rejected it and why. Each middleware adds context and constraints to the request before the final handler sees it.";
+    if (
+      fact.includes("validation") ||
+      fact.includes("input") ||
+      fact.includes("spoofable")
+    )
+      return "Without proper validation, malicious input can bypass security controls or corrupt internal state. This is especially dangerous for public-facing endpoints where input cannot be trusted.";
+    if (
+      fact.includes("monitor") ||
+      fact.includes("metric") ||
+      fact.includes("track") ||
+      fact.includes("observ")
+    )
+      return "Without observability into this behavior, issues will only surface as user-reported bugs rather than being caught by automated alerting. Even basic counters and histograms provide significant debugging value.";
+    if (
+      fact.includes("session") ||
+      fact.includes("cleanup") ||
+      fact.includes("unbounded") ||
+      fact.includes("grow")
+    )
+      return "Unbounded growth in a long-running process is a slow-motion incident — it works fine in development and staging but fails after days or weeks in production when memory pressure triggers GC pauses or OOM kills.";
+    if (
+      fact.includes("blame") ||
+      fact.includes("commit") ||
+      fact.includes("session")
+    )
+      return "Having a direct link from code changes back to the decision-making session provides invaluable context for future contributors trying to understand why a particular approach was chosen.";
+
+    // Smart fallback: rephrase the fact as an observation
+    return `In practice, ${fact.charAt(0).toLowerCase()}${fact.slice(1).replace(/\.$/, "")} — and this has direct implications for how the system behaves under load.`;
   }
 
   function toolInput(tool: string, files: string[]): Record<string, unknown> {
