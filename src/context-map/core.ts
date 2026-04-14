@@ -993,13 +993,40 @@ function buildPendingRetroactivePrompt(map: ContextMapFile, limit = 6) {
 }
 
 export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
-  return [
+  const totalTokens = map.blobOrder.reduce((s, id) => {
+    const blob = map.blobs[id];
+    return s + (blob ? blob.tokenEstimate : 0);
+  }, 0);
+  const blobCount = map.blobOrder.length;
+
+  const lines = [
     "Context map plugin is active.",
     "User controls are authoritative: do not override user-selected blob fidelity or hidden-message choices unless the user explicitly asks or you use a justified force override.",
-    "Use context_map to inspect the current map, compress_blob or drop_blob to change blob fidelity, and session_lookup / blame_lookup plus session_zoom in a sub-agent for historical investigations.",
-    "Current map overview:",
-    buildCurrentContextOverview(map),
-  ].join("\n");
+    "Available tools: context_map (inspect map), compress_blob / drop_blob (change blob fidelity), session_lookup / blame_lookup + session_zoom (historical investigations via sub-agent).",
+  ];
+
+  // Proactive context management guidance when context is growing
+  if (totalTokens > 50_000 && blobCount >= 3) {
+    lines.push(
+      "",
+      "CONTEXT MANAGEMENT: Total context is ~" +
+        Math.round(totalTokens / 1000) +
+        "k tokens across " +
+        blobCount +
+        " topics. Consider using compress_blob to reduce older or less-relevant topics to 'summary' or 'placeholder' to keep context focused. Prioritize compressing topics you haven't actively discussed in recent turns.",
+    );
+  } else if (totalTokens > 20_000 && blobCount >= 2) {
+    lines.push(
+      "",
+      "Context is at ~" +
+        Math.round(totalTokens / 1000) +
+        "k tokens. No action needed yet, but keep context_map and compress_blob in mind as the conversation grows.",
+    );
+  }
+
+  lines.push("", "Current map overview:", buildCurrentContextOverview(map));
+
+  return lines.join("\n");
 }
 
 export function buildAnnotationSystemPrompt(map: ContextMapFile) {
