@@ -13,7 +13,6 @@ import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 
 import {
   buildHistoricalOverview,
-  buildPlaceholderText,
   buildSessionZoomText,
   buildFallbackMapFromMessages,
   computeContextPreview,
@@ -58,17 +57,17 @@ const BLOB_FIDELITY_KEYS: BlobFidelity[] = [
 ];
 const BLOB_FIDELITY_LABEL: Record<BlobFidelity, string> = {
   full: "Full",
-  summary: "Summaries",
+  summary: "Summary",
   compressed: "Compressed",
   placeholder: "Placeholder",
-  drop: "Drop",
+  drop: "Hidden",
 };
 const FIDELITY_SHORT: Record<BlobFidelity, string> = {
   full: "Full",
   summary: "Summ",
   compressed: "Comp",
   placeholder: "Plch",
-  drop: "Drop",
+  drop: "Hide",
 };
 
 // ── Helpers ────────────────────────────────────────────────────────────
@@ -282,7 +281,7 @@ function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
     <box flexDirection="column" gap={1}>
       <Show when={map() && blobs().length > 0}>
         <text fg={props.api.theme.current.text}>
-          <b>Mem Map</b>
+          <b>Context Map</b>
         </text>
         {/* Post-transform context bar */}
         <Show when={preview()}>
@@ -331,7 +330,7 @@ function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
         </Show>
 
         <text fg={props.api.theme.current.textMuted}>
-          {props.api.keybind.print("plugin.mem_map_open")} open
+          {props.api.keybind.print("plugin.context_open")} open
         </text>
       </Show>
     </box>
@@ -754,17 +753,17 @@ function MemMapDialog(props: {
                               msg.fidelityOverride === "full" &&
                               blobF !== "full"
                             )
-                              return " [F override]";
+                              return " [full override]";
                             if (
                               msg.fidelityOverride === "summary" &&
                               blobF !== "summary"
                             )
-                              return " [S override]";
+                              return " [summary override]";
                             if (
                               blobF === "summary" &&
                               msg.fidelityOverride === "inherit"
                             )
-                              return " [S]";
+                              return " [summarized]";
                             return "";
                           };
                           return (
@@ -842,8 +841,11 @@ function MemMapDialog(props: {
                               </Show>
                               <Show when={sel() && collapsed()}>
                                 <text fg={t().border} paddingLeft={3}>
-                                  blob is {sec.fidelity} -- set blob to Full or
-                                  Summary first
+                                  topic is{" "}
+                                  {sec.fidelity === "drop"
+                                    ? "hidden"
+                                    : sec.fidelity}{" "}
+                                  -- set to Full or Summary first
                                 </text>
                               </Show>
                             </box>
@@ -881,25 +883,19 @@ function HistoryDialog(props: {
   close: () => void;
 }) {
   const [bi, setBi] = createSignal(0);
-  const [zoom, setZoom] = createSignal<"placeholder" | "compressed" | "full">(
-    "placeholder",
-  );
+  const [zoom, setZoom] = createSignal<"summary" | "full">("summary");
   const [content, setContent] = createSignal("");
   const [map, setMap] = createSignal<ContextMapFile>();
 
   const blobs = createMemo(() => props.history.overview.blobs);
 
-  const load = async (z: "placeholder" | "compressed" | "full") => {
+  const load = async (z: "summary" | "full") => {
     const b = blobs()[Math.min(bi(), Math.max(0, blobs().length - 1))];
     if (!b) return;
     setZoom(z);
     const m = await ensureHistorical(props.api, props.history.sessionID);
     setMap(m);
-    if (z === "placeholder") {
-      setContent(buildPlaceholderText(m, m.blobs[b.id]!));
-      return;
-    }
-    if (z === "compressed") {
+    if (z === "summary") {
       setContent(
         buildSessionZoomText({ map: m, blobID: b.id, fidelity: "compressed" }),
       );
@@ -955,15 +951,10 @@ function HistoryDialog(props: {
     }
     if (evt.name === "1") {
       stop();
-      void load("placeholder");
+      void load("summary");
       return;
     }
     if (evt.name === "2") {
-      stop();
-      void load("compressed");
-      return;
-    }
-    if (evt.name === "3") {
       stop();
       void load("full");
       return;
@@ -1037,9 +1028,7 @@ function HistoryDialog(props: {
           </scrollbox>
         </box>
         <box flexDirection="column" width="60%">
-          <text fg={t().textMuted}>
-            Zoom: {zoom()} (1 placeholder 2 compressed 3 full)
-          </text>
+          <text fg={t().textMuted}>Zoom: {zoom()} (1 summary 2 full)</text>
           <scrollbox
             maxHeight={12}
             verticalScrollbarOptions={{
@@ -1061,7 +1050,7 @@ function HistoryDialog(props: {
           </scrollbox>
         </box>
       </box>
-      <text fg={t().textMuted}>j/k navigate 1-3 zoom level q close</text>
+      <text fg={t().textMuted}>j/k navigate 1 summary 2 full q close</text>
     </box>
   );
 }
@@ -1112,7 +1101,7 @@ async function runBlame(
 
 const tui: TuiPlugin = async (api) => {
   const keys: TuiKeybindSet = api.keybind.create({
-    plugin_mem_map_open: "<leader>'",
+    plugin_context_open: "<leader>'",
   });
 
   const openMap = (sessionID?: string) => {
@@ -1175,8 +1164,8 @@ const tui: TuiPlugin = async (api) => {
       title: "Open context map",
       value: "context-map.open",
       category: "Plugin",
-      keybind: keys.get("plugin_mem_map_open"),
-      slash: { name: "mem-map" },
+      keybind: keys.get("plugin_context_open"),
+      slash: { name: "context" },
       onSelect: () => openMap(),
     },
     {

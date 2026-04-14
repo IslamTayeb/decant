@@ -236,11 +236,12 @@ const server: Plugin = async (ctx) => {
 
   return {
     tool: {
-      context_map: tool({
-        description: "Inspect the current context map and user controls",
+      view_context: tool({
+        description:
+          "View the current context topics, fidelity settings, and token usage",
         args: {},
         async execute(_args, toolCtx) {
-          toolCtx.metadata({ title: "Context map" });
+          toolCtx.metadata({ title: "View context" });
           return JSON.stringify(
             await currentMapToolView(toolCtx.sessionID),
             null,
@@ -248,23 +249,30 @@ const server: Plugin = async (ctx) => {
           );
         },
       }),
-      compress_blob: tool({
-        description: "Set a blob fidelity level while respecting user control",
+      set_fidelity: tool({
+        description:
+          "Set how much detail to keep for a topic (full, summary, placeholder, hide)",
         args: {
-          blob_id: tool.schema.string().describe("Blob ID to update"),
+          topic_id: tool.schema
+            .string()
+            .describe("Topic ID (snake_case label)"),
           fidelity: tool.schema
-            .enum(["full", "summary", "compressed", "placeholder", "drop"])
-            .describe("Target fidelity level"),
+            .enum(["full", "summary", "placeholder", "drop"])
+            .describe(
+              "Detail level: full (keep everything), summary (one-line per message), placeholder (short stub), hide (remove from context)",
+            ),
           force_user_override: tool.schema
             .boolean()
             .optional()
-            .describe("Override an explicit user-set fidelity choice"),
+            .describe("Override a user-set fidelity (use only if user asks)"),
         },
         async execute(args, toolCtx) {
-          toolCtx.metadata({ title: `Set blob fidelity: ${args.blob_id}` });
+          toolCtx.metadata({
+            title: `Set fidelity: ${args.topic_id} → ${args.fidelity === "drop" ? "hide" : args.fidelity}`,
+          });
           const { result, map } = await applyMapFidelity({
             sessionID: toolCtx.sessionID,
-            blobID: args.blob_id,
+            blobID: args.topic_id,
             fidelity: args.fidelity,
             source: "agent",
             force: args.force_user_override,
@@ -274,36 +282,7 @@ const server: Plugin = async (ctx) => {
               ok: result.ok,
               message: result.message,
               user_controls_are_authoritative: true,
-              blob: map.blobs[args.blob_id],
-            },
-            null,
-            2,
-          );
-        },
-      }),
-      drop_blob: tool({
-        description: "Drop a blob from the active context map",
-        args: {
-          blob_id: tool.schema.string().describe("Blob ID to drop"),
-          force_user_override: tool.schema
-            .boolean()
-            .optional()
-            .describe("Override an explicit user-set fidelity choice"),
-        },
-        async execute(args, toolCtx) {
-          toolCtx.metadata({ title: `Drop blob: ${args.blob_id}` });
-          const { result, map } = await applyMapFidelity({
-            sessionID: toolCtx.sessionID,
-            blobID: args.blob_id,
-            fidelity: "drop",
-            source: "agent",
-            force: args.force_user_override,
-          });
-          return JSON.stringify(
-            {
-              ok: result.ok,
-              message: result.message,
-              blob: map.blobs[args.blob_id],
+              topic: map.blobs[args.topic_id],
             },
             null,
             2,
@@ -311,12 +290,11 @@ const server: Plugin = async (ctx) => {
         },
       }),
       session_lookup: tool({
-        description:
-          "Search historical sessions that already have context maps",
+        description: "Search past sessions by keyword",
         args: {
           query: tool.schema
             .string()
-            .describe("Search text for matching sessions or blobs"),
+            .describe("Search text to match against session titles and topics"),
           limit: tool.schema
             .number()
             .int()
@@ -331,8 +309,10 @@ const server: Plugin = async (ctx) => {
           return JSON.stringify(
             {
               query: args.query,
-              guidance:
-                "Spawn a sub-agent and use session_zoom in that sub-agent for detailed investigation.",
+              hint:
+                sessions.length > 0
+                  ? "Use session_detail in a sub-agent (Task tool) for deeper investigation."
+                  : "No matching sessions found.",
               sessions,
             },
             null,
@@ -340,32 +320,37 @@ const server: Plugin = async (ctx) => {
           );
         },
       }),
-      session_zoom: tool({
-        description:
-          "Zoom into a historical session blob at compressed or full fidelity",
+      session_detail: tool({
+        description: "Get detailed content from a past session topic",
         args: {
-          session_id: tool.schema.string().describe("Historical session ID"),
-          blob_id: tool.schema.string().describe("Blob ID to inspect"),
-          fidelity: tool.schema
-            .enum(["compressed", "full"])
-            .describe("Zoom level to retrieve"),
+          session_id: tool.schema.string().describe("Session ID to look up"),
+          topic_id: tool.schema
+            .string()
+            .describe("Topic ID within that session"),
+          detail: tool.schema
+            .enum(["summary", "full"])
+            .describe(
+              "Detail level: summary (compressed overview) or full (complete messages)",
+            ),
         },
         async execute(args, toolCtx) {
-          toolCtx.metadata({ title: `Session zoom: ${args.blob_id}` });
+          toolCtx.metadata({
+            title: `Session detail: ${args.topic_id}`,
+          });
           const { map } = await ensureHistoricalMap(args.session_id);
           const messages =
-            args.fidelity === "full"
+            args.detail === "full"
               ? await getMessages(args.session_id)
               : undefined;
           return JSON.stringify(
             {
               session_id: args.session_id,
-              blob_id: args.blob_id,
-              fidelity: args.fidelity,
+              topic_id: args.topic_id,
+              detail: args.detail,
               content: buildSessionZoomText({
                 map,
-                blobID: args.blob_id,
-                fidelity: args.fidelity,
+                blobID: args.topic_id,
+                fidelity: args.detail === "full" ? "full" : "compressed",
                 messages,
               }),
             },
@@ -375,20 +360,21 @@ const server: Plugin = async (ctx) => {
         },
       }),
       blame_lookup: tool({
-        description: "Map a blamed file line to a historical context map",
+        description:
+          "Find which session produced a specific line of code (via git blame)",
         args: {
           file: tool.schema
             .string()
-            .describe("Path to the file within the current worktree"),
+            .describe("File path relative to the project root"),
           line: tool.schema
             .number()
             .int()
             .min(1)
-            .describe("1-indexed line number to blame"),
+            .describe("Line number (1-indexed)"),
         },
         async execute(args, toolCtx) {
           toolCtx.metadata({
-            title: `Blame lookup: ${args.file}:${args.line}`,
+            title: `Blame: ${args.file}:${args.line}`,
           });
           return JSON.stringify(
             await blameLookup(args.file, args.line),

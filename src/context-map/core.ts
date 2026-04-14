@@ -956,15 +956,18 @@ export function buildCurrentContextOverview(map: ContextMapFile, limit = 12) {
     .sort((a, b) => b.lastActiveAt - a.lastActiveAt)
     .slice(0, limit);
 
-  if (ordered.length === 0) return "No context blobs have been annotated yet.";
+  if (ordered.length === 0) return "No topics have been identified yet.";
 
   return ordered
     .map((blob) => {
+      const fidelityLabel = blob.fidelity === "drop" ? "hidden" : blob.fidelity;
       const source =
         blob.fidelitySource === "user"
-          ? "user-controlled"
-          : `${blob.fidelitySource}-controlled`;
-      return `- ${blob.label} [${blob.fidelity}, ${source}, ~${blob.tokenEstimate.toLocaleString()} tok, ${blob.messageIDs.length} messages]: ${blob.placeholder}`;
+          ? "user-set"
+          : blob.fidelitySource === "default"
+            ? "auto"
+            : `${blob.fidelitySource}-set`;
+      return `- ${blob.label} [${fidelityLabel}, ${source}, ~${blob.tokenEstimate.toLocaleString()} tok, ${blob.messageIDs.length} messages]: ${blob.placeholder}`;
     })
     .join("\n");
 }
@@ -987,7 +990,7 @@ function buildPendingRetroactivePrompt(map: ContextMapFile, limit = 6) {
         item.suggestedBlobLabel ?? item.suggestedBlobID ?? "unknown";
       const tools =
         item.toolNames.length > 0 ? ` tools=${item.toolNames.join(",")}` : "";
-      return `- message_id=${item.messageID} guessed_blob=${guess}${tools} summary=${item.summary}`;
+      return `- message_id=${item.messageID} suggested_topic=${guess}${tools} summary=${item.summary}`;
     }),
   ];
 }
@@ -1001,11 +1004,10 @@ export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
 
   const lines = [
     "Context map plugin is active.",
-    "User controls are authoritative: do not override user-selected blob fidelity or hidden-message choices unless the user explicitly asks or you use a justified force override.",
-    "Available tools: context_map (inspect map), compress_blob / drop_blob (change blob fidelity), session_lookup / blame_lookup + session_zoom (historical investigations via sub-agent).",
+    "User controls are authoritative: do not override user-set fidelity or hidden-message choices unless the user explicitly asks.",
+    "Available tools: view_context (see topics and fidelity), set_fidelity (change detail level for a topic), session_lookup + session_detail (investigate past sessions via sub-agent), blame_lookup (find which session produced code).",
   ];
 
-  // Proactive context management guidance when context is growing
   if (totalTokens > 50_000 && blobCount >= 3) {
     lines.push(
       "",
@@ -1013,18 +1015,18 @@ export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
         Math.round(totalTokens / 1000) +
         "k tokens across " +
         blobCount +
-        " topics. Consider using compress_blob to reduce older or less-relevant topics to 'summary' or 'placeholder' to keep context focused. Prioritize compressing topics you haven't actively discussed in recent turns.",
+        " topics. Use set_fidelity to reduce older topics to 'summary' or 'placeholder'. Prioritize topics not discussed in recent turns.",
     );
   } else if (totalTokens > 20_000 && blobCount >= 2) {
     lines.push(
       "",
       "Context is at ~" +
         Math.round(totalTokens / 1000) +
-        "k tokens. No action needed yet, but keep context_map and compress_blob in mind as the conversation grows.",
+        "k tokens. No action needed yet, but keep set_fidelity in mind as the conversation grows.",
     );
   }
 
-  lines.push("", "Current map overview:", buildCurrentContextOverview(map));
+  lines.push("", "Current context overview:", buildCurrentContextOverview(map));
 
   return lines.join("\n");
 }
@@ -1075,7 +1077,7 @@ export function buildCompactionPrompt(map: ContextMapFile) {
               case "placeholder":
                 return `${prefix}: already stubbed in context. Include only a one-line reminder if critical.`;
               case "drop":
-                return `${prefix}: already removed from context. Omit entirely unless needed to avoid contradiction.`;
+                return `${prefix}: already hidden from context. Omit entirely unless needed to avoid contradiction.`;
             }
           })
           .join("\n");
@@ -1106,28 +1108,25 @@ export function buildContextMapToolView(map: ContextMapFile) {
   return {
     session_id: map.sessionID,
     total_token_estimate: map.totalTokenEstimate,
-    settings: map.settings,
     controls: {
       user_controls_are_authoritative: true,
-      blob_fidelity_options: [
+      fidelity_levels: [
         "full",
         "summary",
-        "compressed",
         "placeholder",
-        "drop",
+        "hide (internally: drop)",
       ],
-      message_fidelity_options: ["inherit", "full", "summary"],
     },
-    blobs: blobs.map((blob) => ({
+    topics: blobs.map((blob) => ({
       id: blob.id,
       label: blob.label,
       summary: blob.summary,
       placeholder: blob.placeholder,
       key_facts: blob.keyFacts,
-      fidelity: blob.fidelity,
-      fidelity_source: blob.fidelitySource,
+      fidelity: blob.fidelity === "drop" ? "hidden" : blob.fidelity,
+      fidelity_source:
+        blob.fidelitySource === "default" ? "auto" : blob.fidelitySource,
       token_estimate: blob.tokenEstimate,
-      message_ids: blob.messageIDs,
       message_count: blob.messageIDs.length,
       last_active_at: blob.lastActiveAt,
     })),
@@ -1136,15 +1135,11 @@ export function buildContextMapToolView(map: ContextMapFile) {
       .map((message) => ({
         id: message.id,
         role: message.role,
-        blob_id: message.blobID,
+        topic_id: message.blobID,
         summary: message.summary,
-        key_facts: message.keyFacts,
         hidden: message.hidden,
-        hidden_source: message.hiddenSource,
         fidelity_override: message.fidelityOverride,
-        fidelity_source: message.fidelitySource,
         token_estimate: message.tokenEstimate,
-        source: message.source,
       })),
     pending_retroactive: Object.values(map.pendingRetroactive)
       .sort((a, b) => a.createdAt - b.createdAt)
@@ -1152,8 +1147,8 @@ export function buildContextMapToolView(map: ContextMapFile) {
         message_id: item.messageID,
         summary: item.summary,
         tool_names: item.toolNames,
-        suggested_blob_id: item.suggestedBlobID,
-        suggested_blob_label: item.suggestedBlobLabel,
+        suggested_topic_id: item.suggestedBlobID,
+        suggested_topic_label: item.suggestedBlobLabel,
       })),
   };
 }
