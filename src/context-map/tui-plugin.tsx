@@ -588,7 +588,7 @@ function MemMapDialog(props: {
           onMouseUp={() => setTab("blobs")}
         >
           <text fg={tab() === "blobs" ? t().selectedListItemText : t().text}>
-            Topics
+            Blobs
           </text>
         </box>
         <box
@@ -613,7 +613,7 @@ function MemMapDialog(props: {
           when={blobs().length > 0}
           fallback={
             <text fg={t().textMuted}>
-              No topics yet. Chat for a few turns first.
+              No blobs yet. Chat for a few turns first.
             </text>
           }
         >
@@ -841,7 +841,7 @@ function MemMapDialog(props: {
                               </Show>
                               <Show when={sel() && collapsed()}>
                                 <text fg={t().border} paddingLeft={3}>
-                                  topic is{" "}
+                                  blob is{" "}
                                   {sec.fidelity === "drop"
                                     ? "hidden"
                                     : sec.fidelity}{" "}

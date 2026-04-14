@@ -238,7 +238,7 @@ const server: Plugin = async (ctx) => {
     tool: {
       view_context: tool({
         description:
-          "View the current context topics, fidelity settings, and token usage",
+          "View the current context blobs, fidelity settings, and token usage",
         args: {},
         async execute(_args, toolCtx) {
           toolCtx.metadata({ title: "View context" });
@@ -251,11 +251,9 @@ const server: Plugin = async (ctx) => {
       }),
       set_fidelity: tool({
         description:
-          "Set how much detail to keep for a topic (full, summary, placeholder, hide)",
+          "Set how much detail to keep for a blob (full, summary, placeholder, hide)",
         args: {
-          topic_id: tool.schema
-            .string()
-            .describe("Topic ID (snake_case label)"),
+          blob_id: tool.schema.string().describe("Blob ID (snake_case label)"),
           fidelity: tool.schema
             .enum(["full", "summary", "placeholder", "drop"])
             .describe(
@@ -268,11 +266,11 @@ const server: Plugin = async (ctx) => {
         },
         async execute(args, toolCtx) {
           toolCtx.metadata({
-            title: `Set fidelity: ${args.topic_id} → ${args.fidelity === "drop" ? "hide" : args.fidelity}`,
+            title: `Set fidelity: ${args.blob_id} → ${args.fidelity === "drop" ? "hide" : args.fidelity}`,
           });
           const { result, map } = await applyMapFidelity({
             sessionID: toolCtx.sessionID,
-            blobID: args.topic_id,
+            blobID: args.blob_id,
             fidelity: args.fidelity,
             source: "agent",
             force: args.force_user_override,
@@ -282,7 +280,7 @@ const server: Plugin = async (ctx) => {
               ok: result.ok,
               message: result.message,
               user_controls_are_authoritative: true,
-              topic: map.blobs[args.topic_id],
+              blob: map.blobs[args.blob_id],
             },
             null,
             2,
@@ -294,7 +292,7 @@ const server: Plugin = async (ctx) => {
         args: {
           query: tool.schema
             .string()
-            .describe("Search text to match against session titles and topics"),
+            .describe("Search text to match against session titles and blobs"),
           limit: tool.schema
             .number()
             .int()
@@ -321,12 +319,10 @@ const server: Plugin = async (ctx) => {
         },
       }),
       session_detail: tool({
-        description: "Get detailed content from a past session topic",
+        description: "Get detailed content from a past session blob",
         args: {
           session_id: tool.schema.string().describe("Session ID to look up"),
-          topic_id: tool.schema
-            .string()
-            .describe("Topic ID within that session"),
+          blob_id: tool.schema.string().describe("Blob ID within that session"),
           detail: tool.schema
             .enum(["summary", "full"])
             .describe(
@@ -335,7 +331,7 @@ const server: Plugin = async (ctx) => {
         },
         async execute(args, toolCtx) {
           toolCtx.metadata({
-            title: `Session detail: ${args.topic_id}`,
+            title: `Session detail: ${args.blob_id}`,
           });
           const { map } = await ensureHistoricalMap(args.session_id);
           const messages =
@@ -345,11 +341,11 @@ const server: Plugin = async (ctx) => {
           return JSON.stringify(
             {
               session_id: args.session_id,
-              topic_id: args.topic_id,
+              blob_id: args.blob_id,
               detail: args.detail,
               content: buildSessionZoomText({
                 map,
-                blobID: args.topic_id,
+                blobID: args.blob_id,
                 fidelity: args.detail === "full" ? "full" : "compressed",
                 messages,
               }),

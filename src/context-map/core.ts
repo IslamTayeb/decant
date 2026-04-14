@@ -956,7 +956,7 @@ export function buildCurrentContextOverview(map: ContextMapFile, limit = 12) {
     .sort((a, b) => b.lastActiveAt - a.lastActiveAt)
     .slice(0, limit);
 
-  if (ordered.length === 0) return "No topics have been identified yet.";
+  if (ordered.length === 0) return "No blobs have been identified yet.";
 
   return ordered
     .map((blob) => {
@@ -990,7 +990,7 @@ function buildPendingRetroactivePrompt(map: ContextMapFile, limit = 6) {
         item.suggestedBlobLabel ?? item.suggestedBlobID ?? "unknown";
       const tools =
         item.toolNames.length > 0 ? ` tools=${item.toolNames.join(",")}` : "";
-      return `- message_id=${item.messageID} suggested_topic=${guess}${tools} summary=${item.summary}`;
+      return `- message_id=${item.messageID} suggested_blob=${guess}${tools} summary=${item.summary}`;
     }),
   ];
 }
@@ -1005,7 +1005,7 @@ export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
   const lines = [
     "Context map plugin is active.",
     "User controls are authoritative: do not override user-set fidelity or hidden-message choices unless the user explicitly asks.",
-    "Available tools: view_context (see topics and fidelity), set_fidelity (change detail level for a topic), session_lookup + session_detail (investigate past sessions via sub-agent), blame_lookup (find which session produced code).",
+    "Available tools: view_context (see blobs and fidelity), set_fidelity (change detail level for a blob), session_lookup + session_detail (investigate past sessions via sub-agent), blame_lookup (find which session produced code).",
   ];
 
   if (totalTokens > 50_000 && blobCount >= 3) {
@@ -1015,7 +1015,7 @@ export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
         Math.round(totalTokens / 1000) +
         "k tokens across " +
         blobCount +
-        " topics. Use set_fidelity to reduce older topics to 'summary' or 'placeholder'. Prioritize topics not discussed in recent turns.",
+        " blobs. Use set_fidelity to reduce older blobs to 'summary' or 'placeholder'. Prioritize blobs not discussed in recent turns.",
     );
   } else if (totalTokens > 20_000 && blobCount >= 2) {
     lines.push(
@@ -1117,7 +1117,7 @@ export function buildContextMapToolView(map: ContextMapFile) {
         "hide (internally: drop)",
       ],
     },
-    topics: blobs.map((blob) => ({
+    blobs: blobs.map((blob) => ({
       id: blob.id,
       label: blob.label,
       summary: blob.summary,
@@ -1135,7 +1135,7 @@ export function buildContextMapToolView(map: ContextMapFile) {
       .map((message) => ({
         id: message.id,
         role: message.role,
-        topic_id: message.blobID,
+        blob_id: message.blobID,
         summary: message.summary,
         hidden: message.hidden,
         fidelity_override: message.fidelityOverride,
@@ -1147,8 +1147,8 @@ export function buildContextMapToolView(map: ContextMapFile) {
         message_id: item.messageID,
         summary: item.summary,
         tool_names: item.toolNames,
-        suggested_topic_id: item.suggestedBlobID,
-        suggested_topic_label: item.suggestedBlobLabel,
+        suggested_blob_id: item.suggestedBlobID,
+        suggested_blob_label: item.suggestedBlobLabel,
       })),
   };
 }
