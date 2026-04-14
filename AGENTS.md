@@ -138,6 +138,7 @@ Context-map validation runs (annotation reliability, map navigation, sub-agent i
 ## Git Workflow
 
 - **Commit and push regularly** -- after completing each logical unit of work (feature, bugfix, refactor), not in large batches.
+- **Commit when confident** -- only commit/push when the project is in good shape (typecheck passes, tests pass, no known broken state). Each commit should be a valid checkpoint someone could pick up from.
 - **Never use direct Anthropic API** for automated testing or fixture generation. Always use **Amazon Bedrock** as the provider.
 - Commit messages: concise summary line, then body with what changed and why.
 - Do not amend or force-push unless explicitly asked.
