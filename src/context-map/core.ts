@@ -1055,33 +1055,38 @@ export function buildAnnotationSystemPrompt(map: ContextMapFile) {
 }
 
 export function buildCompactionPrompt(map: ContextMapFile) {
-  const lines = map.blobOrder
+  const blobs = map.blobOrder
     .map((blobID) => map.blobs[blobID])
     .filter(Boolean);
   const policy =
-    lines.length === 0
+    blobs.length === 0
       ? "- No blob map exists yet; summarize the conversation normally."
-      : lines
+      : blobs
           .map((blob) => {
-            const prefix = `- ${blob.label} [${blob.fidelity}, ${blob.fidelitySource}]`;
+            const src = blob.fidelitySource === "user" ? " (USER-SET)" : "";
+            const prefix = `- ${blob.label} [${blob.fidelity}${src}]`;
             switch (blob.fidelity) {
               case "full":
-                return `${prefix}: preserve detailed decisions and file-level specifics.`;
+                return `${prefix}: preserve detailed decisions, file-level specifics, and key code snippets.`;
               case "summary":
-                return `${prefix}: compress to a chronological list of message-level decisions.`;
+                return `${prefix}: compress to a chronological list of decisions and key facts. Drop code details.`;
               case "compressed":
-                return `${prefix}: compress to one paragraph while preserving key facts.`;
+                return `${prefix}: compress to one paragraph preserving only the most critical facts.`;
               case "placeholder":
-                return `${prefix}: reduce to a short stub and only the most critical facts.`;
+                return `${prefix}: already stubbed in context. Include only a one-line reminder if critical.`;
               case "drop":
-                return `${prefix}: omit unless absolutely necessary to avoid contradiction.`;
+                return `${prefix}: already removed from context. Omit entirely unless needed to avoid contradiction.`;
             }
           })
           .join("\n");
 
   return [
     "Provide a detailed prompt for continuing this conversation.",
-    "Respect the context-map policy below. User-controlled fidelity decisions have the highest priority.",
+    "The messages you see have ALREADY been transformed by the context map:",
+    "- Dropped blobs are removed. Placeholder blobs are stubbed. Summary blobs show summaries.",
+    "- Your job is to produce a continuation prompt that preserves the RIGHT level of detail per topic.",
+    "- User-set fidelity choices have the HIGHEST priority. Do not add detail to topics the user chose to compress.",
+    "",
     "Use this template:",
     "## Goal",
     "## Instructions",
