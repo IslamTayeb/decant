@@ -28,6 +28,7 @@ import {
   sessionMapPath,
   writeContextMap,
   writeDebugLog,
+  appendTrace,
 } from "./storage";
 import { buildFallbackMapFromMessages } from "./core";
 import type {
@@ -433,24 +434,59 @@ const server: Plugin = async (ctx) => {
         );
         return;
       }
-      output.system.unshift(buildPluginGuidanceSystemPrompt(map));
-      output.system.unshift(buildAnnotationSystemPrompt(map));
+      const guidance = buildPluginGuidanceSystemPrompt(map);
+      const annotation = buildAnnotationSystemPrompt(map);
+      output.system.unshift(guidance);
+      output.system.unshift(annotation);
+
+      await appendTrace(input.sessionID, "system.transform", {
+        blob_count: map.blobOrder.length,
+        total_tokens: map.totalTokenEstimate,
+        guidance_length: guidance.length,
+        annotation_prompt_length: annotation.length,
+        guidance_preview: guidance.slice(0, 300),
+      });
     },
     "experimental.chat.messages.transform": async (_input, output) => {
       const sessionID = resolveSessionID(output.messages as MessageLike[]);
       if (!sessionID) return;
       if (await isChildSession(sessionID)) return;
+      const beforeCount = output.messages.length;
       const currentMessages = sortMessagesChronologically(
         output.messages as MessageLike[],
       );
       const map =
         (await persistCoverage(sessionID, currentMessages)) ??
         (await getMap(sessionID));
+
+      // Snapshot blob fidelities before transform
+      const blobFidelities = Object.fromEntries(
+        map.blobOrder.map((id) => [id, map.blobs[id]?.fidelity]),
+      );
+
       output.messages = transformMessagesForContext(
         output.messages as MessageLike[],
         map,
       ) as never;
       await writeContextMap(map);
+
+      const afterCount = output.messages.length;
+      await appendTrace(sessionID, "messages.transform", {
+        before_count: beforeCount,
+        after_count: afterCount,
+        messages_removed: beforeCount - afterCount,
+        blob_fidelities: blobFidelities,
+        surviving_messages: (output.messages as MessageLike[]).map((m) => ({
+          id: m.info.id,
+          role: m.info.role,
+          text_length: m.parts
+            .filter((p) => p.type === "text")
+            .reduce((s, p) => s + (p.text?.length ?? 0), 0),
+          is_stub:
+            m.parts.some((p) => p.type === "text" && p.text?.startsWith("[")) ??
+            false,
+        })),
+      });
     },
     "experimental.text.complete": async (input, output) => {
       if (await isChildSession(input.sessionID)) return;
@@ -477,13 +513,41 @@ const server: Plugin = async (ctx) => {
         );
       }
       await writeContextMap(map);
-      // Write debug log for inspection
       const preview = computeContextPreview(map);
       await writeDebugLog(map, preview).catch(() => undefined);
+
+      await appendTrace(input.sessionID, "text.complete", {
+        had_annotation: !!parsed.annotation,
+        annotation_blob: parsed.annotation?.current?.blob,
+        annotation_is_new_blob: parsed.annotation?.current?.is_new_blob,
+        annotation_summary: parsed.annotation?.current?.message_summary?.slice(
+          0,
+          100,
+        ),
+        retroactive_count: parsed.annotation?.retroactive?.length ?? 0,
+        fallback_used: !parsed.annotation,
+        blob_count: map.blobOrder.length,
+        total_tokens: map.totalTokenEstimate,
+        effective_tokens: preview.totalEffective,
+      });
     },
     "experimental.session.compacting": async (input, output) => {
       const map = await getMap(input.sessionID);
-      output.prompt = buildCompactionPrompt(map);
+      const prompt = buildCompactionPrompt(map);
+      output.prompt = prompt;
+
+      await appendTrace(input.sessionID, "session.compacting", {
+        blob_count: map.blobOrder.length,
+        blob_policies: map.blobOrder.map((id) => ({
+          id,
+          label: map.blobs[id]?.label,
+          fidelity: map.blobs[id]?.fidelity,
+          source: map.blobs[id]?.fidelitySource,
+          tokens: map.blobs[id]?.tokenEstimate,
+        })),
+        prompt_length: prompt.length,
+        prompt_preview: prompt.slice(0, 500),
+      });
     },
   };
 };

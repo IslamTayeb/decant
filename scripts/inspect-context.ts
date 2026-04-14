@@ -171,6 +171,54 @@ async function main() {
   } catch {
     console.log("\n  No debug log yet (send a message to generate one)");
   }
+
+  // Check for trace log
+  const tracePath = path.join(mapsDir, `${sessionID}.trace.jsonl`);
+  try {
+    const lines = (await fs.readFile(tracePath, "utf8"))
+      .trim()
+      .split("\n")
+      .filter(Boolean);
+    const events = lines.map((l) => JSON.parse(l));
+    console.log(`\n── Trace Log (${events.length} events) ──`);
+    for (const e of events) {
+      const ts = e.ts?.slice(11, 19) ?? "??";
+      if (e.event === "system.transform") {
+        console.log(
+          `  [${ts}] system.transform  blobs=${e.blob_count} total_tok=${e.total_tokens}`,
+        );
+      } else if (e.event === "messages.transform") {
+        console.log(
+          `  [${ts}] messages.transform  before=${e.before_count} after=${e.after_count} removed=${e.messages_removed}`,
+        );
+        if (e.blob_fidelities) {
+          const fids = Object.entries(e.blob_fidelities)
+            .map(([k, v]) => `${k}=${v}`)
+            .join(" ");
+          console.log(`          fidelities: ${fids}`);
+        }
+      } else if (e.event === "text.complete") {
+        console.log(
+          `  [${ts}] text.complete  annotation=${e.had_annotation} blob=${e.annotation_blob ?? "fallback"} blobs=${e.blob_count} eff=${e.effective_tokens}`,
+        );
+      } else if (e.event === "session.compacting") {
+        console.log(
+          `  [${ts}] session.compacting  blobs=${e.blob_count} prompt_len=${e.prompt_length}`,
+        );
+        if (e.blob_policies) {
+          for (const p of e.blob_policies as any[]) {
+            console.log(
+              `          ${(p.label ?? p.id).padEnd(25)} ${p.fidelity?.padEnd(12)} src=${p.source} ~${p.tokens} tok`,
+            );
+          }
+        }
+      } else {
+        console.log(`  [${ts}] ${e.event}`);
+      }
+    }
+  } catch {
+    console.log("\n  No trace log yet (send a message to generate one)");
+  }
 }
 
 void main().catch((e) => {

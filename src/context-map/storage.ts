@@ -201,3 +201,28 @@ export async function writeDebugLog(
 
   await writeJsonAtomic(logPath, log);
 }
+
+// ── Trace log (append-only JSONL per session) ─────────────────────────
+
+export function traceLogPath(sessionID: string) {
+  return path.join(contextMapRoot(), `${sessionID}.trace.jsonl`);
+}
+
+export async function appendTrace(
+  sessionID: string,
+  event: string,
+  data: Record<string, unknown>,
+) {
+  try {
+    await ensureContextMapRoot();
+    const line = JSON.stringify({
+      ts: new Date().toISOString(),
+      event,
+      sessionID,
+      ...data,
+    });
+    await fs.appendFile(traceLogPath(sessionID), `${line}\n`);
+  } catch {
+    // trace logging is best-effort, never block the main flow
+  }
+}
