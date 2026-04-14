@@ -135,3 +135,10 @@ Record each validation run as an experiment note in `notes/experiments/`.
 
 Context-map validation runs (annotation reliability, map navigation, sub-agent investigation) must be documented as experiment files before implementation proceeds. Follow the standard experiment template.
 
+## Git Workflow
+
+- **Commit and push regularly** -- after completing each logical unit of work (feature, bugfix, refactor), not in large batches.
+- **Never use direct Anthropic API** for automated testing or fixture generation. Always use **Amazon Bedrock** as the provider.
+- Commit messages: concise summary line, then body with what changed and why.
+- Do not amend or force-push unless explicitly asked.
+
