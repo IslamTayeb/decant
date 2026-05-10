@@ -16,11 +16,32 @@ type ModelRef = {
   modelID: string;
 };
 
+type SessionMessage = {
+  info?: {
+    id?: string;
+    role?: string;
+    finish?: string;
+    providerID?: string;
+    modelID?: string;
+  };
+  role?: string;
+  parts?: Array<{
+    type: string;
+    text?: string;
+    tool?: string;
+    state?: { status?: string; input?: unknown; output?: unknown };
+  }>;
+};
+
+const validationModelSlug = process.env.MEM_MOULD_E2E_MODEL ?? "openai/gpt-5.5";
+
 async function main() {
   const repoRoot = path.resolve(process.cwd());
-  const tempRoot = await fs.mkdtemp(
-    path.join(os.tmpdir(), "mem-mould-context-map-"),
-  );
+  const providedTempRoot = process.env.MEM_MOULD_E2E_TEMP_ROOT;
+  const tempRoot =
+    providedTempRoot ??
+    (await fs.mkdtemp(path.join(os.tmpdir(), "mem-mould-context-map-")));
+  if (providedTempRoot) await fs.mkdir(tempRoot, { recursive: true });
   const home = path.join(tempRoot, "home");
   const data = path.join(tempRoot, "data");
   const config = path.join(tempRoot, "config");
@@ -47,16 +68,18 @@ async function main() {
     MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",
+      model: validationModelSlug,
       plugin: [pluginSpec],
     }),
   };
 
   const server = await startServer(env, repoRoot);
 
+  let passed = false;
   try {
     const client = createOpencodeClient({ baseUrl: server.url });
-    const model = await pickModel(client, repoRoot);
-    console.log(`Using ${model.providerID}/${model.modelID}`);
+    const model = await pickModel(client, repoRoot, validationModelSlug);
+    console.log(`Using selected model ${model.providerID}/${model.modelID}`);
 
     const toolList = ((
       (await client.tool.list({
@@ -67,11 +90,11 @@ async function main() {
     )?.data ?? []) as Array<{ id: string }>;
     const toolIDs = new Set(toolList.map((tool) => tool.id));
     for (const required of [
-      "context_map",
-      "compress_blob",
-      "drop_blob",
+      "view_context",
+      "set_fidelity",
       "session_lookup",
-      "session_zoom",
+      "session_detail",
+      "message_detail",
       "blame_lookup",
     ]) {
       assert.ok(toolIDs.has(required), `missing tool ${required}`);
@@ -86,24 +109,24 @@ async function main() {
       client,
       repoRoot,
       firstSession,
-      model,
       "Investigate an auth rate limiter race condition on line 42 and explain why an async queue may be safer than a mutex.",
     );
     await prompt(
       client,
       repoRoot,
       firstSession,
-      model,
       "Now switch topics and outline onboarding docs for API contributors.",
     );
     const returnReply = await prompt(
       client,
       repoRoot,
       firstSession,
-      model,
       "Return to the auth topic and mention the failed mutex attempt.",
     );
     const returnText = textFromParts(returnReply.parts);
+    if (returnText.length === 0) {
+      await dumpSessionDiagnostics(client, repoRoot, firstSession, home);
+    }
     assert.ok(returnText.length > 0, "assistant returned no visible text");
     assert.ok(
       !returnText.includes("<annotation>"),
@@ -143,16 +166,15 @@ async function main() {
       client,
       repoRoot,
       firstSession,
-      model,
-      "Call context_map exactly once, then answer with only the session_id value from the tool output.",
-      "You must call the context_map tool exactly once before answering. If you skip the tool call, your answer is wrong. Avoid unrelated tools.",
-      { context_map: true },
+      "Call view_context exactly once, then answer with only the session_id value from the tool output.",
+      "You must call the view_context tool exactly once before answering. If you skip the tool call, your answer is wrong. Avoid unrelated tools.",
+      { view_context: true },
     );
     assert.ok(
       (await sessionToolNames(client, repoRoot, firstSession)).includes(
-        "context_map",
+        "view_context",
       ),
-      "model did not call context_map",
+      "model did not call view_context",
     );
     const postContextToolMap = JSON.parse(
       await fs.readFile(mapPath, "utf8"),
@@ -167,16 +189,15 @@ async function main() {
       client,
       repoRoot,
       firstSession,
-      model,
-      `Call compress_blob exactly once to set blob ${docsBlobID} to placeholder fidelity, then answer with only ok.`,
-      "You must call the compress_blob tool exactly once before answering. If you skip the tool call, your answer is wrong. Avoid unrelated tools.",
-      { compress_blob: true },
+      `Call set_fidelity exactly once with blob_id ${docsBlobID} and fidelity placeholder, then answer with only ok.`,
+      "You must call the set_fidelity tool exactly once before answering. If you skip the tool call, your answer is wrong. Avoid unrelated tools.",
+      { set_fidelity: true },
     );
     assert.ok(
       (await sessionToolNames(client, repoRoot, firstSession)).includes(
-        "compress_blob",
+        "set_fidelity",
       ),
-      "model did not call compress_blob",
+      "model did not call set_fidelity",
     );
     const updatedMap = JSON.parse(
       await fs.readFile(mapPath, "utf8"),
@@ -184,7 +205,7 @@ async function main() {
     assert.equal(
       updatedMap.blobs[docsBlobID!]?.fidelity,
       "placeholder",
-      "compress_blob did not persist blob fidelity",
+      "set_fidelity did not persist blob fidelity",
     );
 
     const secondSession = await createSession(
@@ -196,10 +217,9 @@ async function main() {
       client,
       repoRoot,
       secondSession,
-      model,
-      `Call session_lookup exactly once to find the earlier auth investigation session for ${authBlobID}, then call session_zoom exactly once on the matching blob at compressed fidelity, then answer with one fact.`,
-      "You must call session_lookup exactly once and session_zoom exactly once before answering. If you skip either tool call, your answer is wrong. Avoid unrelated tools.",
-      { session_lookup: true, session_zoom: true },
+      `Call session_lookup exactly once to find the earlier auth investigation session for ${authBlobID}, then call session_detail exactly once on the matching blob with detail summary, then answer with one fact.`,
+      "You must call session_lookup exactly once and session_detail exactly once before answering. If you skip either tool call, your answer is wrong. Avoid unrelated tools.",
+      { session_lookup: true, session_detail: true },
     );
     const lookupTools = await sessionToolNames(client, repoRoot, secondSession);
     assert.ok(
@@ -207,8 +227,8 @@ async function main() {
       "model did not call session_lookup",
     );
     assert.ok(
-      lookupTools.includes("session_zoom"),
-      "model did not call session_zoom",
+      lookupTools.includes("session_detail"),
+      "model did not call session_detail",
     );
 
     const blameHash = await blameHashForLine(repoRoot, "README.md", 1);
@@ -246,22 +266,57 @@ async function main() {
       client,
       repoRoot,
       thirdSession,
-      model,
-      "Call blame_lookup exactly once on README.md line 1, then answer with only the mapped session id.",
-      "You must call the blame_lookup tool exactly once before answering. If you skip the tool call, your answer is wrong. Avoid unrelated tools.",
-      { blame_lookup: true },
+      "Call blame_lookup exactly once on README.md line 1. From the returned overview.blobs compressed summaries, choose the matching blob. Then call session_detail exactly once on that blob with detail messages. From those per-message summaries, choose one relevant message_id and call message_detail exactly once. Then answer with only the mapped session id.",
+      "You must call blame_lookup, then session_detail with detail='messages', then message_detail before answering. If you skip any step, your answer is wrong. Avoid unrelated tools.",
+      { blame_lookup: true, session_detail: true, message_detail: true },
+    );
+    const blameToolCalls = await sessionToolCalls(
+      client,
+      repoRoot,
+      thirdSession,
     );
     assert.ok(
-      (await sessionToolNames(client, repoRoot, thirdSession)).includes(
-        "blame_lookup",
-      ),
+      hasToolCall(blameToolCalls, "blame_lookup"),
       "model did not call blame_lookup",
     );
+    assert.ok(
+      hasToolCall(blameToolCalls, "session_detail"),
+      "model did not call session_detail after blame_lookup",
+    );
+    assert.ok(
+      hasToolCall(blameToolCalls, "message_detail"),
+      "model did not call message_detail after session_detail messages",
+    );
+    assert.ok(
+      blameToolCalls.some(
+        (call) =>
+          call.tool === "session_detail" &&
+          toolInputValue(call, "detail") === "messages",
+      ),
+      "model did not request session_detail detail='messages'",
+    );
+    assert.ok(
+      blameToolCalls.some(
+        (call) =>
+          call.tool === "message_detail" &&
+          typeof toolInputValue(call, "message_id") === "string",
+      ),
+      "model did not request a full historical message by message_id",
+    );
 
+    passed = true;
     console.log("Sandbox validation passed");
   } finally {
     await server.close();
-    await fs.rm(tempRoot, { recursive: true, force: true });
+    if (
+      passed &&
+      !providedTempRoot &&
+      process.env.MEM_MOULD_KEEP_E2E_TEMP !== "1"
+    ) {
+      await fs.rm(tempRoot, { recursive: true, force: true });
+    } else {
+      console.error(`Preserved E2E temp root: ${tempRoot}`);
+    }
   }
 }
 
@@ -321,29 +376,35 @@ async function startServer(env: NodeJS.ProcessEnv, cwd: string) {
 async function pickModel(
   client: ReturnType<typeof createOpencodeClient>,
   directory: string,
+  modelSlug: string,
 ): Promise<ModelRef> {
+  const requested = parseModelSlug(modelSlug);
   const providers = (((await client.provider.list({ directory })) as any)
     ?.data ?? {}) as {
     all?: Array<{ id: string; models: Record<string, unknown> }>;
+    connected?: string[];
   };
   const all = providers.all ?? [];
-  const preferred: ModelRef[] = [
-    { providerID: "anthropic", modelID: "claude-sonnet-4-6" },
-    {
-      providerID: "amazon-bedrock",
-      modelID: "global.anthropic.claude-sonnet-4-6",
-    },
-    { providerID: "openai", modelID: "gpt-5.4" },
-  ];
-  for (const candidate of preferred) {
-    const provider = all.find((item) => item.id === candidate.providerID);
-    if (provider && candidate.modelID in provider.models) return candidate;
-  }
-  const provider = all[0];
-  assert.ok(provider, "no providers available in sandbox");
-  const modelID = Object.keys(provider.models)[0];
-  assert.ok(modelID, `provider ${provider.id} has no models`);
-  return { providerID: provider.id, modelID };
+  const provider = all.find((item) => item.id === requested.providerID);
+  assert.ok(provider, `provider is not available: ${requested.providerID}`);
+  assert.ok(
+    (providers.connected ?? []).includes(requested.providerID),
+    `provider is not connected in the isolated sandbox: ${requested.providerID}`,
+  );
+  assert.ok(
+    requested.modelID in provider.models,
+    `model is not available: ${requested.providerID}/${requested.modelID}`,
+  );
+  return requested;
+}
+
+function parseModelSlug(modelSlug: string): ModelRef {
+  const index = modelSlug.indexOf("/");
+  assert.ok(index > 0, `model must be provider/model, got: ${modelSlug}`);
+  return {
+    providerID: modelSlug.slice(0, index),
+    modelID: modelSlug.slice(index + 1),
+  };
 }
 
 async function createSession(
@@ -361,29 +422,104 @@ async function prompt(
   client: ReturnType<typeof createOpencodeClient>,
   directory: string,
   sessionID: string,
-  model: ModelRef,
   text: string,
   system?: string,
   tools?: Record<string, boolean>,
 ) {
-  const reply = ((
-    (await client.session.prompt({
-      directory,
+  const before = await listSessionMessages(client, directory, sessionID);
+  const beforeIDs = new Set(before.map((message) => message.info?.id));
+  const raw = (await client.session.promptAsync({
+    directory,
+    sessionID,
+    system,
+    tools,
+    parts: [{ type: "text", text }],
+  })) as any;
+  const reply = raw?.data ?? raw ?? {};
+  if (reply.error) throw new Error(JSON.stringify(reply.error));
+  const assistant = await waitForAssistantMessage(
+    client,
+    directory,
+    sessionID,
+    beforeIDs,
+  );
+  return { parts: assistant?.parts ?? [] };
+}
+
+async function waitForAssistantMessage(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  sessionID: string,
+  beforeIDs: Set<string | undefined>,
+) {
+  const deadline = Date.now() + 300_000;
+  while (Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 1_000));
+    const messages = await listSessionMessages(client, directory, sessionID);
+    const assistant = [...messages]
+      .reverse()
+      .find(
+        (message) =>
+          (message.info?.role ?? message.role) === "assistant" &&
+          !beforeIDs.has(message.info?.id) &&
+          message.info?.finish &&
+          message.info.finish !== "tool-calls",
+      );
+    if (assistant) return assistant;
+  }
+  throw new Error(`timed out waiting for assistant message in ${sessionID}`);
+}
+
+async function listSessionMessages(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  sessionID: string,
+) {
+  return ((
+    (await client.session.messages({
       sessionID,
-      model,
-      system,
-      tools,
-      parts: [{ type: "text", text }],
+      directory,
+      limit: 5000,
     })) as any
-  )?.data ?? {}) as {
-    parts: Array<{
-      type: string;
-      text?: string;
-      tool?: string;
-      state?: { status?: string };
-    }>;
-  };
-  return reply;
+  )?.data ?? []) as SessionMessage[];
+}
+
+async function dumpSessionDiagnostics(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  sessionID: string,
+  home: string,
+) {
+  const messages = await listSessionMessages(client, directory, sessionID);
+  console.error("Session diagnostics:");
+  for (const message of messages.slice(-6)) {
+    const text = textFromParts(message.parts).slice(0, 300);
+    const tools = toolParts(message.parts)
+      .map((part) => part.tool)
+      .join(",");
+    console.error(
+      JSON.stringify({
+        id: message.info?.id,
+        role: message.info?.role,
+        providerID: message.info?.providerID,
+        modelID: message.info?.modelID,
+        text,
+        tools,
+        partTypes: (message.parts ?? []).map((part) => part.type),
+      }),
+    );
+  }
+  const tracePath = path.join(
+    home,
+    ".opencode",
+    "context-maps",
+    `${sessionID}.trace.jsonl`,
+  );
+  const trace = await fs.readFile(tracePath, "utf8").catch(() => "");
+  if (trace) {
+    console.error("Trace tail:");
+    for (const line of trace.trim().split("\n").slice(-6)) console.error(line);
+  }
 }
 
 function textFromParts(
@@ -397,10 +533,47 @@ function textFromParts(
 
 function toolParts(
   parts:
-    | Array<{ type: string; tool?: string; state?: { status?: string } }>
+    | Array<{
+        type: string;
+        tool?: string;
+        state?: { status?: string; input?: unknown; output?: unknown };
+      }>
     | undefined,
 ) {
   return (parts ?? []).filter((part) => part.type === "tool");
+}
+
+async function sessionToolCalls(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  sessionID: string,
+) {
+  const messages = await listSessionMessages(client, directory, sessionID);
+  return messages.flatMap((message) =>
+    toolParts(message.parts)
+      .filter((part): part is typeof part & { tool: string } =>
+        Boolean(part.tool),
+      )
+      .map((part) => ({
+        tool: part.tool,
+        input: part.state?.input,
+        output: part.state?.output,
+      })),
+  );
+}
+
+function hasToolCall(
+  calls: Array<{ tool: string; input?: unknown; output?: unknown }>,
+  tool: string,
+) {
+  return calls.some((call) => call.tool === tool);
+}
+
+function toolInputValue(call: { input?: unknown }, key: string) {
+  const input = call.input;
+  if (!input || typeof input !== "object" || Array.isArray(input))
+    return undefined;
+  return (input as Record<string, unknown>)[key];
 }
 
 async function sessionToolNames(
@@ -408,15 +581,7 @@ async function sessionToolNames(
   directory: string,
   sessionID: string,
 ) {
-  const messages = ((
-    (await client.session.messages({
-      sessionID,
-      directory,
-      limit: 5000,
-    })) as any
-  )?.data ?? []) as Array<{
-    parts?: Array<{ type: string; tool?: string; state?: { status?: string } }>;
-  }>;
+  const messages = await listSessionMessages(client, directory, sessionID);
   return messages
     .flatMap((message) => toolParts(message.parts).map((part) => part.tool))
     .filter((tool): tool is string => Boolean(tool));

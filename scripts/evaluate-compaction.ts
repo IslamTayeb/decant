@@ -43,6 +43,8 @@ type ModelRef = {
   modelID: string;
 };
 
+const validationModelSlug = process.env.MEM_MOULD_E2E_MODEL ?? "openai/gpt-5.5";
+
 async function main() {
   const repoRoot = path.resolve(process.cwd());
   const tempRoot = await fs.mkdtemp(
@@ -70,6 +72,7 @@ async function main() {
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",
+      model: validationModelSlug,
     }),
   };
 
@@ -77,8 +80,8 @@ async function main() {
 
   try {
     const client = createOpencodeClient({ baseUrl: server.url });
-    const model = await pickModel(client, repoRoot);
-    console.log(`Using ${model.providerID}/${model.modelID}`);
+    const model = await pickModel(client, repoRoot, validationModelSlug);
+    console.log(`Using selected model ${model.providerID}/${model.modelID}`);
 
     const transcript = buildTranscript();
     const map = buildSyntheticMap();
@@ -87,20 +90,13 @@ async function main() {
     const defaultSummary = await summarize(
       client,
       repoRoot,
-      model,
       transcript,
       DEFAULT_COMPACTION_PROMPT,
     );
-    const mapSummary = await summarize(
-      client,
-      repoRoot,
-      model,
-      transcript,
-      mapPrompt,
-    );
+    const mapSummary = await summarize(client, repoRoot, transcript, mapPrompt);
 
-    const defaultRecall = await recall(client, repoRoot, model, defaultSummary);
-    const mapRecall = await recall(client, repoRoot, model, mapSummary);
+    const defaultRecall = await recall(client, repoRoot, defaultSummary);
+    const mapRecall = await recall(client, repoRoot, mapSummary);
 
     const defaultScore = scoreRecall(defaultRecall);
     const mapScore = scoreRecall(mapRecall);
@@ -230,7 +226,6 @@ function buildSyntheticMap(): ContextMapFile {
 async function summarize(
   client: ReturnType<typeof createOpencodeClient>,
   directory: string,
-  model: ModelRef,
   transcript: string,
   prompt: string,
 ) {
@@ -244,7 +239,6 @@ async function summarize(
     (await client.session.prompt({
       directory,
       sessionID: session.id,
-      model,
       system:
         "You are compacting a coding-agent conversation. Do not call tools. Output only the compacted summary text.",
       tools: {},
@@ -265,7 +259,6 @@ async function summarize(
 async function recall(
   client: ReturnType<typeof createOpencodeClient>,
   directory: string,
-  model: ModelRef,
   summary: string,
 ) {
   const session = ((
@@ -278,7 +271,6 @@ async function recall(
     (await client.session.prompt({
       directory,
       sessionID: session.id,
-      model,
       system:
         "You are evaluating a compaction summary. Answer in strict JSON with keys race_location, failed_fix, final_fix, rollback_flag, queue_helper_path. Use null if the summary does not preserve the fact.",
       tools: {},
@@ -372,29 +364,35 @@ async function startServer(env: NodeJS.ProcessEnv, cwd: string) {
 async function pickModel(
   client: ReturnType<typeof createOpencodeClient>,
   directory: string,
+  modelSlug: string,
 ): Promise<ModelRef> {
+  const requested = parseModelSlug(modelSlug);
   const providers = (((await client.provider.list({ directory })) as any)
     ?.data ?? {}) as {
     all?: Array<{ id: string; models: Record<string, unknown> }>;
+    connected?: string[];
   };
   const all = providers.all ?? [];
-  const preferred: ModelRef[] = [
-    { providerID: "anthropic", modelID: "claude-sonnet-4-6" },
-    {
-      providerID: "amazon-bedrock",
-      modelID: "global.anthropic.claude-sonnet-4-6",
-    },
-    { providerID: "openai", modelID: "gpt-5.4" },
-  ];
-  for (const candidate of preferred) {
-    const provider = all.find((item) => item.id === candidate.providerID);
-    if (provider && candidate.modelID in provider.models) return candidate;
-  }
-  const provider = all[0];
-  assert.ok(provider, "no providers available in sandbox");
-  const modelID = Object.keys(provider.models)[0];
-  assert.ok(modelID, `provider ${provider.id} has no models`);
-  return { providerID: provider.id, modelID };
+  const provider = all.find((item) => item.id === requested.providerID);
+  assert.ok(provider, `provider is not available: ${requested.providerID}`);
+  assert.ok(
+    (providers.connected ?? []).includes(requested.providerID),
+    `provider is not connected in the isolated sandbox: ${requested.providerID}`,
+  );
+  assert.ok(
+    requested.modelID in provider.models,
+    `model is not available: ${requested.providerID}/${requested.modelID}`,
+  );
+  return requested;
+}
+
+function parseModelSlug(modelSlug: string): ModelRef {
+  const index = modelSlug.indexOf("/");
+  assert.ok(index > 0, `model must be provider/model, got: ${modelSlug}`);
+  return {
+    providerID: modelSlug.slice(0, index),
+    modelID: modelSlug.slice(index + 1),
+  };
 }
 
 void main().catch((error) => {

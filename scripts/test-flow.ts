@@ -3,7 +3,7 @@
  *
  * 1. Starts an isolated OpenCode server with the plugin loaded
  * 2. Creates a session, sends a few prompts to build up blobs
- * 3. Changes fidelity on a blob via the compress_blob tool
+ * 3. Changes fidelity on a blob via the set_fidelity tool
  * 4. Sends another prompt and verifies the transform reduced messages
  * 5. Checks trace logs confirm everything fired correctly
  *
@@ -21,6 +21,12 @@ import { pathToFileURL } from "node:url";
 import { createOpencodeClient } from "@opencode-ai/sdk/v2";
 
 const execFileAsync = promisify(execFile);
+const validationModelSlug = process.env.MEM_MOULD_E2E_MODEL ?? "openai/gpt-5.5";
+
+type ModelRef = {
+  providerID: string;
+  modelID: string;
+};
 
 async function main() {
   const projectRoot = path.resolve(process.cwd());
@@ -55,6 +61,7 @@ async function main() {
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",
+      model: validationModelSlug,
       plugin: [
         pathToFileURL(
           path.join(projectRoot, "src", "context-map", "server-plugin.ts"),
@@ -105,19 +112,8 @@ async function main() {
 
   const client = createOpencodeClient({ baseUrl: url });
 
-  // Pick model (Bedrock only)
-  const providers = (((await client.provider.list({ directory: repo })) as any)
-    ?.data ?? {}) as {
-    all?: Array<{ id: string; models: Record<string, unknown> }>;
-  };
-  const bedrock = (providers.all ?? []).find((p) => p.id === "amazon-bedrock");
-  assert.ok(bedrock, "No Amazon Bedrock provider found");
-  const modelID =
-    Object.keys(bedrock.models).find((m) => m.includes("sonnet")) ??
-    Object.keys(bedrock.models)[0];
-  assert.ok(modelID, "No Bedrock model found");
-  const model = { providerID: "amazon-bedrock", modelID };
-  console.log(`Using ${model.providerID}/${model.modelID}`);
+  const model = await pickModel(client, repo, validationModelSlug);
+  console.log(`Using selected model ${model.providerID}/${model.modelID}`);
 
   try {
     // ── Step 1: Create session and send first prompt ────────────
@@ -136,7 +132,6 @@ async function main() {
       client,
       repo,
       sid,
-      model,
       "Read hello.ts and tell me what it exports.",
     );
     console.log("  Prompt 1 done");
@@ -147,7 +142,6 @@ async function main() {
       client,
       repo,
       sid,
-      model,
       "Write a test for hello.ts that checks x equals 1.",
     );
     console.log("  Prompt 2 done");
@@ -208,7 +202,7 @@ async function main() {
       );
     }
 
-    // ── Step 5: Set a blob to summary via compress_blob ────────
+    // ── Step 5: Set a blob to summary via set_fidelity ─────────
     console.log("\n=== Step 5: Compress a blob to summary ===");
     const targetBlob = map.blobOrder[0];
     console.log(`  Target: ${targetBlob}`);
@@ -216,8 +210,7 @@ async function main() {
       client,
       repo,
       sid,
-      model,
-      `Use the compress_blob tool to set the blob "${targetBlob}" to "summary" fidelity.`,
+      `Use the set_fidelity tool to set the blob "${targetBlob}" to "summary" fidelity.`,
     );
     console.log("  Compress prompt done");
 
@@ -235,7 +228,6 @@ async function main() {
       client,
       repo,
       sid,
-      model,
       "What did we discuss so far? Summarize the conversation.",
     );
     console.log("  Prompt 3 done");
@@ -293,13 +285,11 @@ async function prompt(
   client: ReturnType<typeof createOpencodeClient>,
   directory: string,
   sessionID: string,
-  model: { providerID: string; modelID: string },
   text: string,
 ) {
   const raw = (await client.session.prompt({
     directory,
     sessionID,
-    model,
     parts: [{ type: "text", text }],
   })) as any;
   const reply = raw?.data ?? raw ?? {};
@@ -316,6 +306,41 @@ async function prompt(
   if (visible.length === 0) {
     console.error("  WARNING: empty reply");
   }
+}
+
+async function pickModel(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  modelSlug: string,
+): Promise<ModelRef> {
+  const requested = parseModelSlug(modelSlug);
+  const providers = (((await client.provider.list({ directory })) as any)
+    ?.data ?? {}) as {
+    all?: Array<{ id: string; models: Record<string, unknown> }>;
+    connected?: string[];
+  };
+  const provider = (providers.all ?? []).find(
+    (item) => item.id === requested.providerID,
+  );
+  assert.ok(provider, `provider is not available: ${requested.providerID}`);
+  assert.ok(
+    (providers.connected ?? []).includes(requested.providerID),
+    `provider is not connected in the isolated sandbox: ${requested.providerID}`,
+  );
+  assert.ok(
+    requested.modelID in provider.models,
+    `model is not available: ${requested.providerID}/${requested.modelID}`,
+  );
+  return requested;
+}
+
+function parseModelSlug(modelSlug: string): ModelRef {
+  const index = modelSlug.indexOf("/");
+  assert.ok(index > 0, `model must be provider/model, got: ${modelSlug}`);
+  return {
+    providerID: modelSlug.slice(0, index),
+    modelID: modelSlug.slice(index + 1),
+  };
 }
 
 void main().catch((e) => {

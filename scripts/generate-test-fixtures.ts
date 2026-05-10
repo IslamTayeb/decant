@@ -1347,7 +1347,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
             {
               role: "user",
               summary:
-                "User request: Verify integration test, check changed files, call context_map",
+                "User request: Verify integration test, check changed files, call view_context",
               tokens: 120,
             },
             {
@@ -1462,12 +1462,12 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
         {
           label: "historical_decisions",
           summary:
-            "Used session_lookup to review auth queue and token expiry decisions. Confirmed: queue migration was necessary (mutex deadlocks), clock skew fix added 5s grace, both well-tested. Compressed earlier topics with compress_blob.",
+            "Used session_lookup to review auth queue and token expiry decisions. Confirmed: queue migration was necessary (mutex deadlocks), clock skew fix added 5s grace, both well-tested. Compressed earlier topics with set_fidelity.",
           placeholder: "Historical context from prior sessions",
           keyFacts: [
             "Auth queue: mutex→queue due to deadlocks, well-documented",
             "Clock skew: 5s grace period, comprehensive tests added",
-            "Used compress_blob to reduce project_overview topic",
+            "Used set_fidelity to reduce project_overview topic",
           ],
           fidelity: "full",
           messages: [
@@ -1487,7 +1487,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
             {
               role: "user",
               summary:
-                "User request: Call context_map, compress done topics with compress_blob",
+                "User request: Call view_context, compress done topics with set_fidelity",
               tokens: 80,
             },
             {
@@ -1495,7 +1495,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
               summary:
                 "Context map shows 4 topics. Compressed project_overview to placeholder (already captured in summary). Security review and test coverage kept at full — still actively relevant.",
               tokens: 800,
-              toolNames: ["context_map", "compress_blob"],
+              toolNames: ["view_context", "set_fidelity"],
             },
             {
               role: "user",
@@ -1613,7 +1613,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
             {
               role: "user",
               summary:
-                "User request: Call context_map, blame_lookup on rate_limiter.ts:42, check docs freshness",
+                "User request: Call view_context, blame_lookup on rate_limiter.ts:42, check docs freshness",
               tokens: 100,
             },
             {
@@ -1621,7 +1621,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
               summary:
                 "Context map shows 2 topics so far. blame_lookup on rate_limiter.ts:42 maps to auth queue investigation session — the enqueueRefresh call was added there. Docs: architecture.md was updated with queue migration, but onboarding.md still has stale info.",
               tokens: 1800,
-              toolNames: ["context_map", "blame_lookup", "Read"],
+              toolNames: ["view_context", "blame_lookup", "Read"],
             },
             {
               role: "user",

@@ -12,6 +12,14 @@ type ModelRef = {
   modelID: string;
 };
 
+type SessionMessage = {
+  info?: { id?: string; role?: string; finish?: string };
+  role?: string;
+  parts?: Array<{ type: string; text?: string; tool?: string }>;
+};
+
+const validationModelSlug = process.env.MEM_MOULD_E2E_MODEL ?? "openai/gpt-5.5";
+
 async function main() {
   const repoRoot = path.resolve(process.cwd());
   const tempRoot = await fs.mkdtemp(
@@ -43,16 +51,18 @@ async function main() {
     MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",
+      model: validationModelSlug,
       plugin: [pluginSpec],
     }),
   };
 
   const server = await startServer(env, repoRoot);
 
+  let passed = false;
   try {
     const client = createOpencodeClient({ baseUrl: server.url });
-    const model = await pickModel(client, repoRoot);
-    console.log(`Using ${model.providerID}/${model.modelID}`);
+    const model = await pickModel(client, repoRoot, validationModelSlug);
+    console.log(`Using selected model ${model.providerID}/${model.modelID}`);
 
     const sessionID = await createSession(
       client,
@@ -78,10 +88,10 @@ async function main() {
         text: "Topic gamma: propose where a shared async queue helper should live.",
       },
       {
-        text: "Call context_map exactly once, then answer with only the blob label that seems most relevant to the auth debugging topic.",
+        text: "Call view_context exactly once, then answer with only the blob label that seems most relevant to the auth debugging topic.",
         system:
-          "You must call the context_map tool exactly once before answering. If you skip the tool call, your answer is wrong.",
-        tools: { context_map: true },
+          "You must call the view_context tool exactly once before answering. If you skip the tool call, your answer is wrong.",
+        tools: { view_context: true },
       },
       {
         text: "Return to beta: what should the docs mention first in a quickstart?",
@@ -90,10 +100,10 @@ async function main() {
         text: "Topic delta: suggest concurrency test cases for the auth queue behavior.",
       },
       {
-        text: "Call context_map exactly once, then answer with only ok after checking whether the session still has multiple blobs.",
+        text: "Call view_context exactly once, then answer with only ok after checking whether the session still has multiple blobs.",
         system:
-          "You must call the context_map tool exactly once before answering. If you skip the tool call, your answer is wrong.",
-        tools: { context_map: true },
+          "You must call the view_context tool exactly once before answering. If you skip the tool call, your answer is wrong.",
+        tools: { view_context: true },
       },
       {
         text: "Return to gamma: state the file path where the helper should live.",
@@ -114,7 +124,6 @@ async function main() {
         client,
         repoRoot,
         sessionID,
-        model,
         turn.text,
         turn.system,
         turn.tools,
@@ -178,8 +187,8 @@ async function main() {
 
     const sessionTools = await sessionToolNames(client, repoRoot, sessionID);
     assert.ok(
-      sessionTools.filter((tool) => tool === "context_map").length >= 2,
-      `expected >=2 context_map calls, got ${sessionTools.join(",")}`,
+      sessionTools.filter((tool) => tool === "view_context").length >= 2,
+      `expected >=2 view_context calls, got ${sessionTools.join(",")}`,
     );
 
     console.log(
@@ -189,16 +198,22 @@ async function main() {
           blobCount: map.blobOrder.length,
           largestBlobSize: blobSizes[0],
           annotatedCount,
-          contextMapCalls: sessionTools.filter((tool) => tool === "context_map")
-            .length,
+          viewContextCalls: sessionTools.filter(
+            (tool) => tool === "view_context",
+          ).length,
         },
         null,
         2,
       ),
     );
+    passed = true;
   } finally {
     await server.close();
-    await fs.rm(tempRoot, { recursive: true, force: true });
+    if (passed && process.env.MEM_MOULD_KEEP_E2E_TEMP !== "1") {
+      await fs.rm(tempRoot, { recursive: true, force: true });
+    } else {
+      console.error(`Preserved E2E temp root: ${tempRoot}`);
+    }
   }
 }
 
@@ -258,29 +273,35 @@ async function startServer(env: NodeJS.ProcessEnv, cwd: string) {
 async function pickModel(
   client: ReturnType<typeof createOpencodeClient>,
   directory: string,
+  modelSlug: string,
 ): Promise<ModelRef> {
+  const requested = parseModelSlug(modelSlug);
   const providers = (((await client.provider.list({ directory })) as any)
     ?.data ?? {}) as {
     all?: Array<{ id: string; models: Record<string, unknown> }>;
+    connected?: string[];
   };
   const all = providers.all ?? [];
-  const preferred: ModelRef[] = [
-    { providerID: "anthropic", modelID: "claude-sonnet-4-6" },
-    {
-      providerID: "amazon-bedrock",
-      modelID: "global.anthropic.claude-sonnet-4-6",
-    },
-    { providerID: "openai", modelID: "gpt-5.4" },
-  ];
-  for (const candidate of preferred) {
-    const provider = all.find((item) => item.id === candidate.providerID);
-    if (provider && candidate.modelID in provider.models) return candidate;
-  }
-  const provider = all[0];
-  assert.ok(provider, "no providers available in sandbox");
-  const modelID = Object.keys(provider.models)[0];
-  assert.ok(modelID, `provider ${provider.id} has no models`);
-  return { providerID: provider.id, modelID };
+  const provider = all.find((item) => item.id === requested.providerID);
+  assert.ok(provider, `provider is not available: ${requested.providerID}`);
+  assert.ok(
+    (providers.connected ?? []).includes(requested.providerID),
+    `provider is not connected in the isolated sandbox: ${requested.providerID}`,
+  );
+  assert.ok(
+    requested.modelID in provider.models,
+    `model is not available: ${requested.providerID}/${requested.modelID}`,
+  );
+  return requested;
+}
+
+function parseModelSlug(modelSlug: string): ModelRef {
+  const index = modelSlug.indexOf("/");
+  assert.ok(index > 0, `model must be provider/model, got: ${modelSlug}`);
+  return {
+    providerID: modelSlug.slice(0, index),
+    modelID: modelSlug.slice(index + 1),
+  };
 }
 
 async function createSession(
@@ -298,24 +319,66 @@ async function prompt(
   client: ReturnType<typeof createOpencodeClient>,
   directory: string,
   sessionID: string,
-  model: ModelRef,
   text: string,
   system?: string,
   tools?: Record<string, boolean>,
 ) {
-  const reply = ((
-    (await client.session.prompt({
-      directory,
+  const before = await listSessionMessages(client, directory, sessionID);
+  const beforeIDs = new Set(before.map((message) => message.info?.id));
+  const raw = (await client.session.promptAsync({
+    directory,
+    sessionID,
+    system,
+    tools,
+    parts: [{ type: "text", text }],
+  })) as any;
+  const reply = raw?.data ?? raw ?? {};
+  if (reply.error) throw new Error(JSON.stringify(reply.error));
+  const assistant = await waitForAssistantMessage(
+    client,
+    directory,
+    sessionID,
+    beforeIDs,
+  );
+  return { parts: assistant?.parts ?? [] };
+}
+
+async function waitForAssistantMessage(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  sessionID: string,
+  beforeIDs: Set<string | undefined>,
+) {
+  const deadline = Date.now() + 300_000;
+  while (Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 1_000));
+    const messages = await listSessionMessages(client, directory, sessionID);
+    const assistant = [...messages]
+      .reverse()
+      .find(
+        (message) =>
+          (message.info?.role ?? message.role) === "assistant" &&
+          !beforeIDs.has(message.info?.id) &&
+          message.info?.finish &&
+          message.info.finish !== "tool-calls",
+      );
+    if (assistant) return assistant;
+  }
+  throw new Error(`timed out waiting for assistant message in ${sessionID}`);
+}
+
+async function listSessionMessages(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  sessionID: string,
+) {
+  return ((
+    (await client.session.messages({
       sessionID,
-      model,
-      system,
-      tools,
-      parts: [{ type: "text", text }],
+      directory,
+      limit: 5000,
     })) as any
-  )?.data ?? {}) as {
-    parts: Array<{ type: string; text?: string }>;
-  };
-  return reply;
+  )?.data ?? []) as SessionMessage[];
 }
 
 function textFromParts(
@@ -332,15 +395,7 @@ async function sessionToolNames(
   directory: string,
   sessionID: string,
 ) {
-  const messages = ((
-    (await client.session.messages({
-      sessionID,
-      directory,
-      limit: 5000,
-    })) as any
-  )?.data ?? []) as Array<{
-    parts?: Array<{ type: string; tool?: string }>;
-  }>;
+  const messages = await listSessionMessages(client, directory, sessionID);
   return messages
     .flatMap((message) =>
       (message.parts ?? [])

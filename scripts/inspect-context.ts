@@ -3,7 +3,7 @@
  * Inspect the context map state for a test environment session.
  *
  * Usage:
- *   node --import tsx scripts/inspect-context.ts <temp-root> [session-id]
+ *   node --import tsx scripts/inspect-context.ts <temp-root|home-dir|maps-dir> [session-id]
  *
  * If session-id is omitted, lists all sessions.
  * Shows: blob fidelity, effective tokens, message treatments, overrides.
@@ -14,14 +14,29 @@ import path from "node:path";
 const tempRoot = process.argv[2];
 if (!tempRoot) {
   console.error(
-    "Usage: node --import tsx scripts/inspect-context.ts <temp-root> [session-id]",
+    "Usage: node --import tsx scripts/inspect-context.ts <temp-root|home-dir|maps-dir> [session-id]",
   );
   process.exit(1);
 }
 
-const mapsDir = path.join(tempRoot, "home", ".opencode", "context-maps");
+async function resolveMapsDir(input: string) {
+  const candidates = [
+    path.join(input, "home", ".opencode", "context-maps"),
+    path.join(input, ".opencode", "context-maps"),
+    input,
+  ];
+  for (const candidate of candidates) {
+    const stat = await fs.stat(candidate).catch(() => undefined);
+    if (stat?.isDirectory()) return candidate;
+  }
+  console.error(
+    `Could not find context maps. Tried:\n${candidates.map((c) => `  ${c}`).join("\n")}`,
+  );
+  process.exit(1);
+}
 
 async function main() {
+  const mapsDir = await resolveMapsDir(tempRoot);
   const sessionID = process.argv[3];
 
   if (!sessionID) {
@@ -191,11 +206,46 @@ async function main() {
         console.log(
           `  [${ts}] messages.transform  before=${e.before_count} after=${e.after_count} removed=${e.messages_removed}`,
         );
+        if (e.preview) {
+          console.log(
+            `          preview: raw=${e.preview.total_raw_tokens} eff=${e.preview.total_effective_tokens}`,
+          );
+          for (const b of e.preview.blobs ?? []) {
+            console.log(
+              `          ${(b.label ?? b.id).padEnd(25)} ${String(b.fidelity).padEnd(12)} eff=${String(b.effective_tokens).padStart(5)} ${b.effective_label}`,
+            );
+          }
+        }
         if (e.blob_fidelities) {
           const fids = Object.entries(e.blob_fidelities)
             .map(([k, v]) => `${k}=${v}`)
             .join(" ");
           console.log(`          fidelities: ${fids}`);
+        }
+        if (e.payload_messages) {
+          console.log(
+            `          payload snapshot: ${e.payload_messages.length} messages`,
+          );
+          for (const m of e.payload_messages) {
+            console.log(
+              `          - ${m.role} ${m.id} blob=${m.blob_label ?? m.blob_id ?? "none"} treatment=${m.effective_treatment}`,
+            );
+            for (const part of m.parts ?? []) {
+              if (part.type === "text") {
+                console.log(`              text: ${JSON.stringify(part.text)}`);
+              } else if (part.type === "tool") {
+                console.log(
+                  `              tool:${part.tool ?? "unknown"} status=${part.status ?? "unknown"} output=${JSON.stringify(part.output ?? "")}`,
+                );
+              } else {
+                console.log(`              ${part.type}`);
+              }
+            }
+          }
+        } else {
+          console.log(
+            "          payload snapshot disabled; launch with MEM_MOULD_TRACE_CONTEXT_PAYLOAD=1 to capture exact transformed text",
+          );
         }
       } else if (e.event === "text.complete") {
         console.log(

@@ -83,6 +83,10 @@ async function main() {
     path.join(repo, ".opencode", "plugins", "context-map-tui.tsx"),
   );
   await fs.writeFile(
+    path.join(repo, "tui.json"),
+    `${JSON.stringify({ plugin: ["./.opencode/plugins/context-map-tui.tsx"] }, null, 2)}\n`,
+  );
+  await fs.writeFile(
     path.join(repo, ".opencode", "tui.json"),
     `${JSON.stringify({ plugin: ["./plugins/context-map-tui.tsx"] }, null, 2)}\n`,
   );
@@ -170,7 +174,9 @@ async function writeTestingGuide(
     "## Good first checks",
     "",
     "### Context map dialog",
-    "- Open `/mem-map` in any session -- dialog should be centered",
+    "- Open `/context`",
+    "- Press `ctrl+g` or click `open` in the Context Map sidebar block",
+    "- ctrl+p should also show 'Open context map'",
     "- Check Topics tab: blob list with fidelity controls (1-5 keys)",
     "- Check Messages tab: message list grouped by blob",
     "- Use j/k to navigate, tab to switch tabs",
@@ -189,9 +195,9 @@ async function writeTestingGuide(
     "- Should show the auth session with commit-linked blobs",
     "",
     "### Tool exercise",
-    "- Ask: 'call context_map to show the current map'",
+    "- Ask: 'call view_context to show the current map'",
     "- Ask: 'use session_lookup to find sessions about auth queue'",
-    "- Ask: 'compress the oldest blob to placeholder'",
+    "- Ask: 'use set_fidelity to compress the oldest blob to placeholder'",
     "",
     "## Seeded sessions",
     ...Object.entries(sessions).map(([name, id]) => `- ${name}: ${id}`),

@@ -2,7 +2,6 @@
 
 import { useKeyboard } from "@opentui/solid";
 import type {
-  TuiKeybindSet,
   TuiPlugin,
   TuiPluginApi,
   TuiPluginModule,
@@ -158,6 +157,10 @@ function trim(text: string, max: number) {
   return text.length <= max ? text : `${text.slice(0, max - 1)}\u2026`;
 }
 
+function keybindPrint(api: TuiPluginApi, key: string) {
+  return (api as any).keybind?.print?.(key) as string | undefined;
+}
+
 async function loadMap(api: TuiPluginApi, sessionID: string) {
   return readContextMap({
     sessionID,
@@ -234,7 +237,20 @@ function ContextBar(props: { api: TuiPluginApi; map?: ContextMapFile }) {
 
 // ── Sidebar widget ────────────────────────────────────────────────────
 
-function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
+function SidebarView(props: {
+  api: TuiPluginApi;
+  sessionID: string;
+  onOpen?: () => void;
+}) {
+  useKeyboard((evt) => {
+    if (!props.onOpen) return;
+    if (evt.ctrl && evt.name === "g") {
+      evt.preventDefault();
+      evt.stopPropagation();
+      props.onOpen();
+    }
+  });
+
   const [map, setMap] = createSignal<ContextMapFile>();
   const mc = createMemo(
     () => props.api.state.session.messages(props.sessionID).length,
@@ -329,15 +345,18 @@ function SidebarView(props: { api: TuiPluginApi; sessionID: string }) {
           </box>
         </Show>
 
-        <text fg={props.api.theme.current.textMuted}>
-          {props.api.keybind.print("plugin.context_open")} open
-        </text>
+        <box onMouseUp={() => props.onOpen?.()}>
+          <text fg={props.api.theme.current.textMuted}>
+            {keybindPrint(props.api, "plugin_context_open") ?? "ctrl+g/click"}{" "}
+            open
+          </text>
+        </box>
       </Show>
     </box>
   );
 }
 
-// ── Main dialog (/mem-map) ────────────────────────────────────────────
+// ── Main dialog (/context) ────────────────────────────────────────────
 
 function MemMapDialog(props: {
   api: TuiPluginApi;
@@ -1100,98 +1119,154 @@ async function runBlame(
 // ── Plugin entry ──────────────────────────────────────────────────────
 
 const tui: TuiPlugin = async (api) => {
-  const keys: TuiKeybindSet = api.keybind.create({
+  const keys = (api as any).keybind?.create?.({
     plugin_context_open: "<leader>'",
   });
 
   const openMap = (sessionID?: string) => {
     const id = sessionID ?? currentSession(api);
     if (!id) {
-      api.ui.toast({ variant: "error", message: "No active session" });
+      (api as any).ui?.toast?.({
+        variant: "error",
+        message: "No active session",
+      });
       return;
     }
-    api.ui.dialog.setSize("xlarge");
-    api.ui.dialog.replace(
+    const dialog = (api as any).ui?.dialog;
+    if (!dialog) {
+      (api as any).ui?.toast?.({
+        variant: "error",
+        message:
+          "This OpenCode TUI version does not expose dialog APIs to plugins.",
+      });
+      return;
+    }
+    dialog.setSize("xlarge");
+    dialog.replace(
       () => (
-        <MemMapDialog
-          api={api}
-          sessionID={id}
-          close={() => api.ui.dialog.clear()}
-        />
+        <MemMapDialog api={api} sessionID={id} close={() => dialog.clear()} />
       ),
       () => {},
     );
-    queueMicrotask(() => api.ui.dialog.setSize("xlarge"));
+    queueMicrotask(() => dialog.setSize("xlarge"));
   };
 
   const openBlame = () => {
-    const P = api.ui.DialogPrompt;
-    api.ui.dialog.replace(() => (
+    const P = (api as any).ui?.DialogPrompt;
+    const dialog = (api as any).ui?.dialog;
+    if (!P || !dialog) {
+      (api as any).ui?.toast?.({
+        variant: "error",
+        message:
+          "This OpenCode TUI version does not expose dialog APIs to plugins.",
+      });
+      return;
+    }
+    dialog.replace(() => (
       <P
         title="Blame lookup"
         placeholder="src/auth.ts:42"
-        onConfirm={(v) => {
-          api.ui.dialog.clear();
+        onConfirm={(v: string) => {
+          dialog.clear();
           void runBlame(api, v)
             .then((h) => {
-              api.ui.dialog.setSize("xlarge");
-              api.ui.dialog.replace(
+              dialog.setSize("xlarge");
+              dialog.replace(
                 () => (
                   <HistoryDialog
                     api={api}
                     history={h}
-                    close={() => api.ui.dialog.clear()}
+                    close={() => dialog.clear()}
                   />
                 ),
                 () => {},
               );
-              queueMicrotask(() => api.ui.dialog.setSize("xlarge"));
+              queueMicrotask(() => dialog.setSize("xlarge"));
             })
             .catch((e) =>
-              api.ui.toast({
+              (api as any).ui?.toast?.({
                 variant: "error",
                 message: e instanceof Error ? e.message : String(e),
               }),
             );
         }}
-        onCancel={() => api.ui.dialog.clear()}
+        onCancel={() => dialog.clear()}
       />
     ));
   };
 
-  api.command.register(() => [
-    {
-      title: "Open context map",
-      value: "context-map.open",
-      category: "Plugin",
-      keybind: keys.get("plugin_context_open"),
-      slash: { name: "context" },
-      onSelect: () => openMap(),
-    },
-    {
-      title: "Blame lookup",
-      value: "context-map.blame",
-      category: "Plugin",
-      slash: { name: "blame" },
-      onSelect: () => openBlame(),
-    },
-  ]);
+  const keymap = (api as any).keymap;
+  if (keymap?.registerLayer) {
+    keymap.registerLayer({
+      commands: [
+        {
+          name: "context-map.open",
+          title: "Open context map",
+          category: "Plugin",
+          desc: "Inspect and control context map fidelity",
+          namespace: "palette",
+          slashName: "context",
+          run: () => openMap(),
+        },
+        {
+          name: "context-map.blame",
+          title: "Blame lookup",
+          category: "Plugin",
+          desc: "Open context from the session that touched a file line",
+          namespace: "palette",
+          slashName: "blame",
+          run: () => openBlame(),
+        },
+      ],
+      bindings: [
+        {
+          key: "ctrl+g",
+          cmd: "context-map.open",
+          desc: "Open context map",
+        },
+      ],
+    });
+  } else {
+    (api as any).command?.register?.(() => [
+      {
+        title: "Open context map",
+        value: "context-map.open",
+        category: "Plugin",
+        keybind: keys?.get?.("plugin_context_open"),
+        slash: { name: "context" },
+        onSelect: () => openMap(),
+      },
+      {
+        title: "Blame lookup",
+        value: "context-map.blame",
+        category: "Plugin",
+        slash: { name: "blame" },
+        onSelect: () => openBlame(),
+      },
+    ]);
+  }
 
   api.slots.register({
     order: 110,
     slots: {
       sidebar_content(_ctx, value) {
-        return <SidebarView api={api} sessionID={value.session_id} />;
+        return (
+          <SidebarView
+            api={api}
+            sessionID={value.session_id}
+            onOpen={() => openMap(value.session_id)}
+          />
+        );
       },
     },
   });
 
-  api.lifecycle.onDispose(() => {});
+  (api as any).lifecycle?.onDispose?.(() => {});
 };
 
 function currentSession(api: TuiPluginApi) {
-  const c = api.route.current;
-  return c.name === "session" && typeof c.params?.sessionID === "string"
+  const c = (api as any).route?.current;
+  return c?.name === "session" && typeof c.params?.sessionID === "string"
     ? c.params.sessionID
     : undefined;
 }

@@ -6,16 +6,22 @@ import { tool } from "@opencode-ai/plugin/tool";
 import {
   applyAnnotationEnvelope,
   buildAnnotationSystemPrompt,
+  buildBlobMessageSummaries,
   buildCompactionPrompt,
   buildContextMapToolView,
   buildHistoricalOverview,
+  buildMessageDetail,
   buildPluginGuidanceSystemPrompt,
   buildSessionZoomText,
+  computeEffectiveTreatment,
   capturePendingRetroactiveMessage,
   computeContextPreview,
+  filterMessagesForActiveContext,
+  getMessageCreatedAt,
   mergeContextMaps,
   matchBlobIDsForQuery,
   parseAnnotationBlock,
+  resetMapAfterCompaction,
   sortMessagesChronologically,
   transformMessagesForContext,
   updateBlobFidelity,
@@ -29,15 +35,77 @@ import {
   writeContextMap,
   writeDebugLog,
   appendTrace,
+  archiveContextMapForCompaction,
 } from "./storage";
 import { buildFallbackMapFromMessages } from "./core";
 import type {
+  ContextMapFile,
   HistoricalSessionOverview,
   MessageLike,
   SessionLike,
 } from "./types";
 
 const PLUGIN_ID = "mem-mould.context-map";
+
+function tracePayloadEnabled() {
+  return ["1", "true", "yes", "on"].includes(
+    (process.env.MEM_MOULD_TRACE_CONTEXT_PAYLOAD ?? "").toLowerCase(),
+  );
+}
+
+function partPayloadSnapshot(part: MessageLike["parts"][number]) {
+  const base = {
+    id: part.id,
+    type: part.type,
+  };
+  if (part.type === "text") {
+    return {
+      ...base,
+      text: part.text ?? "",
+    };
+  }
+  if (part.type === "tool") {
+    return {
+      ...base,
+      tool: part.tool,
+      title: part.state?.title,
+      status: part.state?.status,
+      output: part.state?.output,
+    };
+  }
+  return {
+    ...base,
+    filename: part.filename,
+    url: part.url,
+  };
+}
+
+function messagePayloadSnapshot(messages: MessageLike[], map: ContextMapFile) {
+  return messages.map((message) => {
+    const entry = map.messages[message.info.id];
+    const blob = entry?.blobID ? map.blobs[entry.blobID] : undefined;
+    return {
+      id: message.info.id,
+      role: message.info.role,
+      blob_id: entry?.blobID,
+      blob_label: blob?.label,
+      blob_fidelity: blob?.fidelity,
+      fidelity_override: entry?.fidelityOverride,
+      effective_treatment: entry
+        ? computeEffectiveTreatment(entry, blob)
+        : "unassigned",
+      parts: message.parts.map(partPayloadSnapshot),
+    };
+  });
+}
+
+function isCompactionSystemPrompt(system: string[]) {
+  return system.some((text) =>
+    text.includes(
+      "You are an anchored context summarization assistant for coding sessions.",
+    ),
+  );
+}
 
 const server: Plugin = async (ctx) => {
   await ensureContextMapRoot().catch(() => undefined);
@@ -50,6 +118,8 @@ const server: Plugin = async (ctx) => {
   }
 
   const childSessionCache = new Map<string, boolean>();
+  const handledCompactions = new Set<string>();
+  const compactingSessions = new Set<string>();
 
   async function responseData<Value>(
     promise: Promise<unknown>,
@@ -81,6 +151,87 @@ const server: Plugin = async (ctx) => {
       } as never),
     );
     return sortMessagesChronologically(rows);
+  }
+
+  function textFromMessage(message: MessageLike) {
+    return message.parts
+      .filter((part) => part.type === "text" && part.text)
+      .map((part) => part.text?.trim())
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  async function latestCompactionSummary(sessionID: string) {
+    const messages = await getMessages(sessionID);
+    const message = [...messages]
+      .reverse()
+      .find(
+        (item) =>
+          item.info.role === "assistant" &&
+          item.info.summary === true &&
+          textFromMessage(item),
+      );
+    if (!message) return undefined;
+    return {
+      messageID: message.info.id,
+      text: textFromMessage(message),
+      createdAt: getMessageCreatedAt(message),
+    };
+  }
+
+  async function resetMapForCompaction(input: {
+    sessionID: string;
+    summaryText?: string;
+    summaryMessageID?: string;
+    compactedAt?: number;
+    includeMessageID?: string;
+  }) {
+    if (!input.sessionID) return;
+    if (await isChildSession(input.sessionID)) return;
+    let summaryText = input.summaryText?.trim() ?? "";
+    let summaryMessageID = input.summaryMessageID;
+    let compactedAt = input.compactedAt;
+    if (!summaryText || !summaryMessageID || !compactedAt) {
+      const latest = await latestCompactionSummary(input.sessionID);
+      summaryText ||= latest?.text ?? "";
+      summaryMessageID ||= latest?.messageID;
+      compactedAt ||= latest?.createdAt;
+    }
+    if (!summaryMessageID) return;
+    summaryText ||= "Conversation compacted.";
+    compactedAt ||= Date.now();
+
+    const key = `${input.sessionID}:${summaryMessageID}`;
+    if (handledCompactions.has(key)) return;
+    handledCompactions.add(key);
+
+    const map = await getMap(input.sessionID);
+    if (map.compaction?.summaryMessageID === summaryMessageID) return;
+
+    const archivePath = await archiveContextMapForCompaction({
+      map,
+      compactedAt,
+      summaryMessageID,
+      summaryText,
+      includeMessageID: input.includeMessageID,
+    });
+    const reset = resetMapAfterCompaction({
+      map,
+      summaryText,
+      summaryMessageID,
+      compactedAt,
+      includeMessageID: input.includeMessageID,
+      archivePath,
+    });
+    await writeContextMap(reset);
+    const preview = computeContextPreview(reset);
+    await writeDebugLog(reset, preview).catch(() => undefined);
+    await appendTrace(input.sessionID, "session.compacted", {
+      summary_message_id: summaryMessageID,
+      include_message_id: input.includeMessageID,
+      archive_path: archivePath,
+      summary_length: summaryText.length,
+    });
   }
 
   function findMessageForToolCall(messages: MessageLike[], callID: string) {
@@ -130,13 +281,17 @@ const server: Plugin = async (ctx) => {
   async function persistCoverage(sessionID: string, messages: MessageLike[]) {
     if (!sessionID || messages.length === 0) return undefined;
     const map = await getMap(sessionID);
+    const activeMessages = filterMessagesForActiveContext(map, messages, {
+      includeSummary: false,
+    });
+    if (activeMessages.length === 0) return map;
     const next = mergeContextMaps(
       map,
       buildFallbackMapFromMessages({
         sessionID,
         directory: ctx.directory,
         worktree: ctx.worktree,
-        messages,
+        messages: activeMessages,
       }),
     );
     await writeContextMap(next);
@@ -212,6 +367,11 @@ const server: Plugin = async (ctx) => {
         commitEntry: entry,
         matchedBlobIDs: entry.activeBlobID ? [entry.activeBlobID] : [],
       }),
+      next_steps: [
+        "Inspect overview.blobs[].compressedSummary to choose relevant blobs.",
+        "Call session_detail with detail='messages' to see message summaries for a blob.",
+        "Call message_detail with a message_id to fetch the full historical message only when needed.",
+      ],
     };
   }
 
@@ -235,6 +395,39 @@ const server: Plugin = async (ctx) => {
   }
 
   return {
+    event: async (input) => {
+      const event = input.event as {
+        id?: string;
+        type?: string;
+        properties?: Record<string, unknown>;
+      };
+      const properties = event.properties ?? {};
+      if (event.type === "session.next.compaction.ended") {
+        compactingSessions.delete(String(properties.sessionID ?? ""));
+        await resetMapForCompaction({
+          sessionID: String(properties.sessionID ?? ""),
+          summaryText:
+            typeof properties.text === "string" ? properties.text : undefined,
+          compactedAt:
+            typeof properties.timestamp === "number"
+              ? properties.timestamp
+              : undefined,
+          includeMessageID:
+            typeof properties.include === "string"
+              ? properties.include
+              : undefined,
+        });
+      }
+      if (event.type === "session.compacted") {
+        compactingSessions.delete(String(properties.sessionID ?? ""));
+        await resetMapForCompaction({
+          sessionID: String(properties.sessionID ?? ""),
+        });
+      }
+      if (event.type === "session.error" || event.type === "session.idle") {
+        compactingSessions.delete(String(properties.sessionID ?? ""));
+      }
+    },
     tool: {
       view_context: tool({
         description:
@@ -251,13 +444,13 @@ const server: Plugin = async (ctx) => {
       }),
       set_fidelity: tool({
         description:
-          "Set how much detail to keep for a blob (full, summary, placeholder, hide)",
+          "Set how much detail to keep for a blob (full, summary, placeholder, drop). Use for stale or large blobs; avoid frequent small edits because prompt reshaping can reduce provider prompt-cache hits.",
         args: {
           blob_id: tool.schema.string().describe("Blob ID (snake_case label)"),
           fidelity: tool.schema
             .enum(["full", "summary", "placeholder", "drop"])
             .describe(
-              "Detail level: full (keep everything), summary (one-line per message), placeholder (short stub), hide (remove from context)",
+              "Detail level: full (keep everything), summary (one-line per message), placeholder (short stub), drop (remove from context)",
             ),
           force_user_override: tool.schema
             .boolean()
@@ -319,14 +512,15 @@ const server: Plugin = async (ctx) => {
         },
       }),
       session_detail: tool({
-        description: "Get detailed content from a past session blob",
+        description:
+          "Get progressive detail from a past session blob: compressed summary, message summaries, or full blob transcript",
         args: {
           session_id: tool.schema.string().describe("Session ID to look up"),
           blob_id: tool.schema.string().describe("Blob ID within that session"),
           detail: tool.schema
-            .enum(["summary", "full"])
+            .enum(["summary", "messages", "full"])
             .describe(
-              "Detail level: summary (compressed overview) or full (complete messages)",
+              "Detail level: summary (compressed blob overview), messages (per-message summaries), or full (complete blob transcript)",
             ),
         },
         async execute(args, toolCtx) {
@@ -334,6 +528,23 @@ const server: Plugin = async (ctx) => {
             title: `Session detail: ${args.blob_id}`,
           });
           const { map } = await ensureHistoricalMap(args.session_id);
+          if (args.detail === "messages") {
+            return JSON.stringify(
+              {
+                session_id: args.session_id,
+                blob_id: args.blob_id,
+                detail: args.detail,
+                ...buildBlobMessageSummaries({
+                  map,
+                  blobID: args.blob_id,
+                }),
+                next_step:
+                  "Call message_detail with one message_id to fetch a full message only if needed.",
+              },
+              null,
+              2,
+            );
+          }
           const messages =
             args.detail === "full"
               ? await getMessages(args.session_id)
@@ -347,6 +558,34 @@ const server: Plugin = async (ctx) => {
                 map,
                 blobID: args.blob_id,
                 fidelity: args.detail === "full" ? "full" : "compressed",
+                messages,
+              }),
+            },
+            null,
+            2,
+          );
+        },
+      }),
+      message_detail: tool({
+        description:
+          "Fetch one full historical message after session_detail detail='messages' identifies the relevant message_id",
+        args: {
+          session_id: tool.schema.string().describe("Session ID to look up"),
+          message_id: tool.schema
+            .string()
+            .describe("Message ID to fetch in full"),
+        },
+        async execute(args, toolCtx) {
+          toolCtx.metadata({ title: `Message detail: ${args.message_id}` });
+          const { map } = await ensureHistoricalMap(args.session_id);
+          const messages = await getMessages(args.session_id);
+          return JSON.stringify(
+            {
+              session_id: args.session_id,
+              message_id: args.message_id,
+              ...buildMessageDetail({
+                map,
+                messageID: args.message_id,
                 messages,
               }),
             },
@@ -408,11 +647,18 @@ const server: Plugin = async (ctx) => {
     },
     "experimental.chat.system.transform": async (input, output) => {
       if (!input.sessionID) return;
+      if (isCompactionSystemPrompt(output.system)) {
+        await appendTrace(input.sessionID, "system.transform", {
+          skipped: "compaction",
+          system_count: output.system.length,
+        });
+        return;
+      }
       const map = await getMap(input.sessionID);
       const child = await isChildSession(input.sessionID);
       if (child) {
         output.system.unshift(
-          "This is a sub-agent session. Do not build a context map for this session. Keep the investigation focused and use session_zoom for historical details when needed.",
+          "This is a sub-agent session. Do not build a context map for this session. Keep the investigation focused and use session_detail/message_detail for historical details when needed.",
         );
         return;
       }
@@ -427,6 +673,15 @@ const server: Plugin = async (ctx) => {
         guidance_length: guidance.length,
         annotation_prompt_length: annotation.length,
         guidance_preview: guidance.slice(0, 300),
+        ...(tracePayloadEnabled()
+          ? {
+              system_prompts: output.system.map((text, index) => ({
+                index,
+                length: text.length,
+                text,
+              })),
+            }
+          : {}),
       });
     },
     "experimental.chat.messages.transform": async (_input, output) => {
@@ -437,19 +692,22 @@ const server: Plugin = async (ctx) => {
       const currentMessages = sortMessagesChronologically(
         output.messages as MessageLike[],
       );
-      const map =
-        (await persistCoverage(sessionID, currentMessages)) ??
-        (await getMap(sessionID));
+      const map = compactingSessions.has(sessionID)
+        ? await getMap(sessionID)
+        : ((await persistCoverage(sessionID, currentMessages)) ??
+          (await getMap(sessionID)));
 
       // Snapshot blob fidelities before transform
       const blobFidelities = Object.fromEntries(
         map.blobOrder.map((id) => [id, map.blobs[id]?.fidelity]),
       );
 
-      output.messages = transformMessagesForContext(
+      const preview = computeContextPreview(map);
+      const transformedMessages = transformMessagesForContext(
         output.messages as MessageLike[],
         map,
-      ) as never;
+      );
+      output.messages = transformedMessages as never;
       await writeContextMap(map);
 
       const afterCount = output.messages.length;
@@ -457,6 +715,19 @@ const server: Plugin = async (ctx) => {
         before_count: beforeCount,
         after_count: afterCount,
         messages_removed: beforeCount - afterCount,
+        preview: {
+          total_raw_tokens: preview.totalRaw,
+          total_effective_tokens: preview.totalEffective,
+          blobs: preview.blobs.map((b) => ({
+            id: b.id,
+            label: b.label,
+            fidelity: b.fidelity,
+            raw_tokens: b.rawTokens,
+            effective_tokens: b.effectiveTokens,
+            effective_label: b.effectiveLabel,
+            message_count: b.messageCount,
+          })),
+        },
         blob_fidelities: blobFidelities,
         surviving_messages: (output.messages as MessageLike[]).map((m) => ({
           id: m.info.id,
@@ -468,6 +739,14 @@ const server: Plugin = async (ctx) => {
             m.parts.some((p) => p.type === "text" && p.text?.startsWith("[")) ??
             false,
         })),
+        ...(tracePayloadEnabled()
+          ? {
+              payload_messages: messagePayloadSnapshot(
+                transformedMessages,
+                map,
+              ),
+            }
+          : {}),
       });
     },
     "experimental.text.complete": async (input, output) => {
@@ -484,15 +763,17 @@ const server: Plugin = async (ctx) => {
           annotation: parsed.annotation,
         });
       } else {
-        map = mergeContextMaps(
-          map,
-          buildFallbackMapFromMessages({
-            sessionID: input.sessionID,
-            directory: ctx.directory,
-            worktree: ctx.worktree,
-            messages,
-          }),
-        );
+        const fallback = buildFallbackMapFromMessages({
+          sessionID: input.sessionID,
+          directory: ctx.directory,
+          worktree: ctx.worktree,
+          messages,
+        });
+        map = mergeContextMaps(map, fallback);
+        for (const messageID of Object.keys(map.pendingRetroactive)) {
+          if (fallback.messages[messageID])
+            delete map.pendingRetroactive[messageID];
+        }
       }
       await writeContextMap(map);
       const preview = computeContextPreview(map);
@@ -514,6 +795,7 @@ const server: Plugin = async (ctx) => {
       });
     },
     "experimental.session.compacting": async (input, output) => {
+      compactingSessions.add(input.sessionID);
       const map = await getMap(input.sessionID);
       const prompt = buildCompactionPrompt(map);
       output.prompt = prompt;

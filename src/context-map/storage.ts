@@ -30,6 +30,15 @@ export function commitMapPath() {
   return path.join(contextMapRoot(), "_commits.json");
 }
 
+export function compactionArchivePath(sessionID: string, compactedAt: number) {
+  return path.join(
+    contextMapRoot(),
+    "archive",
+    sessionID,
+    `${compactedAt}.json`,
+  );
+}
+
 export async function ensureContextMapRoot() {
   await fs.mkdir(contextMapRoot(), { recursive: true });
 }
@@ -99,6 +108,35 @@ export async function readContextMap(input: {
 export async function writeContextMap(map: ContextMapFile) {
   await ensureContextMapRoot();
   await writeJsonAtomic(sessionMapPath(map.sessionID), map);
+}
+
+export async function archiveContextMapForCompaction(input: {
+  map: ContextMapFile;
+  compactedAt: number;
+  summaryMessageID: string;
+  summaryText: string;
+  includeMessageID?: string;
+}) {
+  await ensureContextMapRoot();
+  const archivePath = compactionArchivePath(
+    input.map.sessionID,
+    input.compactedAt,
+  );
+  await fs.mkdir(path.dirname(archivePath), { recursive: true });
+  await writeJsonAtomic(archivePath, {
+    version: 1,
+    reason: "compaction",
+    archivedAt: Date.now(),
+    sessionID: input.map.sessionID,
+    compaction: {
+      compactedAt: input.compactedAt,
+      summaryMessageID: input.summaryMessageID,
+      summaryText: input.summaryText,
+      includeMessageID: input.includeMessageID,
+    },
+    map: input.map,
+  });
+  return archivePath;
 }
 
 export async function readCommitMap(): Promise<CommitMapFile> {

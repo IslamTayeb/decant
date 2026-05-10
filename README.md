@@ -7,12 +7,12 @@ Context map plugin for [OpenCode](https://opencode.ai). Makes the LLM's context 
 Every time the agent responds, the plugin silently annotates the response with topic metadata -- which topic ("blob") this message belongs to, a running summary, and key facts. This builds a **context map** in a sideband JSON file, without touching the conversation itself.
 
 You can then:
-- **See** what's in context (sidebar bar + `/mem-map` dialog)
+- **See** what's in context (sidebar bar + `/context` dialog)
 - **Control** what stays in context (set topics to Full, Summary, Compressed, Placeholder, or Drop)
 - **Control individual messages** (hide, force full, force summary)
 - **Navigate old sessions** via git blame (`/blame src/auth.ts:42`)
 
-The agent also has tools to inspect and manage the map itself (`context_map`, `compress_blob`, `drop_blob`, `session_lookup`, `session_zoom`, `blame_lookup`), but your choices always take priority over the agent's.
+The agent also has tools to inspect and manage the map itself (`view_context`, `set_fidelity`, `session_lookup`, `session_detail`, `message_detail`, `blame_lookup`), but your choices always take priority over the agent's.
 
 ## How it works
 
@@ -25,7 +25,7 @@ You send a message
   -> You see the clean response
   -> Sideband map updates (new blob, updated summary, key facts)
 
-You open /mem-map
+You open /context
   -> See topics, token estimates, fidelity levels
   -> Change fidelity per topic or per message
   -> Changes take effect on the next model call
@@ -68,7 +68,7 @@ This creates a disposable demo repo with seeded sessions, commit mappings, and t
 Once OpenCode opens:
 
 1. Chat normally for a few turns on different topics
-2. Open the context map: type `/mem-map` in the prompt, or press `<leader>'`, or `ctrl+p` and search "context map"
+2. Open the context map: type `/context` in the prompt, use `ctrl+p` and search "Open context map", press `ctrl+g`, or click `open` in the Context Map sidebar block.
 3. Navigate with `j`/`k`, switch tabs with `tab`
 4. Set a topic to Compressed with `3`, or Placeholder with `4`
 5. Switch to the Messages tab and hide a noisy message with `x`
@@ -86,7 +86,7 @@ This resolves the git blame to a historical session, shows the topic map, and le
 
 ## Keyboard reference
 
-### /mem-map dialog
+### /context dialog
 
 | Key | Topics tab | Messages tab |
 |---|---|---|
@@ -113,11 +113,11 @@ The agent has these tools available (registered by the server plugin):
 
 | Tool | Purpose |
 |---|---|
-| `context_map` | Inspect the current map |
-| `compress_blob` | Change a topic's fidelity (respects your overrides) |
-| `drop_blob` | Remove a topic from context |
+| `view_context` | Inspect the current map |
+| `set_fidelity` | Change a topic's fidelity, including dropping it from context; respects your overrides |
 | `session_lookup` | Search historical sessions by keyword |
-| `session_zoom` | Zoom into a historical topic at compressed or full fidelity |
+| `session_detail` | Inspect a historical topic as a compressed summary, per-message summaries, or full transcript |
+| `message_detail` | Fetch one full historical message after narrowing with `session_detail` |
 | `blame_lookup` | Map file:line via git blame to a historical session |
 
 Your fidelity choices are always authoritative. The agent cannot override them without explicitly using `force`.
@@ -163,7 +163,7 @@ src/context-map/
   core.ts            # Annotation parsing, fidelity transforms, map operations
   git.ts             # Git hook installation for commit-to-session mapping
   server-plugin.ts   # Server plugin (hooks + tools)
-  tui-plugin.tsx     # TUI plugin (sidebar + /mem-map + /blame)
+  tui-plugin.tsx     # TUI plugin (sidebar + /context + /blame)
 ```
 
 Sideband data lives at `~/.opencode/context-maps/<session-id>.json`.

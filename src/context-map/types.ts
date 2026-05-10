@@ -97,6 +97,14 @@ export type PendingRetroactiveMessage = {
   suggestedBlobLabel?: string;
 };
 
+export type ContextMapCompactionState = {
+  compactedAt: number;
+  summaryMessageID: string;
+  summaryBlobID: string;
+  includeMessageID?: string;
+  archivePath?: string;
+};
+
 export type ContextMapFile = {
   version: 1;
   sessionID: string;
@@ -112,6 +120,7 @@ export type ContextMapFile = {
   blobs: Record<string, BlobEntry>;
   messages: Record<string, MessageEntry>;
   pendingRetroactive: Record<string, PendingRetroactiveMessage>;
+  compaction?: ContextMapCompactionState;
 };
 
 export type CommitMapEntry = {
@@ -186,8 +195,11 @@ export type HistoricalSessionOverview = {
   blobs: Array<{
     id: string;
     label: string;
+    summary: string;
+    compressedSummary: string;
     placeholder: string;
     tokenEstimate: number;
+    messageCount: number;
     fidelity: BlobFidelity;
     keyFacts: string[];
     activeForCommit: boolean;

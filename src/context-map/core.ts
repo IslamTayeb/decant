@@ -10,6 +10,7 @@ import {
   type BlobFidelity,
   type CommitMapEntry,
   type ContextMapFile,
+  type ContextMapCompactionState,
   type ContextPreview,
   type ContextPreviewBlob,
   type ControlSource,
@@ -21,6 +22,8 @@ import {
   type RetroactiveAnnotationItem,
   type SessionLike,
 } from "./types";
+
+export const COMPACTION_SUMMARY_BLOB_ID = "session_summary";
 
 const STOP_WORDS = new Set([
   "about",
@@ -155,6 +158,77 @@ export function getMessageCreatedAt(message: MessageLike) {
     message.info.time?.created ??
     Date.now()
   );
+}
+
+export function filterMessagesForActiveContext(
+  map: ContextMapFile,
+  messages: MessageLike[],
+  input?: { includeSummary?: boolean },
+) {
+  const compaction = map.compaction;
+  if (!compaction) return messages;
+  const includeSummary = input?.includeSummary ?? true;
+  return messages.filter((message) => {
+    if (message.info.id === compaction.summaryMessageID) return includeSummary;
+    return getMessageCreatedAt(message) > compaction.compactedAt;
+  });
+}
+
+export function resetMapAfterCompaction(input: {
+  map: ContextMapFile;
+  summaryText: string;
+  summaryMessageID: string;
+  compactedAt?: number;
+  includeMessageID?: string;
+  archivePath?: string;
+}): ContextMapFile {
+  const compactedAt = input.compactedAt ?? Date.now();
+  const summaryText = input.summaryText.trim() || "Conversation compacted.";
+  const summaryBlobID = COMPACTION_SUMMARY_BLOB_ID;
+  const blob = createBlobEntry({
+    id: summaryBlobID,
+    label: summaryBlobID,
+    summary: summaryText,
+    placeholder: trimText(summaryText, 80),
+    fidelity: "summary",
+    fidelitySource: "system",
+    createdAt: compactedAt,
+    lastActiveAt: compactedAt,
+  });
+  const message = createMessageEntry({
+    id: input.summaryMessageID,
+    role: "assistant",
+    blobID: summaryBlobID,
+    summary: summaryText,
+    tokenEstimate: estimateTokensFromText(summaryText),
+    createdAt: compactedAt,
+    updatedAt: compactedAt,
+    source: "derived",
+    partTypes: ["text"],
+    toolNames: [],
+  });
+  blob.messageIDs.push(message.id);
+
+  const compaction: ContextMapCompactionState = {
+    compactedAt,
+    summaryMessageID: input.summaryMessageID,
+    summaryBlobID,
+    includeMessageID: input.includeMessageID,
+    archivePath: input.archivePath,
+  };
+  const next: ContextMapFile = {
+    ...input.map,
+    updatedAt: compactedAt,
+    lastAnnotatedMessageID: input.summaryMessageID,
+    lastActiveBlobID: summaryBlobID,
+    blobOrder: [summaryBlobID],
+    blobs: { [summaryBlobID]: blob },
+    messages: { [message.id]: message },
+    pendingRetroactive: {},
+    compaction,
+  };
+  rebuildTotals(next);
+  return next;
 }
 
 export function extractToolNames(parts: MessageLike["parts"]) {
@@ -300,16 +374,22 @@ function pendingMessagesForAnnotation(
   map: ContextMapFile,
   assistantMessageID: string,
 ) {
-  const currentIndex = messages.findIndex(
+  const activeMessages = filterMessagesForActiveContext(map, messages, {
+    includeSummary: false,
+  });
+  const currentIndex = activeMessages.findIndex(
     (message) => message.info.id === assistantMessageID,
   );
   if (currentIndex === -1) return [];
   const lastAnnotatedIndex = map.lastAnnotatedMessageID
-    ? messages.findIndex(
+    ? activeMessages.findIndex(
         (message) => message.info.id === map.lastAnnotatedMessageID,
       )
     : -1;
-  return messages.slice(Math.max(0, lastAnnotatedIndex + 1), currentIndex + 1);
+  return activeMessages.slice(
+    Math.max(0, lastAnnotatedIndex + 1),
+    currentIndex + 1,
+  );
 }
 
 function upsertBlobFromAnnotation(
@@ -666,6 +746,7 @@ export function mergeContextMaps(
 ) {
   const merged: ContextMapFile = {
     ...fresh,
+    compaction: existing.compaction ?? fresh.compaction,
     settings: {
       ...fresh.settings,
       ...existing.settings,
@@ -786,7 +867,20 @@ export function updateMessageControls(input: {
     message.hiddenSource = input.source;
   }
   if (input.fidelityOverride) {
-    message.fidelityOverride = input.fidelityOverride;
+    let normalized = input.fidelityOverride;
+    // Normalize redundant overrides: if the override matches what the blob
+    // already dictates, store "inherit" instead of a no-op explicit value.
+    if (normalized !== "inherit") {
+      const blob = message.blobID ? input.map.blobs[message.blobID] : undefined;
+      if (
+        blob &&
+        ((blob.fidelity === "summary" && normalized === "summary") ||
+          (blob.fidelity === "full" && normalized === "full"))
+      ) {
+        normalized = "inherit";
+      }
+    }
+    message.fidelityOverride = normalized;
     message.fidelitySource = input.source;
   }
   message.updatedAt = Date.now();
@@ -847,11 +941,11 @@ function cleanupToolParts(map: ContextMapFile, parts: MessageLike["parts"]) {
     if (part.type !== "tool") return clonePart(part);
     if (
       ![
-        "context_map",
-        "compress_blob",
-        "drop_blob",
+        "view_context",
+        "set_fidelity",
         "session_lookup",
-        "session_zoom",
+        "session_detail",
+        "message_detail",
         "blame_lookup",
       ].includes(part.tool ?? "")
     ) {
@@ -876,8 +970,9 @@ export function transformMessagesForContext(
   messages: MessageLike[],
   map: ContextMapFile,
 ) {
+  const activeMessages = filterMessagesForActiveContext(map, messages);
   const blobIndexes = new Map<string, number[]>();
-  messages.forEach((message, index) => {
+  activeMessages.forEach((message, index) => {
     const entry = map.messages[message.info.id];
     if (!entry?.blobID) return;
     const blob = map.blobs[entry.blobID];
@@ -891,13 +986,16 @@ export function transformMessagesForContext(
 
   const anchorIndexByBlob = new Map<string, number>();
   for (const [blobID, indexes] of blobIndexes) {
-    anchorIndexByBlob.set(blobID, chooseBlobAnchorIndex(messages, indexes));
+    anchorIndexByBlob.set(
+      blobID,
+      chooseBlobAnchorIndex(activeMessages, indexes),
+    );
   }
 
   const output: MessageLike[] = [];
 
-  for (let index = 0; index < messages.length; index++) {
-    const message = messages[index]!;
+  for (let index = 0; index < activeMessages.length; index++) {
+    const message = activeMessages[index]!;
     const base: MessageLike = {
       ...message,
       parts: cleanupToolParts(map, message.parts),
@@ -1005,7 +1103,9 @@ export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
   const lines = [
     "Context map plugin is active.",
     "User controls are authoritative: do not override user-set fidelity or hidden-message choices unless the user explicitly asks.",
-    "Available tools: view_context (see blobs and fidelity), set_fidelity (change detail level for a blob), session_lookup + session_detail (investigate past sessions via sub-agent), blame_lookup (find which session produced code).",
+    "Available tools: view_context (see blobs and fidelity), set_fidelity (change detail level for a blob), session_lookup + session_detail + message_detail (progressively inspect past sessions), blame_lookup (find which session produced code).",
+    "Historical investigation flow: use blame_lookup or session_lookup to find an OpenCode session; read the compressed summaries in overview.blobs; call session_detail with detail='messages' for per-message summaries in a chosen blob; call message_detail for one full message only when necessary.",
+    "Cache-aware context management: changing fidelity reshapes the next prompt and can reduce provider prompt-cache hits for unchanged later messages. Avoid small or frequent context edits. Use set_fidelity when an older blob is clearly stale or large enough that dropping/summarizing it is worth the one-time cache disruption.",
   ];
 
   if (totalTokens > 50_000 && blobCount >= 3) {
@@ -1171,12 +1271,108 @@ export function buildHistoricalOverview(input: {
       .map((blob) => ({
         id: blob.id,
         label: blob.label,
+        summary: blob.summary,
+        compressedSummary: buildBlobSummaryText(blob),
         placeholder: blob.placeholder,
         tokenEstimate: blob.tokenEstimate,
+        messageCount: blob.messageIDs.length,
         fidelity: blob.fidelity,
         keyFacts: blob.keyFacts,
         activeForCommit: activeBlobIDs.has(blob.id),
       })),
+  };
+}
+
+export function buildBlobMessageSummaries(input: {
+  map: ContextMapFile;
+  blobID: string;
+}) {
+  const blob = input.map.blobs[input.blobID];
+  if (!blob)
+    return { ok: false as const, error: `Unknown blob: ${input.blobID}` };
+  return {
+    ok: true as const,
+    blob: {
+      id: blob.id,
+      label: blob.label,
+      compressedSummary: buildBlobSummaryText(blob),
+      tokenEstimate: blob.tokenEstimate,
+      messageCount: blob.messageIDs.length,
+    },
+    messages: blob.messageIDs
+      .map((messageID) => input.map.messages[messageID])
+      .filter(Boolean)
+      .sort((a, b) => a.createdAt - b.createdAt)
+      .map((message) => ({
+        id: message.id,
+        role: message.role,
+        summary: message.summary,
+        keyFacts: message.keyFacts,
+        tokenEstimate: message.tokenEstimate,
+        hidden: message.hidden,
+        fidelityOverride: message.fidelityOverride,
+        createdAt: message.createdAt,
+      })),
+  };
+}
+
+export function buildMessageDetail(input: {
+  map: ContextMapFile;
+  messageID: string;
+  messages: MessageLike[];
+}) {
+  const entry = input.map.messages[input.messageID];
+  const message = input.messages.find(
+    (item) => item.info.id === input.messageID,
+  );
+  if (!entry || !message) {
+    return {
+      ok: false as const,
+      error: `Unknown message: ${input.messageID}`,
+    };
+  }
+  const blob = entry.blobID ? input.map.blobs[entry.blobID] : undefined;
+  return {
+    ok: true as const,
+    message: {
+      id: entry.id,
+      role: entry.role,
+      blobID: entry.blobID,
+      blobLabel: blob?.label,
+      summary: entry.summary,
+      keyFacts: entry.keyFacts,
+      tokenEstimate: entry.tokenEstimate,
+      createdAt: entry.createdAt,
+      parts: message.parts.map((part) => {
+        if (part.type === "text" || part.type === "reasoning") {
+          return {
+            id: part.id,
+            type: part.type,
+            text: part.text ?? "",
+          };
+        }
+        if (part.type === "tool") {
+          return {
+            id: part.id,
+            type: part.type,
+            tool: part.tool,
+            callID: part.callID,
+            title: part.state?.title,
+            status: part.state?.status,
+            input: part.state?.input,
+            output: part.state?.output,
+            metadata: part.state?.metadata,
+          };
+        }
+        return {
+          id: part.id,
+          type: part.type,
+          filename: part.filename,
+          url: part.url,
+          metadata: part.metadata,
+        };
+      }),
+    },
   };
 }
 
@@ -1244,11 +1440,14 @@ export function buildFallbackMapFromMessages(input: {
   for (const message of input.messages) {
     const summary = deriveSummaryFromMessage(message);
     if (!currentBlobID || message.info.role === "user") {
-      currentBlobID = findBestBlobForSummary(map, summary);
+      currentBlobID = shouldStartFreshFallbackBlob(summary)
+        ? undefined
+        : findBestBlobForSummary(map, summary);
       if (!currentBlobID) {
-        currentBlobID = slugifyBlobLabel(
+        const baseBlobID = slugifyBlobLabel(
           labelFromSummary(summary, map.blobOrder.length + 1),
         );
+        currentBlobID = nextAvailableBlobID(map, baseBlobID);
         map.blobs[currentBlobID] = createBlobEntry({
           id: currentBlobID,
           label: currentBlobID,
@@ -1282,6 +1481,22 @@ export function buildFallbackMapFromMessages(input: {
 
   rebuildTotals(map);
   return map;
+}
+
+function shouldStartFreshFallbackBlob(summary: string) {
+  const lowered = summary.toLowerCase();
+  if (/\b(return|back|resume|revisit)\b/.test(lowered)) return false;
+  return (
+    /\b(?:switch|change|shift|move)\s+(?:topics?|gears)\b/.test(lowered) ||
+    /\b(?:new|different|separate|unrelated)\s+topic\b/.test(lowered)
+  );
+}
+
+function nextAvailableBlobID(map: ContextMapFile, baseBlobID: string) {
+  if (!map.blobs[baseBlobID]) return baseBlobID;
+  let index = 2;
+  while (map.blobs[`${baseBlobID}_${index}`]) index += 1;
+  return `${baseBlobID}_${index}`;
 }
 
 export function matchBlobIDsForQuery(map: ContextMapFile, query: string) {
