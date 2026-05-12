@@ -25,7 +25,7 @@ bun run benchmark:provenance-qa -- --out benchmarks/provenance-qa/runs/manual
 ```sh
 MEM_MOULD_E2E_MODEL="openai/gpt-5.5" bun run benchmark:provenance-blog -- --prepare-only
 MEM_MOULD_E2E_MODEL="openai/gpt-5.5" bun run benchmark:provenance-blog -- --conditions searchable-transcript,memmould-map-zoom --fixtures auth-queue-rationale
-MEM_MOULD_E2E_MODEL="openai/gpt-5.5" MEM_MOULD_E2E_CHILD_MODEL="openai/<mini-model>" bun run benchmark:provenance-blog -- --conditions subagent-searchable-transcript,subagent-map-zoom
+MEM_MOULD_E2E_MODEL="openai/gpt-5.5" MEM_MOULD_E2E_CHILD_MODEL="openai/gpt-5.4-mini" bun run benchmark:provenance-blog -- --conditions subagent-searchable-transcript,subagent-map-zoom
 ```
 
 Blog fixtures cover basic rationale lookup, correction chains, false provenance, related-work reuse, sub-agent synthesis, and a `/blame`-style line-to-rationale task. The `/blame` condition only runs for fixtures with an explicit blame target.
@@ -42,7 +42,7 @@ Blog fixtures cover basic rationale lookup, correction chains, false provenance,
 
 ## Scoring
 
-The harness requires both answer correctness and provenance correctness.
+The harness requires answer correctness, provenance correctness, and condition tool-policy correctness.
 
 Answer correctness requires all expected rationale facts:
 
@@ -53,12 +53,20 @@ Answer correctness requires all expected rationale facts:
 
 Provenance correctness requires citation of the relevant session and a supporting message ID. For mem-mould conditions these are real OpenCode session/message IDs.
 
+Tool-policy correctness requires each condition to use the intended path. For example, `memmould-map-zoom` must use `session_lookup -> session_detail -> message_detail` and must not read transcript files; `subagent-map-zoom` must delegate to the dedicated mem-mould sub-agent and the child must use the same session tools. Searchable transcript conditions must use file search/read tools and must not use mem-mould session tools.
+
 The analyzer also records:
 
 - forbidden distractor terms in the final answer.
 - context-tool, task-tool, and `message_detail` call counts.
 - `glob`/`grep` search calls, `read` calls, transcript files read, and irrelevant transcript reads.
 - provider input, cache-read, output, reasoning, and cache-hit share.
+
+## Current Blog Artifacts
+
+- Final GPT-5.5 full matrix: `benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final`.
+- GPT-5.5 parent + GPT-5.4 mini child sub-agent comparison: `benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents`.
+- `openai/gpt-5.5-mini` was not available in the tested OpenAI/OpenCode model list; `openai/gpt-5.4-mini` was the available mini baseline.
 
 ## Interpretation
 
