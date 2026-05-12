@@ -126,6 +126,8 @@ type RunStats = {
   benchmark_passed: boolean;
   answer_passed: boolean;
   provenance_passed: boolean;
+  tool_path_passed: boolean;
+  tool_path_failures: string[];
   required_hits: string[];
   missing_required: string[];
   forbidden_hits: string[];
@@ -150,6 +152,7 @@ type RunStats = {
   duration_ms: number;
   relevant_session_id: string;
   relevant_message_ids: string[];
+  error?: string;
 };
 
 type Analysis = {
@@ -198,7 +201,11 @@ const fixtures: Fixture[] = [
       },
       {
         id: "global_mutex_rejected",
-        patterns: [/global mutex/i, /rejected/i, /would .*block/i],
+        patterns: [
+          /global (auth )?mutex/i,
+          /rejected|instead of|rather than|not use/i,
+          /would .*block|blocking behind|must not block/i,
+        ],
       },
     ],
     forbidden: ["billing retry", "markdown parser", "quickstart"],
@@ -273,7 +280,12 @@ const fixtures: Fixture[] = [
     required: [
       {
         id: "after_split",
-        patterns: [/after (splitting|split)/i, /split first/i],
+        patterns: [
+          /after (splitting|split|tokenization|tokenizing)/i,
+          /split first/i,
+          /tokeni[sz](e|ing) first/i,
+          /trim(ming)? afterward/i,
+        ],
       },
       { id: "preserve_raw", patterns: [/preserv/i, /raw/i, /quoted/i] },
       {
@@ -672,14 +684,16 @@ async function runFixtureCondition(
   let server: Awaited<ReturnType<typeof startServer>> | undefined;
   const startedAt = Date.now();
   try {
-    await prepareFixtureRepo(worktree, fixture);
+    await prepareFixtureRepo(worktree, fixture, {
+      includeTranscripts: condition.includes("searchable"),
+    });
     const opencodeRoot = resolveOpenCodeRoot(conditionDir);
     const env = await buildOpenCodeEnv({
       opencodeRoot,
       conditionDir,
       modelSlug: options.modelSlug,
       childModelSlug: options.childModelSlug,
-      plugin: condition.startsWith("memmould"),
+      plugin: usesMemMould(condition),
     });
     server = await startServer(env, worktree);
     const client = createOpencodeClient({ baseUrl: server.url });
@@ -687,7 +701,7 @@ async function runFixtureCondition(
     if (options.childModelSlug)
       await pickModel(client, worktree, options.childModelSlug);
 
-    const seeded = condition.startsWith("memmould")
+    const seeded = usesMemMould(condition)
       ? await seedHistoricalSessions(
           client,
           worktree,
@@ -759,12 +773,20 @@ async function runFixtureCondition(
       error instanceof Error ? (error.stack ?? error.message) : String(error);
     await fs.writeFile(
       statsPath,
-      `${JSON.stringify({ fixture: fixture.id, condition, error: message }, null, 2)}\n`,
+      `${JSON.stringify(failedStats(fixture, condition, startedAt, message), null, 2)}\n`,
     );
     return { fixture: fixture.id, condition, statsPath, error: message };
   } finally {
     await server?.close();
   }
+}
+
+function usesMemMould(condition: ConditionID) {
+  return (
+    condition === "memmould-map-zoom" ||
+    condition === "subagent-map-zoom" ||
+    condition === "memmould-blame-lookup"
+  );
 }
 
 function parseOptions(): Options {
@@ -802,7 +824,11 @@ function parseOptions(): Options {
   };
 }
 
-async function prepareFixtureRepo(worktree: string, fixture: Fixture) {
+async function prepareFixtureRepo(
+  worktree: string,
+  fixture: Fixture,
+  options: { includeTranscripts: boolean },
+) {
   await fs.rm(worktree, { recursive: true, force: true });
   for (const file of fixture.sourceFiles) {
     await fs.mkdir(path.dirname(path.join(worktree, file.file)), {
@@ -813,7 +839,8 @@ async function prepareFixtureRepo(worktree: string, fixture: Fixture) {
       `${file.lines.join("\n")}\n`,
     );
   }
-  await writeTranscriptCorpus(worktree, fixture);
+  if (options.includeTranscripts)
+    await writeTranscriptCorpus(worktree, fixture);
   await execFileAsync("git", ["init"], { cwd: worktree });
   await execFileAsync("git", ["add", "."], { cwd: worktree });
   await execFileAsync(
@@ -933,14 +960,34 @@ async function buildOpenCodeEnv(input: {
     $schema: "https://opencode.ai/config.json",
     model: input.modelSlug,
   };
+  const agentConfig: Record<string, Record<string, unknown>> = {};
   if (input.childModelSlug)
-    config.agent = { general: { model: input.childModelSlug } };
-  if (input.plugin)
+    agentConfig.general = { model: input.childModelSlug };
+  if (input.plugin) {
+    agentConfig.memmould = {
+      mode: "subagent",
+      description:
+        "Mem-mould provenance investigator. Use this agent when the parent asks for session_lookup, session_detail, and message_detail over prior session maps.",
+      ...(input.childModelSlug ? { model: input.childModelSlug } : {}),
+      permission: {
+        glob: "deny",
+        grep: "deny",
+        read: "deny",
+        bash: "deny",
+        session_lookup: "allow",
+        session_detail: "allow",
+        message_detail: "allow",
+        session_tree: "allow",
+        blame_lookup: "allow",
+      },
+    };
     config.plugin = [
       pathToFileURL(
         path.join(repoRoot, "src", "context-map", "server-plugin.ts"),
       ).href,
     ];
+  }
+  if (Object.keys(agentConfig).length > 0) config.agent = agentConfig;
   const authContent = await seededAuthContent();
   return {
     ...process.env,
@@ -1168,6 +1215,7 @@ function buildPromptForCondition(
     "Return compact JSON only with this shape:",
     '{"answer":"...","evidence":{"session_id":"...","blob_id":"...","message_id":"..."},"rationale":"...","irrelevant_context_ignored":["..."]}',
     "The cited message_id must support the full answer, not just a nearby subclaim.",
+    "If a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale.",
   ].join("\n");
   const transcriptDir = path.join(worktree, "memory", "transcripts");
   const distractorTitles = fixture.distractors
@@ -1176,7 +1224,7 @@ function buildPromptForCondition(
   if (condition === "searchable-transcript") {
     return {
       system:
-        "Answer with compact JSON only. Use glob, grep, then read before answering. Cite exact session_id and message_id.",
+        "Answer with compact JSON only. Use only glob, grep, and read over transcript files before answering. Do not use bash or mem-mould/session tools. Cite exact session_id and message_id.",
       tools: { glob: true, grep: true, read: true },
       text: [
         `Transcript directory: ${transcriptDir}`,
@@ -1189,7 +1237,7 @@ function buildPromptForCondition(
   if (condition === "subagent-searchable-transcript") {
     return {
       system:
-        "Answer with compact JSON only. Use the Task tool exactly once. The child must use glob, grep, and read over transcript files before returning evidence.",
+        "Answer with compact JSON only. Use the Task tool exactly once. The child must use only glob, grep, and read over transcript files before returning evidence. Do not ask the child to use bash or mem-mould/session tools.",
       tools: { task: true },
       text: [
         `Transcript directory: ${transcriptDir}`,
@@ -1203,7 +1251,7 @@ function buildPromptForCondition(
     assert.ok(fixture.blame, "blame condition requires fixture.blame");
     return {
       system:
-        "Answer with compact JSON only. Use blame_lookup first, then session_detail detail='messages', then message_detail for exact evidence.",
+        "Answer with compact JSON only. Use blame_lookup first, then session_detail detail='messages', then message_detail for exact evidence. Do not use glob, grep, read, bash, or transcript files.",
       tools: { blame_lookup: true, session_detail: true, message_detail: true },
       text: [
         `Question: ${fixture.question}`,
@@ -1215,11 +1263,13 @@ function buildPromptForCondition(
   if (condition === "subagent-map-zoom") {
     return {
       system:
-        "Answer with compact JSON only. Use the Task tool exactly once. The child must use session_lookup, session_detail detail='messages', and message_detail before returning evidence.",
+        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
       tools: { task: true, session_tree: true },
       text: [
         `Question: ${fixture.question}`,
         `Expected relevant prior session: ${fixture.relevant.title}`,
+        "Task instruction: call subagent_type='memmould', not general or explore.",
+        "No transcript corpus is available for this condition; provenance must come from mem-mould session tools.",
         `Ask the child to ignore distractors: ${distractorTitles}`,
         answerContract,
       ].join("\n"),
@@ -1227,7 +1277,7 @@ function buildPromptForCondition(
   }
   return {
     system:
-      "Answer with compact JSON only. Use session_lookup, then session_detail detail='messages', then message_detail before answering.",
+      "Answer with compact JSON only. Use session_lookup, then session_detail detail='messages', then message_detail before answering. Do not use glob, grep, read, bash, or transcript files.",
     tools: {
       session_lookup: true,
       session_detail: true,
@@ -1395,6 +1445,11 @@ function buildStats(input: {
   const tools = toolParts(allMessages);
   const toolNames = tools.map((part) => part.tool).filter(Boolean) as string[];
   const transcriptFilesRead = transcriptReadFiles(tools);
+  const toolPath = evaluateToolPath(
+    input.condition,
+    toolNames,
+    transcriptFilesRead,
+  );
   const irrelevantTranscriptReads = transcriptFilesRead.filter(
     (file) =>
       input.fixture.distractors.some((d) => file.includes(d.sessionID)) ||
@@ -1407,9 +1462,11 @@ function buildStats(input: {
   return {
     fixture: input.fixture.id,
     condition: input.condition,
-    benchmark_passed: answerPassed && provenancePassed,
+    benchmark_passed: answerPassed && provenancePassed && toolPath.passed,
     answer_passed: answerPassed,
     provenance_passed: provenancePassed,
+    tool_path_passed: toolPath.passed,
+    tool_path_failures: toolPath.failures,
     required_hits: requiredHits,
     missing_required: missingRequired,
     forbidden_hits: forbiddenHits,
@@ -1449,6 +1506,101 @@ function buildStats(input: {
       input.seeded.relevantSessionID ?? input.fixture.relevant.sessionID,
     relevant_message_ids: input.seeded.relevantMessageIDs,
   };
+}
+
+function failedStats(
+  fixture: Fixture,
+  condition: ConditionID,
+  startedAt: number,
+  error: string,
+): RunStats {
+  return {
+    fixture: fixture.id,
+    condition,
+    benchmark_passed: false,
+    answer_passed: false,
+    provenance_passed: false,
+    tool_path_passed: false,
+    tool_path_failures: ["run_error"],
+    required_hits: [],
+    missing_required: fixture.required.map((item) => item.id),
+    forbidden_hits: [],
+    citation_hits: [],
+    output_preview: error.slice(0, 1200),
+    tool_names: [],
+    tool_call_count: 0,
+    context_tool_call_count: 0,
+    search_tool_call_count: 0,
+    read_tool_call_count: 0,
+    task_tool_call_count: 0,
+    message_detail_call_count: 0,
+    blame_lookup_call_count: 0,
+    transcript_files_read: [],
+    irrelevant_transcript_reads: [],
+    child_session_count: 0,
+    parent_tokens: emptyTokenBucket(),
+    child_tokens: emptyTokenBucket(),
+    tokens: emptyTokenBucket(),
+    parent_models: [],
+    child_models: [],
+    duration_ms: Date.now() - startedAt,
+    relevant_session_id: fixture.relevant.sessionID,
+    relevant_message_ids: fixture.relevant.messages
+      .filter((message) => message.supportsAnswer)
+      .map((message) => message.id),
+    error,
+  };
+}
+
+function evaluateToolPath(
+  condition: ConditionID,
+  toolNames: string[],
+  transcriptFilesRead: string[],
+) {
+  const failures: string[] = [];
+  const has = (tool: string) => toolNames.includes(tool);
+  const requireTools = (tools: string[]) => {
+    for (const tool of tools) if (!has(tool)) failures.push(`missing:${tool}`);
+  };
+  const rejectTools = (tools: string[]) => {
+    for (const tool of tools)
+      if (has(tool)) failures.push(`disallowed:${tool}`);
+  };
+  const searchTools = ["glob", "grep", "read", "bash"];
+  const contextTools = [
+    "session_lookup",
+    "session_detail",
+    "message_detail",
+    "session_tree",
+    "blame_lookup",
+  ];
+
+  if (condition === "searchable-transcript") {
+    requireTools(["glob", "grep", "read"]);
+    rejectTools(["task", "bash", ...contextTools]);
+  } else if (condition === "subagent-searchable-transcript") {
+    requireTools(["task", "glob", "grep", "read"]);
+    rejectTools(["bash", ...contextTools]);
+  } else if (condition === "memmould-map-zoom") {
+    requireTools(["session_lookup", "session_detail", "message_detail"]);
+    rejectTools(["task", ...searchTools, "blame_lookup"]);
+  } else if (condition === "subagent-map-zoom") {
+    requireTools([
+      "task",
+      "session_lookup",
+      "session_detail",
+      "message_detail",
+    ]);
+    rejectTools(searchTools.concat("blame_lookup"));
+  } else if (condition === "memmould-blame-lookup") {
+    requireTools(["blame_lookup", "session_detail", "message_detail"]);
+    rejectTools(["task", ...searchTools]);
+  }
+
+  if (condition.startsWith("memmould") || condition === "subagent-map-zoom") {
+    if (transcriptFilesRead.length > 0) failures.push("transcript_read");
+  }
+  return { passed: failures.length === 0, failures };
 }
 
 function answerCorrectnessText(outputText: string) {
@@ -1613,9 +1765,46 @@ async function collectStats(dir: string, rows: RunStats[]) {
       const parsed = JSON.parse(await fs.readFile(file, "utf8")) as RunStats & {
         error?: unknown;
       };
-      if (!parsed.error) rows.push(parsed);
+      rows.push(normalizeRunStats(parsed));
     }
   }
+}
+
+function normalizeRunStats(input: Partial<RunStats>): RunStats {
+  return {
+    fixture: input.fixture ?? "unknown",
+    condition: input.condition as ConditionID,
+    benchmark_passed: input.benchmark_passed ?? false,
+    answer_passed: input.answer_passed ?? false,
+    provenance_passed: input.provenance_passed ?? false,
+    tool_path_passed: input.tool_path_passed ?? false,
+    tool_path_failures: input.tool_path_failures ?? [],
+    required_hits: input.required_hits ?? [],
+    missing_required: input.missing_required ?? [],
+    forbidden_hits: input.forbidden_hits ?? [],
+    citation_hits: input.citation_hits ?? [],
+    output_preview: input.output_preview ?? String(input.error ?? ""),
+    tool_names: input.tool_names ?? [],
+    tool_call_count: input.tool_call_count ?? 0,
+    context_tool_call_count: input.context_tool_call_count ?? 0,
+    search_tool_call_count: input.search_tool_call_count ?? 0,
+    read_tool_call_count: input.read_tool_call_count ?? 0,
+    task_tool_call_count: input.task_tool_call_count ?? 0,
+    message_detail_call_count: input.message_detail_call_count ?? 0,
+    blame_lookup_call_count: input.blame_lookup_call_count ?? 0,
+    transcript_files_read: input.transcript_files_read ?? [],
+    irrelevant_transcript_reads: input.irrelevant_transcript_reads ?? [],
+    child_session_count: input.child_session_count ?? 0,
+    parent_tokens: input.parent_tokens ?? emptyTokenBucket(),
+    child_tokens: input.child_tokens ?? emptyTokenBucket(),
+    tokens: input.tokens ?? emptyTokenBucket(),
+    parent_models: input.parent_models ?? [],
+    child_models: input.child_models ?? [],
+    duration_ms: input.duration_ms ?? 0,
+    relevant_session_id: input.relevant_session_id ?? "",
+    relevant_message_ids: input.relevant_message_ids ?? [],
+    error: input.error,
+  };
 }
 
 async function writeAnalysisFiles(outDir: string, analysis: Analysis) {
@@ -1638,7 +1827,7 @@ async function writeAnalysisFiles(outDir: string, analysis: Analysis) {
 function renderAnalysisMarkdown(analysis: Analysis) {
   const rows = analysis.rows.map(
     (row) =>
-      `| ${row.fixture} | ${row.condition} | ${String(row.benchmark_passed)} | ${String(row.answer_passed)} | ${String(row.provenance_passed)} | ${row.tool_names.join(" -> ")} | ${row.tokens.input.toLocaleString()} | ${row.tokens.cacheRead.toLocaleString()} | ${formatPercent(cacheHitShare(row.tokens))} | ${row.parent_tokens.input.toLocaleString()} | ${row.child_tokens.input.toLocaleString()} | ${row.irrelevant_transcript_reads.length} |`,
+      `| ${row.fixture} | ${row.condition} | ${String(row.benchmark_passed)} | ${String(row.answer_passed)} | ${String(row.provenance_passed)} | ${String(row.tool_path_passed)} | ${row.tool_path_failures.join("; ")} | ${row.tool_names.join(" -> ")} | ${row.tokens.input.toLocaleString()} | ${row.tokens.cacheRead.toLocaleString()} | ${formatPercent(cacheHitShare(row.tokens))} | ${row.parent_tokens.input.toLocaleString()} | ${row.child_tokens.input.toLocaleString()} | ${row.irrelevant_transcript_reads.length} |`,
   );
   return [
     "# Provenance Blog Benchmark Analysis",
@@ -1647,8 +1836,8 @@ function renderAnalysisMarkdown(analysis: Analysis) {
     `- Generated: ${analysis.generatedAt}`,
     `- Passed: ${analysis.rows.filter((row) => row.benchmark_passed).length}/${analysis.rows.length}`,
     "",
-    "| Fixture | Condition | Pass | Answer | Provenance | Tool Path | Input Tok | Cache Read Tok | Cache Hit | Parent Input | Child Input | Irrelevant Reads |",
-    "|---|---|---:|---:|---:|---|---:|---:|---:|---:|---:|---:|",
+    "| Fixture | Condition | Pass | Answer | Provenance | Tool Policy | Tool Failures | Tool Path | Input Tok | Cache Read Tok | Cache Hit | Parent Input | Child Input | Irrelevant Reads |",
+    "|---|---|---:|---:|---:|---:|---|---|---:|---:|---:|---:|---:|---:|",
     ...rows,
     "",
   ].join("\n");
@@ -1661,6 +1850,8 @@ function renderAnalysisCsv(analysis: Analysis) {
     "pass",
     "answer_pass",
     "provenance_pass",
+    "tool_path_pass",
+    "tool_path_failures",
     "input_tokens",
     "cache_read_tokens",
     "cache_hit_share",
@@ -1676,6 +1867,8 @@ function renderAnalysisCsv(analysis: Analysis) {
       row.benchmark_passed,
       row.answer_passed,
       row.provenance_passed,
+      row.tool_path_passed,
+      csvCell(row.tool_path_failures.join(";")),
       row.tokens.input,
       row.tokens.cacheRead,
       cacheHitShare(row.tokens) ?? "",
@@ -1695,6 +1888,7 @@ async function writeEvidenceMarkdown(outDir: string, analysis: Analysis) {
       `## ${row.fixture} / ${row.condition}`,
       "",
       `- Pass: ${row.benchmark_passed}`,
+      `- Tool policy: ${row.tool_path_passed}${row.tool_path_failures.length > 0 ? ` (${row.tool_path_failures.join(", ")})` : ""}`,
       `- Tool path: ${row.tool_names.join(" -> ") || "none"}`,
       `- Input tokens: ${row.tokens.input.toLocaleString()}`,
       `- Cache hit: ${formatPercent(cacheHitShare(row.tokens))}`,
