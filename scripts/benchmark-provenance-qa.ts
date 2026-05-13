@@ -17,8 +17,8 @@ type ModelRef = {
 type ConditionID =
   | "full-transcript"
   | "keyword-snippets"
-  | "searchable-transcript"
-  | "subagent-searchable-transcript"
+  | "rlm-transcript-search"
+  | "subagent-rlm-transcript-search"
   | "memmould-map-zoom"
   | "subagent-map-zoom";
 
@@ -148,8 +148,8 @@ const conditions: Record<ConditionID, { plugin: boolean; subagent: boolean }> =
   {
     "full-transcript": { plugin: false, subagent: false },
     "keyword-snippets": { plugin: false, subagent: false },
-    "searchable-transcript": { plugin: false, subagent: false },
-    "subagent-searchable-transcript": { plugin: false, subagent: true },
+    "rlm-transcript-search": { plugin: false, subagent: false },
+    "subagent-rlm-transcript-search": { plugin: false, subagent: true },
     "memmould-map-zoom": { plugin: true, subagent: false },
     "subagent-map-zoom": { plugin: true, subagent: true },
   };
@@ -377,8 +377,8 @@ function parseOptions(): Options {
       : [
           "full-transcript",
           "keyword-snippets",
-          "searchable-transcript",
-          "subagent-searchable-transcript",
+          "rlm-transcript-search",
+          "subagent-rlm-transcript-search",
           "memmould-map-zoom",
           "subagent-map-zoom",
         ]
@@ -605,9 +605,7 @@ async function buildOpenCodeEnv(input: {
   };
   if (input.plugin) {
     config.plugin = [
-      pathToFileURL(
-        path.join(repoRoot, "src", "context-map", "server-plugin.ts"),
-      ).href,
+      pathToFileURL(path.join(repoRoot, "src", "server-plugin.ts")).href,
     ];
   }
   const authContent = await seededAuthContent();
@@ -854,7 +852,7 @@ function buildPromptForCondition(
     };
   }
 
-  if (conditionID === "searchable-transcript") {
+  if (conditionID === "rlm-transcript-search") {
     const transcriptDir = path.join(worktree, "memory", "transcripts");
     return {
       system: [
@@ -874,7 +872,7 @@ function buildPromptForCondition(
     };
   }
 
-  if (conditionID === "subagent-searchable-transcript") {
+  if (conditionID === "subagent-rlm-transcript-search") {
     const transcriptDir = path.join(worktree, "memory", "transcripts");
     return {
       system: [

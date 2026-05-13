@@ -128,8 +128,8 @@ The plugin is not auto-loaded. To enable it on a project:
 
 ```sh
 mkdir -p .opencode/plugins
-ln -s /path/to/mem-mould/src/context-map/server-plugin.ts .opencode/plugins/context-map.ts
-ln -s /path/to/mem-mould/src/context-map/tui-plugin.tsx .opencode/plugins/context-map-tui.tsx
+ln -s /path/to/mem-mould/src/server-plugin.ts .opencode/plugins/context-map.ts
+ln -s /path/to/mem-mould/src/tui-plugin.tsx .opencode/plugins/context-map-tui.tsx
 ```
 
 Then add `.opencode/tui.json`:
@@ -157,7 +157,7 @@ npm run setup:test-env     # create disposable manual test repo
 ## Project structure
 
 ```
-src/context-map/
+src/
   types.ts           # Sideband JSON schema and annotation types
   storage.ts         # Read/write context map and commit map files
   core.ts            # Annotation parsing, fidelity transforms, map operations

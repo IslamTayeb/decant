@@ -47,9 +47,7 @@ async function main() {
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",
       plugin: [
-        pathToFileURL(
-          path.join(projectRoot, "src", "context-map", "server-plugin.ts"),
-        ).href,
+        pathToFileURL(path.join(projectRoot, "src", "server-plugin.ts")).href,
       ],
     }),
   };
@@ -644,7 +642,7 @@ async function main() {
 
   // ── Save fixtures ──────────────────────────────────────────────
   console.log("Saving fixtures...");
-  const fixturesDir = path.join(projectRoot, "fixtures", "test-env");
+  const fixturesDir = path.join(projectRoot, "fixtures");
   // Clean old fixtures completely before writing new ones
   await fs.rm(fixturesDir, { recursive: true, force: true });
   await fs.mkdir(path.join(fixturesDir, "context-maps"), { recursive: true });
@@ -1741,11 +1739,11 @@ async function createDemoRepo(projectRoot: string, repo: string) {
   await fs.mkdir(path.join(repo, ".opencode", "plugins"), { recursive: true });
   await fs.writeFile(path.join(repo, ".gitignore"), ".opencode/\n");
   await fs.symlink(
-    path.join(projectRoot, "src", "context-map", "server-plugin.ts"),
+    path.join(projectRoot, "src", "server-plugin.ts"),
     path.join(repo, ".opencode", "plugins", "context-map.ts"),
   );
   await fs.symlink(
-    path.join(projectRoot, "src", "context-map", "tui-plugin.tsx"),
+    path.join(projectRoot, "src", "tui-plugin.tsx"),
     path.join(repo, ".opencode", "plugins", "context-map-tui.tsx"),
   );
   await fs.writeFile(

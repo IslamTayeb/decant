@@ -6,7 +6,7 @@ import path from "node:path";
 import test from "node:test";
 import { promisify } from "node:util";
 
-import { ensureContextMapGitHook } from "../src/context-map/git";
+import { ensureContextMapGitHook } from "../src/git";
 
 const execFileAsync = promisify(execFile);
 

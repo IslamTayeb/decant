@@ -11,13 +11,13 @@ const execAsync = promisify(exec);
 /**
  * Instant test environment setup.
  *
- * Reads pre-generated fixtures from fixtures/test-env/ (created by
+ * Reads pre-generated fixtures from fixtures/ (created by
  * generate-test-fixtures.ts) and copies them into a fresh temp directory
  * with patched paths. Takes <5 seconds instead of 10-15 minutes.
  */
 async function main() {
   const projectRoot = path.resolve(process.cwd());
-  const fixturesDir = path.join(projectRoot, "fixtures", "test-env");
+  const fixturesDir = path.join(projectRoot, "fixtures");
 
   // ── Check fixtures exist ──────────────────────────────────────────
   let metadata: {
@@ -75,11 +75,11 @@ async function main() {
   // ── Set up plugin wiring ─────────────────────────────────────────
   await fs.mkdir(path.join(repo, ".opencode", "plugins"), { recursive: true });
   await fs.symlink(
-    path.join(projectRoot, "src", "context-map", "server-plugin.ts"),
+    path.join(projectRoot, "src", "server-plugin.ts"),
     path.join(repo, ".opencode", "plugins", "context-map.ts"),
   );
   await fs.symlink(
-    path.join(projectRoot, "src", "context-map", "tui-plugin.tsx"),
+    path.join(projectRoot, "src", "tui-plugin.tsx"),
     path.join(repo, ".opencode", "plugins", "context-map-tui.tsx"),
   );
   await fs.writeFile(

@@ -11,12 +11,12 @@ const execFileAsync = promisify(execFile);
 const repoRoot = path.resolve(process.cwd());
 
 type ConditionID =
-  | "searchable-transcript"
-  | "subagent-searchable-transcript"
+  | "rlm-transcript-search"
+  | "subagent-rlm-transcript-search"
   | "memmould-map-zoom"
   | "subagent-map-zoom"
-  | "memmould-rlm-hybrid"
-  | "subagent-memmould-rlm-hybrid"
+  | "memmould-guided-rlm"
+  | "subagent-memmould-guided-rlm"
   | "memmould-blame-lookup";
 
 type ModelRef = { providerID: string; modelID: string };
@@ -173,12 +173,12 @@ const defaultOutDir = path.join(
 );
 
 const defaultConditions: ConditionID[] = [
-  "searchable-transcript",
-  "subagent-searchable-transcript",
+  "rlm-transcript-search",
+  "subagent-rlm-transcript-search",
   "memmould-map-zoom",
   "subagent-map-zoom",
-  "memmould-rlm-hybrid",
-  "subagent-memmould-rlm-hybrid",
+  "memmould-guided-rlm",
+  "subagent-memmould-guided-rlm",
   "memmould-blame-lookup",
 ];
 
@@ -794,23 +794,23 @@ function usesMemMould(condition: ConditionID) {
   return (
     condition === "memmould-map-zoom" ||
     condition === "subagent-map-zoom" ||
-    condition === "memmould-rlm-hybrid" ||
-    condition === "subagent-memmould-rlm-hybrid" ||
+    condition === "memmould-guided-rlm" ||
+    condition === "subagent-memmould-guided-rlm" ||
     condition === "memmould-blame-lookup"
   );
 }
 
 function usesHybrid(condition: ConditionID) {
   return (
-    condition === "memmould-rlm-hybrid" ||
-    condition === "subagent-memmould-rlm-hybrid"
+    condition === "memmould-guided-rlm" ||
+    condition === "subagent-memmould-guided-rlm"
   );
 }
 
 function usesStaticTranscripts(condition: ConditionID) {
   return (
-    condition === "searchable-transcript" ||
-    condition === "subagent-searchable-transcript"
+    condition === "rlm-transcript-search" ||
+    condition === "subagent-rlm-transcript-search"
   );
 }
 
@@ -1138,9 +1138,7 @@ async function buildOpenCodeEnv(input: {
       },
     };
     config.plugin = [
-      pathToFileURL(
-        path.join(repoRoot, "src", "context-map", "server-plugin.ts"),
-      ).href,
+      pathToFileURL(path.join(repoRoot, "src", "server-plugin.ts")).href,
     ];
   }
   if (Object.keys(agentConfig).length > 0) config.agent = agentConfig;
@@ -1377,7 +1375,7 @@ function buildPromptForCondition(
   const distractorTitles = fixture.distractors
     .map((item) => item.title)
     .join(", ");
-  if (condition === "searchable-transcript") {
+  if (condition === "rlm-transcript-search") {
     return {
       system:
         "Answer with compact JSON only. Use RLM-style transcript search with glob/grep/read and optional read-only bash before answering. If you use bash, do not modify files. Do not use mem-mould/session tools. Cite exact session_id and message_id.",
@@ -1390,7 +1388,7 @@ function buildPromptForCondition(
       ].join("\n"),
     };
   }
-  if (condition === "subagent-searchable-transcript") {
+  if (condition === "subagent-rlm-transcript-search") {
     return {
       system:
         "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='transcript'. The child must use RLM-style transcript search with glob/grep/read and optional read-only bash before returning evidence. If using bash, the child must not modify files. Do not ask the child to use mem-mould/session tools.",
@@ -1404,7 +1402,7 @@ function buildPromptForCondition(
       ].join("\n"),
     };
   }
-  if (condition === "memmould-rlm-hybrid") {
+  if (condition === "memmould-guided-rlm") {
     return {
       system:
         "Answer with compact JSON only. Use mem-mould session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, do not modify files. Cite real OpenCode session_id and message_id values, not embedded fixture labels.",
@@ -1427,7 +1425,7 @@ function buildPromptForCondition(
       ].join("\n"),
     };
   }
-  if (condition === "subagent-memmould-rlm-hybrid") {
+  if (condition === "subagent-memmould-guided-rlm") {
     return {
       system:
         "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='hybrid'. The child must use mem-mould session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, the child must not modify files.",
@@ -1773,10 +1771,10 @@ function evaluateToolPath(
     "blame_lookup",
   ];
 
-  if (condition === "searchable-transcript") {
+  if (condition === "rlm-transcript-search") {
     requireSearchEvidence();
     rejectTools(["task", ...contextTools]);
-  } else if (condition === "subagent-searchable-transcript") {
+  } else if (condition === "subagent-rlm-transcript-search") {
     requireTools(["task"]);
     requireSearchEvidence();
     rejectTools(contextTools);
@@ -1791,11 +1789,11 @@ function evaluateToolPath(
       "message_detail",
     ]);
     rejectTools(searchTools.concat("blame_lookup"));
-  } else if (condition === "memmould-rlm-hybrid") {
+  } else if (condition === "memmould-guided-rlm") {
     requireTools(["session_lookup", "session_detail", "message_detail"]);
     requireSearchEvidence();
     rejectTools(["task", "blame_lookup"]);
-  } else if (condition === "subagent-memmould-rlm-hybrid") {
+  } else if (condition === "subagent-memmould-guided-rlm") {
     requireTools([
       "task",
       "session_lookup",

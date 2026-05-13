@@ -63,9 +63,7 @@ async function main() {
       $schema: "https://opencode.ai/config.json",
       model: validationModelSlug,
       plugin: [
-        pathToFileURL(
-          path.join(projectRoot, "src", "context-map", "server-plugin.ts"),
-        ).href,
+        pathToFileURL(path.join(projectRoot, "src", "server-plugin.ts")).href,
       ],
     }),
   };

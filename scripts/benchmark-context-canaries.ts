@@ -575,9 +575,7 @@ async function buildOpenCodeEnv(input: {
   };
   if (input.plugin) {
     config.plugin = [
-      pathToFileURL(
-        path.join(repoRoot, "src", "context-map", "server-plugin.ts"),
-      ).href,
+      pathToFileURL(path.join(repoRoot, "src", "server-plugin.ts")).href,
     ];
   }
   return {

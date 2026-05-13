@@ -37,7 +37,7 @@ async function main() {
   );
 
   const pluginSpec = pathToFileURL(
-    path.join(repoRoot, "src/context-map/server-plugin.ts"),
+    path.join(repoRoot, "src/server-plugin.ts"),
   ).href;
   const env = {
     ...process.env,

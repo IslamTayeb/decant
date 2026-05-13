@@ -24,8 +24,8 @@ bun run benchmark:provenance-qa -- --out benchmarks/provenance-qa/runs/manual
 
 ```sh
 MEM_MOULD_E2E_MODEL="openai/gpt-5.5" bun run benchmark:provenance-blog -- --prepare-only
-MEM_MOULD_E2E_MODEL="openai/gpt-5.5" bun run benchmark:provenance-blog -- --conditions searchable-transcript,memmould-map-zoom --fixtures auth-queue-rationale
-MEM_MOULD_E2E_MODEL="openai/gpt-5.5" MEM_MOULD_E2E_CHILD_MODEL="openai/gpt-5.4-mini" bun run benchmark:provenance-blog -- --conditions subagent-searchable-transcript,subagent-map-zoom
+MEM_MOULD_E2E_MODEL="openai/gpt-5.5" bun run benchmark:provenance-blog -- --conditions rlm-transcript-search,memmould-map-zoom --fixtures auth-queue-rationale
+MEM_MOULD_E2E_MODEL="openai/gpt-5.5" MEM_MOULD_E2E_CHILD_MODEL="openai/gpt-5.4-mini" bun run benchmark:provenance-blog -- --conditions subagent-rlm-transcript-search,subagent-map-zoom
 ```
 
 Blog fixtures cover basic rationale lookup, correction chains, false provenance, related-work reuse, sub-agent synthesis, and a `/blame`-style line-to-rationale task. The `/blame` condition only runs for fixtures with an explicit blame target.
@@ -34,12 +34,12 @@ Blog fixtures cover basic rationale lookup, correction chains, false provenance,
 
 - `full-transcript`: the answer prompt receives the whole synthetic prior transcript bundle. This is the expensive upper-bound baseline.
 - `keyword-snippets`: the answer prompt receives naive keyword snippets with distractors. This is the cheap retrieval baseline.
-- `searchable-transcript`: prior transcripts are stored on disk under `memory/transcripts/`; the answering agent uses RLM-style transcript search with `grep`/`read` and optional read-only `bash`.
-- `subagent-searchable-transcript`: the parent delegates to a sub-agent, and the child uses RLM-style transcript search over transcript files.
+- `rlm-transcript-search`: prior transcripts are stored on disk under `memory/transcripts/`; the answering agent uses RLM-style transcript search with `grep`/`read` and optional read-only `bash`.
+- `subagent-rlm-transcript-search`: the parent delegates to a sub-agent, and the child uses RLM-style transcript search over transcript files.
 - `memmould-map-zoom`: prior sessions are real OpenCode sessions with mem-mould enabled. The answering agent must use `session_lookup`, `session_detail`, and `message_detail`.
 - `subagent-map-zoom`: the parent agent must delegate the provenance lookup to a sub-agent, then answer from the child result.
-- `memmould-rlm-hybrid`: the answer uses mem-mould session tools first, then RLM-style transcript search in the per-run transcript corpus, then `message_detail` for final evidence.
-- `subagent-memmould-rlm-hybrid`: the parent delegates to a hybrid child that uses mem-mould session tools plus RLM-style transcript search.
+- `memmould-guided-rlm`: the answer uses mem-mould session tools first, then RLM-style transcript search in the per-run transcript corpus, then `message_detail` for final evidence.
+- `subagent-memmould-guided-rlm`: the parent delegates to a hybrid child that uses mem-mould session tools plus RLM-style transcript search.
 - `memmould-blame-lookup`: the answer starts from `blame_lookup`, then zooms through the mapped session and message evidence. This is a prototype demo path, not a product-proven claim.
 
 ## Scoring

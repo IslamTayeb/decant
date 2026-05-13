@@ -15,9 +15,9 @@ import {
   transformMessagesForContext,
   updateBlobFidelity,
   updateMessageControls,
-} from "../src/context-map/core";
-import { createEmptyContextMap } from "../src/context-map/storage";
-import type { MessageLike } from "../src/context-map/types";
+} from "../src/core";
+import { createEmptyContextMap } from "../src/storage";
+import type { MessageLike } from "../src/types";
 
 function message(
   id: string,
