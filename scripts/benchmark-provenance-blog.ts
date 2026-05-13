@@ -15,6 +15,8 @@ type ConditionID =
   | "subagent-searchable-transcript"
   | "memmould-map-zoom"
   | "subagent-map-zoom"
+  | "memmould-rlm-hybrid"
+  | "subagent-memmould-rlm-hybrid"
   | "memmould-blame-lookup";
 
 type ModelRef = { providerID: string; modelID: string };
@@ -138,6 +140,7 @@ type RunStats = {
   context_tool_call_count: number;
   search_tool_call_count: number;
   read_tool_call_count: number;
+  bash_tool_call_count: number;
   task_tool_call_count: number;
   message_detail_call_count: number;
   blame_lookup_call_count: number;
@@ -174,6 +177,8 @@ const defaultConditions: ConditionID[] = [
   "subagent-searchable-transcript",
   "memmould-map-zoom",
   "subagent-map-zoom",
+  "memmould-rlm-hybrid",
+  "subagent-memmould-rlm-hybrid",
   "memmould-blame-lookup",
 ];
 
@@ -686,7 +691,7 @@ async function runFixtureCondition(
   const startedAt = Date.now();
   try {
     await prepareFixtureRepo(worktree, fixture, {
-      includeTranscripts: condition.includes("searchable"),
+      includeTranscripts: usesStaticTranscripts(condition),
     });
     const opencodeRoot = resolveOpenCodeRoot(conditionDir);
     const env = await buildOpenCodeEnv({
@@ -710,6 +715,9 @@ async function runFixtureCondition(
           options.promptTimeoutMs,
         )
       : staticSeededSessions(fixture);
+    if (usesHybrid(condition)) {
+      await writeHybridTranscriptCorpus(client, worktree, fixture, seeded);
+    }
     if (
       condition === "memmould-blame-lookup" &&
       fixture.blame &&
@@ -786,7 +794,23 @@ function usesMemMould(condition: ConditionID) {
   return (
     condition === "memmould-map-zoom" ||
     condition === "subagent-map-zoom" ||
+    condition === "memmould-rlm-hybrid" ||
+    condition === "subagent-memmould-rlm-hybrid" ||
     condition === "memmould-blame-lookup"
+  );
+}
+
+function usesHybrid(condition: ConditionID) {
+  return (
+    condition === "memmould-rlm-hybrid" ||
+    condition === "subagent-memmould-rlm-hybrid"
+  );
+}
+
+function usesStaticTranscripts(condition: ConditionID) {
+  return (
+    condition === "searchable-transcript" ||
+    condition === "subagent-searchable-transcript"
   );
 }
 
@@ -891,6 +915,99 @@ async function writeTranscriptCorpus(worktree: string, fixture: Fixture) {
   }
 }
 
+async function writeHybridTranscriptCorpus(
+  client: ReturnType<typeof createOpencodeClient>,
+  worktree: string,
+  fixture: Fixture,
+  seeded: SeededSessions,
+) {
+  const dir = path.join(worktree, "memory", "transcripts");
+  await fs.mkdir(dir, { recursive: true });
+  const entries: Array<{
+    session_id: string;
+    title: string;
+    file: string;
+    role: string;
+  }> = [];
+
+  const seededSources = [
+    { source: fixture.relevant, role: "relevant" },
+    ...fixture.distractors.map((source) => ({ source, role: "distractor" })),
+  ];
+  for (const item of seeded.sessions) {
+    const match = seededSources.find(
+      ({ role, source }) => role === item.role && source.title === item.title,
+    );
+    if (!match) continue;
+    const messages = await listSessionMessages(client, worktree, item.id);
+    const messageID =
+      messages.find(
+        (message) => (message.info?.role ?? message.role) === "user",
+      )?.info?.id ?? messages[0]?.info?.id;
+    assert.ok(messageID, `missing seeded message for ${item.id}`);
+    const file = `${match.source.sessionID}--${item.id}.md`;
+    entries.push({
+      session_id: item.id,
+      title: item.title,
+      file,
+      role: item.role,
+    });
+    await fs.writeFile(
+      path.join(dir, file),
+      hybridTranscriptMarkdown({
+        sessionID: item.id,
+        title: item.title,
+        messageID,
+        messages: match.source.messages,
+      }),
+    );
+  }
+
+  for (const session of generatedDistractors(fixture)) {
+    const file = `${session.sessionID}.md`;
+    entries.push({
+      session_id: session.sessionID,
+      title: session.title,
+      file,
+      role: "decoy",
+    });
+    await fs.writeFile(path.join(dir, file), transcriptMarkdown(session));
+  }
+
+  await fs.writeFile(
+    path.join(worktree, "memory", "manifest.json"),
+    `${JSON.stringify(
+      {
+        fixture: fixture.id,
+        transcript_dir: "memory/transcripts",
+        id_policy:
+          "Hybrid transcript files use real OpenCode session_id and heading message_id values for seeded sessions. Cite those real ids, not embedded fixture fact labels.",
+        sessions: entries,
+      },
+      null,
+      2,
+    )}\n`,
+  );
+}
+
+function hybridTranscriptMarkdown(input: {
+  sessionID: string;
+  title: string;
+  messageID: string;
+  messages: MessageFact[];
+}) {
+  return [
+    `# ${input.title}`,
+    `session_id: ${input.sessionID}`,
+    `title: ${input.title}`,
+    "id_policy: cite the heading message id below, not fixture fact labels",
+    "",
+    `## message ${input.messageID}`,
+    ...input.messages.map((message) => `- ${message.text}`),
+    "",
+  ].join("\n");
+}
+
 function transcriptMarkdown(session: {
   sessionID: string;
   title: string;
@@ -967,19 +1084,38 @@ async function buildOpenCodeEnv(input: {
   agentConfig.transcript = {
     mode: "subagent",
     description:
-      "Transcript provenance investigator. Use this agent when the parent asks for glob, grep, and read over prior transcript files.",
+      "Transcript provenance investigator. Use this agent when the parent asks for RLM-style grep/read/bash over prior transcript files.",
     ...(input.childModelSlug ? { model: input.childModelSlug } : {}),
     permission: {
       glob: "allow",
       grep: "allow",
       read: "allow",
-      bash: "deny",
+      bash: "allow",
       task: "deny",
       todowrite: "deny",
       session_lookup: "deny",
       session_detail: "deny",
       message_detail: "deny",
       session_tree: "deny",
+      blame_lookup: "deny",
+    },
+  };
+  agentConfig.hybrid = {
+    mode: "subagent",
+    description:
+      "Hybrid provenance investigator. Use mem-mould session tools first, then RLM-style grep/read/bash over transcript files.",
+    ...(input.childModelSlug ? { model: input.childModelSlug } : {}),
+    permission: {
+      glob: "allow",
+      grep: "allow",
+      read: "allow",
+      bash: "allow",
+      task: "deny",
+      todowrite: "deny",
+      session_lookup: "allow",
+      session_detail: "allow",
+      message_detail: "allow",
+      session_tree: "allow",
       blame_lookup: "deny",
     },
   };
@@ -1244,8 +1380,8 @@ function buildPromptForCondition(
   if (condition === "searchable-transcript") {
     return {
       system:
-        "Answer with compact JSON only. Use only glob, grep, and read over transcript files before answering. Do not use bash or mem-mould/session tools. Cite exact session_id and message_id.",
-      tools: { glob: true, grep: true, read: true },
+        "Answer with compact JSON only. Use RLM-style transcript search with glob/grep/read and optional read-only bash before answering. If you use bash, do not modify files. Do not use mem-mould/session tools. Cite exact session_id and message_id.",
+      tools: { glob: true, grep: true, read: true, bash: true },
       text: [
         `Transcript directory: ${transcriptDir}`,
         `Question: ${fixture.question}`,
@@ -1257,13 +1393,51 @@ function buildPromptForCondition(
   if (condition === "subagent-searchable-transcript") {
     return {
       system:
-        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='transcript'. The child must use only glob, grep, and read over transcript files before returning evidence. Do not ask the child to use bash or mem-mould/session tools.",
+        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='transcript'. The child must use RLM-style transcript search with glob/grep/read and optional read-only bash before returning evidence. If using bash, the child must not modify files. Do not ask the child to use mem-mould/session tools.",
       tools: { task: true },
       text: [
         `Transcript directory: ${transcriptDir}`,
         `Question: ${fixture.question}`,
         "Task instruction: call subagent_type='transcript', not general or explore.",
         `Ask the child to ignore distractors: ${distractorTitles}`,
+        answerContract,
+      ].join("\n"),
+    };
+  }
+  if (condition === "memmould-rlm-hybrid") {
+    return {
+      system:
+        "Answer with compact JSON only. Use mem-mould session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, do not modify files. Cite real OpenCode session_id and message_id values, not embedded fixture labels.",
+      tools: {
+        session_lookup: true,
+        session_detail: true,
+        message_detail: true,
+        session_tree: true,
+        glob: true,
+        grep: true,
+        read: true,
+        bash: true,
+      },
+      text: [
+        `Question: ${fixture.question}`,
+        `Transcript directory: ${transcriptDir}`,
+        `Known distractor topics include: ${distractorTitles}`,
+        "Required route: use session_lookup/session_detail to identify the likely prior session, search transcript files only as corroborating RLM-style evidence, then call message_detail for the final cited message.",
+        answerContract,
+      ].join("\n"),
+    };
+  }
+  if (condition === "subagent-memmould-rlm-hybrid") {
+    return {
+      system:
+        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='hybrid'. The child must use mem-mould session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, the child must not modify files.",
+      tools: { task: true, session_tree: true },
+      text: [
+        `Question: ${fixture.question}`,
+        `Transcript directory: ${transcriptDir}`,
+        "Task instruction: call subagent_type='hybrid', not general or explore.",
+        "The child must cite real OpenCode session_id and message_id values from mem-mould/message_detail, not embedded fixture labels in transcript text.",
+        `Known distractor topics include: ${distractorTitles}`,
         answerContract,
       ].join("\n"),
     };
@@ -1509,6 +1683,7 @@ function buildStats(input: {
       ["glob", "grep"].includes(tool),
     ).length,
     read_tool_call_count: toolNames.filter((tool) => tool === "read").length,
+    bash_tool_call_count: toolNames.filter((tool) => tool === "bash").length,
     task_tool_call_count: toolNames.filter((tool) => tool === "task").length,
     message_detail_call_count: toolNames.filter(
       (tool) => tool === "message_detail",
@@ -1554,6 +1729,7 @@ function failedStats(
     context_tool_call_count: 0,
     search_tool_call_count: 0,
     read_tool_call_count: 0,
+    bash_tool_call_count: 0,
     task_tool_call_count: 0,
     message_detail_call_count: 0,
     blame_lookup_call_count: 0,
@@ -1598,11 +1774,12 @@ function evaluateToolPath(
   ];
 
   if (condition === "searchable-transcript") {
-    requireTools(["glob", "grep", "read"]);
-    rejectTools(["task", "bash", ...contextTools]);
+    requireSearchEvidence();
+    rejectTools(["task", ...contextTools]);
   } else if (condition === "subagent-searchable-transcript") {
-    requireTools(["task", "glob", "grep", "read"]);
-    rejectTools(["bash", ...contextTools]);
+    requireTools(["task"]);
+    requireSearchEvidence();
+    rejectTools(contextTools);
   } else if (condition === "memmould-map-zoom") {
     requireTools(["session_lookup", "session_detail", "message_detail"]);
     rejectTools(["task", ...searchTools, "blame_lookup"]);
@@ -1614,15 +1791,35 @@ function evaluateToolPath(
       "message_detail",
     ]);
     rejectTools(searchTools.concat("blame_lookup"));
+  } else if (condition === "memmould-rlm-hybrid") {
+    requireTools(["session_lookup", "session_detail", "message_detail"]);
+    requireSearchEvidence();
+    rejectTools(["task", "blame_lookup"]);
+  } else if (condition === "subagent-memmould-rlm-hybrid") {
+    requireTools([
+      "task",
+      "session_lookup",
+      "session_detail",
+      "message_detail",
+    ]);
+    requireSearchEvidence();
+    rejectTools(["blame_lookup"]);
   } else if (condition === "memmould-blame-lookup") {
     requireTools(["blame_lookup", "session_detail", "message_detail"]);
     rejectTools(["task", ...searchTools]);
   }
 
-  if (condition.startsWith("memmould") || condition === "subagent-map-zoom") {
+  if (
+    (condition.startsWith("memmould") && !usesHybrid(condition)) ||
+    condition === "subagent-map-zoom"
+  ) {
     if (transcriptFilesRead.length > 0) failures.push("transcript_read");
   }
   return { passed: failures.length === 0, failures };
+
+  function requireSearchEvidence() {
+    if (!has("grep") && !has("bash")) failures.push("missing:grep-or-bash");
+  }
 }
 
 function answerCorrectnessText(outputText: string) {
@@ -1682,16 +1879,32 @@ function citationMatches(
 function transcriptReadFiles(
   tools: Array<NonNullable<SessionMessage["parts"]>[number]>,
 ) {
-  return tools
-    .filter((part) => part.tool === "read")
-    .map((part) => {
+  const files: string[] = [];
+  for (const part of tools) {
+    if (part.tool === "read") {
       const input =
         part.state?.input && typeof part.state.input === "object"
           ? (part.state.input as Record<string, unknown>)
           : {};
-      return typeof input.filePath === "string" ? input.filePath : "";
-    })
-    .filter((file) => file.includes("memory/transcripts"));
+      if (typeof input.filePath === "string") files.push(input.filePath);
+      continue;
+    }
+    if (part.tool === "bash") {
+      const input =
+        part.state?.input && typeof part.state.input === "object"
+          ? (part.state.input as Record<string, unknown>)
+          : {};
+      const command = typeof input.command === "string" ? input.command : "";
+      for (const match of command.matchAll(
+        /[^\s"'`]+memory\/transcripts\/[^\s"'`]+/g,
+      )) {
+        files.push(match[0]);
+      }
+    }
+  }
+  return [
+    ...new Set(files.filter((file) => file.includes("memory/transcripts"))),
+  ];
 }
 
 function latestAssistantMessage(messages: SessionMessage[]) {
@@ -1817,6 +2030,7 @@ function normalizeRunStats(input: Partial<RunStats>): RunStats {
     context_tool_call_count: input.context_tool_call_count ?? 0,
     search_tool_call_count: input.search_tool_call_count ?? 0,
     read_tool_call_count: input.read_tool_call_count ?? 0,
+    bash_tool_call_count: input.bash_tool_call_count ?? 0,
     task_tool_call_count: input.task_tool_call_count ?? 0,
     message_detail_call_count: input.message_detail_call_count ?? 0,
     blame_lookup_call_count: input.blame_lookup_call_count ?? 0,
@@ -1855,7 +2069,7 @@ async function writeAnalysisFiles(outDir: string, analysis: Analysis) {
 function renderAnalysisMarkdown(analysis: Analysis) {
   const rows = analysis.rows.map(
     (row) =>
-      `| ${row.fixture} | ${row.condition} | ${String(row.benchmark_passed)} | ${String(row.answer_passed)} | ${String(row.provenance_passed)} | ${String(row.tool_path_passed)} | ${row.tool_path_failures.join("; ")} | ${row.tool_names.join(" -> ")} | ${row.tokens.input.toLocaleString()} | ${row.tokens.cacheRead.toLocaleString()} | ${formatPercent(cacheHitShare(row.tokens))} | ${row.parent_tokens.input.toLocaleString()} | ${row.child_tokens.input.toLocaleString()} | ${row.irrelevant_transcript_reads.length} |`,
+      `| ${row.fixture} | ${row.condition} | ${String(row.benchmark_passed)} | ${String(row.answer_passed)} | ${String(row.provenance_passed)} | ${String(row.tool_path_passed)} | ${row.tool_path_failures.join("; ")} | ${row.tool_names.join(" -> ")} | ${row.tokens.input.toLocaleString()} | ${row.tokens.cacheRead.toLocaleString()} | ${formatPercent(cacheHitShare(row.tokens))} | ${row.parent_tokens.input.toLocaleString()} | ${row.child_tokens.input.toLocaleString()} | ${row.bash_tool_call_count} | ${row.irrelevant_transcript_reads.length} |`,
   );
   return [
     "# Provenance Blog Benchmark Analysis",
@@ -1864,8 +2078,8 @@ function renderAnalysisMarkdown(analysis: Analysis) {
     `- Generated: ${analysis.generatedAt}`,
     `- Passed: ${analysis.rows.filter((row) => row.benchmark_passed).length}/${analysis.rows.length}`,
     "",
-    "| Fixture | Condition | Pass | Answer | Provenance | Tool Policy | Tool Failures | Tool Path | Input Tok | Cache Read Tok | Cache Hit | Parent Input | Child Input | Irrelevant Reads |",
-    "|---|---|---:|---:|---:|---:|---|---|---:|---:|---:|---:|---:|---:|",
+    "| Fixture | Condition | Pass | Answer | Provenance | Tool Policy | Tool Failures | Tool Path | Input Tok | Cache Read Tok | Cache Hit | Parent Input | Child Input | Bash Calls | Irrelevant Reads |",
+    "|---|---|---:|---:|---:|---:|---|---|---:|---:|---:|---:|---:|---:|---:|",
     ...rows,
     "",
   ].join("\n");
@@ -1886,6 +2100,7 @@ function renderAnalysisCsv(analysis: Analysis) {
     "parent_input",
     "child_input",
     "tool_path",
+    "bash_calls",
     "irrelevant_reads",
   ].join(",");
   const rows = analysis.rows.map((row) =>
@@ -1903,6 +2118,7 @@ function renderAnalysisCsv(analysis: Analysis) {
       row.parent_tokens.input,
       row.child_tokens.input,
       csvCell(row.tool_names.join(" -> ")),
+      row.bash_tool_call_count,
       row.irrelevant_transcript_reads.length,
     ].join(","),
   );
