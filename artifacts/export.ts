@@ -31,6 +31,35 @@ const conditionNameMap = new Map([
   ["subagent-memmould-rlm-hybrid", "subagent-memmould-guided-rlm"],
 ]);
 
+const pathNameMap = new Map([
+  [
+    "scripts/benchmark-context-canaries.ts",
+    "benchmarks/context-canaries/run.ts",
+  ],
+  [
+    "scripts/benchmark-provenance-blog.ts",
+    "benchmarks/provenance-qa/blog-run.ts",
+  ],
+  ["scripts/benchmark-provenance-qa.ts", "benchmarks/provenance-qa/run.ts"],
+  [
+    "scripts/benchmark-swebench-context.ts",
+    "benchmarks/swebench-context/run.ts",
+  ],
+  ["scripts/evaluate-compaction.ts", "tools/validation/evaluate-compaction.ts"],
+  ["scripts/export-benchmark-artifacts.ts", "artifacts/export.ts"],
+  [
+    "scripts/generate-test-fixtures.ts",
+    "tools/fixtures/generate-test-fixtures.ts",
+  ],
+  ["scripts/inspect-context.ts", "tools/inspect-context.ts"],
+  ["scripts/setup-test-env.ts", "tools/fixtures/setup-test-env.ts"],
+  [
+    "scripts/validate-long-session.ts",
+    "tools/validation/validate-long-session.ts",
+  ],
+  ["scripts/validate-sandbox.ts", "tools/validation/validate-sandbox.ts"],
+]);
+
 const skippedDirectoryNames = new Set([
   ".git",
   "node_modules",
@@ -245,6 +274,9 @@ function normalizeRelativePath(relativePath: string) {
 function normalizeConditionNames(value: string) {
   let next = value;
   for (const [oldName, newName] of conditionNameMap) {
+    next = next.replaceAll(oldName, newName);
+  }
+  for (const [oldName, newName] of pathNameMap) {
     next = next.replaceAll(oldName, newName);
   }
   return next;

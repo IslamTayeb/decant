@@ -29,11 +29,11 @@
 - Cache hit: 
 
 Error: timed out waiting for assistant message in ses_1e1ca82c1ffeBzhviic5jRS96s
-    at waitForAssistantMessage (/Users/islamtayeb/Documents/GitHub/mem-mould/scripts/benchmark-provenance-blog.ts:1311:9)
+    at waitForAssistantMessage (/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/blog-run.ts:1311:9)
     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-    at async prompt (/Users/islamtayeb/Documents/GitHub/mem-mould/scripts/benchmark-provenance-blog.ts:1280:10)
-    at async runFixtureCondition (/Users/islamtayeb/Documents/GitHub/mem-mould/scripts/benchmark-provenance-blog.ts:712:5)
-    at async main (/Users/islamtayeb/Documents/GitHub/mem-mould/scripts/benchmark-provenance-blog.ts:645:22)
+    at async prompt (/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/blog-run.ts:1280:10)
+    at async runFixtureCondition (/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/blog-run.ts:712:5)
+    at async main (/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/blog-run.ts:645:22)
 
 ## auth-queue-rationale / subagent-rlm-transcript-search
 

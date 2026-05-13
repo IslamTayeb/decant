@@ -3,7 +3,7 @@
  * Inspect the context map state for a test environment session.
  *
  * Usage:
- *   node --import tsx scripts/inspect-context.ts <temp-root|home-dir|maps-dir> [session-id]
+ *   node --import tsx tools/inspect-context.ts <temp-root|home-dir|maps-dir> [session-id]
  *
  * If session-id is omitted, lists all sessions.
  * Shows: blob fidelity, effective tokens, message treatments, overrides.
@@ -14,7 +14,7 @@ import path from "node:path";
 const tempRoot = process.argv[2];
 if (!tempRoot) {
   console.error(
-    "Usage: node --import tsx scripts/inspect-context.ts <temp-root|home-dir|maps-dir> [session-id]",
+    "Usage: node --import tsx tools/inspect-context.ts <temp-root|home-dir|maps-dir> [session-id]",
   );
   process.exit(1);
 }

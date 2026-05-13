@@ -6,8 +6,8 @@ import path from "node:path";
 
 import { createOpencodeClient } from "@opencode-ai/sdk/v2";
 
-import { buildCompactionPrompt } from "../src/core";
-import type { ContextMapFile } from "../src/types";
+import { buildCompactionPrompt } from "../../src/core";
+import type { ContextMapFile } from "../../src/types";
 
 const DEFAULT_COMPACTION_PROMPT = `Provide a detailed prompt for continuing our conversation above.
 Focus on information that would be helpful for continuing the conversation, including what we did, what we're doing, which files we're working on, and what we're going to do next.
