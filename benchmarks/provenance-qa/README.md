@@ -34,10 +34,12 @@ Blog fixtures cover basic rationale lookup, correction chains, false provenance,
 
 - `full-transcript`: the answer prompt receives the whole synthetic prior transcript bundle. This is the expensive upper-bound baseline.
 - `keyword-snippets`: the answer prompt receives naive keyword snippets with distractors. This is the cheap retrieval baseline.
-- `searchable-transcript`: prior transcripts are stored on disk under `memory/transcripts/`; the answering agent must use `glob`, `grep`, and `read` to find evidence.
-- `subagent-searchable-transcript`: the parent delegates to a sub-agent, and the child uses `glob`, `grep`, and `read` over transcript files.
+- `searchable-transcript`: prior transcripts are stored on disk under `memory/transcripts/`; the answering agent uses RLM-style transcript search with `grep`/`read` and optional read-only `bash`.
+- `subagent-searchable-transcript`: the parent delegates to a sub-agent, and the child uses RLM-style transcript search over transcript files.
 - `memmould-map-zoom`: prior sessions are real OpenCode sessions with mem-mould enabled. The answering agent must use `session_lookup`, `session_detail`, and `message_detail`.
 - `subagent-map-zoom`: the parent agent must delegate the provenance lookup to a sub-agent, then answer from the child result.
+- `memmould-rlm-hybrid`: the answer uses mem-mould session tools first, then RLM-style transcript search in the per-run transcript corpus, then `message_detail` for final evidence.
+- `subagent-memmould-rlm-hybrid`: the parent delegates to a hybrid child that uses mem-mould session tools plus RLM-style transcript search.
 - `memmould-blame-lookup`: the answer starts from `blame_lookup`, then zooms through the mapped session and message evidence. This is a prototype demo path, not a product-proven claim.
 
 ## Scoring
@@ -66,8 +68,16 @@ The analyzer also records:
 
 - Final GPT-5.5 full matrix: `benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final`.
 - GPT-5.5 parent + GPT-5.4 mini child sub-agent comparison: `benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed`.
+- GPT-5.5 RLM/hybrid matrix: `benchmarks/provenance-qa/runs/gpt55-rlm-hybrid`.
 - `openai/gpt-5.5-mini` was not available in the tested OpenAI/OpenCode model list; `openai/gpt-5.4-mini` was the available mini baseline.
 - Cost is not directly measured for these OpenAI subscription-auth runs; OpenCode reported `cost: 0`, so analysis should use token/cache metrics unless a separate pricing estimator is added.
+
+Safety / validity notes:
+
+- Automated benchmark runs use isolated OpenCode roots and explicit plugin config; benchmark code is not placed under `.opencode/plugins/`.
+- Hybrid transcript files are generated inside the per-run worktree after real mem-mould sessions are seeded. They use real OpenCode session/message IDs for seeded sessions so the model cannot pass by citing fixture-only fact IDs.
+- Bash is allowed only as an RLM-style optional tool and prompts instruct read-only use. Runs still execute in isolated benchmark worktrees, and the analyzer records `bash` call counts.
+- Token/cache metrics are proxies, not measured dollar costs.
 
 ## Interpretation
 
