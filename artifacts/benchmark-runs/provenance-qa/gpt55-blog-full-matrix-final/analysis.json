@@ -1,0 +1,2203 @@
+{
+  "outDir": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final",
+  "generatedAt": "2026-05-12T23:29:27.123Z",
+  "rows": [
+    {
+      "fixture": "auth-queue-rationale",
+      "condition": "memmould-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "per_tenant",
+        "same_tenant_coalesce",
+        "different_tenants_parallel",
+        "global_mutex_rejected"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce, while unrelated tenants can refresh in parallel. A single global mutex was rejected because it would make unrelated tenants block each other.\",\"evidence\":{\"session_id\":\"ses_1e1863eacffecG40pKECWckHQv\",\"blob_id\":\"auth_refresh_queue\",\"message_id\":\"msg_e1e79c16c001do7MQSMC6YoTTP\"},\"rationale\":\"The cited message explicitly states the rejected alternative was one global mutex, that it was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other, and that RefreshQueue uses a per-tenant key to coalesce same-tenant duplicates while allowing different tenants to continue in parallel.\",\"irrelevant_context_ignored\":[\"Billing retry queue rationale\",\"Markdown parser onboarding cleanup\"]}",
+      "tool_names": [
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 3,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3705,
+        "output": 324,
+        "total": 43479,
+        "reasoning": 26,
+        "cacheRead": 39424,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1464
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3705,
+        "output": 324,
+        "total": 43479,
+        "reasoning": 26,
+        "cacheRead": 39424,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1464
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 69807,
+      "relevant_session_id": "ses_1e1863eacffecG40pKECWckHQv",
+      "relevant_message_ids": [
+        "msg_e1e79c16c001do7MQSMC6YoTTP",
+        "msg_e1e79c174001qkms4Od3Kz08p2"
+      ]
+    },
+    {
+      "fixture": "auth-queue-rationale",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "per_tenant",
+        "same_tenant_coalesce",
+        "different_tenants_parallel",
+        "global_mutex_rejected"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce, while refreshes for different tenants can continue in parallel rather than being serialized behind one global mutex.\",\"evidence\":{\"session_id\":\"auth_refresh_session\",\"blob_id\":\"auth_refresh_session.md\",\"message_id\":\"auth_fact_3\"},\"rationale\":\"The relevant auth rationale states the implemented RefreshQueue behavior: per-tenant keys coalesce same-tenant duplicate refreshes while allowing different tenants to proceed in parallel. The rejected global mutex matters because it would have blocked unrelated tenants; this is consistent with the cited per-tenant rationale rather than a competing correction.\",\"irrelevant_context_ignored\":[\"Billing retry queue rationale\",\"Markdown parser onboarding cleanup\",\"auth_queue_rationale_decoy_*\"]}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read"
+      ],
+      "tool_call_count": 3,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 1,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md"
+      ],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3932,
+        "output": 411,
+        "total": 43098,
+        "reasoning": 355,
+        "cacheRead": 38400,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1527
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3932,
+        "output": 411,
+        "total": 43098,
+        "reasoning": 355,
+        "cacheRead": 38400,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1527
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 20071,
+      "relevant_session_id": "auth_refresh_session",
+      "relevant_message_ids": [
+        "auth_fact_3"
+      ]
+    },
+    {
+      "fixture": "auth-queue-rationale",
+      "condition": "subagent-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "per_tenant",
+        "same_tenant_coalesce",
+        "different_tenants_parallel",
+        "global_mutex_rejected"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce while refreshes for different tenants can run in parallel, avoiding cross-tenant blocking from a global mutex.\",\"evidence\":{\"session_id\":\"ses_1e185b1cbffe4bIAlV0Pchebpp\",\"blob_id\":\"auth_refresh_queue\",\"message_id\":\"msg_e1e7a4e53001jFBJE9TXzmWNFL\"},\"rationale\":\"The cited message supports both the chosen per-tenant deduplication behavior and the rejected alternative: a single global mutex was rejected because unrelated tenants must not block each other. No stale correction was indicated by the child.\",\"irrelevant_context_ignored\":[\"Billing retry queue rationale\",\"Markdown parser onboarding cleanup\"]}",
+      "tool_names": [
+        "task",
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 4,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1564,
+        "output": 361,
+        "total": 20374,
+        "reasoning": 17,
+        "cacheRead": 18432,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 969
+      },
+      "child_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 5900,
+        "output": 262,
+        "total": 17462,
+        "reasoning": 36,
+        "cacheRead": 11264,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 3252
+      },
+      "tokens": {
+        "messages": 8,
+        "assistant": 6,
+        "input": 7464,
+        "output": 623,
+        "total": 37836,
+        "reasoning": 53,
+        "cacheRead": 29696,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 3252
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 40029,
+      "relevant_session_id": "ses_1e185b1cbffe4bIAlV0Pchebpp",
+      "relevant_message_ids": [
+        "msg_e1e7a4e53001jFBJE9TXzmWNFL",
+        "msg_e1e7a4e5a001v1vMk3gCZYg455"
+      ]
+    },
+    {
+      "fixture": "auth-queue-rationale",
+      "condition": "subagent-rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "per_tenant",
+        "same_tenant_coalesce",
+        "different_tenants_parallel",
+        "global_mutex_rejected"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce while unrelated tenants can still refresh in parallel; one global mutex would unnecessarily block different tenants.\",\"evidence\":{\"session_id\":\"auth_refresh_session\",\"blob_id\":\"/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md\",\"message_id\":\"auth_fact_3\"},\"rationale\":\"The cited message says RefreshQueue uses a per-tenant key so same-tenant duplicate refreshes coalesce while different tenants continue in parallel. The rejected alternative that matters is a global mutex, which would serialize unrelated tenants.\",\"irrelevant_context_ignored\":[\"Billing retry queue rationale\",\"Markdown parser onboarding cleanup\"]}",
+      "tool_names": [
+        "task",
+        "glob",
+        "grep",
+        "grep",
+        "read",
+        "grep",
+        "read",
+        "read",
+        "read"
+      ],
+      "tool_call_count": 9,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 4,
+      "read_tool_call_count": 4,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_1.md"
+      ],
+      "irrelevant_transcript_reads": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_1.md"
+      ],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1356,
+        "output": 419,
+        "total": 19695,
+        "reasoning": 0,
+        "cacheRead": 17920,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 693
+      },
+      "child_tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 11245,
+        "output": 920,
+        "total": 42541,
+        "reasoning": 680,
+        "cacheRead": 29696,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 5006
+      },
+      "tokens": {
+        "messages": 10,
+        "assistant": 8,
+        "input": 12601,
+        "output": 1339,
+        "total": 62236,
+        "reasoning": 680,
+        "cacheRead": 47616,
+        "cacheWrite": 0,
+        "toolCalls": 9,
+        "maxInput": 5006
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 51351,
+      "relevant_session_id": "auth_refresh_session",
+      "relevant_message_ids": [
+        "auth_fact_3"
+      ]
+    },
+    {
+      "fixture": "blame-line-rationale",
+      "condition": "memmould-blame-lookup",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "cap_ttl",
+        "noisy_namespace",
+        "line_rationale"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Line 2 caps the requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ses_1e17a4f6bffeiFkhXM8mu7BnLf\",\"blob_id\":\"cache_ttl\",\"message_id\":\"msg_e1e85b0a4001wdQNkicnbigUsl\"},\"rationale\":\"blame_lookup had no direct session mapping for commit ^a5cad14, so I used session provenance and the exact message ttl_fact_2, which directly states the reason. The Markdown preview TTL and billing TTL sessions were ignored as distractors because they concern docs preview freshness and provider billing policy, not src/cache/ttl.ts line 2.\",\"irrelevant_context_ignored\":[\"markdown_ttl_distractor\",\"billing_ttl_distractor\"]}",
+      "tool_names": [
+        "blame_lookup",
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 4,
+      "context_tool_call_count": 4,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 1,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 4470,
+        "output": 358,
+        "total": 55156,
+        "reasoning": 152,
+        "cacheRead": 50176,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 1495
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 4470,
+        "output": 358,
+        "total": 55156,
+        "reasoning": 152,
+        "cacheRead": 50176,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 1495
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 35759,
+      "relevant_session_id": "ses_1e17a4f6bffeiFkhXM8mu7BnLf",
+      "relevant_message_ids": [
+        "msg_e1e85b0a4001wdQNkicnbigUsl",
+        "msg_e1e85b0ab001oFAAPy5kbwvPRs"
+      ]
+    },
+    {
+      "fixture": "blame-line-rationale",
+      "condition": "memmould-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "cap_ttl",
+        "noisy_namespace",
+        "line_rationale"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Line 2 caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ses_1e17b670bffew4PU9PtiDrX3MM\",\"blob_id\":\"cache_ttl\",\"message_id\":\"msg_e1e849909001WGUHaptndmYj0W\"},\"rationale\":\"The cited TTL blame rationale message explicitly states the line was introduced in src/cache/ttl.ts and explains the cap as preventing noisy namespaces from retaining stale cache entries beyond their namespace budget. No correction or rejected alternative was present in the cited message.\",\"irrelevant_context_ignored\":[\"Billing TTL distractor\",\"Markdown TTL distractor\"]}",
+      "tool_names": [
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 3,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3680,
+        "output": 295,
+        "total": 44450,
+        "reasoning": 27,
+        "cacheRead": 40448,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1797
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3680,
+        "output": 295,
+        "total": 44450,
+        "reasoning": 27,
+        "cacheRead": 40448,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1797
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 30497,
+      "relevant_session_id": "ses_1e17b670bffew4PU9PtiDrX3MM",
+      "relevant_message_ids": [
+        "msg_e1e849909001WGUHaptndmYj0W",
+        "msg_e1e8499110019z3nKxysdeT6hi"
+      ]
+    },
+    {
+      "fixture": "blame-line-rationale",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "cap_ttl",
+        "noisy_namespace",
+        "line_rationale"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"It caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ttl_blame_session\",\"blob_id\":\"ttl_blame_session.md\",\"message_id\":\"ttl_fact_2\"},\"rationale\":\"The supporting message directly states the line-2 rationale. The billing and Markdown TTL notes are distractors about unrelated TTL policies, not the src/cache/ttl.ts namespace cap.\",\"irrelevant_context_ignored\":[\"Billing TTL distractor\",\"Markdown TTL distractor\",\"blame_line_rationale_decoy_* files\"]}",
+      "tool_names": [
+        "grep",
+        "read",
+        "glob",
+        "grep"
+      ],
+      "tool_call_count": 4,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 3,
+      "read_tool_call_count": 1,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md"
+      ],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 5316,
+        "output": 457,
+        "total": 56173,
+        "reasoning": 224,
+        "cacheRead": 50176,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 1460
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 5316,
+        "output": 457,
+        "total": 56173,
+        "reasoning": 224,
+        "cacheRead": 50176,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 1460
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 22436,
+      "relevant_session_id": "ttl_blame_session",
+      "relevant_message_ids": [
+        "ttl_fact_2"
+      ]
+    },
+    {
+      "fixture": "blame-line-rationale",
+      "condition": "subagent-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "cap_ttl",
+        "noisy_namespace",
+        "line_rationale"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"It caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ses_1e17af2f1ffe2ibEZ2tPPUTAsO\",\"blob_id\":\"cache_ttl\",\"message_id\":\"msg_e1e850d30001LURpvfsRslOkDp\"},\"rationale\":\"The cited TTL blame rationale message directly supports the full answer. No correction, stale detail, or rejected alternative mattered.\",\"irrelevant_context_ignored\":[\"Billing TTL distractor\",\"Markdown TTL distractor\"]}",
+      "tool_names": [
+        "task",
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 4,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1087,
+        "output": 297,
+        "total": 20352,
+        "reasoning": 24,
+        "cacheRead": 18944,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 597
+      },
+      "child_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 11001,
+        "output": 350,
+        "total": 18609,
+        "reasoning": 90,
+        "cacheRead": 7168,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 5407
+      },
+      "tokens": {
+        "messages": 8,
+        "assistant": 6,
+        "input": 12088,
+        "output": 647,
+        "total": 38961,
+        "reasoning": 114,
+        "cacheRead": 26112,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 5407
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 40890,
+      "relevant_session_id": "ses_1e17af2f1ffe2ibEZ2tPPUTAsO",
+      "relevant_message_ids": [
+        "msg_e1e850d30001LURpvfsRslOkDp",
+        "msg_e1e850d37001pWdXHnOWt8KeJ3"
+      ]
+    },
+    {
+      "fixture": "blame-line-rationale",
+      "condition": "subagent-rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "cap_ttl",
+        "noisy_namespace",
+        "line_rationale"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "output_preview": "{\"answer\":\"src/cache/ttl.ts caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ttl_blame_session\",\"blob_id\":\"\",\"message_id\":\"ttl_fact_2\"},\"rationale\":\"The cited provenance message directly explains line 2's cap as enforcing each namespace's retention budget and preventing noisy namespaces from prolonging stale cache entries. Billing TTL and Markdown TTL were distractors, not relevant sources.\",\"irrelevant_context_ignored\":[\"Billing TTL distractor\",\"Markdown TTL distractor\"]}",
+      "tool_names": [
+        "task",
+        "glob",
+        "grep",
+        "grep",
+        "read",
+        "grep",
+        "read",
+        "grep"
+      ],
+      "tool_call_count": 8,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 5,
+      "read_tool_call_count": 2,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_1.md"
+      ],
+      "irrelevant_transcript_reads": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_1.md"
+      ],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1332,
+        "output": 340,
+        "total": 19592,
+        "reasoning": 0,
+        "cacheRead": 17920,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 695
+      },
+      "child_tokens": {
+        "messages": 8,
+        "assistant": 7,
+        "input": 5709,
+        "output": 815,
+        "total": 43410,
+        "reasoning": 534,
+        "cacheRead": 36352,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 1551
+      },
+      "tokens": {
+        "messages": 11,
+        "assistant": 9,
+        "input": 7041,
+        "output": 1155,
+        "total": 63002,
+        "reasoning": 534,
+        "cacheRead": 54272,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 1551
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 45472,
+      "relevant_session_id": "ttl_blame_session",
+      "relevant_message_ids": [
+        "ttl_fact_2"
+      ]
+    },
+    {
+      "fixture": "correction-chain",
+      "condition": "memmould-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "after_split",
+        "preserve_raw",
+        "earlier_wrong"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/parser/schema.ts trims schema field names after splitting/tokenization because tokenizing first preserves raw delimiter and quoted-field behavior, then per-field trimming only cleans the resulting field names.\",\"evidence\":{\"session_id\":\"ses_1e18480c1ffeZEDu5yO3I7TMkc\",\"blob_id\":\"schema_parser_correction\",\"message_id\":\"msg_e1e7b7f4e0012he06mt057oKrI\"},\"rationale\":\"The correction chain explicitly supersedes the early note to trim the whole schema header before tokenization. The final corrected rationale is to tokenize first, then trim each field; the before-tokenization rationale was wrong and should not be cited as final.\",\"irrelevant_context_ignored\":[\"CSV trim cleanup\",\"Network timeout parser\"]}",
+      "tool_names": [
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 3,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3487,
+        "output": 315,
+        "total": 44276,
+        "reasoning": 26,
+        "cacheRead": 40448,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1728
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3487,
+        "output": 315,
+        "total": 44276,
+        "reasoning": 26,
+        "cacheRead": 40448,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1728
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 29957,
+      "relevant_session_id": "ses_1e18480c1ffeZEDu5yO3I7TMkc",
+      "relevant_message_ids": [
+        "msg_e1e7b7f4e0012he06mt057oKrI",
+        "msg_e1e7b7f54001hC9b6poAVxkhWu"
+      ]
+    },
+    {
+      "fixture": "correction-chain",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": false,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": false,
+      "tool_path_failures": [
+        "missing:glob"
+      ],
+      "required_hits": [
+        "after_split",
+        "preserve_raw",
+        "earlier_wrong"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/parser/schema.ts trims field names after splitting/tokenizing so tokenization sees the raw schema text, preserving delimiter and quoted-field behavior, while still cleaning each parsed field name.\",\"evidence\":{\"session_id\":\"schema_parser_session\",\"blob_id\":\"schema_parser_session.md\",\"message_id\":\"schema_fact_2\"},\"rationale\":\"The final correction says to tokenize first, then trim each field; the earlier idea to trim the whole schema header before tokenization was superseded and should not be treated as final.\",\"irrelevant_context_ignored\":[\"CSV trim cleanup\",\"Network timeout parser\",\"correction_chain_decoy_*\"]}",
+      "tool_names": [
+        "grep",
+        "read"
+      ],
+      "tool_call_count": 2,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 1,
+      "read_tool_call_count": 1,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/rlm-transcript-search/worktree/memory/transcripts/schema_parser_session.md"
+      ],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 4,
+        "assistant": 3,
+        "input": 2537,
+        "output": 307,
+        "total": 31123,
+        "reasoning": 119,
+        "cacheRead": 28160,
+        "cacheWrite": 0,
+        "toolCalls": 2,
+        "maxInput": 1301
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 4,
+        "assistant": 3,
+        "input": 2537,
+        "output": 307,
+        "total": 31123,
+        "reasoning": 119,
+        "cacheRead": 28160,
+        "cacheWrite": 0,
+        "toolCalls": 2,
+        "maxInput": 1301
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 12951,
+      "relevant_session_id": "schema_parser_session",
+      "relevant_message_ids": [
+        "schema_fact_2"
+      ]
+    },
+    {
+      "fixture": "correction-chain",
+      "condition": "subagent-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "after_split",
+        "preserve_raw",
+        "earlier_wrong"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/parser/schema.ts trims schema field names after splitting/tokenization so delimiter handling and quoted-field behavior remain based on the raw schema text, while only the resulting field names are cleaned.\",\"evidence\":{\"session_id\":\"ses_1e18411acffegYBgKoYn7NTVgX\",\"blob_id\":\"schema_parser_correction\",\"message_id\":\"msg_e1e7bee70001Ta8M0bVuk6SJUC\"},\"rationale\":\"The relevant session corrected the earlier rationale: tokenize first, then trim each field. The rejected before-tokenization explanation was stale and should not be cited.\",\"irrelevant_context_ignored\":[\"CSV trim cleanup\",\"Network timeout parser\"]}",
+      "tool_names": [
+        "task",
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 4,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1598,
+        "output": 342,
+        "total": 20389,
+        "reasoning": 17,
+        "cacheRead": 18432,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 1010
+      },
+      "child_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3509,
+        "output": 305,
+        "total": 18221,
+        "reasoning": 71,
+        "cacheRead": 14336,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1335
+      },
+      "tokens": {
+        "messages": 8,
+        "assistant": 6,
+        "input": 5107,
+        "output": 647,
+        "total": 38610,
+        "reasoning": 88,
+        "cacheRead": 32768,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 1335
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 39538,
+      "relevant_session_id": "ses_1e18411acffegYBgKoYn7NTVgX",
+      "relevant_message_ids": [
+        "msg_e1e7bee70001Ta8M0bVuk6SJUC",
+        "msg_e1e7bee77001EwDhkh33rg6juf"
+      ]
+    },
+    {
+      "fixture": "correction-chain",
+      "condition": "subagent-rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "after_split",
+        "preserve_raw",
+        "earlier_wrong"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Because tokenizing/splitting first preserves raw delimiter and quoted-field behavior; trimming afterward cleans only the resulting field names.\",\"evidence\":{\"session_id\":\"schema_parser_session\",\"blob_id\":\"schema_parser_session.md\",\"message_id\":\"schema_fact_2\"},\"rationale\":\"schema_fact_2 is the corrected final rationale. The earlier idea to trim before tokenization was explicitly superseded/rejected, so it should not be used.\",\"irrelevant_context_ignored\":[\"CSV trim cleanup\",\"Network timeout parser\",\"correction_chain_decoy_*\"]}",
+      "tool_names": [
+        "task",
+        "glob",
+        "grep",
+        "read"
+      ],
+      "tool_call_count": 4,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 1,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/schema_parser_session.md"
+      ],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1749,
+        "output": 336,
+        "total": 19493,
+        "reasoning": 0,
+        "cacheRead": 17408,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 1065
+      },
+      "child_tokens": {
+        "messages": 4,
+        "assistant": 3,
+        "input": 3102,
+        "output": 376,
+        "total": 15497,
+        "reasoning": 243,
+        "cacheRead": 11776,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1646
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 5,
+        "input": 4851,
+        "output": 712,
+        "total": 34990,
+        "reasoning": 243,
+        "cacheRead": 29184,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 1646
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 26077,
+      "relevant_session_id": "schema_parser_session",
+      "relevant_message_ids": [
+        "schema_fact_2"
+      ]
+    },
+    {
+      "fixture": "false-provenance",
+      "condition": "memmould-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "namespace_ttl",
+        "avoid_noisy_namespace",
+        "global_ttl_rejected"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/cache/index.ts scopes TTL by namespace so one noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy.\",\"evidence\":{\"session_id\":\"ses_1e18268a4ffewjtshQa0gdRm2o\",\"blob_id\":\"cache_namespace_ttl\",\"message_id\":\"msg_e1e7d976b0010UaKtKYQDWLbVD\"},\"rationale\":\"The cited message states that a global TTL was considered, but namespace-scoped TTL was chosen to prevent cross-namespace interference from a shared global TTL policy.\",\"irrelevant_context_ignored\":[\"Billing cache global TTL\",\"Image cache namespace notes\"]}",
+      "tool_names": [
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 3,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3436,
+        "output": 278,
+        "total": 44179,
+        "reasoning": 17,
+        "cacheRead": 40448,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1728
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3436,
+        "output": 278,
+        "total": 44179,
+        "reasoning": 17,
+        "cacheRead": 40448,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1728
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 30139,
+      "relevant_session_id": "ses_1e18268a4ffewjtshQa0gdRm2o",
+      "relevant_message_ids": [
+        "msg_e1e7d976b0010UaKtKYQDWLbVD",
+        "msg_e1e7d9771001QQFmTA4Y7GXWVO"
+      ]
+    },
+    {
+      "fixture": "false-provenance",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "namespace_ttl",
+        "avoid_noisy_namespace",
+        "global_ttl_rejected"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/cache/index.ts scopes TTL by namespace so one noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy.\",\"evidence\":{\"session_id\":\"cache_namespace_session\",\"blob_id\":\"cache_namespace_session.md\",\"message_id\":\"cache_fact_2\"},\"rationale\":\"The relevant transcript states that namespace-scoped TTL was chosen to isolate namespaces from each other. A global TTL was considered, but the chosen design rejects it because shared TTL behavior would let activity in one namespace affect unrelated namespaces.\",\"irrelevant_context_ignored\":[\"Billing cache global TTL: billing uses one global TTL because its provider invalidates all tenants together, but that is a different cache.\",\"Image cache namespace notes: image namespace prefixes are for CDN purges, not TTL rationale.\",\"False provenance decoy files mention src/cache/index.ts but explicitly say they are not the final rationale.\"]}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "grep",
+        "read",
+        "read"
+      ],
+      "tool_call_count": 6,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 3,
+      "read_tool_call_count": 3,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/rlm-transcript-search/worktree/memory/transcripts/cache_namespace_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/rlm-transcript-search/worktree/memory/transcripts/billing_cache_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/rlm-transcript-search/worktree/memory/transcripts/image_cache_session.md"
+      ],
+      "irrelevant_transcript_reads": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/rlm-transcript-search/worktree/memory/transcripts/billing_cache_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/rlm-transcript-search/worktree/memory/transcripts/image_cache_session.md"
+      ],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 22260,
+        "output": 691,
+        "total": 67704,
+        "reasoning": 209,
+        "cacheRead": 44544,
+        "cacheWrite": 0,
+        "toolCalls": 6,
+        "maxInput": 10845
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 22260,
+        "output": 691,
+        "total": 67704,
+        "reasoning": 209,
+        "cacheRead": 44544,
+        "cacheWrite": 0,
+        "toolCalls": 6,
+        "maxInput": 10845
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 30137,
+      "relevant_session_id": "cache_namespace_session",
+      "relevant_message_ids": [
+        "cache_fact_2"
+      ]
+    },
+    {
+      "fixture": "false-provenance",
+      "condition": "subagent-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "namespace_ttl",
+        "avoid_noisy_namespace",
+        "global_ttl_rejected"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/cache/index.ts scopes TTL by namespace so a noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy; a single global TTL was considered and rejected.\",\"evidence\":{\"session_id\":\"ses_1e181f063ffeVGwV2JVakd4s3X\",\"blob_id\":\"cache_namespace_ttl\",\"message_id\":\"msg_e1e7e0fab001aAqoY65vqDkBO0\"},\"rationale\":\"The cited message supports the full answer by stating that a global TTL was considered, then rejected in favor of namespace-scoped TTL to isolate namespaces from each other's expiry behavior.\",\"irrelevant_context_ignored\":[\"Billing cache global TTL\",\"Image cache namespace notes\"]}",
+      "tool_names": [
+        "task",
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 4,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1072,
+        "output": 341,
+        "total": 20357,
+        "reasoning": 0,
+        "cacheRead": 18944,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 592
+      },
+      "child_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 10726,
+        "output": 309,
+        "total": 18271,
+        "reasoning": 68,
+        "cacheRead": 7168,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 5309
+      },
+      "tokens": {
+        "messages": 8,
+        "assistant": 6,
+        "input": 11798,
+        "output": 650,
+        "total": 38628,
+        "reasoning": 68,
+        "cacheRead": 26112,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 5309
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 41926,
+      "relevant_session_id": "ses_1e181f063ffeVGwV2JVakd4s3X",
+      "relevant_message_ids": [
+        "msg_e1e7e0fab001aAqoY65vqDkBO0",
+        "msg_e1e7e0fb2001sTGArjqcxUxWvo"
+      ]
+    },
+    {
+      "fixture": "false-provenance",
+      "condition": "subagent-rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "namespace_ttl",
+        "avoid_noisy_namespace",
+        "global_ttl_rejected"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"src/cache/index.ts scopes TTL by namespace so one noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy.\",\"evidence\":{\"session_id\":\"cache_namespace_session\",\"blob_id\":\"cache_namespace_session.md\",\"message_id\":\"cache_fact_2\"},\"rationale\":\"A global TTL was considered and rejected because it would let activity in one namespace affect expiration behavior for unrelated namespaces.\",\"irrelevant_context_ignored\":[\"Billing cache global TTL\",\"Image cache namespace notes\"]}",
+      "tool_names": [
+        "task",
+        "glob",
+        "grep",
+        "grep",
+        "read",
+        "grep",
+        "read"
+      ],
+      "tool_call_count": 7,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 4,
+      "read_tool_call_count": 2,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/cache_namespace_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/false_provenance_decoy_1.md"
+      ],
+      "irrelevant_transcript_reads": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/false_provenance_decoy_1.md"
+      ],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1234,
+        "output": 327,
+        "total": 19510,
+        "reasoning": 29,
+        "cacheRead": 17920,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 690
+      },
+      "child_tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 14913,
+        "output": 622,
+        "total": 36876,
+        "reasoning": 349,
+        "cacheRead": 20992,
+        "cacheWrite": 0,
+        "toolCalls": 6,
+        "maxInput": 6684
+      },
+      "tokens": {
+        "messages": 10,
+        "assistant": 8,
+        "input": 16147,
+        "output": 949,
+        "total": 56386,
+        "reasoning": 378,
+        "cacheRead": 38912,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 6684
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 38327,
+      "relevant_session_id": "cache_namespace_session",
+      "relevant_message_ids": [
+        "cache_fact_2"
+      ]
+    },
+    {
+      "fixture": "multi-agent-synthesis",
+      "condition": "memmould-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "child_agent",
+        "failed_test_ids",
+        "triage"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Test investigator child session\",\"evidence\":{\"session_id\":\"ses_1e17d8bceffeBLb0Fk8y3gMNpx\",\"blob_id\":\"test_investigator_child\",\"message_id\":\"msg_e1e82744c001sUvpSyvKuNZ2n1\"},\"rationale\":\"The cited message says the test investigator child found failed-test IDs must remain in final reports so later agents can reproduce and triage exact failures, and that the parent accepted this finding and kept failed_test_ids in src/report/summary.ts. No correction or rejected alternative supersedes it.\",\"irrelevant_context_ignored\":[\"Docs writer child session\",\"Style reviewer child session\"]}",
+      "tool_names": [
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 3,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 5629,
+        "output": 295,
+        "total": 44349,
+        "reasoning": 25,
+        "cacheRead": 38400,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 2633
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 5629,
+        "output": 295,
+        "total": 44349,
+        "reasoning": 25,
+        "cacheRead": 38400,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 2633
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 31422,
+      "relevant_session_id": "ses_1e17d8bceffeBLb0Fk8y3gMNpx",
+      "relevant_message_ids": [
+        "msg_e1e82744c001sUvpSyvKuNZ2n1",
+        "msg_e1e827463001uZvs2eWFMRTvbM"
+      ]
+    },
+    {
+      "fixture": "multi-agent-synthesis",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "child_agent",
+        "failed_test_ids",
+        "triage"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Test investigator child agent\",\"evidence\":{\"session_id\":\"test_investigator_child_session\",\"blob_id\":\"test_investigator_child_session.md\",\"message_id\":\"child_fact_1\"},\"rationale\":\"The test investigator child found that failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures. The accepted follow-up kept failed_test_ids in src/report/summary.ts; docs writer's request for no debugging IDs was rejected, and style review was only about alphabetizing fields.\",\"irrelevant_context_ignored\":[\"Docs writer child session\",\"Style reviewer child session\",\"Decoy transcript mentions of src/report/summary.ts\"]}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "grep"
+      ],
+      "tool_call_count": 7,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 4,
+      "read_tool_call_count": 3,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/multi-agent-synthesis/conditions/rlm-transcript-search/worktree/memory/transcripts/test_investigator_child_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/multi-agent-synthesis/conditions/rlm-transcript-search/worktree/memory/transcripts/docs_writer_child_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/multi-agent-synthesis/conditions/rlm-transcript-search/worktree/memory/transcripts/style_reviewer_child_session.md"
+      ],
+      "irrelevant_transcript_reads": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/multi-agent-synthesis/conditions/rlm-transcript-search/worktree/memory/transcripts/docs_writer_child_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/multi-agent-synthesis/conditions/rlm-transcript-search/worktree/memory/transcripts/style_reviewer_child_session.md"
+      ],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 5513,
+        "output": 741,
+        "total": 59074,
+        "reasoning": 596,
+        "cacheRead": 52224,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 2443
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 5513,
+        "output": 741,
+        "total": 59074,
+        "reasoning": 596,
+        "cacheRead": 52224,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 2443
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 33382,
+      "relevant_session_id": "test_investigator_child_session",
+      "relevant_message_ids": [
+        "child_fact_1"
+      ]
+    },
+    {
+      "fixture": "multi-agent-synthesis",
+      "condition": "subagent-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "child_agent",
+        "failed_test_ids",
+        "triage"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Test investigator child session\",\"evidence\":{\"session_id\":\"ses_1e17d0b75ffeZZ5BL2FFfK6gxb\",\"blob_id\":\"test_investigator_child\",\"message_id\":\"msg_e1e82f49d001oyICv5QopBimIx\"},\"rationale\":\"The cited finding says failed-test IDs are intentionally kept in final reports so later agents can reproduce and triage exact failures; this explains why src/report/summary.ts preserves failed_test_ids.\",\"irrelevant_context_ignored\":[\"Docs writer child session\",\"Style reviewer child session\"]}",
+      "tool_names": [
+        "task",
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 4,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1045,
+        "output": 293,
+        "total": 20306,
+        "reasoning": 24,
+        "cacheRead": 18944,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 597
+      },
+      "child_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 6297,
+        "output": 280,
+        "total": 17438,
+        "reasoning": 109,
+        "cacheRead": 10752,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 3227
+      },
+      "tokens": {
+        "messages": 8,
+        "assistant": 6,
+        "input": 7342,
+        "output": 573,
+        "total": 37744,
+        "reasoning": 133,
+        "cacheRead": 29696,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 3227
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 40913,
+      "relevant_session_id": "ses_1e17d0b75ffeZZ5BL2FFfK6gxb",
+      "relevant_message_ids": [
+        "msg_e1e82f49d001oyICv5QopBimIx",
+        "msg_e1e82f4a5001kRyrIa2HOxA4MX"
+      ]
+    },
+    {
+      "fixture": "multi-agent-synthesis",
+      "condition": "subagent-rlm-transcript-search",
+      "benchmark_passed": false,
+      "answer_passed": true,
+      "provenance_passed": false,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "child_agent",
+        "failed_test_ids",
+        "triage"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Test investigator child\",\"evidence\":{\"session_id\":\"test_investigator_child_session\",\"blob_id\":\"test_investigator_child_session.md\",\"message_id\":\"child_fact_2\"},\"rationale\":\"The cited finding says failed-test IDs must remain so a later agent can reproduce and triage exact failures, which explains why src/report/summary.ts keeps them in the final report. The docs writer's no-debugging-IDs request was rejected as a distractor.\",\"irrelevant_context_ignored\":[\"Docs writer child session\",\"Style reviewer child session\"]}",
+      "tool_names": [
+        "task",
+        "glob",
+        "grep",
+        "grep",
+        "grep",
+        "read",
+        "grep",
+        "read",
+        "grep"
+      ],
+      "tool_call_count": 9,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 6,
+      "read_tool_call_count": 2,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/multi-agent-synthesis/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/test_investigator_child_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/multi-agent-synthesis/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/multi_agent_synthesis_decoy_1.md"
+      ],
+      "irrelevant_transcript_reads": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/multi-agent-synthesis/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/multi_agent_synthesis_decoy_1.md"
+      ],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1271,
+        "output": 335,
+        "total": 19556,
+        "reasoning": 30,
+        "cacheRead": 17920,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 695
+      },
+      "child_tokens": {
+        "messages": 8,
+        "assistant": 7,
+        "input": 7484,
+        "output": 838,
+        "total": 49934,
+        "reasoning": 652,
+        "cacheRead": 40960,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 2505
+      },
+      "tokens": {
+        "messages": 11,
+        "assistant": 9,
+        "input": 8755,
+        "output": 1173,
+        "total": 69490,
+        "reasoning": 682,
+        "cacheRead": 58880,
+        "cacheWrite": 0,
+        "toolCalls": 9,
+        "maxInput": 2505
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 52370,
+      "relevant_session_id": "test_investigator_child_session",
+      "relevant_message_ids": [
+        "child_fact_1"
+      ]
+    },
+    {
+      "fixture": "related-reuse",
+      "condition": "memmould-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "reuse_principle",
+        "do_not_copy_comma",
+        "tsv_specific"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries. Do not copy the stale comma-specific CSV splitting detail; src/tsv/schema.ts should use tab delimiters for TSV.\",\"evidence\":{\"session_id\":\"ses_1e17feda7ffecLyXKslLYG1Lqg\",\"blob_id\":\"csv_parser_lesson\",\"message_id\":\"msg_e1e801269001PyUjSoOD56voVT\"},\"rationale\":\"The cited CSV parser lesson explicitly says the reusable part is post-split field trimming, while the stale detail is comma-specific CSV splitting, which must be rejected for TSV in favor of tab delimiters.\",\"irrelevant_context_ignored\":[\"Auth queue related reuse\",\"Markdown table parser\"]}",
+      "tool_names": [
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 3,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3627,
+        "output": 315,
+        "total": 44413,
+        "reasoning": 23,
+        "cacheRead": 40448,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1782
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 3627,
+        "output": 315,
+        "total": 44413,
+        "reasoning": 23,
+        "cacheRead": 40448,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 1782
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 32653,
+      "relevant_session_id": "ses_1e17feda7ffecLyXKslLYG1Lqg",
+      "relevant_message_ids": [
+        "msg_e1e801269001PyUjSoOD56voVT",
+        "msg_e1e80126f001Kaaxe5nJLA9m7m"
+      ]
+    },
+    {
+      "fixture": "related-reuse",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "reuse_principle",
+        "do_not_copy_comma",
+        "tsv_specific"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without changing raw parse boundaries; do not copy comma-specific CSV splitting into src/tsv/schema.ts, because TSV must use tab delimiters.\",\"evidence\":{\"session_id\":\"csv_parser_lesson_session\",\"blob_id\":\"csv_parser_lesson_session.md\",\"message_id\":\"reuse_fact_1,reuse_fact_2\"},\"rationale\":\"The relevant CSV parser transcript gives the reusable lesson in reuse_fact_1 and the stale detail to reject in reuse_fact_2. The stale comma-specific detail matters because TSV requires tab delimiters instead.\",\"irrelevant_context_ignored\":[\"Auth queue related reuse\",\"Markdown table parser\",\"related_reuse_decoy_*\"]}",
+      "tool_names": [
+        "grep",
+        "read",
+        "grep",
+        "glob",
+        "read",
+        "read",
+        "read"
+      ],
+      "tool_call_count": 7,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 3,
+      "read_tool_call_count": 4,
+      "task_tool_call_count": 0,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_7.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md"
+      ],
+      "irrelevant_transcript_reads": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_7.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md"
+      ],
+      "child_session_count": 0,
+      "parent_tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 16364,
+        "output": 763,
+        "total": 68024,
+        "reasoning": 721,
+        "cacheRead": 50176,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 10809
+      },
+      "child_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 16364,
+        "output": 763,
+        "total": 68024,
+        "reasoning": 721,
+        "cacheRead": 50176,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 10809
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [],
+      "duration_ms": 38313,
+      "relevant_session_id": "csv_parser_lesson_session",
+      "relevant_message_ids": [
+        "reuse_fact_1",
+        "reuse_fact_2"
+      ]
+    },
+    {
+      "fixture": "related-reuse",
+      "condition": "subagent-map-zoom",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "reuse_principle",
+        "do_not_copy_comma",
+        "tsv_specific"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Reuse the CSV parser lesson to trim fields after delimiter splitting; do not copy the stale CSV-specific comma-splitting detail because src/tsv/schema.ts should split on tabs.\",\"evidence\":{\"session_id\":\"ses_1e17f71b6ffeHdG24PQPzrWsJc\",\"blob_id\":\"csv_parser_lesson\",\"message_id\":\"msg_e1e808e59001c2dspZPedrep5h\"},\"rationale\":\"The relevant prior lesson is about normalizing parsed field names by trimming after splitting, but the stale implementation detail is the comma delimiter from CSV. For TSV, the delimiter must remain tab-based. The child explicitly ignored the unrelated Auth queue related reuse and Markdown table parser distractors.\",\"irrelevant_context_ignored\":[\"Auth queue related reuse\",\"Markdown table parser\"]}",
+      "tool_names": [
+        "task",
+        "session_lookup",
+        "session_detail",
+        "message_detail"
+      ],
+      "tool_call_count": 4,
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 0,
+      "read_tool_call_count": 0,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1055,
+        "output": 342,
+        "total": 20341,
+        "reasoning": 0,
+        "cacheRead": 18944,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 600
+      },
+      "child_tokens": {
+        "messages": 5,
+        "assistant": 4,
+        "input": 6253,
+        "output": 330,
+        "total": 18433,
+        "reasoning": 74,
+        "cacheRead": 11776,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 3228
+      },
+      "tokens": {
+        "messages": 8,
+        "assistant": 6,
+        "input": 7308,
+        "output": 672,
+        "total": 38774,
+        "reasoning": 74,
+        "cacheRead": 30720,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 3228
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 38894,
+      "relevant_session_id": "ses_1e17f71b6ffeHdG24PQPzrWsJc",
+      "relevant_message_ids": [
+        "msg_e1e808e59001c2dspZPedrep5h",
+        "msg_e1e808e60001a02muHBRKz9WaO"
+      ]
+    },
+    {
+      "fixture": "related-reuse",
+      "condition": "subagent-rlm-transcript-search",
+      "benchmark_passed": true,
+      "answer_passed": true,
+      "provenance_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "required_hits": [
+        "reuse_principle",
+        "do_not_copy_comma",
+        "tsv_specific"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "citation_hits": [
+        "session",
+        "message",
+        "blob"
+      ],
+      "output_preview": "{\"answer\":\"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without changing raw parse boundaries; do not copy the stale comma-specific CSV splitting detail because TSV must split on tabs.\",\"evidence\":{\"session_id\":\"csv_parser_lesson_session\",\"blob_id\":\"csv_parser_lesson_session.md\",\"message_id\":\"reuse_fact_2\"},\"rationale\":\"The relevant CSV parser lesson is field trimming after delimiter splitting. The stale detail is explicitly corrected: comma-specific CSV splitting should not be copied into TSV; TSV requires tab delimiters.\",\"irrelevant_context_ignored\":[\"Auth queue related reuse\",\"Markdown table parser\"]}",
+      "tool_names": [
+        "task",
+        "glob",
+        "grep",
+        "grep",
+        "read",
+        "grep",
+        "read"
+      ],
+      "tool_call_count": 7,
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 4,
+      "read_tool_call_count": 2,
+      "task_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "blame_lookup_call_count": 0,
+      "transcript_files_read": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md",
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md"
+      ],
+      "irrelevant_transcript_reads": [
+        "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md"
+      ],
+      "child_session_count": 1,
+      "parent_tokens": {
+        "messages": 3,
+        "assistant": 2,
+        "input": 1277,
+        "output": 349,
+        "total": 20062,
+        "reasoning": 516,
+        "cacheRead": 17920,
+        "cacheWrite": 0,
+        "toolCalls": 1,
+        "maxInput": 695
+      },
+      "child_tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 6547,
+        "output": 683,
+        "total": 40985,
+        "reasoning": 475,
+        "cacheRead": 33280,
+        "cacheWrite": 0,
+        "toolCalls": 6,
+        "maxInput": 2689
+      },
+      "tokens": {
+        "messages": 10,
+        "assistant": 8,
+        "input": 7824,
+        "output": 1032,
+        "total": 61047,
+        "reasoning": 991,
+        "cacheRead": 51200,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 2689
+      },
+      "parent_models": [
+        "openai/gpt-5.5"
+      ],
+      "child_models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 49571,
+      "relevant_session_id": "csv_parser_lesson_session",
+      "relevant_message_ids": [
+        "reuse_fact_1",
+        "reuse_fact_2"
+      ]
+    }
+  ]
+}

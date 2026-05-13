@@ -1,0 +1,93 @@
+{
+  "fixture": "false-provenance",
+  "condition": "subagent-rlm-transcript-search",
+  "benchmark_passed": true,
+  "answer_passed": true,
+  "provenance_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "required_hits": [
+    "namespace_ttl",
+    "avoid_noisy_namespace",
+    "global_ttl_rejected"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [],
+  "citation_hits": [
+    "session",
+    "message",
+    "blob"
+  ],
+  "output_preview": "{\"answer\":\"src/cache/index.ts scopes TTL by namespace so one noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy.\",\"evidence\":{\"session_id\":\"cache_namespace_session\",\"blob_id\":\"cache_namespace_session.md\",\"message_id\":\"cache_fact_2\"},\"rationale\":\"A global TTL was considered and rejected because it would let activity in one namespace affect expiration behavior for unrelated namespaces.\",\"irrelevant_context_ignored\":[\"Billing cache global TTL\",\"Image cache namespace notes\"]}",
+  "tool_names": [
+    "task",
+    "glob",
+    "grep",
+    "grep",
+    "read",
+    "grep",
+    "read"
+  ],
+  "tool_call_count": 7,
+  "context_tool_call_count": 0,
+  "search_tool_call_count": 4,
+  "read_tool_call_count": 2,
+  "task_tool_call_count": 1,
+  "message_detail_call_count": 0,
+  "blame_lookup_call_count": 0,
+  "transcript_files_read": [
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/cache_namespace_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/false_provenance_decoy_1.md"
+  ],
+  "irrelevant_transcript_reads": [
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/false_provenance_decoy_1.md"
+  ],
+  "child_session_count": 1,
+  "parent_tokens": {
+    "messages": 3,
+    "assistant": 2,
+    "input": 1234,
+    "output": 327,
+    "total": 19510,
+    "reasoning": 29,
+    "cacheRead": 17920,
+    "cacheWrite": 0,
+    "toolCalls": 1,
+    "maxInput": 690
+  },
+  "child_tokens": {
+    "messages": 7,
+    "assistant": 6,
+    "input": 14913,
+    "output": 622,
+    "total": 36876,
+    "reasoning": 349,
+    "cacheRead": 20992,
+    "cacheWrite": 0,
+    "toolCalls": 6,
+    "maxInput": 6684
+  },
+  "tokens": {
+    "messages": 10,
+    "assistant": 8,
+    "input": 16147,
+    "output": 949,
+    "total": 56386,
+    "reasoning": 378,
+    "cacheRead": 38912,
+    "cacheWrite": 0,
+    "toolCalls": 7,
+    "maxInput": 6684
+  },
+  "parent_models": [
+    "openai/gpt-5.5"
+  ],
+  "child_models": [
+    "openai/gpt-5.5"
+  ],
+  "duration_ms": 38327,
+  "relevant_session_id": "cache_namespace_session",
+  "relevant_message_ids": [
+    "cache_fact_2"
+  ]
+}

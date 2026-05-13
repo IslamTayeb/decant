@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-05-12T03:16:16.859Z",
+  "session_id": "ses_1e5d1e409ffeTc5zrmTS5uEDlG",
+  "blobs": [
+    {
+      "id": "are_beginning_the",
+      "label": "are_beginning_the",
+      "fidelity": "full",
+      "raw_tokens": 69,
+      "effective_tokens": 69,
+      "message_count": 2,
+      "effective_label": "2 msgs 69"
+    },
+    {
+      "id": "session_summary",
+      "label": "session_summary",
+      "fidelity": "placeholder",
+      "raw_tokens": 416,
+      "effective_tokens": 30,
+      "message_count": 1,
+      "effective_label": "stub"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg_e1a2f34ec0016zGGS6bIF5TRxx",
+      "role": "assistant",
+      "blob_id": "session_summary",
+      "blob_label": "session_summary",
+      "blob_fidelity": "placeholder",
+      "summary": "## Goal\nContinue the auth refresh race fix. Implement/validate an async queue-based refresh coordinator that deduplicates refresh work per tenant without over-serializing unrelated tenants.\n\n## Instructions\n- Prioritize auth work over docs cleanup.\n- Do not revive the old docs/markdown parser caching hypothesis; it was wrong and unrelated noise for the auth fix.\n- Avoid returning to the failed mutex design except as prior evidence.\n- Keep the queue helper API narrow, centered on `enqueueRefresh`.\n- Ensure same-tenant refresh work is coalesced and different tenants can proceed independently.\n- Register in-flight work synchronously before any `await`.\n\n## Discoveries\n- `MutexRefreshCoordinator` failed under the concurrent test `auth_refresh_deduplicates_parallel_requests`.\n- A mutex can fail if scoped per handler/request/instance instead of shared per tenant.\n- Final direction is an async queue/coalescing helper.\n- Rollback should be controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n- Needed tests:\n  - same-tenant refresh dedupe — most important\n  - different-tenant parallelism\n  - rollback flag behavior\n  - failure propagation when queued refresh rejects\n- On rejection, all coalesced callers should receive the failure, and a later retry should be able to enqueue fresh work.\n\n## Accomplished\n- Decided against the mutex-oriented approach.\n- Chosen final design direction: async per-tenant queue/coalescing.\n- Identified rollback flag and helper location.\n- Separated docs cleanup from auth work.\n\n## Relevant files / directories\n- `src/auth/queue.ts`\n- `FLAG_AUTH_QUEUE_ROLLBACK`\n- Test name to preserve: `auth_refresh_deduplicates_parallel_requests`",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 416,
+      "source": "derived",
+      "effective_treatment": "placeholder-stub"
+    },
+    {
+      "id": "msg_e1a2f5d49001c1COACPn3I4jBd",
+      "role": "user",
+      "blob_id": "are_beginning_the",
+      "blob_label": "are_beginning_the",
+      "blob_fidelity": "full",
+      "summary": "User request: We are beginning the current task now: update a CSV header parser so header cells are trimmed around commas. What is the current task? Return JSON with keys current_task, immediate_next_step, and ready_for_new_issue. Only d...",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 68,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e1a2f5d4c002iMCjAJ95C4NQL6",
+      "role": "assistant",
+      "blob_id": "are_beginning_the",
+      "blob_label": "are_beginning_the",
+      "blob_fidelity": "full",
+      "summary": "Assistant step without text content",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 1,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    }
+  ],
+  "totals": {
+    "raw_tokens": 485,
+    "effective_tokens": 99
+  }
+}

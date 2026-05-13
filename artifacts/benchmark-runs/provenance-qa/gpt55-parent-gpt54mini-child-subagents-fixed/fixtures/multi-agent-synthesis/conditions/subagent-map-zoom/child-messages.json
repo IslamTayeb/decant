@@ -1,0 +1,767 @@
+[
+  {
+    "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+    "messages": [
+      {
+        "info": {
+          "id": "msg_e1e9478e30025eX7RM7OMnQpvV",
+          "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+          "role": "user",
+          "time": {
+            "created": 1778629507300
+          },
+          "summary": {
+            "diffs": []
+          },
+          "agent": "memmould",
+          "model": {
+            "providerID": "openai",
+            "modelID": "gpt-5.4-mini"
+          },
+          "tools": {
+            "todowrite": false,
+            "task": false
+          }
+        },
+        "parts": [
+          {
+            "id": "prt_e1e9478e4001TlIpiQVShV23tg",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9478e30025eX7RM7OMnQpvV",
+            "type": "text",
+            "text": "Use only mem-mould session tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the prior Test investigator child session relevant to this question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Ignore distractors: Docs writer child session, Style reviewer child session. Return evidence with session_id, blob_id, and message_id. The cited message_id must support the full answer, including why failed-test IDs are kept in the final report. If a correction, stale detail, or rejected alternative matters, mention it explicitly. Return compact JSON only to parent with answer, evidence, rationale, irrelevant_context_ignored."
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e9478e8002D7R26sRhlTfZWQ",
+          "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+          "role": "assistant",
+          "time": {
+            "created": 1778629507304,
+            "completed": 1778629509853
+          },
+          "parentID": "msg_e1e9478e30025eX7RM7OMnQpvV",
+          "modelID": "gpt-5.4-mini",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 3520,
+            "input": 3268,
+            "output": 132,
+            "reasoning": 120,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e947b8b001zqrGufwiVWL5qf",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9478e8002D7R26sRhlTfZWQ",
+            "type": "step-start",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6"
+          },
+          {
+            "id": "prt_e1e947bfa001IRIk3TZUfqz14q",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9478e8002D7R26sRhlTfZWQ",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_069d4649271a014d016a03bb8460408191a4a17dbb9bfe3143"
+              }
+            },
+            "time": {
+              "start": 1778629508090,
+              "end": 1778629509096
+            }
+          },
+          {
+            "id": "prt_e1e947fec0011pK2v0BpUjb8Oz",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9478e8002D7R26sRhlTfZWQ",
+            "type": "text",
+            "text": "Searching prior sessions for the test-investigator finding that mentions `src/report/summary.ts` and failed-test IDs.",
+            "time": {
+              "start": 1778629509100,
+              "end": 1778629509641
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_069d4649271a014d016a03bb856058819183c4e1343d9b6a69",
+                "phase": "commentary"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e94820c001paz6wi0c86o5Sp",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9478e8002D7R26sRhlTfZWQ",
+            "type": "tool",
+            "callID": "call_3NuO2HCBm6H8HxO9PIYSMymV",
+            "tool": "session_lookup",
+            "state": {
+              "status": "completed",
+              "input": {
+                "query": "src/report/summary.ts failed-test IDs final report test investigator",
+                "limit": 10
+              },
+              "output": "{\n  \"query\": \"src/report/summary.ts failed-test IDs final report test investigator\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e16b9d29ffeM3mVZgwi5qZsWh\",\n      \"title\": \"multi-agent-synthesis subagent-map-zoom\",\n      \"updatedAt\": 1778629501732,\n      \"matchedBlobIDs\": [\n        \"report_summary\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"report_summary\",\n          \"label\": \"report_summary\",\n          \"summary\": \"User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"compressedSummary\": \"[Blob summary: report_summary] User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"placeholder\": \"User request: Question: Which child agent's prior finding explains why src/re...\",\n          \"tokenEstimate\": 205,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bad34ffe0qx931QFwd2TXL\",\n      \"title\": \"Docs writer child session\",\n      \"updatedAt\": 1778629499550,\n      \"matchedBlobIDs\": [\n        \"docs_writer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"docs_writer_child\",\n          \"label\": \"docs_writer_child\",\n          \"summary\": \"User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: docs_writer_child] User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"placeholder\": \"User request: # Docs writer child session session_id: docs_writer_child_sessi...\",\n          \"tokenEstimate\": 53,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bbd12ffeGdK3E6EyFyk0Cs\",\n      \"title\": \"Test investigator child session\",\n      \"updatedAt\": 1778629496899,\n      \"matchedBlobIDs\": [\n        \"test_investigator_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"test_investigator_child\",\n          \"label\": \"test_investigator_child\",\n          \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: test_investigator_child] User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"placeholder\": \"User request: # Test investigator child session session_id: test_investigator...\",\n          \"tokenEstimate\": 102,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629509655,
+                "end": 1778629509673
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_069d4649271a014d016a03bb85e87081918c4403e9145e84c7"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e948219001Gg3lr6QMYy0pVh",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9478e8002D7R26sRhlTfZWQ",
+            "type": "tool",
+            "callID": "call_0GhIf8N8RuG09dIhWtNvTjh7",
+            "tool": "session_lookup",
+            "state": {
+              "status": "completed",
+              "input": {
+                "query": "failed-test IDs final report summary.ts",
+                "limit": 10
+              },
+              "output": "{\n  \"query\": \"failed-test IDs final report summary.ts\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e16b9d29ffeM3mVZgwi5qZsWh\",\n      \"title\": \"multi-agent-synthesis subagent-map-zoom\",\n      \"updatedAt\": 1778629501732,\n      \"matchedBlobIDs\": [\n        \"report_summary\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"report_summary\",\n          \"label\": \"report_summary\",\n          \"summary\": \"User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"compressedSummary\": \"[Blob summary: report_summary] User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"placeholder\": \"User request: Question: Which child agent's prior finding explains why src/re...\",\n          \"tokenEstimate\": 205,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bad34ffe0qx931QFwd2TXL\",\n      \"title\": \"Docs writer child session\",\n      \"updatedAt\": 1778629499550,\n      \"matchedBlobIDs\": [\n        \"docs_writer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"docs_writer_child\",\n          \"label\": \"docs_writer_child\",\n          \"summary\": \"User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: docs_writer_child] User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"placeholder\": \"User request: # Docs writer child session session_id: docs_writer_child_sessi...\",\n          \"tokenEstimate\": 53,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bbd12ffeGdK3E6EyFyk0Cs\",\n      \"title\": \"Test investigator child session\",\n      \"updatedAt\": 1778629496899,\n      \"matchedBlobIDs\": [\n        \"test_investigator_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"test_investigator_child\",\n          \"label\": \"test_investigator_child\",\n          \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: test_investigator_child] User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"placeholder\": \"User request: # Test investigator child session session_id: test_investigator...\",\n          \"tokenEstimate\": 102,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629509660,
+                "end": 1778629509674
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_069d4649271a014d016a03bb85e88081919ba79007765d2295"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e94821d001JafJMXz4aTJJy2",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9478e8002D7R26sRhlTfZWQ",
+            "type": "tool",
+            "callID": "call_ui1zzosZmJO9HyPwqXPkbBKQ",
+            "tool": "session_lookup",
+            "state": {
+              "status": "completed",
+              "input": {
+                "query": "Test investigator summary.ts failed test ids",
+                "limit": 10
+              },
+              "output": "{\n  \"query\": \"Test investigator summary.ts failed test ids\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e16b9d29ffeM3mVZgwi5qZsWh\",\n      \"title\": \"multi-agent-synthesis subagent-map-zoom\",\n      \"updatedAt\": 1778629501732,\n      \"matchedBlobIDs\": [\n        \"report_summary\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"report_summary\",\n          \"label\": \"report_summary\",\n          \"summary\": \"User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"compressedSummary\": \"[Blob summary: report_summary] User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"placeholder\": \"User request: Question: Which child agent's prior finding explains why src/re...\",\n          \"tokenEstimate\": 205,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bad34ffe0qx931QFwd2TXL\",\n      \"title\": \"Docs writer child session\",\n      \"updatedAt\": 1778629499550,\n      \"matchedBlobIDs\": [\n        \"docs_writer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"docs_writer_child\",\n          \"label\": \"docs_writer_child\",\n          \"summary\": \"User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: docs_writer_child] User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"placeholder\": \"User request: # Docs writer child session session_id: docs_writer_child_sessi...\",\n          \"tokenEstimate\": 53,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bbd12ffeGdK3E6EyFyk0Cs\",\n      \"title\": \"Test investigator child session\",\n      \"updatedAt\": 1778629496899,\n      \"matchedBlobIDs\": [\n        \"test_investigator_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"test_investigator_child\",\n          \"label\": \"test_investigator_child\",\n          \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: test_investigator_child] User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"placeholder\": \"User request: # Test investigator child session session_id: test_investigator...\",\n          \"tokenEstimate\": 102,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629509663,
+                "end": 1778629509675
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_069d4649271a014d016a03bb85e8888191b230bec3fb6d9ff5"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e9482b8001pfBxPdXGWahkuu",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9478e8002D7R26sRhlTfZWQ",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6",
+            "cost": 0,
+            "tokens": {
+              "total": 3520,
+              "input": 3268,
+              "output": 132,
+              "reasoning": 120,
+              "cache": {
+                "read": 0,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e9482df0012X9IgMkpYUtVCD",
+          "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+          "role": "assistant",
+          "time": {
+            "created": 1778629509855,
+            "completed": 1778629512431
+          },
+          "parentID": "msg_e1e9478e30025eX7RM7OMnQpvV",
+          "modelID": "gpt-5.4-mini",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 6400,
+            "input": 3059,
+            "output": 183,
+            "reasoning": 86,
+            "cache": {
+              "read": 3072,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e94851f001Igs1RXKlSMIAz7",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9482df0012X9IgMkpYUtVCD",
+            "type": "step-start",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6"
+          },
+          {
+            "id": "prt_e1e94859c0014Ir0aI4dYsNX37",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9482df0012X9IgMkpYUtVCD",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0ce0314cb1c7ea8b016a03bb86d5f0819189ccbe2bc7f15b21"
+              }
+            },
+            "time": {
+              "start": 1778629510556,
+              "end": 1778629511333
+            }
+          },
+          {
+            "id": "prt_e1e9488ab00174namWx35Lopfj",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9482df0012X9IgMkpYUtVCD",
+            "type": "text",
+            "text": "Pulling the test-investigator child session messages to identify the exact finding and supporting message ID.",
+            "time": {
+              "start": 1778629511339,
+              "end": 1778629512197
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_0ce0314cb1c7ea8b016a03bb879a78819187646ed0036f6929",
+                "phase": "commentary"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e948c06001wV1O2uUYVHdQNV",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9482df0012X9IgMkpYUtVCD",
+            "type": "tool",
+            "callID": "call_6450mZJbAjGGywe3nRlo1HPM",
+            "tool": "session_detail",
+            "state": {
+              "status": "completed",
+              "input": {
+                "session_id": "ses_1e16bbd12ffeGdK3E6EyFyk0Cs",
+                "blob_id": "test_investigator_child",
+                "detail": "messages"
+              },
+              "output": "{\n  \"session_id\": \"ses_1e16bbd12ffeGdK3E6EyFyk0Cs\",\n  \"blob_id\": \"test_investigator_child\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"test_investigator_child\",\n    \"label\": \"test_investigator_child\",\n    \"compressedSummary\": \"[Blob summary: test_investigator_child] User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n    \"tokenEstimate\": 102,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e1e944307001eKKs5pWMHCXk3d\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 100,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778629493511\n    },\n    {\n      \"id\": \"msg_e1e94430e001IooJWU4gRF2D74\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 2,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778629493518\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629512213,
+                "end": 1778629512217
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0ce0314cb1c7ea8b016a03bb8878008191b7ec1fe5daf2fb06"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e948c160014DWCg2ABFEIoGI",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9482df0012X9IgMkpYUtVCD",
+            "type": "tool",
+            "callID": "call_RsWPSX7fOOVEgdrhBkpi66PO",
+            "tool": "session_detail",
+            "state": {
+              "status": "completed",
+              "input": {
+                "session_id": "ses_1e16b9d29ffeM3mVZgwi5qZsWh",
+                "blob_id": "report_summary",
+                "detail": "messages"
+              },
+              "output": "{\n  \"session_id\": \"ses_1e16b9d29ffeM3mVZgwi5qZsWh\",\n  \"blob_id\": \"report_summary\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"report_summary\",\n    \"label\": \"report_summary\",\n    \"compressedSummary\": \"[Blob summary: report_summary] User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n    \"tokenEstimate\": 205,\n    \"messageCount\": 1\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e1e9462e1001sWubSNhuDNXUye\",\n      \"role\": \"user\",\n      \"summary\": \"User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 205,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778629501665\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629512219,
+                "end": 1778629512220
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0ce0314cb1c7ea8b016a03bb8878108191b475c9ce932b4ef4"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e948c1b002cirtZ2kd1bIKV4",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9482df0012X9IgMkpYUtVCD",
+            "type": "tool",
+            "callID": "call_ceV9CkQER3eof3kzM9Nlwj0m",
+            "tool": "session_detail",
+            "state": {
+              "status": "completed",
+              "input": {
+                "session_id": "ses_1e16bad34ffe0qx931QFwd2TXL",
+                "blob_id": "docs_writer_child",
+                "detail": "messages"
+              },
+              "output": "{\n  \"session_id\": \"ses_1e16bad34ffe0qx931QFwd2TXL\",\n  \"blob_id\": \"docs_writer_child\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"docs_writer_child\",\n    \"label\": \"docs_writer_child\",\n    \"compressedSummary\": \"[Blob summary: docs_writer_child] User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n    \"tokenEstimate\": 53,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e1e9452f9001l0gpPUXvKF4xbo\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs.\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 51,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778629497593\n    },\n    {\n      \"id\": \"msg_e1e94530a002fruDQVbzfOc4wl\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 2,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778629497610\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629512303,
+                "end": 1778629512304
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0ce0314cb1c7ea8b016a03bb88781881919d5ad42b51b4d24c"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e948cc1001mpoXOdYZDknzAH",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e9482df0012X9IgMkpYUtVCD",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6",
+            "cost": 0,
+            "tokens": {
+              "total": 6400,
+              "input": 3059,
+              "output": 183,
+              "reasoning": 86,
+              "cache": {
+                "read": 3072,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e948cf1001f63mF5YObAlISc",
+          "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+          "role": "assistant",
+          "time": {
+            "created": 1778629512433,
+            "completed": 1778629515527
+          },
+          "parentID": "msg_e1e9478e30025eX7RM7OMnQpvV",
+          "modelID": "gpt-5.4-mini",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 7707,
+            "input": 1382,
+            "output": 98,
+            "reasoning": 83,
+            "cache": {
+              "read": 6144,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e948f480018gZHDI1NjMpf4h",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e948cf1001f63mF5YObAlISc",
+            "type": "step-start",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6"
+          },
+          {
+            "id": "prt_e1e948fc8001msgHpfugyNh5ZB",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e948cf1001f63mF5YObAlISc",
+            "type": "reasoning",
+            "text": "**Fetching necessary details**\n\nI need to provide a complete answer about why the failed-test IDs were retained. It seems like the session_detail only offers summaries, but the message_detail might include the full content I need. I'll focus on obtaining message_detail for the message from the test_investigator child. There's also a potential relevant session called \"report_summary,\" but the user requested specifics. Gathering the evidence from the test investigator child session message seems important, so let's move forward with that.",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_02b3a341673e27f5016a03bb896dd481919dcff16582f6b5b3"
+              }
+            },
+            "time": {
+              "start": 1778629513160,
+              "end": 1778629515200
+            }
+          },
+          {
+            "id": "prt_e1e9497c1001veHk3OAwV0mae0",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e948cf1001f63mF5YObAlISc",
+            "type": "text",
+            "text": "The test-investigator session is the right one; fetching the full message content so the answer can cite the actual reason failed-test IDs were retained.",
+            "time": {
+              "start": 1778629515201,
+              "end": 1778629515275
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_02b3a341673e27f5016a03bb8b7904819195588aa613be1e20",
+                "phase": "commentary"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e94981e001u1jGTmRoYsHeM4",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e948cf1001f63mF5YObAlISc",
+            "type": "tool",
+            "callID": "call_QGp3fDvxzlDKZwyzfoDtJNyO",
+            "tool": "message_detail",
+            "state": {
+              "status": "completed",
+              "input": {
+                "session_id": "ses_1e16bbd12ffeGdK3E6EyFyk0Cs",
+                "message_id": "msg_e1e944307001eKKs5pWMHCXk3d"
+              },
+              "output": "{\n  \"session_id\": \"ses_1e16bbd12ffeGdK3E6EyFyk0Cs\",\n  \"message_id\": \"msg_e1e944307001eKKs5pWMHCXk3d\",\n  \"ok\": true,\n  \"message\": {\n    \"id\": \"msg_e1e944307001eKKs5pWMHCXk3d\",\n    \"role\": \"user\",\n    \"blobID\": \"test_investigator_child\",\n    \"blobLabel\": \"test_investigator_child\",\n    \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report...\",\n    \"keyFacts\": [],\n    \"tokenEstimate\": 100,\n    \"createdAt\": 1778629493511,\n    \"parts\": [\n      {\n        \"id\": \"prt_e1e944308001fyNirkPE17kCDT\",\n        \"type\": \"text\",\n        \"text\": \"# Test investigator child session\\nsession_id: test_investigator_child_session\\ntitle: Test investigator child session\\n\\n## message child_fact_1\\nThe test investigator child found that failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures.\\n\\n## message child_fact_2\\nThe parent accepted this child finding and kept failed_test_ids in src/report/summary.ts.\\n\"\n      }\n    ]\n  }\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629515432,
+                "end": 1778629515436
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_02b3a341673e27f5016a03bb8b8c6c8191ba4f985861b543b6"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e9498e4001JWEAiOfD1Iyw5o",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e948cf1001f63mF5YObAlISc",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6",
+            "cost": 0,
+            "tokens": {
+              "total": 7707,
+              "input": 1382,
+              "output": 98,
+              "reasoning": 83,
+              "cache": {
+                "read": 6144,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e949909001lmYh1XVYNNTzYf",
+          "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+          "role": "assistant",
+          "time": {
+            "created": 1778629515529,
+            "completed": 1778629518298
+          },
+          "parentID": "msg_e1e9478e30025eX7RM7OMnQpvV",
+          "modelID": "gpt-5.4-mini",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 8319,
+            "input": 877,
+            "output": 94,
+            "reasoning": 180,
+            "cache": {
+              "read": 7168,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e949b56001tzdJO6JZWZomV7",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e949909001lmYh1XVYNNTzYf",
+            "type": "step-start",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6"
+          },
+          {
+            "id": "prt_e1e949c90001OCXT9snJq37Ooz",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e949909001lmYh1XVYNNTzYf",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_074c479554fd4521016a03bb8cb76081919dddf975f0ae1a7d"
+              }
+            },
+            "time": {
+              "start": 1778629516432,
+              "end": 1778629517813
+            }
+          },
+          {
+            "id": "prt_e1e94a1f9001BFTK7mJSMMU7TM",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e949909001lmYh1XVYNNTzYf",
+            "type": "text",
+            "text": "Checking the obvious distractor session so I can explicitly exclude it in the final JSON.",
+            "time": {
+              "start": 1778629517817,
+              "end": 1778629518107
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_074c479554fd4521016a03bb8e191081919dbd3972f410b8e7",
+                "phase": "commentary"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e94a31f001gTsoMcxhndyKtD",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e949909001lmYh1XVYNNTzYf",
+            "type": "tool",
+            "callID": "call_5VSSDziUb4Yf7vByeclJ8UwZ",
+            "tool": "session_lookup",
+            "state": {
+              "status": "completed",
+              "input": {
+                "query": "Style reviewer child session",
+                "limit": 5
+              },
+              "output": "{\n  \"query\": \"Style reviewer child session\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e16b9d29ffeM3mVZgwi5qZsWh\",\n      \"title\": \"multi-agent-synthesis subagent-map-zoom\",\n      \"updatedAt\": 1778629501732,\n      \"matchedBlobIDs\": [\n        \"report_summary\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"report_summary\",\n          \"label\": \"report_summary\",\n          \"summary\": \"User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"compressedSummary\": \"[Blob summary: report_summary] User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"placeholder\": \"User request: Question: Which child agent's prior finding explains why src/re...\",\n          \"tokenEstimate\": 205,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16ba510ffe8t4e4ck3d2h04R\",\n      \"title\": \"Style reviewer child session\",\n      \"updatedAt\": 1778629501644,\n      \"matchedBlobIDs\": [],\n      \"blobs\": [\n        {\n          \"id\": \"style_reviewer_child\",\n          \"label\": \"style_reviewer_child\",\n          \"summary\": \"User request: # Style reviewer child session session_id: style_reviewer_child_session title: Style reviewer child session ## message style_child_fact_1 The style reviewer child wanted field names alphabetized; not the rationale for faile... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: style_reviewer_child] User request: # Style reviewer child session session_id: style_reviewer_child_session title: Style reviewer child session ## message style_child_fact_1 The style reviewer child wanted field names alphabetized; not the rationale for faile... Assistant step without text content\",\n          \"placeholder\": \"User request: # Style reviewer child session session_id: style_reviewer_child...\",\n          \"tokenEstimate\": 61,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bad34ffe0qx931QFwd2TXL\",\n      \"title\": \"Docs writer child session\",\n      \"updatedAt\": 1778629499550,\n      \"matchedBlobIDs\": [\n        \"docs_writer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"docs_writer_child\",\n          \"label\": \"docs_writer_child\",\n          \"summary\": \"User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: docs_writer_child] User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"placeholder\": \"User request: # Docs writer child session session_id: docs_writer_child_sessi...\",\n          \"tokenEstimate\": 53,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bbd12ffeGdK3E6EyFyk0Cs\",\n      \"title\": \"Test investigator child session\",\n      \"updatedAt\": 1778629496899,\n      \"matchedBlobIDs\": [\n        \"test_investigator_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"test_investigator_child\",\n          \"label\": \"test_investigator_child\",\n          \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: test_investigator_child] User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"placeholder\": \"User request: # Test investigator child session session_id: test_investigator...\",\n          \"tokenEstimate\": 102,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629518119,
+                "end": 1778629518135
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_074c479554fd4521016a03bb8e62988191a47305d25ec206af"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e94a329001yAkslp2ZSobmjV",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e949909001lmYh1XVYNNTzYf",
+            "type": "tool",
+            "callID": "call_hYMkRzgtLVQedJInF40KNy6w",
+            "tool": "session_lookup",
+            "state": {
+              "status": "completed",
+              "input": {
+                "query": "style reviewer no debugging IDs failed-test IDs",
+                "limit": 5
+              },
+              "output": "{\n  \"query\": \"style reviewer no debugging IDs failed-test IDs\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e16b9d29ffeM3mVZgwi5qZsWh\",\n      \"title\": \"multi-agent-synthesis subagent-map-zoom\",\n      \"updatedAt\": 1778629501732,\n      \"matchedBlobIDs\": [\n        \"report_summary\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"report_summary\",\n          \"label\": \"report_summary\",\n          \"summary\": \"User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"compressedSummary\": \"[Blob summary: report_summary] User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Expected relevant prior session: Test investigator child session Task instruction: call subagent_type...\",\n          \"placeholder\": \"User request: Question: Which child agent's prior finding explains why src/re...\",\n          \"tokenEstimate\": 205,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16ba510ffe8t4e4ck3d2h04R\",\n      \"title\": \"Style reviewer child session\",\n      \"updatedAt\": 1778629501644,\n      \"matchedBlobIDs\": [\n        \"style_reviewer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"style_reviewer_child\",\n          \"label\": \"style_reviewer_child\",\n          \"summary\": \"User request: # Style reviewer child session session_id: style_reviewer_child_session title: Style reviewer child session ## message style_child_fact_1 The style reviewer child wanted field names alphabetized; not the rationale for faile... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: style_reviewer_child] User request: # Style reviewer child session session_id: style_reviewer_child_session title: Style reviewer child session ## message style_child_fact_1 The style reviewer child wanted field names alphabetized; not the rationale for faile... Assistant step without text content\",\n          \"placeholder\": \"User request: # Style reviewer child session session_id: style_reviewer_child...\",\n          \"tokenEstimate\": 61,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bad34ffe0qx931QFwd2TXL\",\n      \"title\": \"Docs writer child session\",\n      \"updatedAt\": 1778629499550,\n      \"matchedBlobIDs\": [\n        \"docs_writer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"docs_writer_child\",\n          \"label\": \"docs_writer_child\",\n          \"summary\": \"User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: docs_writer_child] User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"placeholder\": \"User request: # Docs writer child session session_id: docs_writer_child_sessi...\",\n          \"tokenEstimate\": 53,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16bbd12ffeGdK3E6EyFyk0Cs\",\n      \"title\": \"Test investigator child session\",\n      \"updatedAt\": 1778629496899,\n      \"matchedBlobIDs\": [\n        \"test_investigator_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"test_investigator_child\",\n          \"label\": \"test_investigator_child\",\n          \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: test_investigator_child] User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"placeholder\": \"User request: # Test investigator child session session_id: test_investigator...\",\n          \"tokenEstimate\": 102,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629518126,
+                "end": 1778629518146
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_074c479554fd4521016a03bb8e62a48191bf1c530ba81e6404"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e94a3b3001bEb5NfnNfkicxm",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e949909001lmYh1XVYNNTzYf",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6",
+            "cost": 0,
+            "tokens": {
+              "total": 8319,
+              "input": 877,
+              "output": 94,
+              "reasoning": 180,
+              "cache": {
+                "read": 7168,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e94a3db0017luF6BFTZmEeiK",
+          "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+          "role": "assistant",
+          "time": {
+            "created": 1778629518299,
+            "completed": 1778629520640
+          },
+          "parentID": "msg_e1e9478e30025eX7RM7OMnQpvV",
+          "modelID": "gpt-5.4-mini",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/multi-agent-synthesis/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 10859,
+            "input": 2420,
+            "output": 140,
+            "reasoning": 107,
+            "cache": {
+              "read": 8192,
+              "write": 0
+            }
+          },
+          "finish": "stop"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e94a63e001kuNl0pgDajhPO9",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e94a3db0017luF6BFTZmEeiK",
+            "type": "step-start",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6"
+          },
+          {
+            "id": "prt_e1e94a6bf001NKc25n0wBGfvBV",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e94a3db0017luF6BFTZmEeiK",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_021e2b469a444365016a03bb8f528c81918431838b775b8a58"
+              }
+            },
+            "time": {
+              "start": 1778629519039,
+              "end": 1778629520033
+            }
+          },
+          {
+            "id": "prt_e1e94aaa5001l5kF3viI6cy6yW",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e94a3db0017luF6BFTZmEeiK",
+            "type": "text",
+            "text": "{\"answer\":\"Test investigator child session\",\"evidence\":{\"session_id\":\"ses_1e16bbd12ffeGdK3E6EyFyk0Cs\",\"blob_id\":\"test_investigator_child\",\"message_id\":\"msg_e1e944307001eKKs5pWMHCXk3d\"},\"rationale\":\"The cited message says failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures, and that the parent accepted this finding and kept `failed_test_ids` in `src/report/summary.ts`.\",\"irrelevant_context_ignored\":[\"Docs writer child session\",\"Style reviewer child session\"]}",
+            "time": {
+              "start": 1778629520037,
+              "end": 1778629520548
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_021e2b469a444365016a03bb9050948191a0e5b8c4eccfb787",
+                "phase": "final_answer"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e94acdb001R9NV4BNwxlhcXo",
+            "sessionID": "ses_1e16b871effe2lCgfYlZFYb0ko",
+            "messageID": "msg_e1e94a3db0017luF6BFTZmEeiK",
+            "type": "step-finish",
+            "reason": "stop",
+            "snapshot": "53648a4e5603c3e930b9ebcbcdf293a3447caef6",
+            "cost": 0,
+            "tokens": {
+              "total": 10859,
+              "input": 2420,
+              "output": 140,
+              "reasoning": 107,
+              "cache": {
+                "read": 8192,
+                "write": 0
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

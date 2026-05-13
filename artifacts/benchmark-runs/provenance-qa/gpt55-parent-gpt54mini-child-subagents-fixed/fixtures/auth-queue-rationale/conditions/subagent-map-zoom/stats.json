@@ -1,0 +1,92 @@
+{
+  "fixture": "auth-queue-rationale",
+  "condition": "subagent-map-zoom",
+  "benchmark_passed": true,
+  "answer_passed": true,
+  "provenance_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "required_hits": [
+    "per_tenant",
+    "same_tenant_coalesce",
+    "different_tenants_parallel",
+    "global_mutex_rejected"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [],
+  "citation_hits": [
+    "session",
+    "message",
+    "blob"
+  ],
+  "output_preview": "{\"answer\":\"src/auth/queue.ts deduplicates refresh work per tenant so same-tenant refreshes coalesce while unrelated tenants can refresh in parallel. A single global mutex was rejected because it would unnecessarily block refreshes for different tenants.\",\"evidence\":{\"session_id\":\"ses_1e170904dffeys4WpMwHd449UF\",\"blob_id\":\"auth_refresh_queue\",\"message_id\":\"msg_e1e8f6fc4001m7YIdSdnd0xpGu\"},\"rationale\":\"The cited message supports the full answer: it explains the rejected global-mutex alternative and why per-tenant deduplication is required instead.\",\"irrelevant_context_ignored\":[\"Billing retry queue rationale\",\"Markdown parser onboarding cleanup\"]}",
+  "tool_names": [
+    "task",
+    "session_lookup",
+    "session_lookup",
+    "session_lookup",
+    "session_lookup",
+    "session_detail",
+    "session_detail",
+    "message_detail",
+    "message_detail"
+  ],
+  "tool_call_count": 9,
+  "context_tool_call_count": 8,
+  "search_tool_call_count": 0,
+  "read_tool_call_count": 0,
+  "task_tool_call_count": 1,
+  "message_detail_call_count": 2,
+  "blame_lookup_call_count": 0,
+  "transcript_files_read": [],
+  "irrelevant_transcript_reads": [],
+  "child_session_count": 1,
+  "parent_tokens": {
+    "messages": 3,
+    "assistant": 2,
+    "input": 5711,
+    "output": 330,
+    "total": 20377,
+    "reasoning": 0,
+    "cacheRead": 14336,
+    "cacheWrite": 0,
+    "toolCalls": 1,
+    "maxInput": 5237
+  },
+  "child_tokens": {
+    "messages": 5,
+    "assistant": 4,
+    "input": 8981,
+    "output": 596,
+    "total": 26567,
+    "reasoning": 606,
+    "cacheRead": 16384,
+    "cacheWrite": 0,
+    "toolCalls": 8,
+    "maxInput": 3348
+  },
+  "tokens": {
+    "messages": 8,
+    "assistant": 6,
+    "input": 14692,
+    "output": 926,
+    "total": 46944,
+    "reasoning": 606,
+    "cacheRead": 30720,
+    "cacheWrite": 0,
+    "toolCalls": 9,
+    "maxInput": 5237
+  },
+  "parent_models": [
+    "openai/gpt-5.5"
+  ],
+  "child_models": [
+    "openai/gpt-5.4-mini"
+  ],
+  "duration_ms": 42690,
+  "relevant_session_id": "ses_1e170904dffeys4WpMwHd449UF",
+  "relevant_message_ids": [
+    "msg_e1e8f6fc4001m7YIdSdnd0xpGu",
+    "msg_e1e8f6fcb001GKrTCz9vXCScap"
+  ]
+}

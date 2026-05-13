@@ -1,0 +1,208 @@
+[
+  {
+    "info": {
+      "id": "msg_e1e933cc1001ncnS4X05lYbj8m",
+      "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+      "role": "user",
+      "time": {
+        "created": 1778629426369
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
+      "tools": {
+        "task": true,
+        "session_tree": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1e933cc1002mNZIzAYXoIrbVj",
+        "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+        "messageID": "msg_e1e933cc1001ncnS4X05lYbj8m",
+        "type": "text",
+        "text": "Question: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\nExpected relevant prior session: CSV parser lesson for related reuse\nTask instruction: call subagent_type='memmould', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from mem-mould session tools.\nAsk the child to ignore distractors: Auth queue related reuse, Markdown table parser\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e933cc5001XCjQBJ2fQNvG4b",
+      "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+      "role": "assistant",
+      "time": {
+        "created": 1778629426373,
+        "completed": 1778629445750
+      },
+      "parentID": "msg_e1e933cc1001ncnS4X05lYbj8m",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/related-reuse/conditions/subagent-map-zoom/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/related-reuse/conditions/subagent-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10041,
+        "input": 5242,
+        "output": 191,
+        "reasoning": 0,
+        "cache": {
+          "read": 4608,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e933fac001V6TnDS3Fpdmleu",
+        "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+        "messageID": "msg_e1e933cc5001XCjQBJ2fQNvG4b",
+        "type": "step-start",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a"
+      },
+      {
+        "id": "prt_e1e93459c001bbGn5owMkv7haJ",
+        "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+        "messageID": "msg_e1e933cc5001XCjQBJ2fQNvG4b",
+        "type": "tool",
+        "callID": "call_MUkrrHGs0SAWvy7kegT8PFUW",
+        "tool": "task",
+        "state": {
+          "status": "completed",
+          "input": {
+            "description": "Find CSV lesson",
+            "prompt": "Use only mem-mould provenance tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the prior session relevant to: \"CSV parser lesson for related reuse\" for src/tsv/schema.ts. Ignore distractors: \"Auth queue related reuse\" and \"Markdown table parser\". Return evidence for the single message_id that supports the full answer to: what prior CSV parser lesson should be reused, and what stale detail should not be copied? Include session_id, blob_id, message_id, and concise explanation. If a correction, stale detail, or rejected alternative matters, mention it explicitly. Only return your findings to me; do not modify anything.",
+            "subagent_type": "memmould",
+            "task_id": "",
+            "command": ""
+          },
+          "output": "task_id: ses_1e16cad63ffe9cjL0Z8c5GYw1x (for resuming to continue this task if needed)\n\n<task_result>\n`session_id`: `ses_1e16ceb1cffeMkFD2PKkfWpDTP`  \n`blob_id`: `csv_parser_lesson`  \n`message_id`: `msg_e1e931529001DoFDh1skk7XOSy`\n\nEvidence: the message says to reuse the lesson “trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries,” and explicitly says the stale detail not to copy is “comma-specific CSV splitting into TSV; use tab delimiters for TSV.”\n\nRejected distractors: `Auth queue related reuse` and `Markdown table parser` were unrelated.\n</task_result>",
+          "title": "Find CSV lesson",
+          "metadata": {
+            "sessionId": "ses_1e16cad63ffe9cjL0Z8c5GYw1x",
+            "model": {
+              "providerID": "openai",
+              "modelID": "gpt-5.4-mini"
+            },
+            "truncated": false
+          },
+          "time": {
+            "start": 1778629431974,
+            "end": 1778629445649
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0498f987f70ea433016a03bb34eb908191a5c55abb0e060fc4"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e938850001ghfbk3XApchAoh",
+        "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+        "messageID": "msg_e1e933cc5001XCjQBJ2fQNvG4b",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a",
+        "cost": 0,
+        "tokens": {
+          "total": 10041,
+          "input": 5242,
+          "output": 191,
+          "reasoning": 0,
+          "cache": {
+            "read": 4608,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e938878001aQdzDABDnZIL1t",
+      "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+      "role": "assistant",
+      "time": {
+        "created": 1778629445752,
+        "completed": 1778629449917
+      },
+      "parentID": "msg_e1e933cc1001ncnS4X05lYbj8m",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/related-reuse/conditions/subagent-map-zoom/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/related-reuse/conditions/subagent-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10385,
+        "input": 493,
+        "output": 164,
+        "reasoning": 0,
+        "cache": {
+          "read": 9728,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e938b75001qnF4XabTLfHwGN",
+        "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+        "messageID": "msg_e1e938878001aQdzDABDnZIL1t",
+        "type": "step-start",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a"
+      },
+      {
+        "id": "prt_e1e938c990014NmqsaPlSxzGd7",
+        "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+        "messageID": "msg_e1e938878001aQdzDABDnZIL1t",
+        "type": "text",
+        "text": "{\"answer\":\"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries. Do not copy the stale comma-specific CSV splitting detail; TSV must use tab delimiters.\",\"evidence\":{\"session_id\":\"ses_1e16ceb1cffeMkFD2PKkfWpDTP\",\"blob_id\":\"csv_parser_lesson\",\"message_id\":\"msg_e1e931529001DoFDh1skk7XOSy\"},\"rationale\":\"The cited message supports both the reusable lesson and the stale detail to reject: trimming after splitting is reusable, but comma-specific CSV splitting is stale for src/tsv/schema.ts and must be replaced with tab delimiters.\",\"irrelevant_context_ignored\":[\"Auth queue related reuse\",\"Markdown table parser\"]}",
+        "time": {
+          "start": 1778629446809,
+          "end": 1778629449818
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0d6f875e467a85cd016a03bb47179881919e76e3597dcb6845",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e939899001F7BtxHZupvQPFl",
+        "sessionID": "ses_1e16cc345ffe4aP2U5jn2Ti1XR",
+        "messageID": "msg_e1e938878001aQdzDABDnZIL1t",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a",
+        "cost": 0,
+        "tokens": {
+          "total": 10385,
+          "input": 493,
+          "output": 164,
+          "reasoning": 0,
+          "cache": {
+            "read": 9728,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

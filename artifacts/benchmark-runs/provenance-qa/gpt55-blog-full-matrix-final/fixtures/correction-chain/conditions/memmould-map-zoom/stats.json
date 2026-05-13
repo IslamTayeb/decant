@@ -1,0 +1,83 @@
+{
+  "fixture": "correction-chain",
+  "condition": "memmould-map-zoom",
+  "benchmark_passed": true,
+  "answer_passed": true,
+  "provenance_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "required_hits": [
+    "after_split",
+    "preserve_raw",
+    "earlier_wrong"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [],
+  "citation_hits": [
+    "session",
+    "message",
+    "blob"
+  ],
+  "output_preview": "{\"answer\":\"src/parser/schema.ts trims schema field names after splitting/tokenization because tokenizing first preserves raw delimiter and quoted-field behavior, then per-field trimming only cleans the resulting field names.\",\"evidence\":{\"session_id\":\"ses_1e18480c1ffeZEDu5yO3I7TMkc\",\"blob_id\":\"schema_parser_correction\",\"message_id\":\"msg_e1e7b7f4e0012he06mt057oKrI\"},\"rationale\":\"The correction chain explicitly supersedes the early note to trim the whole schema header before tokenization. The final corrected rationale is to tokenize first, then trim each field; the before-tokenization rationale was wrong and should not be cited as final.\",\"irrelevant_context_ignored\":[\"CSV trim cleanup\",\"Network timeout parser\"]}",
+  "tool_names": [
+    "session_lookup",
+    "session_detail",
+    "message_detail"
+  ],
+  "tool_call_count": 3,
+  "context_tool_call_count": 3,
+  "search_tool_call_count": 0,
+  "read_tool_call_count": 0,
+  "task_tool_call_count": 0,
+  "message_detail_call_count": 1,
+  "blame_lookup_call_count": 0,
+  "transcript_files_read": [],
+  "irrelevant_transcript_reads": [],
+  "child_session_count": 0,
+  "parent_tokens": {
+    "messages": 5,
+    "assistant": 4,
+    "input": 3487,
+    "output": 315,
+    "total": 44276,
+    "reasoning": 26,
+    "cacheRead": 40448,
+    "cacheWrite": 0,
+    "toolCalls": 3,
+    "maxInput": 1728
+  },
+  "child_tokens": {
+    "messages": 0,
+    "assistant": 0,
+    "input": 0,
+    "output": 0,
+    "total": 0,
+    "reasoning": 0,
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 0
+  },
+  "tokens": {
+    "messages": 5,
+    "assistant": 4,
+    "input": 3487,
+    "output": 315,
+    "total": 44276,
+    "reasoning": 26,
+    "cacheRead": 40448,
+    "cacheWrite": 0,
+    "toolCalls": 3,
+    "maxInput": 1728
+  },
+  "parent_models": [
+    "openai/gpt-5.5"
+  ],
+  "child_models": [],
+  "duration_ms": 29957,
+  "relevant_session_id": "ses_1e18480c1ffeZEDu5yO3I7TMkc",
+  "relevant_message_ids": [
+    "msg_e1e7b7f4e0012he06mt057oKrI",
+    "msg_e1e7b7f54001hC9b6poAVxkhWu"
+  ]
+}

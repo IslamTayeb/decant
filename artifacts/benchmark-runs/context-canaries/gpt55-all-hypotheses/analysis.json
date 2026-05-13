@@ -1,0 +1,358 @@
+{
+  "outDir": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/context-canaries/runs/gpt55-all-hypotheses",
+  "generatedAt": "2026-05-12T03:16:17.351Z",
+  "rows": [
+    {
+      "condition": "polluted-default-compact",
+      "canary": "conversational-inertia",
+      "contextHygienePassed": false,
+      "canaryPassed": false,
+      "currentTaskTermHits": [
+        "csv",
+        "header",
+        "trim"
+      ],
+      "staleTermsInOutput": [],
+      "staleTermsInCompactionSummary": [
+        "auth rate limiter",
+        "rate_limiter",
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "quickstart",
+        "onboarding docs",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "staleTermsInVisibleCompactionSummary": [
+        "auth rate limiter",
+        "rate_limiter",
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "quickstart",
+        "onboarding docs",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "contextToolCalls": 0,
+      "toolCalls": 0,
+      "tokens": {
+        "messages": 24,
+        "assistant": 12,
+        "input": 22695,
+        "output": 2388,
+        "total": 119803,
+        "reasoning": 0,
+        "cacheRead": 94720,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 9617
+      },
+      "cacheHitShare": 0.8067112379167909,
+      "outputPreview": "{\"fresh_plan\":[\"Locate the CSV parser code path that reads and stores header cells.\",\"Identify the smallest point where header cell strings are finalized before storage.\",\"Trim leading and trailing whitespace for header cells only, preserving existing behavior for data rows unless tests indicate otherwise.\",\"Add or update focused tests covering headers like \\\" name , age \\\" being stored as \\\"name\\\" and \\\"age\\\".\",\"Run the parser test suite or the narrow CSV parser tests.\"],\"reused_failed_prior_approach\":false,\"why_this_is_current\":\"This plan is scoped only to the current CSV parser task: trimming whitespace around header cells before storage. It does not reuse unrelated auth, docs, queue, mutex, rollback flag, or markdown-parser ideas from prior context.\"}"
+    },
+    {
+      "condition": "polluted-memmould-cache-stable-boundary-compact",
+      "canary": "conversational-inertia",
+      "contextHygienePassed": true,
+      "canaryPassed": true,
+      "currentTaskTermHits": [
+        "csv",
+        "header",
+        "trim"
+      ],
+      "staleTermsInOutput": [],
+      "staleTermsInCompactionSummary": [
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "staleTermsInVisibleCompactionSummary": [],
+      "sessionSummaryFidelity": "placeholder",
+      "contextToolCalls": 4,
+      "toolCalls": 4,
+      "tokens": {
+        "messages": 29,
+        "assistant": 16,
+        "input": 40296,
+        "output": 1974,
+        "total": 184296,
+        "reasoning": 202,
+        "cacheRead": 141824,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 10864
+      },
+      "cacheHitShare": 0.7787392927739951,
+      "outputPreview": "{\"fresh_plan\":[\"Locate the CSV header parsing path and identify where header cell strings are first materialized.\",\"Add trimming at the narrowest point before headers are stored, preserving downstream behavior for non-header cells.\",\"Add or update focused tests covering leading/trailing whitespace in header cells and unchanged data cell whitespace if applicable.\"],\"reused_failed_prior_approach\":false,\"why_this_is_current\":\"This plan is based only on the current parser task: trimming CSV header cell whitespace before storage.\"}"
+    },
+    {
+      "condition": "polluted-default-compact",
+      "canary": "current-task-capsule",
+      "contextHygienePassed": false,
+      "canaryPassed": false,
+      "currentTaskTermHits": [
+        "csv",
+        "header",
+        "trim"
+      ],
+      "staleTermsInOutput": [],
+      "staleTermsInCompactionSummary": [
+        "rate_limiter",
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "quickstart",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "staleTermsInVisibleCompactionSummary": [
+        "rate_limiter",
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "quickstart",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "contextToolCalls": 0,
+      "toolCalls": 0,
+      "tokens": {
+        "messages": 24,
+        "assistant": 12,
+        "input": 22519,
+        "output": 2010,
+        "total": 117201,
+        "reasoning": 0,
+        "cacheRead": 92672,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 11067
+      },
+      "cacheHitShare": 0.8045072965769895,
+      "outputPreview": "{\"current_task\":\"Update a CSV header parser so header cells are trimmed around commas.\",\"immediate_next_step\":\"Inspect the parser implementation and tests to find where CSV headers are split and add trimming behavior there.\",\"ready_for_new_issue\":true}"
+    },
+    {
+      "condition": "polluted-memmould-cache-stable-boundary-compact",
+      "canary": "current-task-capsule",
+      "contextHygienePassed": true,
+      "canaryPassed": true,
+      "currentTaskTermHits": [
+        "csv",
+        "header",
+        "trim"
+      ],
+      "staleTermsInOutput": [],
+      "staleTermsInCompactionSummary": [
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "staleTermsInVisibleCompactionSummary": [],
+      "sessionSummaryFidelity": "placeholder",
+      "contextToolCalls": 3,
+      "toolCalls": 3,
+      "tokens": {
+        "messages": 28,
+        "assistant": 15,
+        "input": 32232,
+        "output": 1961,
+        "total": 168553,
+        "reasoning": 216,
+        "cacheRead": 134144,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 10659
+      },
+      "cacheHitShare": 0.8062701351156417,
+      "outputPreview": "{\"current_task\":\"Update a CSV header parser so header cells are trimmed around commas.\",\"immediate_next_step\":\"Inspect the parser implementation and related tests to find where CSV header cells are parsed and add trimming behavior.\",\"ready_for_new_issue\":true}"
+    },
+    {
+      "condition": "polluted-default-compact",
+      "canary": "stale-instruction",
+      "contextHygienePassed": false,
+      "canaryPassed": false,
+      "currentTaskTermHits": [
+        "csv",
+        "header",
+        "trim"
+      ],
+      "staleTermsInOutput": [],
+      "staleTermsInCompactionSummary": [
+        "rate_limiter",
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "quickstart",
+        "onboarding docs",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "staleTermsInVisibleCompactionSummary": [
+        "rate_limiter",
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "quickstart",
+        "onboarding docs",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "contextToolCalls": 0,
+      "toolCalls": 0,
+      "tokens": {
+        "messages": 24,
+        "assistant": 12,
+        "input": 47656,
+        "output": 2152,
+        "total": 118001,
+        "reasoning": 97,
+        "cacheRead": 68096,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 10857
+      },
+      "cacheHitShare": 0.5882922109337204,
+      "outputPreview": "{\"approach\":\"Trim leading and trailing spaces from each comma-separated CSV header name during header parsing, preserving the existing CSV parsing flow and applying the change only to header name normalization.\",\"forbidden_old_approach_used\":false,\"rationale\":\"The bug is specifically about spaces around CSV header names, so the fix should be narrowly scoped to trimming header fields after splitting/parsing comma-separated headers. Unrelated prior auth/docs implementation directions are not used.\"}"
+    },
+    {
+      "condition": "polluted-memmould-cache-stable-boundary-compact",
+      "canary": "stale-instruction",
+      "contextHygienePassed": true,
+      "canaryPassed": true,
+      "currentTaskTermHits": [
+        "csv",
+        "header",
+        "trim"
+      ],
+      "staleTermsInOutput": [],
+      "staleTermsInCompactionSummary": [
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "staleTermsInVisibleCompactionSummary": [],
+      "sessionSummaryFidelity": "placeholder",
+      "contextToolCalls": 3,
+      "toolCalls": 3,
+      "tokens": {
+        "messages": 28,
+        "assistant": 15,
+        "input": 43662,
+        "output": 2051,
+        "total": 170296,
+        "reasoning": 167,
+        "cacheRead": 124416,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 9946
+      },
+      "cacheHitShare": 0.7402277514011352,
+      "outputPreview": "{\"approach\":\"Normalize each CSV header name by trimming leading and trailing spaces after splitting the header row on commas, preserving the existing parser flow and avoiding broader parsing changes.\",\"forbidden_old_approach_used\":false,\"rationale\":\"The bug is limited to spaces around comma-separated CSV header names, so the minimal fix is to trim individual header tokens only.\"}"
+    },
+    {
+      "condition": "polluted-default-compact",
+      "canary": "task-switch",
+      "contextHygienePassed": false,
+      "canaryPassed": false,
+      "currentTaskTermHits": [
+        "csv",
+        "header",
+        "trim"
+      ],
+      "staleTermsInOutput": [],
+      "staleTermsInCompactionSummary": [
+        "rate_limiter",
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "quickstart",
+        "onboarding docs",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "staleTermsInVisibleCompactionSummary": [
+        "rate_limiter",
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "quickstart",
+        "onboarding docs",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "contextToolCalls": 0,
+      "toolCalls": 0,
+      "tokens": {
+        "messages": 24,
+        "assistant": 12,
+        "input": 40013,
+        "output": 2318,
+        "total": 119643,
+        "reasoning": 0,
+        "cacheRead": 77312,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 10593
+      },
+      "cacheHitShare": 0.6589558917536756,
+      "outputPreview": "{\"current_task\":\"Fix a CSV header parser so it trims spaces around comma-separated header names.\",\"proposed_fix\":\"Locate the CSV header parsing logic and trim surrounding whitespace from each header token after splitting on commas, preserving existing behavior otherwise.\",\"stale_context_policy\":\"Ignore prior unrelated context unless it directly applies to this CSV parser issue.\",\"next_action\":\"Inspect the parser implementation and tests, then add or update focused tests for headers like `name, age, email`.\"}"
+    },
+    {
+      "condition": "polluted-memmould-cache-stable-boundary-compact",
+      "canary": "task-switch",
+      "contextHygienePassed": true,
+      "canaryPassed": true,
+      "currentTaskTermHits": [
+        "csv",
+        "header",
+        "trim"
+      ],
+      "staleTermsInOutput": [],
+      "staleTermsInCompactionSummary": [
+        "MutexRefreshCoordinator",
+        "FLAG_AUTH_QUEUE_ROLLBACK",
+        "enqueueRefresh",
+        "src/auth/queue.ts",
+        "markdown parser",
+        "auth_refresh_deduplicates_parallel_requests"
+      ],
+      "staleTermsInVisibleCompactionSummary": [],
+      "sessionSummaryFidelity": "placeholder",
+      "contextToolCalls": 3,
+      "toolCalls": 3,
+      "tokens": {
+        "messages": 28,
+        "assistant": 15,
+        "input": 38681,
+        "output": 1989,
+        "total": 169338,
+        "reasoning": 156,
+        "cacheRead": 128512,
+        "cacheWrite": 0,
+        "toolCalls": 3,
+        "maxInput": 10381
+      },
+      "cacheHitShare": 0.768644620289127,
+      "outputPreview": "{\"current_task\":\"Fix the CSV header parser so it trims spaces around comma-separated header names.\",\"proposed_fix\":\"Locate the header parsing logic and trim whitespace from each parsed header name after splitting on commas, preserving existing behavior otherwise.\",\"stale_context_policy\":\"Ignore prior unrelated context unless a context-management tool marks it relevant to this parser issue.\",\"next_action\":\"Inspect the repository for the CSV header parser and related tests, then implement the minimal fix and run the relevant test suite.\"}"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "fixture": "false-provenance",
+  "condition": "subagent-map-zoom",
+  "benchmark_passed": true,
+  "answer_passed": true,
+  "provenance_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "required_hits": [
+    "namespace_ttl",
+    "avoid_noisy_namespace",
+    "global_ttl_rejected"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [],
+  "citation_hits": [
+    "session",
+    "message",
+    "blob"
+  ],
+  "output_preview": "{\"answer\":\"src/cache/index.ts scopes TTL by namespace so a noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy; a single global TTL was considered and rejected.\",\"evidence\":{\"session_id\":\"ses_1e181f063ffeVGwV2JVakd4s3X\",\"blob_id\":\"cache_namespace_ttl\",\"message_id\":\"msg_e1e7e0fab001aAqoY65vqDkBO0\"},\"rationale\":\"The cited message supports the full answer by stating that a global TTL was considered, then rejected in favor of namespace-scoped TTL to isolate namespaces from each other's expiry behavior.\",\"irrelevant_context_ignored\":[\"Billing cache global TTL\",\"Image cache namespace notes\"]}",
+  "tool_names": [
+    "task",
+    "session_lookup",
+    "session_detail",
+    "message_detail"
+  ],
+  "tool_call_count": 4,
+  "context_tool_call_count": 3,
+  "search_tool_call_count": 0,
+  "read_tool_call_count": 0,
+  "task_tool_call_count": 1,
+  "message_detail_call_count": 1,
+  "blame_lookup_call_count": 0,
+  "transcript_files_read": [],
+  "irrelevant_transcript_reads": [],
+  "child_session_count": 1,
+  "parent_tokens": {
+    "messages": 3,
+    "assistant": 2,
+    "input": 1072,
+    "output": 341,
+    "total": 20357,
+    "reasoning": 0,
+    "cacheRead": 18944,
+    "cacheWrite": 0,
+    "toolCalls": 1,
+    "maxInput": 592
+  },
+  "child_tokens": {
+    "messages": 5,
+    "assistant": 4,
+    "input": 10726,
+    "output": 309,
+    "total": 18271,
+    "reasoning": 68,
+    "cacheRead": 7168,
+    "cacheWrite": 0,
+    "toolCalls": 3,
+    "maxInput": 5309
+  },
+  "tokens": {
+    "messages": 8,
+    "assistant": 6,
+    "input": 11798,
+    "output": 650,
+    "total": 38628,
+    "reasoning": 68,
+    "cacheRead": 26112,
+    "cacheWrite": 0,
+    "toolCalls": 4,
+    "maxInput": 5309
+  },
+  "parent_models": [
+    "openai/gpt-5.5"
+  ],
+  "child_models": [
+    "openai/gpt-5.5"
+  ],
+  "duration_ms": 41926,
+  "relevant_session_id": "ses_1e181f063ffeVGwV2JVakd4s3X",
+  "relevant_message_ids": [
+    "msg_e1e7e0fab001aAqoY65vqDkBO0",
+    "msg_e1e7e0fb2001sTGArjqcxUxWvo"
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "fixture": "related-reuse",
+  "condition": "rlm-transcript-search",
+  "benchmark_passed": true,
+  "answer_passed": true,
+  "provenance_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "required_hits": [
+    "reuse_principle",
+    "do_not_copy_comma",
+    "tsv_specific"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [],
+  "citation_hits": [
+    "session",
+    "message",
+    "blob"
+  ],
+  "output_preview": "{\"answer\":\"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without changing raw parse boundaries; do not copy comma-specific CSV splitting into src/tsv/schema.ts, because TSV should use tab delimiters.\",\"evidence\":{\"session_id\":\"csv_parser_lesson_session\",\"blob_id\":\"csv_parser_lesson_session.md\",\"message_id\":\"reuse_fact_1;reuse_fact_2\"},\"rationale\":\"The CSV parser transcript supplies both the reusable lesson and the stale detail: trimming after delimiter splitting remains applicable, but comma-specific CSV splitting is explicitly stale for TSV and must be replaced with tab delimiters.\",\"irrelevant_context_ignored\":[\"Auth queue related reuse\",\"Markdown table parser\",\"related_reuse_decoy_* mentions of src/tsv/schema.ts\"]}",
+  "tool_names": [
+    "glob",
+    "grep",
+    "read",
+    "read",
+    "read",
+    "grep",
+    "read",
+    "glob",
+    "read"
+  ],
+  "tool_call_count": 9,
+  "context_tool_call_count": 0,
+  "search_tool_call_count": 4,
+  "read_tool_call_count": 5,
+  "bash_tool_call_count": 0,
+  "task_tool_call_count": 0,
+  "message_detail_call_count": 0,
+  "blame_lookup_call_count": 0,
+  "transcript_files_read": [
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md"
+  ],
+  "irrelevant_transcript_reads": [
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md"
+  ],
+  "child_session_count": 0,
+  "parent_tokens": {
+    "messages": 8,
+    "assistant": 7,
+    "input": 14114,
+    "output": 917,
+    "total": 87793,
+    "reasoning": 570,
+    "cacheRead": 72192,
+    "cacheWrite": 0,
+    "toolCalls": 9,
+    "maxInput": 6887
+  },
+  "child_tokens": {
+    "messages": 0,
+    "assistant": 0,
+    "input": 0,
+    "output": 0,
+    "total": 0,
+    "reasoning": 0,
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 0
+  },
+  "tokens": {
+    "messages": 8,
+    "assistant": 7,
+    "input": 14114,
+    "output": 917,
+    "total": 87793,
+    "reasoning": 570,
+    "cacheRead": 72192,
+    "cacheWrite": 0,
+    "toolCalls": 9,
+    "maxInput": 6887
+  },
+  "parent_models": [
+    "openai/gpt-5.5"
+  ],
+  "child_models": [],
+  "duration_ms": 40489,
+  "relevant_session_id": "csv_parser_lesson_session",
+  "relevant_message_ids": [
+    "reuse_fact_1",
+    "reuse_fact_2"
+  ]
+}

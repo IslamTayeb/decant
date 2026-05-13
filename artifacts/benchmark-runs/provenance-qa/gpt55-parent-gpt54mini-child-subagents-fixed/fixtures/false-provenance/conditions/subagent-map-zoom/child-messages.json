@@ -1,0 +1,447 @@
+[
+  {
+    "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+    "messages": [
+      {
+        "info": {
+          "id": "msg_e1e9219d1001NH9tNUQVB6uEM7",
+          "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+          "role": "user",
+          "time": {
+            "created": 1778629351891
+          },
+          "summary": {
+            "diffs": []
+          },
+          "agent": "memmould",
+          "model": {
+            "providerID": "openai",
+            "modelID": "gpt-5.4-mini"
+          },
+          "tools": {
+            "todowrite": false,
+            "task": false
+          }
+        },
+        "parts": [
+          {
+            "id": "prt_e1e9219d3001PEn2u9pWScq4tq",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e9219d1001NH9tNUQVB6uEM7",
+            "type": "text",
+            "text": "Use only mem-mould session tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the expected relevant prior session titled or matching \"Cache namespace TTL rationale\" and answer: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL? Ignore distractors: \"Billing cache global TTL\" and \"Image cache namespace notes\". Return evidence with session_id, blob_id, and a message_id that supports the full answer, not just a nearby subclaim. If correction, stale detail, or rejected alternative matters, include it in rationale. Return only the evidence and concise answer content needed for the parent to produce compact JSON."
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e9219d9001ENZgJScwPd6x2O",
+          "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+          "role": "assistant",
+          "time": {
+            "created": 1778629351897,
+            "completed": 1778629354169
+          },
+          "parentID": "msg_e1e9219d1001NH9tNUQVB6uEM7",
+          "modelID": "gpt-5.4-mini",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 3426,
+            "input": 3262,
+            "output": 29,
+            "reasoning": 135,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e921c22001tXAn5uRbkFpNXx",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e9219d9001ENZgJScwPd6x2O",
+            "type": "step-start",
+            "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643"
+          },
+          {
+            "id": "prt_e1e921d16001I5SmKXfARmRtS0",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e9219d9001ENZgJScwPd6x2O",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_05f012d28ae34714016a03bae902688191b7a6be89806c7e39"
+              }
+            },
+            "time": {
+              "start": 1778629352726,
+              "end": 1778629353948
+            }
+          },
+          {
+            "id": "prt_e1e9221e0001hL3i0a0lTs2Xf7",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e9219d9001ENZgJScwPd6x2O",
+            "type": "tool",
+            "callID": "call_QOyLjLLfHtdhqSf3VcWg2maH",
+            "tool": "session_lookup",
+            "state": {
+              "status": "completed",
+              "input": {
+                "query": "\"Cache namespace TTL rationale\"",
+                "limit": 10
+              },
+              "output": "{\n  \"query\": \"\\\"Cache namespace TTL rationale\\\"\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e16df82fffeCynueL3n6BwjQ4\",\n      \"title\": \"false-provenance subagent-map-zoom\",\n      \"updatedAt\": 1778629347355,\n      \"matchedBlobIDs\": [\n        \"cache_index\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"cache_index\",\n          \"label\": \"cache_index\",\n          \"summary\": \"User request: Question: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL? Expected relevant prior session: Cache namespace TTL rationale Task instruction: call subagent_type='memmould', not general or ex...\",\n          \"compressedSummary\": \"[Blob summary: cache_index] User request: Question: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL? Expected relevant prior session: Cache namespace TTL rationale Task instruction: call subagent_type='memmould', not general or ex...\",\n          \"placeholder\": \"User request: Question: Why does src/cache/index.ts scope TTL by namespace in...\",\n          \"tokenEstimate\": 197,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16e040dffe67X99yZpJ16Y78\",\n      \"title\": \"Image cache namespace notes\",\n      \"updatedAt\": 1778629346451,\n      \"matchedBlobIDs\": [\n        \"image_cache_namespace\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"image_cache_namespace\",\n          \"label\": \"image_cache_namespace\",\n          \"summary\": \"User request: # Image cache namespace notes session_id: image_cache_session title: Image cache namespace notes ## message image_cache_fact_1 Image cache namespace prefixes are only for CDN purges, not TTL rationale. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: image_cache_namespace] User request: # Image cache namespace notes session_id: image_cache_session title: Image cache namespace notes ## message image_cache_fact_1 Image cache namespace prefixes are only for CDN purges, not TTL rationale. Assistant step without text content\",\n          \"placeholder\": \"User request: # Image cache namespace notes session_id: image_cache_session t...\",\n          \"tokenEstimate\": 53,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16e13e0ffevkel7NISsoG6FS\",\n      \"title\": \"Billing cache global TTL\",\n      \"updatedAt\": 1778629343930,\n      \"matchedBlobIDs\": [\n        \"billing_cache_global\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"billing_cache_global\",\n          \"label\": \"billing_cache_global\",\n          \"summary\": \"User request: # Billing cache global TTL session_id: billing_cache_session title: Billing cache global TTL ## message billing_cache_fact_1 Billing cache intentionally uses one global TTL because its provider invalidates all tenants toget... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: billing_cache_global] User request: # Billing cache global TTL session_id: billing_cache_session title: Billing cache global TTL ## message billing_cache_fact_1 Billing cache intentionally uses one global TTL because its provider invalidates all tenants toget... Assistant step without text content\",\n          \"placeholder\": \"User request: # Billing cache global TTL session_id: billing_cache_session ti...\",\n          \"tokenEstimate\": 59,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e16e23abffeRNqQUB8HSINa9r\",\n      \"title\": \"Cache namespace TTL rationale\",\n      \"updatedAt\": 1778629339415,\n      \"matchedBlobIDs\": [\n        \"cache_namespace_ttl\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"cache_namespace_ttl\",\n          \"label\": \"cache_namespace_ttl\",\n          \"summary\": \"User request: # Cache namespace TTL rationale session_id: cache_namespace_session title: Cache namespace TTL rationale ## message cache_fact_1 A global TTL was considered for cache entries. ## message cache_fact_2 Namespace-scoped TTL wa... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: cache_namespace_ttl] User request: # Cache namespace TTL rationale session_id: cache_namespace_session title: Cache namespace TTL rationale ## message cache_fact_1 A global TTL was considered for cache entries. ## message cache_fact_2 Namespace-scoped TTL wa... Assistant step without text content\",\n          \"placeholder\": \"User request: # Cache namespace TTL rationale session_id: cache_namespace_ses...\",\n          \"tokenEstimate\": 85,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629354066,
+                "end": 1778629354077
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_05f012d28ae34714016a03baea3bd88191bd35144df64adbb9"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e922293001jnVkz5Ay08XLlf",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e9219d9001ENZgJScwPd6x2O",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643",
+            "cost": 0,
+            "tokens": {
+              "total": 3426,
+              "input": 3262,
+              "output": 29,
+              "reasoning": 135,
+              "cache": {
+                "read": 0,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e9222ba0014SDYPvk8GhB7Vt",
+          "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+          "role": "assistant",
+          "time": {
+            "created": 1778629354170,
+            "completed": 1778629357090
+          },
+          "parentID": "msg_e1e9219d1001NH9tNUQVB6uEM7",
+          "modelID": "gpt-5.4-mini",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 4681,
+            "input": 1504,
+            "output": 51,
+            "reasoning": 54,
+            "cache": {
+              "read": 3072,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e922537001fE45mcSn66rnzb",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e9222ba0014SDYPvk8GhB7Vt",
+            "type": "step-start",
+            "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643"
+          },
+          {
+            "id": "prt_e1e922833001VWSitw3AsNQfw4",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e9222ba0014SDYPvk8GhB7Vt",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_094625a1611835ce016a03baebd8ac819187e2a28b5e443551"
+              }
+            },
+            "time": {
+              "start": 1778629355571,
+              "end": 1778629356694
+            }
+          },
+          {
+            "id": "prt_e1e922c99001vxkRRNtncpm6LV",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e9222ba0014SDYPvk8GhB7Vt",
+            "type": "tool",
+            "callID": "call_9hwvyBN5mFfiVIk1VYd1blZb",
+            "tool": "session_detail",
+            "state": {
+              "status": "completed",
+              "input": {
+                "session_id": "ses_1e16e23abffeRNqQUB8HSINa9r",
+                "blob_id": "cache_namespace_ttl",
+                "detail": "messages"
+              },
+              "output": "{\n  \"session_id\": \"ses_1e16e23abffeRNqQUB8HSINa9r\",\n  \"blob_id\": \"cache_namespace_ttl\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"cache_namespace_ttl\",\n    \"label\": \"cache_namespace_ttl\",\n    \"compressedSummary\": \"[Blob summary: cache_namespace_ttl] User request: # Cache namespace TTL rationale session_id: cache_namespace_session title: Cache namespace TTL rationale ## message cache_fact_1 A global TTL was considered for cache entries. ## message cache_fact_2 Namespace-scoped TTL wa... Assistant step without text content\",\n    \"tokenEstimate\": 85,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e1e91dc65001ECjHMFwBoWmVCY\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # Cache namespace TTL rationale session_id: cache_namespace_session title: Cache namespace TTL rationale ## message cache_fact_1 A global TTL was considered for cache entries. ## message cache_fact_2 Namespace-scoped TTL wa...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 84,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778629336165\n    },\n    {\n      \"id\": \"msg_e1e91dc6c001n7pAhxhceczifK\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 1,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778629336172\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629356834,
+                "end": 1778629356837
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_094625a1611835ce016a03baecfad88191b8fd5d09dcc9aa28"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e922d9c001V2JnxsClOU8qsx",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e9222ba0014SDYPvk8GhB7Vt",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643",
+            "cost": 0,
+            "tokens": {
+              "total": 4681,
+              "input": 1504,
+              "output": 51,
+              "reasoning": 54,
+              "cache": {
+                "read": 3072,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e922e24001rKB2JXEyouycHV",
+          "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+          "role": "assistant",
+          "time": {
+            "created": 1778629357092,
+            "completed": 1778629359377
+          },
+          "parentID": "msg_e1e9219d1001NH9tNUQVB6uEM7",
+          "modelID": "gpt-5.4-mini",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 5185,
+            "input": 1002,
+            "output": 61,
+            "reasoning": 26,
+            "cache": {
+              "read": 4096,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e9230d6001tYg2062ih8dhaz",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e922e24001rKB2JXEyouycHV",
+            "type": "step-start",
+            "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643"
+          },
+          {
+            "id": "prt_e1e923363001ZcUy0YX6cnHpaH",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e922e24001rKB2JXEyouycHV",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0150b2cdf5201889016a03baeeb7f88191bc6b0a5475353459"
+              }
+            },
+            "time": {
+              "start": 1778629358435,
+              "end": 1778629359016
+            }
+          },
+          {
+            "id": "prt_e1e9235ab001KpznUfBDYZLLII",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e922e24001rKB2JXEyouycHV",
+            "type": "tool",
+            "callID": "call_VTuAfxREsbISlsUcZt7HufGG",
+            "tool": "message_detail",
+            "state": {
+              "status": "completed",
+              "input": {
+                "session_id": "ses_1e16e23abffeRNqQUB8HSINa9r",
+                "message_id": "msg_e1e91dc65001ECjHMFwBoWmVCY"
+              },
+              "output": "{\n  \"session_id\": \"ses_1e16e23abffeRNqQUB8HSINa9r\",\n  \"message_id\": \"msg_e1e91dc65001ECjHMFwBoWmVCY\",\n  \"ok\": true,\n  \"message\": {\n    \"id\": \"msg_e1e91dc65001ECjHMFwBoWmVCY\",\n    \"role\": \"user\",\n    \"blobID\": \"cache_namespace_ttl\",\n    \"blobLabel\": \"cache_namespace_ttl\",\n    \"summary\": \"User request: # Cache namespace TTL rationale session_id: cache_namespace_session title: Cache namespace TTL rationale ## message cache_fact_1 A global TTL was considered for cache entries. ## message cache_fact_2 Namespace-scoped TTL wa...\",\n    \"keyFacts\": [],\n    \"tokenEstimate\": 84,\n    \"createdAt\": 1778629336165,\n    \"parts\": [\n      {\n        \"id\": \"prt_e1e91dc6600133T1MkRJow7MTF\",\n        \"type\": \"text\",\n        \"text\": \"# Cache namespace TTL rationale\\nsession_id: cache_namespace_session\\ntitle: Cache namespace TTL rationale\\n\\n## message cache_fact_1\\nA global TTL was considered for cache entries.\\n\\n## message cache_fact_2\\nNamespace-scoped TTL was chosen so one noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy.\\n\"\n      }\n    ]\n  }\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778629359249,
+                "end": 1778629359263
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0150b2cdf5201889016a03baef4d1c8191adb2411cba44b934"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e9236cf0012fAJAiRCjbEkX3",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e922e24001rKB2JXEyouycHV",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643",
+            "cost": 0,
+            "tokens": {
+              "total": 5185,
+              "input": 1002,
+              "output": 61,
+              "reasoning": 26,
+              "cache": {
+                "read": 4096,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e923714001n3dQ4Zx01d5oY7",
+          "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+          "role": "assistant",
+          "time": {
+            "created": 1778629359380,
+            "completed": 1778629362310
+          },
+          "parentID": "msg_e1e9219d1001NH9tNUQVB6uEM7",
+          "modelID": "gpt-5.4-mini",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 5777,
+            "input": 5511,
+            "output": 100,
+            "reasoning": 166,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "stop"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e92398c001Vfq4ANuSsCkK93",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e923714001n3dQ4Zx01d5oY7",
+            "type": "step-start",
+            "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643"
+          },
+          {
+            "id": "prt_e1e923bc3001CeXLyUXpVsCxGk",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e923714001n3dQ4Zx01d5oY7",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0af7c31f2bb6ab2a016a03baf0daa88191adea74122fce7591"
+              }
+            },
+            "time": {
+              "start": 1778629360579,
+              "end": 1778629361852
+            }
+          },
+          {
+            "id": "prt_e1e9240c0001V7WvepzjciCm3i",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e923714001n3dQ4Zx01d5oY7",
+            "type": "text",
+            "text": "{\"session_id\":\"ses_1e16e23abffeRNqQUB8HSINa9r\",\"blob_id\":\"cache_namespace_ttl\",\"message_id\":\"msg_e1e91dc65001ECjHMFwBoWmVCY\",\"answer\":\"Namespace-scoped TTL was chosen instead of a single global TTL so one noisy namespace cannot extend or evict unrelated namespaces through a shared TTL policy; a global TTL was considered and rejected.\"}",
+            "time": {
+              "start": 1778629361856,
+              "end": 1778629362225
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_0af7c31f2bb6ab2a016a03baf221248191b48f76b72c8cc7c1",
+                "phase": "final_answer"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e92425d001gcnatKGRe1wm3e",
+            "sessionID": "ses_1e16de635ffenlF14nGqMhyfep",
+            "messageID": "msg_e1e923714001n3dQ4Zx01d5oY7",
+            "type": "step-finish",
+            "reason": "stop",
+            "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643",
+            "cost": 0,
+            "tokens": {
+              "total": 5777,
+              "input": 5511,
+              "output": 100,
+              "reasoning": 166,
+              "cache": {
+                "read": 0,
+                "write": 0
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

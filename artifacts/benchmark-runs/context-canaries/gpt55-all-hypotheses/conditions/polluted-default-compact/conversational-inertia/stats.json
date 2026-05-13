@@ -1,0 +1,57 @@
+{
+  "condition": "polluted-default-compact",
+  "canary": "conversational-inertia",
+  "title": "Conversational inertia",
+  "failure_mode": "Agent repeats old failed approaches because prior responses behave like bad examples.",
+  "session_id": "ses_1e5d7aeadffePYETFWgCAW6MTX",
+  "duration_ms": 84601,
+  "message_count": 24,
+  "tool_call_count": 0,
+  "tool_names": [],
+  "context_tool_call_count": 0,
+  "output_preview": "{\"fresh_plan\":[\"Locate the CSV parser code path that reads and stores header cells.\",\"Identify the smallest point where header cell strings are finalized before storage.\",\"Trim leading and trailing whitespace for header cells only, preserving existing behavior for data rows unless tests indicate otherwise.\",\"Add or update focused tests covering headers like \\\" name , age \\\" being stored as \\\"name\\\" and \\\"age\\\".\",\"Run the parser test suite or the narrow CSV parser tests.\"],\"reused_failed_prior_approach\":false,\"why_this_is_current\":\"This plan is scoped only to the current CSV parser task: trimming whitespace around header cells before storage. It does not reuse unrelated auth, docs, queue, mutex, rollback flag, or markdown-parser ideas from prior context.\"}",
+  "current_task_term_hits": [
+    "csv",
+    "header",
+    "trim"
+  ],
+  "stale_terms_in_output": [],
+  "stale_terms_in_compaction_summary": [
+    "auth rate limiter",
+    "rate_limiter",
+    "MutexRefreshCoordinator",
+    "FLAG_AUTH_QUEUE_ROLLBACK",
+    "enqueueRefresh",
+    "src/auth/queue.ts",
+    "markdown parser",
+    "quickstart",
+    "onboarding docs",
+    "auth_refresh_deduplicates_parallel_requests"
+  ],
+  "stale_terms_in_visible_compaction_summary": [
+    "auth rate limiter",
+    "rate_limiter",
+    "MutexRefreshCoordinator",
+    "FLAG_AUTH_QUEUE_ROLLBACK",
+    "enqueueRefresh",
+    "src/auth/queue.ts",
+    "markdown parser",
+    "quickstart",
+    "onboarding docs",
+    "auth_refresh_deduplicates_parallel_requests"
+  ],
+  "tokens": {
+    "messages": 24,
+    "assistant": 12,
+    "input": 22695,
+    "output": 2388,
+    "total": 119803,
+    "reasoning": 0,
+    "cacheRead": 94720,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 9617
+  },
+  "context_hygiene_passed": false,
+  "canary_passed": false
+}

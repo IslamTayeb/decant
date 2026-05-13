@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-05-12T03:12:09.860Z",
+  "session_id": "ses_1e5d53e0cffelG7RTSn5fa5cm2",
+  "blobs": [
+    {
+      "id": "are_working_wholly",
+      "label": "are_working_wholly",
+      "fidelity": "full",
+      "raw_tokens": 87,
+      "effective_tokens": 87,
+      "message_count": 2,
+      "effective_label": "2 msgs 87"
+    },
+    {
+      "id": "session_summary",
+      "label": "session_summary",
+      "fidelity": "placeholder",
+      "raw_tokens": 340,
+      "effective_tokens": 30,
+      "message_count": 1,
+      "effective_label": "stub"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg_e1a2b7ffa00181Hbk9aXgCGcpA",
+      "role": "assistant",
+      "blob_id": "session_summary",
+      "blob_label": "session_summary",
+      "blob_fidelity": "placeholder",
+      "summary": "## Goal\nContinue the auth refresh race fix. Final direction is an async queue helper that deduplicates refresh work per tenant.\n\n## Instructions\n- Do not revive the mutex approach except as a known failed design.\n- Keep docs/onboarding cleanup separate from auth work.\n- Treat the old markdown parser caching hypothesis as unrelated noise; it was wrong and belongs only to docs cleanup.\n- Prioritize the same-tenant concurrency test.\n\n## Discoveries\n- `MutexRefreshCoordinator` failed under concurrent testing.\n- Failing test name: `auth_refresh_deduplicates_parallel_requests`.\n- The desired design is a per-tenant async queue / single-flight helper.\n- Rollback must be controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n- The queue helper should expose a narrow API: `enqueueRefresh`.\n- Needed auth tests:\n  - same-tenant refresh dedupe, highest priority\n  - different-tenant parallelism\n  - rollback flag behavior\n  - failure propagation when a queued refresh rejects\n  - cleanup after rejection so later refresh can retry\n\n## Accomplished\n- Identified mutex approach as insufficient / failed.\n- Chosen async queue as final direction.\n- Defined rollback flag name.\n- Defined helper location and public API.\n\n## Relevant files / directories\n- `src/auth/queue.ts`\n- `FLAG_AUTH_QUEUE_ROLLBACK`\n- `MutexRefreshCoordinator`\n- `auth_refresh_deduplicates_parallel_requests`",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 340,
+      "source": "derived",
+      "effective_treatment": "placeholder-stub"
+    },
+    {
+      "id": "msg_e1a2b9b890016nRuodwhPhoX4p",
+      "role": "user",
+      "blob_id": "are_working_wholly",
+      "blob_label": "are_working_wholly",
+      "blob_fidelity": "full",
+      "summary": "User request: We are now working on a wholly unrelated parser issue in this repository. Current task: a CSV header parser should trim spaces around comma-separated header names. Return JSON with keys current_task, proposed_fix, stale_con...",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 86,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e1a2b9b8c001835GyhqfRup1j8",
+      "role": "assistant",
+      "blob_id": "are_working_wholly",
+      "blob_label": "are_working_wholly",
+      "blob_fidelity": "full",
+      "summary": "Assistant step without text content",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 1,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    }
+  ],
+  "totals": {
+    "raw_tokens": 427,
+    "effective_tokens": 117
+  }
+}

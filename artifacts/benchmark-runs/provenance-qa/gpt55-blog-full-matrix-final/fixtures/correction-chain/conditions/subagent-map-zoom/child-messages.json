@@ -1,0 +1,447 @@
+[
+  {
+    "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+    "messages": [
+      {
+        "info": {
+          "id": "msg_e1e7c2dc30018wZMJfiR3TuSdv",
+          "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+          "role": "user",
+          "time": {
+            "created": 1778627915205
+          },
+          "summary": {
+            "diffs": []
+          },
+          "agent": "memmould",
+          "model": {
+            "providerID": "openai",
+            "modelID": "gpt-5.5"
+          },
+          "tools": {
+            "todowrite": false,
+            "task": false
+          }
+        },
+        "parts": [
+          {
+            "id": "prt_e1e7c2dc5001Ao9h5S3OdA7DtH",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c2dc30018wZMJfiR3TuSdv",
+            "type": "text",
+            "text": "Use only mem-mould session tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the expected relevant prior session: \"Schema parser correction chain\". Answer this provenance question: Why does src/parser/schema.ts trim schema field names after splitting fields instead of before tokenization? Ignore distractors: \"CSV trim cleanup\" and \"Network timeout parser\". Return evidence with session_id, blob_id, and a single message_id that supports the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, include it in the rationale. Return compact JSON only with keys answer, evidence, rationale, irrelevant_context_ignored."
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e7c2dcf001l6Jz8a8X38ZTMJ",
+          "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+          "role": "assistant",
+          "time": {
+            "created": 1778627915215,
+            "completed": 1778627918093
+          },
+          "parentID": "msg_e1e7c2dc30018wZMJfiR3TuSdv",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 3297,
+            "input": 691,
+            "output": 27,
+            "reasoning": 19,
+            "cache": {
+              "read": 2560,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e7c306d001GC9pfmS7lM8pLe",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c2dcf001l6Jz8a8X38ZTMJ",
+            "type": "step-start",
+            "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb"
+          },
+          {
+            "id": "prt_e1e7c336e0018zLDIlpjoZLzut",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c2dcf001l6Jz8a8X38ZTMJ",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_08a93c2f1b2290af016a03b54d0b448191a403ba7b95e1b0d2"
+              }
+            },
+            "time": {
+              "start": 1778627916654,
+              "end": 1778627917903
+            }
+          },
+          {
+            "id": "prt_e1e7c3850001iw2zLw4q2ILTYg",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c2dcf001l6Jz8a8X38ZTMJ",
+            "type": "tool",
+            "callID": "call_n0dBaq7ieL3C6sQZ0kN9doss",
+            "tool": "session_lookup",
+            "state": {
+              "status": "completed",
+              "input": {
+                "query": "Schema parser correction chain",
+                "limit": 5
+              },
+              "output": "{\n  \"query\": \"Schema parser correction chain\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e183e605ffeT3RhTmPpw6Siks\",\n      \"title\": \"correction-chain subagent-map-zoom\",\n      \"updatedAt\": 1778627910207,\n      \"matchedBlobIDs\": [\n        \"parser_schema\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"parser_schema\",\n          \"label\": \"parser_schema\",\n          \"summary\": \"User request: Question: Why does src/parser/schema.ts trim schema field names after splitting fields instead of before tokenization? Expected relevant prior session: Schema parser correction chain Task instruction: call subagent_type='me...\",\n          \"compressedSummary\": \"[Blob summary: parser_schema] User request: Question: Why does src/parser/schema.ts trim schema field names after splitting fields instead of before tokenization? Expected relevant prior session: Schema parser correction chain Task instruction: call subagent_type='me...\",\n          \"placeholder\": \"User request: Question: Why does src/parser/schema.ts trim schema field names...\",\n          \"tokenEstimate\": 200,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e183f1ecffe4rz86NDmMnYhbB\",\n      \"title\": \"Network timeout parser\",\n      \"updatedAt\": 1778627909764,\n      \"matchedBlobIDs\": [\n        \"network_timeout_parser\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"network_timeout_parser\",\n          \"label\": \"network_timeout_parser\",\n          \"summary\": \"User request: # Network timeout parser session_id: network_timeout_session title: Network timeout parser ## message net_fact_1 A network parser strips whitespace before tokenization; this is a distractor. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: network_timeout_parser] User request: # Network timeout parser session_id: network_timeout_session title: Network timeout parser ## message net_fact_1 A network parser strips whitespace before tokenization; this is a distractor. Assistant step without text content\",\n          \"placeholder\": \"User request: # Network timeout parser session_id: network_timeout_session ti...\",\n          \"tokenEstimate\": 50,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e183fddaffe1582uw3hFi62Ff\",\n      \"title\": \"CSV trim cleanup\",\n      \"updatedAt\": 1778627906738,\n      \"matchedBlobIDs\": [\n        \"csv_trim_cleanup\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"csv_trim_cleanup\",\n          \"label\": \"csv_trim_cleanup\",\n          \"summary\": \"User request: # CSV trim cleanup session_id: csv_trim_session title: CSV trim cleanup ## message csv_fact_1 CSV header cells trim around commas; this is related but not the schema pipe parser correction. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: csv_trim_cleanup] User request: # CSV trim cleanup session_id: csv_trim_session title: CSV trim cleanup ## message csv_fact_1 CSV header cells trim around commas; this is related but not the schema pipe parser correction. Assistant step without text content\",\n          \"placeholder\": \"User request: # CSV trim cleanup session_id: csv_trim_session title: CSV trim...\",\n          \"tokenEstimate\": 49,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e18411acffegYBgKoYn7NTVgX\",\n      \"title\": \"Schema parser correction chain\",\n      \"updatedAt\": 1778627903374,\n      \"matchedBlobIDs\": [],\n      \"blobs\": [\n        {\n          \"id\": \"schema_parser_correction\",\n          \"label\": \"schema_parser_correction\",\n          \"summary\": \"User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: schema_parser_correction] User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc... Assistant step without text content\",\n          \"placeholder\": \"User request: # Schema parser correction chain session_id: schema_parser_sess...\",\n          \"tokenEstimate\": 123,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778627918012,
+                "end": 1778627918026
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_08a93c2f1b2290af016a03b54e4bb08191814e12a63dcb3fb2"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e7c38f1001HXmNnsCcplso0t",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c2dcf001l6Jz8a8X38ZTMJ",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb",
+            "cost": 0,
+            "tokens": {
+              "total": 3297,
+              "input": 691,
+              "output": 27,
+              "reasoning": 19,
+              "cache": {
+                "read": 2560,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e7c390e0027ZPsjpj4S7i4dG",
+          "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+          "role": "assistant",
+          "time": {
+            "created": 1778627918094,
+            "completed": 1778627920254
+          },
+          "parentID": "msg_e1e7c2dc30018wZMJfiR3TuSdv",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 4468,
+            "input": 1335,
+            "output": 50,
+            "reasoning": 11,
+            "cache": {
+              "read": 3072,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e7c3b7f00172FJFXA5xK0W1l",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c390e0027ZPsjpj4S7i4dG",
+            "type": "step-start",
+            "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb"
+          },
+          {
+            "id": "prt_e1e7c3cd8001UB5PHCF1Zroemv",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c390e0027ZPsjpj4S7i4dG",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0845f410c9f7974a016a03b54f734081918e9a583061064ac0"
+              }
+            },
+            "time": {
+              "start": 1778627919065,
+              "end": 1778627919669
+            }
+          },
+          {
+            "id": "prt_e1e7c3f37001PJh3z9LwxFxAAz",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c390e0027ZPsjpj4S7i4dG",
+            "type": "tool",
+            "callID": "call_5SUrU98aQ7fsvCPT8hPReNl7",
+            "tool": "session_detail",
+            "state": {
+              "status": "completed",
+              "input": {
+                "session_id": "ses_1e18411acffegYBgKoYn7NTVgX",
+                "blob_id": "schema_parser_correction",
+                "detail": "messages"
+              },
+              "output": "{\n  \"session_id\": \"ses_1e18411acffegYBgKoYn7NTVgX\",\n  \"blob_id\": \"schema_parser_correction\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"schema_parser_correction\",\n    \"label\": \"schema_parser_correction\",\n    \"compressedSummary\": \"[Blob summary: schema_parser_correction] User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc... Assistant step without text content\",\n    \"tokenEstimate\": 123,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e1e7bee70001Ta8M0bVuk6SJUC\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 121,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778627898992\n    },\n    {\n      \"id\": \"msg_e1e7bee77001EwDhkh33rg6juf\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 2,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778627898999\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778627920160,
+                "end": 1778627920166
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0845f410c9f7974a016a03b5500ff08191b2ba36f9bf76e31b"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e7c415f001QUG7891dyiiYfZ",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c390e0027ZPsjpj4S7i4dG",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb",
+            "cost": 0,
+            "tokens": {
+              "total": 4468,
+              "input": 1335,
+              "output": 50,
+              "reasoning": 11,
+              "cache": {
+                "read": 3072,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e7c417f001jCU7lMsINKaaiD",
+          "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+          "role": "assistant",
+          "time": {
+            "created": 1778627920255,
+            "completed": 1778627922641
+          },
+          "parentID": "msg_e1e7c2dc30018wZMJfiR3TuSdv",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 4950,
+            "input": 785,
+            "output": 60,
+            "reasoning": 9,
+            "cache": {
+              "read": 4096,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e7c4493001C53AwGkdKjs5nL",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c417f001jCU7lMsINKaaiD",
+            "type": "step-start",
+            "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb"
+          },
+          {
+            "id": "prt_e1e7c4574001Ua1k6rKi6Qdghj",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c417f001jCU7lMsINKaaiD",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0c6ca031bd44e3ab016a03b551a8e08191bdc2522e497ba445"
+              }
+            },
+            "time": {
+              "start": 1778627921268,
+              "end": 1778627921725
+            }
+          },
+          {
+            "id": "prt_e1e7c4744001QW9MlRwrdxzEpH",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c417f001jCU7lMsINKaaiD",
+            "type": "tool",
+            "callID": "call_Jd3ESthHenZTCLq39JlAcU49",
+            "tool": "message_detail",
+            "state": {
+              "status": "completed",
+              "input": {
+                "session_id": "ses_1e18411acffegYBgKoYn7NTVgX",
+                "message_id": "msg_e1e7bee70001Ta8M0bVuk6SJUC"
+              },
+              "output": "{\n  \"session_id\": \"ses_1e18411acffegYBgKoYn7NTVgX\",\n  \"message_id\": \"msg_e1e7bee70001Ta8M0bVuk6SJUC\",\n  \"ok\": true,\n  \"message\": {\n    \"id\": \"msg_e1e7bee70001Ta8M0bVuk6SJUC\",\n    \"role\": \"user\",\n    \"blobID\": \"schema_parser_correction\",\n    \"blobLabel\": \"schema_parser_correction\",\n    \"summary\": \"User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc...\",\n    \"keyFacts\": [],\n    \"tokenEstimate\": 121,\n    \"createdAt\": 1778627898992,\n    \"parts\": [\n      {\n        \"id\": \"prt_e1e7bee71001QyxTeu1JBPwDmJ\",\n        \"type\": \"text\",\n        \"text\": \"# Schema parser correction chain\\nsession_id: schema_parser_session\\ntitle: Schema parser correction chain\\n\\n## message schema_fact_1\\nEarly note, later superseded: trim the whole schema header before tokenization.\\n\\n## message schema_fact_2\\nCorrection: tokenize first, then trim each field. This preserves raw delimiter and quoted-field behavior while cleaning field names.\\n\\n## message schema_fact_3\\nThe earlier before-tokenization rationale was wrong and should not be cited as final.\\n\"\n      }\n    ]\n  }\n}",
+              "title": "",
+              "metadata": {
+                "truncated": false
+              },
+              "time": {
+                "start": 1778627922543,
+                "end": 1778627922552
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0c6ca031bd44e3ab016a03b5521d188191a19b1a3aa1e111cf"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e7c4aad001KTueq7H5XMHOE1",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c417f001jCU7lMsINKaaiD",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb",
+            "cost": 0,
+            "tokens": {
+              "total": 4950,
+              "input": 785,
+              "output": 60,
+              "reasoning": 9,
+              "cache": {
+                "read": 4096,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1e7c4ad2001ZDEhQZkH3kJOiT",
+          "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+          "role": "assistant",
+          "time": {
+            "created": 1778627922642,
+            "completed": 1778627927367
+          },
+          "parentID": "msg_e1e7c2dc30018wZMJfiR3TuSdv",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "memmould",
+          "agent": "memmould",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 5506,
+            "input": 698,
+            "output": 168,
+            "reasoning": 32,
+            "cache": {
+              "read": 4608,
+              "write": 0
+            }
+          },
+          "finish": "stop"
+        },
+        "parts": [
+          {
+            "id": "prt_e1e7c4d8f001K2RBUyb5HFijEH",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c4ad2001ZDEhQZkH3kJOiT",
+            "type": "step-start",
+            "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb"
+          },
+          {
+            "id": "prt_e1e7c4ece001CsmroQdK0sv6TU",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c4ad2001ZDEhQZkH3kJOiT",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0ac283e636e3347b016a03b5540e5c81918be8148995060c6d"
+              }
+            },
+            "time": {
+              "start": 1778627923662,
+              "end": 1778627925396
+            }
+          },
+          {
+            "id": "prt_e1e7c559600185GOnsF8H07yMd",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c4ad2001ZDEhQZkH3kJOiT",
+            "type": "text",
+            "text": "{\"answer\":\"src/parser/schema.ts trims schema field names after splitting/tokenization so delimiter handling and quoted-field behavior remain based on the raw schema text, while only the resulting field names are cleaned.\",\"evidence\":{\"session_id\":\"ses_1e18411acffegYBgKoYn7NTVgX\",\"blob_id\":\"schema_parser_correction\",\"message_id\":\"msg_e1e7bee70001Ta8M0bVuk6SJUC\"},\"rationale\":\"The relevant session explicitly corrects the earlier note: tokenize first, then trim each field. It says this preserves raw delimiter and quoted-field behavior while cleaning field names, and warns that the before-tokenization rationale was wrong and should not be cited.\",\"irrelevant_context_ignored\":[\"CSV trim cleanup\",\"Network timeout parser\"]}",
+            "time": {
+              "start": 1778627925398,
+              "end": 1778627927282
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_0ac283e636e3347b016a03b555c7508191945a862654da0f62",
+                "phase": "final_answer"
+              }
+            }
+          },
+          {
+            "id": "prt_e1e7c5d26001Cjr9SU3Mg8OBnP",
+            "sessionID": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "messageID": "msg_e1e7c4ad2001ZDEhQZkH3kJOiT",
+            "type": "step-finish",
+            "reason": "stop",
+            "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb",
+            "cost": 0,
+            "tokens": {
+              "total": 5506,
+              "input": 698,
+              "output": 168,
+              "reasoning": 32,
+              "cache": {
+                "read": 4608,
+                "write": 0
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-05-12T03:13:37.714Z",
+  "session_id": "ses_1e5d451ebffe5S9Qd4ZuILTqpd",
+  "blobs": [
+    {
+      "id": "current_task_choose",
+      "label": "current_task_choose",
+      "fidelity": "full",
+      "raw_tokens": 96,
+      "effective_tokens": 96,
+      "message_count": 2,
+      "effective_label": "2 msgs 96"
+    },
+    {
+      "id": "session_summary",
+      "label": "session_summary",
+      "fidelity": "placeholder",
+      "raw_tokens": 361,
+      "effective_tokens": 30,
+      "message_count": 1,
+      "effective_label": "stub"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg_e1a2cc70800106LVKfQL4lLF9a",
+      "role": "assistant",
+      "blob_id": "session_summary",
+      "blob_label": "session_summary",
+      "blob_fidelity": "placeholder",
+      "summary": "## Goal\nContinue the auth refresh race fix. The final direction is an async queue helper that deduplicates refresh work per tenant.\n\n## Instructions\n- Do not revive the old mutex design except as a known failed approach.\n- Keep auth work separate from docs cleanup.\n- Treat the markdown parser/docs generation caching hypothesis as unrelated noise and not part of the auth fix.\n- Prioritize auth over docs.\n- If implementing, keep the queue API narrow: expose `enqueueRefresh`.\n\n## Discoveries\n- `MutexRefreshCoordinator` failed under concurrency.\n- Failing test name: `auth_refresh_deduplicates_parallel_requests`.\n- Final approach: async queue helper.\n- Queue must deduplicate refreshes per tenant.\n- Rollback is controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n- Required auth tests:\n  - same-tenant refresh dedupe — most important\n  - different-tenant parallelism\n  - rollback flag behavior\n  - failure propagation when a queued refresh rejects\n- Old wrong hypothesis: markdown parser caching in docs generation caused the bug. This is incorrect and unrelated to auth.\n\n## Accomplished\n- Chose async queue over mutex-based coordination.\n- Identified rollback flag name.\n- Identified helper location and public API shape.\n- Identified core concurrency test coverage.\n\n## Relevant files / directories\n- `src/auth/queue.ts`\n- `FLAG_AUTH_QUEUE_ROLLBACK`\n- `enqueueRefresh`\n- `MutexRefreshCoordinator`\n- `auth_refresh_deduplicates_parallel_requests`",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 361,
+      "source": "derived",
+      "effective_treatment": "placeholder-stub"
+    },
+    {
+      "id": "msg_e1a2cea9c001rUhHg5nEaqOf9c",
+      "role": "user",
+      "blob_id": "current_task_choose",
+      "blob_label": "current_task_choose",
+      "blob_fidelity": "full",
+      "summary": "User request: Current task: choose the implementation approach for a CSV header parser bug. Important latest instruction: the solution is only about trimming spaces around comma-separated CSV header names. Return JSON with keys approach,...",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 95,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e1a2ceaa0001ytsHZSk5DG2PU2",
+      "role": "assistant",
+      "blob_id": "current_task_choose",
+      "blob_label": "current_task_choose",
+      "blob_fidelity": "full",
+      "summary": "Assistant step without text content",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 1,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    }
+  ],
+  "totals": {
+    "raw_tokens": 457,
+    "effective_tokens": 126
+  }
+}

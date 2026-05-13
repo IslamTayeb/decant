@@ -1,0 +1,87 @@
+{
+  "fixture": "auth-queue-rationale",
+  "condition": "subagent-map-zoom",
+  "benchmark_passed": true,
+  "answer_passed": true,
+  "provenance_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "required_hits": [
+    "per_tenant",
+    "same_tenant_coalesce",
+    "different_tenants_parallel",
+    "global_mutex_rejected"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [],
+  "citation_hits": [
+    "session",
+    "message",
+    "blob"
+  ],
+  "output_preview": "{\"answer\":\"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce while refreshes for different tenants can run in parallel, avoiding cross-tenant blocking from a global mutex.\",\"evidence\":{\"session_id\":\"ses_1e185b1cbffe4bIAlV0Pchebpp\",\"blob_id\":\"auth_refresh_queue\",\"message_id\":\"msg_e1e7a4e53001jFBJE9TXzmWNFL\"},\"rationale\":\"The cited message supports both the chosen per-tenant deduplication behavior and the rejected alternative: a single global mutex was rejected because unrelated tenants must not block each other. No stale correction was indicated by the child.\",\"irrelevant_context_ignored\":[\"Billing retry queue rationale\",\"Markdown parser onboarding cleanup\"]}",
+  "tool_names": [
+    "task",
+    "session_lookup",
+    "session_detail",
+    "message_detail"
+  ],
+  "tool_call_count": 4,
+  "context_tool_call_count": 3,
+  "search_tool_call_count": 0,
+  "read_tool_call_count": 0,
+  "task_tool_call_count": 1,
+  "message_detail_call_count": 1,
+  "blame_lookup_call_count": 0,
+  "transcript_files_read": [],
+  "irrelevant_transcript_reads": [],
+  "child_session_count": 1,
+  "parent_tokens": {
+    "messages": 3,
+    "assistant": 2,
+    "input": 1564,
+    "output": 361,
+    "total": 20374,
+    "reasoning": 17,
+    "cacheRead": 18432,
+    "cacheWrite": 0,
+    "toolCalls": 1,
+    "maxInput": 969
+  },
+  "child_tokens": {
+    "messages": 5,
+    "assistant": 4,
+    "input": 5900,
+    "output": 262,
+    "total": 17462,
+    "reasoning": 36,
+    "cacheRead": 11264,
+    "cacheWrite": 0,
+    "toolCalls": 3,
+    "maxInput": 3252
+  },
+  "tokens": {
+    "messages": 8,
+    "assistant": 6,
+    "input": 7464,
+    "output": 623,
+    "total": 37836,
+    "reasoning": 53,
+    "cacheRead": 29696,
+    "cacheWrite": 0,
+    "toolCalls": 4,
+    "maxInput": 3252
+  },
+  "parent_models": [
+    "openai/gpt-5.5"
+  ],
+  "child_models": [
+    "openai/gpt-5.5"
+  ],
+  "duration_ms": 40029,
+  "relevant_session_id": "ses_1e185b1cbffe4bIAlV0Pchebpp",
+  "relevant_message_ids": [
+    "msg_e1e7a4e53001jFBJE9TXzmWNFL",
+    "msg_e1e7a4e5a001v1vMk3gCZYg455"
+  ]
+}

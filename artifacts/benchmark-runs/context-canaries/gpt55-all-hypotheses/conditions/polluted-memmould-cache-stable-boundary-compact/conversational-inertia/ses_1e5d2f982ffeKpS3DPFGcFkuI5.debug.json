@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-05-12T03:14:48.183Z",
+  "session_id": "ses_1e5d2f982ffeKpS3DPFGcFkuI5",
+  "blobs": [
+    {
+      "id": "start_fresh_repository",
+      "label": "start_fresh_repository",
+      "fidelity": "full",
+      "raw_tokens": 78,
+      "effective_tokens": 78,
+      "message_count": 2,
+      "effective_label": "2 msgs 78"
+    },
+    {
+      "id": "session_summary",
+      "label": "session_summary",
+      "fidelity": "placeholder",
+      "raw_tokens": 494,
+      "effective_tokens": 30,
+      "message_count": 1,
+      "effective_label": "stub"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg_e1a2de054001P80qalmsxHjT0U",
+      "role": "assistant",
+      "blob_id": "session_summary",
+      "blob_label": "session_summary",
+      "blob_fidelity": "placeholder",
+      "summary": "## Goal\nContinue the auth refresh race fix. The final direction is an async queue helper that deduplicates refresh work per tenant and exposes a narrow `enqueueRefresh` API.\n\n## Instructions\n- Do not revive the mutex design as the primary fix.\n- Treat `MutexRefreshCoordinator` as a failed approach.\n- Keep docs/onboarding work separate and lower priority.\n- Do not use the old markdown parser/docs-generation caching hypothesis for the auth fix; it was wrong and unrelated noise.\n- Prefer focused implementation/testing around the queue helper and rollback flag.\n\n## Discoveries\n- A mutex-oriented design failed under concurrency.\n- Failed implementation: `MutexRefreshCoordinator`.\n- Failing test: `auth_refresh_deduplicates_parallel_requests`.\n- Likely concern with mutexes: wrong lock scope can serialize too much or fail if scoped per handler instance instead of per tenant/shared refresh identity.\n- Final auth direction: async queue-based refresh coordination.\n- Queue should deduplicate same-tenant refresh work.\n- Different tenants should still be able to proceed in parallel.\n- Rollback is controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n- Failure propagation matters: if a queued refresh rejects, waiting callers should observe the rejection appropriately.\n- Most important test: same-tenant refresh dedupe under concurrency.\n\n## Accomplished\n- Captured that the mutex approach failed and should not be reused as the main solution.\n- Chosen final design direction: async queue helper.\n- Defined helper surface: narrow `enqueueRefresh` API.\n- Identified required test coverage:\n  - same-tenant refresh dedupe\n  - different-tenant parallelism\n  - `FLAG_AUTH_QUEUE_ROLLBACK` behavior\n  - queued refresh rejection/failure propagation\n\n## Relevant files / directories\n- `src/auth/queue.ts` — planned async queue helper location.\n- `FLAG_AUTH_QUEUE_ROLLBACK` — rollback flag.\n- `auth_refresh_deduplicates_parallel_requests` — known failing concurrency test from mutex attempt.",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 494,
+      "source": "derived",
+      "effective_treatment": "placeholder-stub"
+    },
+    {
+      "id": "msg_e1a2e0952001Zy14fl6LPVqZzQ",
+      "role": "user",
+      "blob_id": "start_fresh_repository",
+      "blob_label": "start_fresh_repository",
+      "blob_fidelity": "full",
+      "summary": "User request: Start fresh on this repository's parser task. Current task: propose a minimal plan for trimming whitespace around CSV header cells before they are stored. Return JSON with keys fresh_plan, reused_failed_prior_approach, and...",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 77,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e1a2e09560019aoSgIynieVzIf",
+      "role": "assistant",
+      "blob_id": "start_fresh_repository",
+      "blob_label": "start_fresh_repository",
+      "blob_fidelity": "full",
+      "summary": "Assistant step without text content",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 1,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    }
+  ],
+  "totals": {
+    "raw_tokens": 572,
+    "effective_tokens": 108
+  }
+}

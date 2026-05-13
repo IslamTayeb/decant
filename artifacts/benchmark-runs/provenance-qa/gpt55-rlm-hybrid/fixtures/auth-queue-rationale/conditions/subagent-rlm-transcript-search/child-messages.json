@@ -1,0 +1,545 @@
+[
+  {
+    "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+    "messages": [
+      {
+        "info": {
+          "id": "msg_e1eb6e74e002CErYcBPO35VtHf",
+          "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+          "role": "user",
+          "time": {
+            "created": 1778631763791
+          },
+          "summary": {
+            "diffs": []
+          },
+          "agent": "transcript",
+          "model": {
+            "providerID": "openai",
+            "modelID": "gpt-5.5"
+          },
+          "tools": {}
+        },
+        "parts": [
+          {
+            "id": "prt_e1eb6e74f001b0RQgYFbl8VUCi",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6e74e002CErYcBPO35VtHf",
+            "type": "text",
+            "text": "Use RLM-style transcript search only over transcript files under /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts. Use glob/grep/read and optional read-only bash only; if using bash, do not modify files. Do not use mem-mould/session tools. Find evidence answering: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex? Ignore distractors: Billing retry queue rationale, Markdown parser onboarding cleanup. Return a single concise result containing answer, session_id, blob_id, message_id, rationale, and ignored irrelevant contexts. The cited message_id must support the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1eb6e754001ZTkMfGMqw0jyYU",
+          "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+          "role": "assistant",
+          "time": {
+            "created": 1778631763796,
+            "completed": 1778631769938
+          },
+          "parentID": "msg_e1eb6e74e002CErYcBPO35VtHf",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 6288,
+            "input": 6074,
+            "output": 214,
+            "reasoning": 0,
+            "cache": {
+              "read": 0,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1eb6eae5001dxWbJQ8Nkwt7jw",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6e754001ZTkMfGMqw0jyYU",
+            "type": "step-start",
+            "snapshot": "107d0651abf0cfbfd3e07c0e3855c0e7a4e8e1a7"
+          },
+          {
+            "id": "prt_e1eb6ef5b001oj2dUXkglh6myf",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6e754001ZTkMfGMqw0jyYU",
+            "type": "text",
+            "text": "Searching only the transcript directory for queue/auth refresh rationale, then I’ll read the supporting transcript messages to identify a single message that fully answers the question.",
+            "time": {
+              "start": 1778631765851,
+              "end": 1778631769648
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_0a83dead5e9d8265016a03c45610a081918705f0ea6f298304",
+                "phase": "commentary"
+              }
+            }
+          },
+          {
+            "id": "prt_e1eb6fe35001DjJ7EW6RlE2mxd",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6e754001ZTkMfGMqw0jyYU",
+            "type": "tool",
+            "callID": "call_iVXqmNuFnqEt2lWPxyYX5nBd",
+            "tool": "grep",
+            "state": {
+              "status": "completed",
+              "input": {
+                "pattern": "tenant|global mutex|deduplicat|refresh|auth|queue",
+                "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts",
+                "include": "*"
+              },
+              "output": "Found 45 matches\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_8.md:\n  Line 1: # Auth queue rationale decoy 8\n\n  Line 2: session_id: auth_queue_rationale_decoy_8\n\n  Line 3: title: Auth queue rationale decoy 8\n\n  Line 6: Decoy 8: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_3.md:\n  Line 1: # Auth queue rationale decoy 3\n\n  Line 2: session_id: auth_queue_rationale_decoy_3\n\n  Line 3: title: Auth queue rationale decoy 3\n\n  Line 6: Decoy 3: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_2.md:\n  Line 1: # Auth queue rationale decoy 2\n\n  Line 2: session_id: auth_queue_rationale_decoy_2\n\n  Line 3: title: Auth queue rationale decoy 2\n\n  Line 6: Decoy 2: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_1.md:\n  Line 1: # Auth queue rationale decoy 1\n\n  Line 2: session_id: auth_queue_rationale_decoy_1\n\n  Line 3: title: Auth queue rationale decoy 1\n\n  Line 6: Decoy 1: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_6.md:\n  Line 1: # Auth queue rationale decoy 6\n\n  Line 2: session_id: auth_queue_rationale_decoy_6\n\n  Line 3: title: Auth queue rationale decoy 6\n\n  Line 6: Decoy 6: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_4.md:\n  Line 1: # Auth queue rationale decoy 4\n\n  Line 2: session_id: auth_queue_rationale_decoy_4\n\n  Line 3: title: Auth queue rationale decoy 4\n\n  Line 6: Decoy 4: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_7.md:\n  Line 1: # Auth queue rationale decoy 7\n\n  Line 2: session_id: auth_queue_rationale_decoy_7\n\n  Line 3: title: Auth queue rationale decoy 7\n\n  Line 6: Decoy 7: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_5.md:\n  Line 1: # Auth queue rationale decoy 5\n\n  Line 2: session_id: auth_queue_rationale_decoy_5\n\n  Line 3: title: Auth queue rationale decoy 5\n\n  Line 6: Decoy 5: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md:\n  Line 1: # Auth refresh queue rationale\n\n  Line 2: session_id: auth_refresh_session\n\n  Line 3: title: Auth refresh queue rationale\n\n  Line 5: ## message auth_fact_1\n\n  Line 6: The rejected design was one global mutex around all auth refresh work.\n\n  Line 8: ## message auth_fact_2\n\n  Line 9: The global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n\n  Line 11: ## message auth_fact_3\n\n  Line 12: RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md:\n  Line 1: # Billing retry queue rationale\n\n  Line 3: title: Billing retry queue rationale\n\n  Line 6: Billing retry queues used a global mutex because provider limits serialize all tenants.\n\n  Line 9: This is not the auth refresh queue rationale.\n",
+              "title": "tenant|global mutex|deduplicat|refresh|auth|queue",
+              "metadata": {
+                "matches": 45,
+                "truncated": false
+              },
+              "time": {
+                "start": 1778631769663,
+                "end": 1778631769693
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0a83dead5e9d8265016a03c459e8908191b4d37eb8dd405e10"
+              }
+            }
+          },
+          {
+            "id": "prt_e1eb6fe40001IYkBaZeAk95jSR",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6e754001ZTkMfGMqw0jyYU",
+            "type": "tool",
+            "callID": "call_uK5bs4hGqfZIRKDsSdv8oOFH",
+            "tool": "glob",
+            "state": {
+              "status": "completed",
+              "input": {
+                "pattern": "**/*",
+                "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts"
+              },
+              "output": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_7.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_3.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_2.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_6.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_8.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_1.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_5.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_4.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md",
+              "title": "memory/transcripts",
+              "metadata": {
+                "count": 11,
+                "truncated": false
+              },
+              "time": {
+                "start": 1778631769759,
+                "end": 1778631769769
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0a83dead5e9d8265016a03c459e8a081919457bd98ecbf0e1c"
+              }
+            }
+          },
+          {
+            "id": "prt_e1eb6ff2c001TWUuQAZBr2fo1F",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6e754001ZTkMfGMqw0jyYU",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "107d0651abf0cfbfd3e07c0e3855c0e7a4e8e1a7",
+            "cost": 0,
+            "tokens": {
+              "total": 6288,
+              "input": 6074,
+              "output": 214,
+              "reasoning": 0,
+              "cache": {
+                "read": 0,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1eb6ff54001p2Wg9hyO19oqck",
+          "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+          "role": "assistant",
+          "time": {
+            "created": 1778631769940,
+            "completed": 1778631778255
+          },
+          "parentID": "msg_e1eb6e74e002CErYcBPO35VtHf",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 8733,
+            "input": 2814,
+            "output": 258,
+            "reasoning": 29,
+            "cache": {
+              "read": 5632,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1eb701b9001thYLXOAubh5pZF",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6ff54001p2Wg9hyO19oqck",
+            "type": "step-start",
+            "snapshot": "107d0651abf0cfbfd3e07c0e3855c0e7a4e8e1a7"
+          },
+          {
+            "id": "prt_e1eb70a18001X1Sv4p4DnEqf6K",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6ff54001p2Wg9hyO19oqck",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0d7939feb5a001db016a03c45cf858819188c0ceec164c333c"
+              }
+            },
+            "time": {
+              "start": 1778631772696,
+              "end": 1778631777885
+            }
+          },
+          {
+            "id": "prt_e1eb71e69001wiaclsK6OHbI2X",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6ff54001p2Wg9hyO19oqck",
+            "type": "tool",
+            "callID": "call_6aQbp1olZTgfzHa1XbYWqniJ",
+            "tool": "read",
+            "state": {
+              "status": "completed",
+              "input": {
+                "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md",
+                "offset": 1,
+                "limit": 80
+              },
+              "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md</path>\n<type>file</type>\n<content>\n1: # Auth refresh queue rationale\n2: session_id: auth_refresh_session\n3: title: Auth refresh queue rationale\n4: \n5: ## message auth_fact_1\n6: The rejected design was one global mutex around all auth refresh work.\n7: \n8: ## message auth_fact_2\n9: The global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n10: \n11: ## message auth_fact_3\n12: RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.\n\n(End of file - total 12 lines)\n</content>",
+              "title": "memory/transcripts/auth_refresh_session.md",
+              "metadata": {
+                "preview": "# Auth refresh queue rationale\nsession_id: auth_refresh_session\ntitle: Auth refresh queue rationale\n\n## message auth_fact_1\nThe rejected design was one global mutex around all auth refresh work.\n\n## message auth_fact_2\nThe global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n\n## message auth_fact_3\nRefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.",
+                "truncated": false,
+                "loaded": []
+              },
+              "time": {
+                "start": 1778631777904,
+                "end": 1778631777946
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0d7939feb5a001db016a03c46226408191b1c415e8bd712f7d"
+              }
+            }
+          },
+          {
+            "id": "prt_e1eb71e78001duFRTGNFzz7lE3",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6ff54001p2Wg9hyO19oqck",
+            "type": "tool",
+            "callID": "call_rTWYENbzWtVcbp2WCKYUTBjM",
+            "tool": "read",
+            "state": {
+              "status": "completed",
+              "input": {
+                "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md",
+                "offset": 1,
+                "limit": 60
+              },
+              "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md</path>\n<type>file</type>\n<content>\n1: # Billing retry queue rationale\n2: session_id: billing_retry_session\n3: title: Billing retry queue rationale\n4: \n5: ## message billing_fact_1\n6: Billing retry queues used a global mutex because provider limits serialize all tenants.\n7: \n8: ## message billing_fact_2\n9: This is not the auth refresh queue rationale.\n\n(End of file - total 9 lines)\n</content>",
+              "title": "memory/transcripts/billing_retry_session.md",
+              "metadata": {
+                "preview": "# Billing retry queue rationale\nsession_id: billing_retry_session\ntitle: Billing retry queue rationale\n\n## message billing_fact_1\nBilling retry queues used a global mutex because provider limits serialize all tenants.\n\n## message billing_fact_2\nThis is not the auth refresh queue rationale.",
+                "truncated": false,
+                "loaded": []
+              },
+              "time": {
+                "start": 1778631777937,
+                "end": 1778631777945
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0d7939feb5a001db016a03c46226508191a9aaa06685efdbd2"
+              }
+            }
+          },
+          {
+            "id": "prt_e1eb71e9200159jdPDzW7L2Gi4",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6ff54001p2Wg9hyO19oqck",
+            "type": "tool",
+            "callID": "call_l9a8lvKMhuiADgPR5WLknsZp",
+            "tool": "read",
+            "state": {
+              "status": "completed",
+              "input": {
+                "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md",
+                "offset": 1,
+                "limit": 60
+              },
+              "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md</path>\n<type>file</type>\n<content>\n1: # Markdown parser onboarding cleanup\n2: session_id: markdown_parser_session\n3: title: Markdown parser onboarding cleanup\n4: \n5: ## message docs_fact_1\n6: Markdown parser cache issues affected onboarding docs and quickstart text.\n\n(End of file - total 6 lines)\n</content>",
+              "title": "memory/transcripts/markdown_parser_session.md",
+              "metadata": {
+                "preview": "# Markdown parser onboarding cleanup\nsession_id: markdown_parser_session\ntitle: Markdown parser onboarding cleanup\n\n## message docs_fact_1\nMarkdown parser cache issues affected onboarding docs and quickstart text.",
+                "truncated": false,
+                "loaded": []
+              },
+              "time": {
+                "start": 1778631778001,
+                "end": 1778631778005
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0d7939feb5a001db016a03c46226b081918220cad8621c38be"
+              }
+            }
+          },
+          {
+            "id": "prt_e1eb71fa2001KKsDRDjq8kuPy0",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb6ff54001p2Wg9hyO19oqck",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "107d0651abf0cfbfd3e07c0e3855c0e7a4e8e1a7",
+            "cost": 0,
+            "tokens": {
+              "total": 8733,
+              "input": 2814,
+              "output": 258,
+              "reasoning": 29,
+              "cache": {
+                "read": 5632,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1eb71fd0001X8xjZcgfJg2ZnQ",
+          "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+          "role": "assistant",
+          "time": {
+            "created": 1778631778256,
+            "completed": 1778631787617
+          },
+          "parentID": "msg_e1eb6e74e002CErYcBPO35VtHf",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 9671,
+            "input": 1081,
+            "output": 93,
+            "reasoning": 305,
+            "cache": {
+              "read": 8192,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1eb722510011gA9fm7830fWc6",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb71fd0001X8xjZcgfJg2ZnQ",
+            "type": "step-start",
+            "snapshot": "107d0651abf0cfbfd3e07c0e3855c0e7a4e8e1a7"
+          },
+          {
+            "id": "prt_e1eb7277f0013zNIk9u9FUlnTr",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb71fd0001X8xjZcgfJg2ZnQ",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0542a8b84870ee07016a03c4647f688191b3025670825e6e85"
+              }
+            },
+            "time": {
+              "start": 1778631780223,
+              "end": 1778631786288
+            }
+          },
+          {
+            "id": "prt_e1eb73f33001jJXUMeGEcjmVrs",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb71fd0001X8xjZcgfJg2ZnQ",
+            "type": "tool",
+            "callID": "call_jhNtHzruF7jqRSnS6bojhCdV",
+            "tool": "grep",
+            "state": {
+              "status": "completed",
+              "input": {
+                "pattern": "blob_id|blob|auth_fact_3|auth_fact_2",
+                "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts",
+                "include": "*"
+              },
+              "output": "Found 2 matches\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md:\n  Line 8: ## message auth_fact_2\n\n  Line 11: ## message auth_fact_3\n",
+              "title": "blob_id|blob|auth_fact_3|auth_fact_2",
+              "metadata": {
+                "matches": 2,
+                "truncated": false
+              },
+              "time": {
+                "start": 1778631787437,
+                "end": 1778631787466
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0542a8b84870ee07016a03c46a90348191aa43783394850fd4"
+              }
+            }
+          },
+          {
+            "id": "prt_e1eb7443d001fNofGIfhwuUOzu",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb71fd0001X8xjZcgfJg2ZnQ",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "107d0651abf0cfbfd3e07c0e3855c0e7a4e8e1a7",
+            "cost": 0,
+            "tokens": {
+              "total": 9671,
+              "input": 1081,
+              "output": 93,
+              "reasoning": 305,
+              "cache": {
+                "read": 8192,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1eb74463001rwwVKuXVMIvELK",
+          "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+          "role": "assistant",
+          "time": {
+            "created": 1778631787619,
+            "completed": 1778631799840
+          },
+          "parentID": "msg_e1eb6e74e002CErYcBPO35VtHf",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 10386,
+            "input": 1065,
+            "output": 184,
+            "reasoning": 433,
+            "cache": {
+              "read": 8704,
+              "write": 0
+            }
+          },
+          "finish": "stop"
+        },
+        "parts": [
+          {
+            "id": "prt_e1eb746cc001jZBbfy5LvFKm9J",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb74463001rwwVKuXVMIvELK",
+            "type": "step-start",
+            "snapshot": "107d0651abf0cfbfd3e07c0e3855c0e7a4e8e1a7"
+          },
+          {
+            "id": "prt_e1eb74824001KRbcJODdwCccd4",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb74463001rwwVKuXVMIvELK",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_07035da746d82e60016a03c46cdaac8191abf29a5eb9837f30"
+              }
+            },
+            "time": {
+              "start": 1778631788580,
+              "end": 1778631796754
+            }
+          },
+          {
+            "id": "prt_e1eb76813001EsZTxbBV1edvE7",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb74463001rwwVKuXVMIvELK",
+            "type": "text",
+            "text": "answer: `src/auth/queue.ts` deduplicates per tenant so duplicate refreshes for the same tenant coalesce, while refreshes for different tenants can still run in parallel rather than blocking behind one global mutex.\n\nsession_id: `auth_refresh_session`  \nblob_id: `memory/transcripts/auth_refresh_session.md`  \nmessage_id: `auth_fact_3`  \nrationale: `auth_fact_3` directly states the per-tenant key behavior: same-tenant duplicate refreshes coalesce and different tenants continue in parallel. The rejected alternative matters: `auth_fact_2` says the global mutex was rejected because unrelated tenants must not block each other.  \nignored irrelevant contexts: `billing_retry_session` is billing retry rationale; `markdown_parser_session` is markdown parser cleanup; `auth_queue_rationale_decoy_*` files explicitly say they are not final rationale.",
+            "time": {
+              "start": 1778631796755,
+              "end": 1778631799705
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_07035da746d82e60016a03c47506648191a5e085d019a8685f",
+                "phase": "final_answer"
+              }
+            }
+          },
+          {
+            "id": "prt_e1eb773f7001WexfYo4cPqSYLC",
+            "sessionID": "ses_1e14918b3ffeFdeLE4OvmIY9nQ",
+            "messageID": "msg_e1eb74463001rwwVKuXVMIvELK",
+            "type": "step-finish",
+            "reason": "stop",
+            "snapshot": "107d0651abf0cfbfd3e07c0e3855c0e7a4e8e1a7",
+            "cost": 0,
+            "tokens": {
+              "total": 10386,
+              "input": 1065,
+              "output": 184,
+              "reasoning": 433,
+              "cache": {
+                "read": 8704,
+                "write": 0
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,97 @@
+{
+  "fixture": "auth-queue-rationale",
+  "condition": "subagent-rlm-transcript-search",
+  "benchmark_passed": true,
+  "answer_passed": true,
+  "provenance_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "required_hits": [
+    "per_tenant",
+    "same_tenant_coalesce",
+    "different_tenants_parallel",
+    "global_mutex_rejected"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [],
+  "citation_hits": [
+    "session",
+    "message",
+    "blob"
+  ],
+  "output_preview": "{\"answer\":\"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce, while refreshes for different tenants can still run in parallel instead of being blocked behind one global mutex.\",\"evidence\":{\"session_id\":\"auth_refresh_session\",\"blob_id\":\"memory/transcripts/auth_refresh_session.md\",\"message_id\":\"auth_fact_3\"},\"rationale\":\"auth_fact_3 supports the full answer by stating both same-tenant coalescing and cross-tenant parallelism. The rejected global mutex alternative matters because it would block unrelated tenants, which was explicitly rejected.\",\"irrelevant_context_ignored\":[\"Billing retry queue rationale\",\"Markdown parser onboarding cleanup\",\"auth_queue_rationale_decoy_* files\"]}",
+  "tool_names": [
+    "task",
+    "grep",
+    "glob",
+    "read",
+    "read",
+    "read",
+    "grep"
+  ],
+  "tool_call_count": 7,
+  "context_tool_call_count": 0,
+  "search_tool_call_count": 3,
+  "read_tool_call_count": 3,
+  "bash_tool_call_count": 0,
+  "task_tool_call_count": 1,
+  "message_detail_call_count": 0,
+  "blame_lookup_call_count": 0,
+  "transcript_files_read": [
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md"
+  ],
+  "irrelevant_transcript_reads": [
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md"
+  ],
+  "child_session_count": 1,
+  "parent_tokens": {
+    "messages": 3,
+    "assistant": 2,
+    "input": 8677,
+    "output": 378,
+    "total": 19807,
+    "reasoning": 0,
+    "cacheRead": 10752,
+    "cacheWrite": 0,
+    "toolCalls": 1,
+    "maxInput": 7950
+  },
+  "child_tokens": {
+    "messages": 5,
+    "assistant": 4,
+    "input": 11034,
+    "output": 749,
+    "total": 35078,
+    "reasoning": 767,
+    "cacheRead": 22528,
+    "cacheWrite": 0,
+    "toolCalls": 6,
+    "maxInput": 6074
+  },
+  "tokens": {
+    "messages": 8,
+    "assistant": 6,
+    "input": 19711,
+    "output": 1127,
+    "total": 54885,
+    "reasoning": 767,
+    "cacheRead": 33280,
+    "cacheWrite": 0,
+    "toolCalls": 7,
+    "maxInput": 7950
+  },
+  "parent_models": [
+    "openai/gpt-5.5"
+  ],
+  "child_models": [
+    "openai/gpt-5.5"
+  ],
+  "duration_ms": 48423,
+  "relevant_session_id": "auth_refresh_session",
+  "relevant_message_ids": [
+    "auth_fact_3"
+  ]
+}

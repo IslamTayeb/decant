@@ -1,0 +1,90 @@
+{
+  "fixture": "multi-agent-synthesis",
+  "condition": "rlm-transcript-search",
+  "benchmark_passed": true,
+  "answer_passed": true,
+  "provenance_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "required_hits": [
+    "child_agent",
+    "failed_test_ids",
+    "triage"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [],
+  "citation_hits": [
+    "session",
+    "message",
+    "blob"
+  ],
+  "output_preview": "{\"answer\":\"Test investigator child session\",\"evidence\":{\"session_id\":\"test_investigator_child_session\",\"blob_id\":\"test_investigator_child_session.md\",\"message_id\":\"child_fact_1\"},\"rationale\":\"The cited message states that the test investigator child found failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures. The parent later accepted that finding and kept failed_test_ids in src/report/summary.ts; the docs writer's contrary preference for no debugging IDs was not adopted.\",\"irrelevant_context_ignored\":[\"Docs writer child session\",\"Style reviewer child session\",\"multi_agent_synthesis_decoy_*\"]}",
+  "tool_names": [
+    "glob",
+    "grep",
+    "grep",
+    "read",
+    "read"
+  ],
+  "tool_call_count": 5,
+  "context_tool_call_count": 0,
+  "search_tool_call_count": 3,
+  "read_tool_call_count": 2,
+  "bash_tool_call_count": 0,
+  "task_tool_call_count": 0,
+  "message_detail_call_count": 0,
+  "blame_lookup_call_count": 0,
+  "transcript_files_read": [
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/rlm-transcript-search/worktree/memory/transcripts/test_investigator_child_session.md",
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/rlm-transcript-search/worktree/memory/transcripts/docs_writer_child_session.md"
+  ],
+  "irrelevant_transcript_reads": [
+    "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/rlm-transcript-search/worktree/memory/transcripts/docs_writer_child_session.md"
+  ],
+  "child_session_count": 0,
+  "parent_tokens": {
+    "messages": 6,
+    "assistant": 5,
+    "input": 10978,
+    "output": 571,
+    "total": 56332,
+    "reasoning": 239,
+    "cacheRead": 44544,
+    "cacheWrite": 0,
+    "toolCalls": 5,
+    "maxInput": 6887
+  },
+  "child_tokens": {
+    "messages": 0,
+    "assistant": 0,
+    "input": 0,
+    "output": 0,
+    "total": 0,
+    "reasoning": 0,
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 0
+  },
+  "tokens": {
+    "messages": 6,
+    "assistant": 5,
+    "input": 10978,
+    "output": 571,
+    "total": 56332,
+    "reasoning": 239,
+    "cacheRead": 44544,
+    "cacheWrite": 0,
+    "toolCalls": 5,
+    "maxInput": 6887
+  },
+  "parent_models": [
+    "openai/gpt-5.5"
+  ],
+  "child_models": [],
+  "duration_ms": 23190,
+  "relevant_session_id": "test_investigator_child_session",
+  "relevant_message_ids": [
+    "child_fact_1"
+  ]
+}

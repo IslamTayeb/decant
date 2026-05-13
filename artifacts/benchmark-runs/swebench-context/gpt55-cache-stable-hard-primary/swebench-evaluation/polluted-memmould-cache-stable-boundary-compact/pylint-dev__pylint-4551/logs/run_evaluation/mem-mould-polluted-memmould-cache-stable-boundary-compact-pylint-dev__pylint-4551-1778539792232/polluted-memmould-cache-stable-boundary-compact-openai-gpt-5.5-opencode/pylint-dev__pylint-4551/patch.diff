@@ -1,0 +1,82 @@
+diff --git a/pylint/pyreverse/inspector.py b/pylint/pyreverse/inspector.py
+index 8fa12202..b40031cf 100644
+--- a/pylint/pyreverse/inspector.py
++++ b/pylint/pyreverse/inspector.py
+@@ -231,11 +231,47 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+         """
+         try:
+             values = set(node.infer())
++            values.update(Linker._annotation_type(node))
+             current = set(parent.instance_attrs_type[node.attrname])
+             parent.instance_attrs_type[node.attrname] = list(current | values)
+         except astroid.InferenceError:
+             pass
+ 
++    @staticmethod
++    def _annotation_type(node):
++        """Return inferred annotation nodes for an assigned instance attribute."""
++        assign_type = node.assign_type()
++        annotation = getattr(assign_type, "annotation", None)
++        if annotation is not None:
++            try:
++                return set(annotation.infer())
++            except astroid.InferenceError:
++                return set()
++
++        value = getattr(assign_type, "value", None)
++        if not isinstance(value, astroid.Name):
++            return set()
++
++        frame = node.frame()
++        if not isinstance(frame, astroid.FunctionDef):
++            return set()
++
++        args = frame.args
++        annotations = zip(
++            getattr(args, "posonlyargs", ()) + args.args + args.kwonlyargs,
++            getattr(args, "posonlyargs_annotations", ())
++            + args.annotations
++            + args.kwonlyargs_annotations,
++        )
++        for arg, annotation in annotations:
++            if arg.name != value.name or annotation is None:
++                continue
++            try:
++                return set(annotation.infer())
++            except astroid.InferenceError:
++                return set()
++        return set()
++
+     def visit_import(self, node):
+         """visit an astroid.Import node
+ 
+diff --git a/tests/unittest_pyreverse_inspector.py b/tests/unittest_pyreverse_inspector.py
+index e1ff6378..dd3c9e8d 100644
+--- a/tests/unittest_pyreverse_inspector.py
++++ b/tests/unittest_pyreverse_inspector.py
+@@ -71,6 +71,25 @@ def test_instance_attrs_resolution(project):
+     assert type_dict["_id"][0] is astroid.Uninferable
+ 
+ 
++def test_instance_attrs_annotation_resolution():
++    klass = astroid.extract_node(
++        """
++        class C:
++            def __init__(self, value: str = None):
++                self.value = value
++                self.other: int = None
++        """
++    )
++    linker = inspector.Linker(None)
++    linker.visit(klass)
++
++    type_dict = klass.instance_attrs_type
++    value_names = {node.name for node in type_dict["value"] if hasattr(node, "name")}
++    other_names = {node.name for node in type_dict["other"] if hasattr(node, "name")}
++    assert "str" in value_names
++    assert "int" in other_names
++
++
+ def test_concat_interfaces():
+     cls = astroid.extract_node(
+         '''

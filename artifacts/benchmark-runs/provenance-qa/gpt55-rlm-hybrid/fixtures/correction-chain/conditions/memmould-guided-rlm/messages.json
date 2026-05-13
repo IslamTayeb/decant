@@ -1,0 +1,662 @@
+[
+  {
+    "info": {
+      "id": "msg_e1eba6d45001WGCXgQz4KhBmyX",
+      "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+      "role": "user",
+      "time": {
+        "created": 1778631994693
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use mem-mould session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, do not modify files. Cite real OpenCode session_id and message_id values, not embedded fixture labels.",
+      "tools": {
+        "session_lookup": true,
+        "session_detail": true,
+        "message_detail": true,
+        "session_tree": true,
+        "glob": true,
+        "grep": true,
+        "read": true,
+        "bash": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1eba6d45002CGY3nNL8ecDMW7",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba6d45001WGCXgQz4KhBmyX",
+        "type": "text",
+        "text": "Question: Why does src/parser/schema.ts trim schema field names after splitting fields instead of before tokenization?\nTranscript directory: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts\nKnown distractor topics include: CSV trim cleanup, Network timeout parser\nRequired route: use session_lookup/session_detail to identify the likely prior session, search transcript files only as corroborating RLM-style evidence, then call message_detail for the final cited message.\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eba6d4c001kSnjfa8vFiFiUh",
+      "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+      "role": "assistant",
+      "time": {
+        "created": 1778631994700,
+        "completed": 1778631997055
+      },
+      "parentID": "msg_e1eba6d45001WGCXgQz4KhBmyX",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9966,
+        "input": 694,
+        "output": 37,
+        "reasoning": 19,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eba7086001sTH1RVxENQT2lE",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba6d4c001kSnjfa8vFiFiUh",
+        "type": "step-start",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62"
+      },
+      {
+        "id": "prt_e1eba71c0001uAc7zbvXYCnFRU",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba6d4c001kSnjfa8vFiFiUh",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_09d7e6b0d8672b06016a03c53c1c908191a6e270000aa96db3"
+          }
+        },
+        "time": {
+          "start": 1778631995840,
+          "end": 1778631996564
+        }
+      },
+      {
+        "id": "prt_e1eba7498001vaeqCkLp21JalQ",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba6d4c001kSnjfa8vFiFiUh",
+        "type": "tool",
+        "callID": "call_n99vpByeyrEow2por1BmkEC1",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "src/parser/schema.ts trim schema field names after splitting fields before tokenization",
+            "limit": 5
+          },
+          "output": "{\n  \"query\": \"src/parser/schema.ts trim schema field names after splitting fields before tokenization\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e14592cfffe6VQct07GD4r0yc\",\n      \"title\": \"correction-chain memmould-guided-rlm\",\n      \"updatedAt\": 1778631994806,\n      \"matchedBlobIDs\": [\n        \"parser_schema\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"parser_schema\",\n          \"label\": \"parser_schema\",\n          \"summary\": \"User request: Question: Why does src/parser/schema.ts trim schema field names after splitting fields instead of before tokenization? Transcript directory: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-r...\",\n          \"compressedSummary\": \"[Blob summary: parser_schema] User request: Question: Why does src/parser/schema.ts trim schema field names after splitting fields instead of before tokenization? Transcript directory: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-r...\",\n          \"placeholder\": \"User request: Question: Why does src/parser/schema.ts trim schema field names...\",\n          \"tokenEstimate\": 240,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e1459b03ffeYc81CCONOyDduz\",\n      \"title\": \"Network timeout parser\",\n      \"updatedAt\": 1778631994289,\n      \"matchedBlobIDs\": [\n        \"network_timeout_parser\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"network_timeout_parser\",\n          \"label\": \"network_timeout_parser\",\n          \"summary\": \"User request: # Network timeout parser session_id: network_timeout_session title: Network timeout parser ## message net_fact_1 A network parser strips whitespace before tokenization; this is a distractor. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: network_timeout_parser] User request: # Network timeout parser session_id: network_timeout_session title: Network timeout parser ## message net_fact_1 A network parser strips whitespace before tokenization; this is a distractor. Assistant step without text content\",\n          \"placeholder\": \"User request: # Network timeout parser session_id: network_timeout_session ti...\",\n          \"tokenEstimate\": 49,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e145a6ebffeW6mPgjhceItQCh\",\n      \"title\": \"CSV trim cleanup\",\n      \"updatedAt\": 1778631992255,\n      \"matchedBlobIDs\": [\n        \"csv_trim_cleanup\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"csv_trim_cleanup\",\n          \"label\": \"csv_trim_cleanup\",\n          \"summary\": \"User request: # CSV trim cleanup session_id: csv_trim_session title: CSV trim cleanup ## message csv_fact_1 CSV header cells trim around commas; this is related but not the schema pipe parser correction. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: csv_trim_cleanup] User request: # CSV trim cleanup session_id: csv_trim_session title: CSV trim cleanup ## message csv_fact_1 CSV header cells trim around commas; this is related but not the schema pipe parser correction. Assistant step without text content\",\n          \"placeholder\": \"User request: # CSV trim cleanup session_id: csv_trim_session title: CSV trim...\",\n          \"tokenEstimate\": 49,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e145baaeffe50kFHR4dI8LRnC\",\n      \"title\": \"Schema parser correction chain\",\n      \"updatedAt\": 1778631989312,\n      \"matchedBlobIDs\": [\n        \"schema_parser_correction\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"schema_parser_correction\",\n          \"label\": \"schema_parser_correction\",\n          \"summary\": \"User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: schema_parser_correction] User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc... Assistant step without text content\",\n          \"placeholder\": \"User request: # Schema parser correction chain session_id: schema_parser_sess...\",\n          \"tokenEstimate\": 122,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778631996869,
+            "end": 1778631996881
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_09d7e6b0d8672b06016a03c53cd7448191a14a0aee4146cc85"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eba7657001hWqndea2O3fTyS",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba6d4c001kSnjfa8vFiFiUh",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62",
+        "cost": 0,
+        "tokens": {
+          "total": 9966,
+          "input": 694,
+          "output": 37,
+          "reasoning": 19,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eba7681001IDCc6tpXjlBVSO",
+      "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+      "role": "assistant",
+      "time": {
+        "created": 1778631997057,
+        "completed": 1778631999460
+      },
+      "parentID": "msg_e1eba6d45001WGCXgQz4KhBmyX",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11189,
+        "input": 1400,
+        "output": 51,
+        "reasoning": 10,
+        "cache": {
+          "read": 9728,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eba79b10012a8F2bQfb32Ry1",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba7681001IDCc6tpXjlBVSO",
+        "type": "step-start",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62"
+      },
+      {
+        "id": "prt_e1eba7a16001c25MT4rnpUU7ZA",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba7681001IDCc6tpXjlBVSO",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0cdb4642b96b2dc9016a03c53e41408191a90aed2a402d1af3"
+          }
+        },
+        "time": {
+          "start": 1778631997974,
+          "end": 1778631999106
+        }
+      },
+      {
+        "id": "prt_e1eba7e87001hMeXebrmdZkCR4",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba7681001IDCc6tpXjlBVSO",
+        "type": "tool",
+        "callID": "call_mjmmlVzSnwuExlmlnSWKd0gb",
+        "tool": "session_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1e145baaeffe50kFHR4dI8LRnC",
+            "blob_id": "schema_parser_correction",
+            "detail": "messages"
+          },
+          "output": "{\n  \"session_id\": \"ses_1e145baaeffe50kFHR4dI8LRnC\",\n  \"blob_id\": \"schema_parser_correction\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"schema_parser_correction\",\n    \"label\": \"schema_parser_correction\",\n    \"compressedSummary\": \"[Blob summary: schema_parser_correction] User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc... Assistant step without text content\",\n    \"tokenEstimate\": 122,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e1eba45660015oPv3FAY1OdiY4\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 121,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778631984486\n    },\n    {\n      \"id\": \"msg_e1eba456e0011oCpQLXqdEwSVT\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 1,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778631984494\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778631999245,
+            "end": 1778631999251
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0cdb4642b96b2dc9016a03c53f5e448191b1f6273713637969"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eba7fb90017Iw0go7H2oPL8w",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba7681001IDCc6tpXjlBVSO",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62",
+        "cost": 0,
+        "tokens": {
+          "total": 11189,
+          "input": 1400,
+          "output": 51,
+          "reasoning": 10,
+          "cache": {
+            "read": 9728,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eba7fe5001VMRs4aWQdsmT3y",
+      "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+      "role": "assistant",
+      "time": {
+        "created": 1778631999461,
+        "completed": 1778632004508
+      },
+      "parentID": "msg_e1eba6d45001WGCXgQz4KhBmyX",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11796,
+        "input": 850,
+        "output": 176,
+        "reasoning": 18,
+        "cache": {
+          "read": 10752,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eba82e2001qHbM52Xcyyg8H8",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba7fe5001VMRs4aWQdsmT3y",
+        "type": "step-start",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62"
+      },
+      {
+        "id": "prt_e1eba8482001I7a8nfjUsFG2FK",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba7fe5001VMRs4aWQdsmT3y",
+        "type": "reasoning",
+        "text": "**Searching for files**\n\nI need to locate transcript files that only corroborate information. I think I'll use the glob tool to search for these specific files efficiently. This seems like a straightforward task, but I want to ensure I get the right files without overlooking anything. I'll keep my approach focused so that I can find what I need quickly. Alright, let’s tackle this and find those corroborating transcript files!",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_082927d779e6d878016a03c540ec408191ba4fd8591ab14358"
+          }
+        },
+        "time": {
+          "start": 1778632000642,
+          "end": 1778632004169
+        }
+      },
+      {
+        "id": "prt_e1eba924a001dnNvZWqlJ6QYUd",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba7fe5001VMRs4aWQdsmT3y",
+        "type": "tool",
+        "callID": "call_2mHpcHcjSnyPyswOt9Aey4i8",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "**/*",
+            "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts"
+          },
+          "output": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_7.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_6.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_8.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_5.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_3.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_4.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_2.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_1.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/network_timeout_session--ses_1e1459b03ffeYc81CCONOyDduz.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/csv_trim_session--ses_1e145a6ebffeW6mPgjhceItQCh.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/schema_parser_session--ses_1e145baaeffe50kFHR4dI8LRnC.md",
+          "title": "memory/transcripts",
+          "metadata": {
+            "count": 11,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632004182,
+            "end": 1778632004215
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_082927d779e6d878016a03c54470608191a85cd0254d2cbac5"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eba92590015vbP4Kx0a2oCUS",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba7fe5001VMRs4aWQdsmT3y",
+        "type": "tool",
+        "callID": "call_8JRW7tjd4ACl5mkswlm0civW",
+        "tool": "grep",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "schema|tokenization|trim|src/parser/schema.ts",
+            "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts",
+            "include": "*"
+          },
+          "output": "Found 15 matches\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_8.md:\n  Line 6: Decoy 8: mentions src/parser/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_6.md:\n  Line 6: Decoy 6: mentions src/parser/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_7.md:\n  Line 6: Decoy 7: mentions src/parser/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_5.md:\n  Line 6: Decoy 5: mentions src/parser/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_3.md:\n  Line 6: Decoy 3: mentions src/parser/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_4.md:\n  Line 6: Decoy 4: mentions src/parser/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_2.md:\n  Line 6: Decoy 2: mentions src/parser/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/correction_chain_decoy_1.md:\n  Line 6: Decoy 1: mentions src/parser/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/network_timeout_session--ses_1e1459b03ffeYc81CCONOyDduz.md:\n  Line 7: - A network parser strips whitespace before tokenization; this is a distractor.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/csv_trim_session--ses_1e145a6ebffeW6mPgjhceItQCh.md:\n  Line 1: # CSV trim cleanup\n\n  Line 3: title: CSV trim cleanup\n\n  Line 7: - CSV header cells trim around commas; this is related but not the schema pipe parser correction.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/schema_parser_session--ses_1e145baaeffe50kFHR4dI8LRnC.md:\n  Line 7: - Early note, later superseded: trim the whole schema header before tokenization.\n\n  Line 8: - Correction: tokenize first, then trim each field. This preserves raw delimiter and quoted-field behavior while cleaning field names.\n\n  Line 9: - The earlier before-tokenization rationale was wrong and should not be cited as final.\n",
+          "title": "schema|tokenization|trim|src/parser/schema.ts",
+          "metadata": {
+            "matches": 15,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632004388,
+            "end": 1778632004415
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_082927d779e6d878016a03c544706c81918922bf48cf784e22"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eba9376001GBj5CwJTIz4W9X",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba7fe5001VMRs4aWQdsmT3y",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62",
+        "cost": 0,
+        "tokens": {
+          "total": 11796,
+          "input": 850,
+          "output": 176,
+          "reasoning": 18,
+          "cache": {
+            "read": 10752,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eba939e001300TlLj3t0Un9h",
+      "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+      "role": "assistant",
+      "time": {
+        "created": 1778632004510,
+        "completed": 1778632008174
+      },
+      "parentID": "msg_e1eba6d45001WGCXgQz4KhBmyX",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13796,
+        "input": 2410,
+        "output": 104,
+        "reasoning": 18,
+        "cache": {
+          "read": 11264,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eba97b0001DMV5jukgfvd75l",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba939e001300TlLj3t0Un9h",
+        "type": "step-start",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62"
+      },
+      {
+        "id": "prt_e1eba9875001lkL0A5g9LwrBWC",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba939e001300TlLj3t0Un9h",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0150ea9d5419d2be016a03c54607ec8191886ec16a9254e2b6"
+          }
+        },
+        "time": {
+          "start": 1778632005749,
+          "end": 1778632006476
+        }
+      },
+      {
+        "id": "prt_e1eba9b52001yAFRm03FArHGgT",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba939e001300TlLj3t0Un9h",
+        "type": "tool",
+        "callID": "call_1J3CdrgmBwzDPkAXVjFSN58p",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/schema_parser_session--ses_1e145baaeffe50kFHR4dI8LRnC.md",
+            "offset": 1,
+            "limit": 20
+          },
+          "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree/memory/transcripts/schema_parser_session--ses_1e145baaeffe50kFHR4dI8LRnC.md</path>\n<type>file</type>\n<content>\n1: # Schema parser correction chain\n2: session_id: ses_1e145baaeffe50kFHR4dI8LRnC\n3: title: Schema parser correction chain\n4: id_policy: cite the heading message id below, not fixture fact labels\n5: \n6: ## message msg_e1eba45660015oPv3FAY1OdiY4\n7: - Early note, later superseded: trim the whole schema header before tokenization.\n8: - Correction: tokenize first, then trim each field. This preserves raw delimiter and quoted-field behavior while cleaning field names.\n9: - The earlier before-tokenization rationale was wrong and should not be cited as final.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "memory/transcripts/schema_parser_session--ses_1e145baaeffe50kFHR4dI8LRnC.md",
+          "metadata": {
+            "preview": "# Schema parser correction chain\nsession_id: ses_1e145baaeffe50kFHR4dI8LRnC\ntitle: Schema parser correction chain\nid_policy: cite the heading message id below, not fixture fact labels\n\n## message msg_e1eba45660015oPv3FAY1OdiY4\n- Early note, later superseded: trim the whole schema header before tokenization.\n- Correction: tokenize first, then trim each field. This preserves raw delimiter and quoted-field behavior while cleaning field names.\n- The earlier before-tokenization rationale was wrong and should not be cited as final.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778632007975,
+            "end": 1778632007985
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0150ea9d5419d2be016a03c546c0e481919512638177f80825"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ebaa1c90010MIhP1041LaflN",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1eba939e001300TlLj3t0Un9h",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62",
+        "cost": 0,
+        "tokens": {
+          "total": 13796,
+          "input": 2410,
+          "output": 104,
+          "reasoning": 18,
+          "cache": {
+            "read": 11264,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ebaa1f0001znEO3lpc62T3tK",
+      "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+      "role": "assistant",
+      "time": {
+        "created": 1778632008176,
+        "completed": 1778632010582
+      },
+      "parentID": "msg_e1eba6d45001WGCXgQz4KhBmyX",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 14117,
+        "input": 747,
+        "output": 58,
+        "reasoning": 0,
+        "cache": {
+          "read": 13312,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ebaa544001mhBf1AsWBCX6pV",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1ebaa1f0001znEO3lpc62T3tK",
+        "type": "step-start",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62"
+      },
+      {
+        "id": "prt_e1ebaa703001eHfL60IDG1jbSB",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1ebaa1f0001znEO3lpc62T3tK",
+        "type": "tool",
+        "callID": "call_ofABaijSb4JFmRrBq8UxrOh5",
+        "tool": "message_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1e145baaeffe50kFHR4dI8LRnC",
+            "message_id": "msg_e1eba45660015oPv3FAY1OdiY4"
+          },
+          "output": "{\n  \"session_id\": \"ses_1e145baaeffe50kFHR4dI8LRnC\",\n  \"message_id\": \"msg_e1eba45660015oPv3FAY1OdiY4\",\n  \"ok\": true,\n  \"message\": {\n    \"id\": \"msg_e1eba45660015oPv3FAY1OdiY4\",\n    \"role\": \"user\",\n    \"blobID\": \"schema_parser_correction\",\n    \"blobLabel\": \"schema_parser_correction\",\n    \"summary\": \"User request: # Schema parser correction chain session_id: schema_parser_session title: Schema parser correction chain ## message schema_fact_1 Early note, later superseded: trim the whole schema header before tokenization. ## message sc...\",\n    \"keyFacts\": [],\n    \"tokenEstimate\": 121,\n    \"createdAt\": 1778631984486,\n    \"parts\": [\n      {\n        \"id\": \"prt_e1eba4567001Osomgixh51G6KE\",\n        \"type\": \"text\",\n        \"text\": \"# Schema parser correction chain\\nsession_id: schema_parser_session\\ntitle: Schema parser correction chain\\n\\n## message schema_fact_1\\nEarly note, later superseded: trim the whole schema header before tokenization.\\n\\n## message schema_fact_2\\nCorrection: tokenize first, then trim each field. This preserves raw delimiter and quoted-field behavior while cleaning field names.\\n\\n## message schema_fact_3\\nThe earlier before-tokenization rationale was wrong and should not be cited as final.\\n\"\n      }\n    ]\n  }\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632010416,
+            "end": 1778632010427
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0f84f431a1d0a996016a03c549c1548191a3652db42a412434"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ebaaafc001DkmwgM1s3d1gRC",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1ebaa1f0001znEO3lpc62T3tK",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62",
+        "cost": 0,
+        "tokens": {
+          "total": 14117,
+          "input": 747,
+          "output": 58,
+          "reasoning": 0,
+          "cache": {
+            "read": 13312,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ebaab57002ZEyiziwCi1ofKX",
+      "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+      "role": "assistant",
+      "time": {
+        "created": 1778632010583,
+        "completed": 1778632015090
+      },
+      "parentID": "msg_e1eba6d45001WGCXgQz4KhBmyX",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/correction-chain/conditions/memmould-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 14655,
+        "input": 646,
+        "output": 185,
+        "reasoning": 0,
+        "cache": {
+          "read": 13824,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ebaaecd001xEc0JYl9wYefH5",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1ebaab57002ZEyiziwCi1ofKX",
+        "type": "step-start",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62"
+      },
+      {
+        "id": "prt_e1ebaaf62001RJBIdjp1v9h4yi",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1ebaab57002ZEyiziwCi1ofKX",
+        "type": "text",
+        "text": "{\"answer\":\"`src/parser/schema.ts` trims schema field names after splitting because the parser must tokenize on the raw schema text first, preserving delimiter and quoted-field behavior, and only then clean each field name.\",\"evidence\":{\"session_id\":\"ses_1e145baaeffe50kFHR4dI8LRnC\",\"blob_id\":\"schema_parser_correction\",\"message_id\":\"msg_e1eba45660015oPv3FAY1OdiY4\"},\"rationale\":\"The cited message contains the correction: tokenize first, then trim each field, because this preserves raw delimiter and quoted-field behavior while cleaning field names. It also explicitly says the earlier rationale to trim the whole schema header before tokenization was superseded and should not be cited as final.\",\"irrelevant_context_ignored\":[\"CSV trim cleanup\",\"Network timeout parser\",\"correction_chain_decoy_* transcript files\"]}",
+        "time": {
+          "start": 1778632011618,
+          "end": 1778632014982
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_031e870d196d8331016a03c54be2448191bf6c7e0f297d7ce0",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ebabcc9001Cgf55gJMzF30O9",
+        "sessionID": "ses_1e14592cfffe6VQct07GD4r0yc",
+        "messageID": "msg_e1ebaab57002ZEyiziwCi1ofKX",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "8b84490ba017665b49668939c4ee093d456dfa62",
+        "cost": 0,
+        "tokens": {
+          "total": 14655,
+          "input": 646,
+          "output": 185,
+          "reasoning": 0,
+          "cache": {
+            "read": 13824,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

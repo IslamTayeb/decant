@@ -1,0 +1,208 @@
+[
+  {
+    "info": {
+      "id": "msg_e1e95ae85001zSx0rLLj3Z6V0Y",
+      "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+      "role": "user",
+      "time": {
+        "created": 1778629586565
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
+      "tools": {
+        "task": true,
+        "session_tree": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1e95ae85002vOmBYuoYrxJJXF",
+        "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+        "messageID": "msg_e1e95ae85001zSx0rLLj3Z6V0Y",
+        "type": "text",
+        "text": "Question: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2?\nExpected relevant prior session: TTL blame rationale session\nTask instruction: call subagent_type='memmould', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from mem-mould session tools.\nAsk the child to ignore distractors: Billing TTL distractor, Markdown TTL distractor\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e95ae89001OjcZmJL4xin3u6",
+      "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+      "role": "assistant",
+      "time": {
+        "created": 1778629586569,
+        "completed": 1778629600031
+      },
+      "parentID": "msg_e1e95ae85001zSx0rLLj3Z6V0Y",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/blame-line-rationale/conditions/subagent-map-zoom/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/blame-line-rationale/conditions/subagent-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10010,
+        "input": 8311,
+        "output": 163,
+        "reasoning": 0,
+        "cache": {
+          "read": 1536,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e95b182001Wep7hysdGQw9f8",
+        "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+        "messageID": "msg_e1e95ae89001OjcZmJL4xin3u6",
+        "type": "step-start",
+        "snapshot": "8be895ff3d92b6c6ca1127281a37c2e11965bf03"
+      },
+      {
+        "id": "prt_e1e95b284001oFh7SeKiBArNAz",
+        "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+        "messageID": "msg_e1e95ae89001OjcZmJL4xin3u6",
+        "type": "tool",
+        "callID": "call_IJnZjDUITprqX5XIdIUqRUUn",
+        "tool": "task",
+        "state": {
+          "status": "completed",
+          "input": {
+            "description": "TTL provenance rationale",
+            "prompt": "Find provenance for why `src/cache/ttl.ts` caps requested TTL with `namespaceMaxSeconds` on line 2. Use only mem-mould session tools: `session_lookup`, `session_detail` with detail='messages', and `message_detail`. Do not use glob, grep, read, bash, or transcript files. Expected relevant prior session is the TTL blame rationale session. Ignore distractors named Billing TTL distractor and Markdown TTL distractor. Return evidence with a single session_id, blob_id, and message_id where the cited message supports the full answer, including any correction, stale detail, or rejected alternative if relevant.",
+            "subagent_type": "memmould",
+            "task_id": "",
+            "command": ""
+          },
+          "output": "task_id: ses_1e16a426bffe0QsI9tEaBqGy2M (for resuming to continue this task if needed)\n\n<task_result>\nThe provenance is in `ttl_blame_session`:\n\n- `session_id`: `ses_1e16a80fbffea0vgwCvGkXTPFx`\n- `blob_id`: `cache_ttl`\n- `message_id`: `msg_e1e957f18001PJVCwcFKdQmXTJ`\n\nSupporting text: “Line 2 caps requested TTL with `namespaceMaxSeconds` so a noisy namespace cannot extend stale cache retention beyond its namespace budget.”\n</task_result>",
+          "title": "TTL provenance rationale",
+          "metadata": {
+            "sessionId": "ses_1e16a426bffe0QsI9tEaBqGy2M",
+            "model": {
+              "providerID": "openai",
+              "modelID": "gpt-5.4-mini"
+            },
+            "truncated": false
+          },
+          "time": {
+            "start": 1778629590431,
+            "end": 1778629599938
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_050576e14b301959016a03bbd3e2a481918c26b704f022b56e"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e95e300001PWAC4KkredJ7ep",
+        "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+        "messageID": "msg_e1e95ae89001OjcZmJL4xin3u6",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8be895ff3d92b6c6ca1127281a37c2e11965bf03",
+        "cost": 0,
+        "tokens": {
+          "total": 10010,
+          "input": 8311,
+          "output": 163,
+          "reasoning": 0,
+          "cache": {
+            "read": 1536,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e95e320002HV3YhXIlCiuRjz",
+      "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+      "role": "assistant",
+      "time": {
+        "created": 1778629600032,
+        "completed": 1778629603728
+      },
+      "parentID": "msg_e1e95ae85001zSx0rLLj3Z6V0Y",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/blame-line-rationale/conditions/subagent-map-zoom/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/blame-line-rationale/conditions/subagent-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10312,
+        "input": 435,
+        "output": 149,
+        "reasoning": 0,
+        "cache": {
+          "read": 9728,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e95e63a001XWLm5mSA970iH8",
+        "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+        "messageID": "msg_e1e95e320002HV3YhXIlCiuRjz",
+        "type": "step-start",
+        "snapshot": "8be895ff3d92b6c6ca1127281a37c2e11965bf03"
+      },
+      {
+        "id": "prt_e1e95e69f001Yokc5PbTJCLV3a",
+        "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+        "messageID": "msg_e1e95e320002HV3YhXIlCiuRjz",
+        "type": "text",
+        "text": "{\"answer\":\"Line 2 caps the requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ses_1e16a80fbffea0vgwCvGkXTPFx\",\"blob_id\":\"cache_ttl\",\"message_id\":\"msg_e1e957f18001PJVCwcFKdQmXTJ\"},\"rationale\":\"The cited TTL blame rationale message directly explains the purpose of the cap. Billing TTL distractor and Markdown TTL distractor were ignored as instructed; no correction, stale detail, or rejected alternative was reported as relevant.\",\"irrelevant_context_ignored\":[\"Billing TTL distractor\",\"Markdown TTL distractor\"]}",
+        "time": {
+          "start": 1778629600927,
+          "end": 1778629603607
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0e7662092a22d416016a03bbe1296c8191a3098228be523846",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e95f151001gsEe8xi5Hczth1",
+        "sessionID": "ses_1e16a5180ffe9mC452Uy6e4Mx1",
+        "messageID": "msg_e1e95e320002HV3YhXIlCiuRjz",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "8be895ff3d92b6c6ca1127281a37c2e11965bf03",
+        "cost": 0,
+        "tokens": {
+          "total": 10312,
+          "input": 435,
+          "output": 149,
+          "reasoning": 0,
+          "cache": {
+            "read": 9728,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

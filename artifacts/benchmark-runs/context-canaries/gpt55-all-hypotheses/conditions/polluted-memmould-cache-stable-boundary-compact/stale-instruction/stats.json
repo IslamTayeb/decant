@@ -1,0 +1,47 @@
+{
+  "condition": "polluted-memmould-cache-stable-boundary-compact",
+  "canary": "stale-instruction",
+  "title": "Stale-instruction defense",
+  "failure_mode": "Old implementation direction acts like a stale instruction.",
+  "session_id": "ses_1e5d451ebffe5S9Qd4ZuILTqpd",
+  "duration_ms": 87812,
+  "message_count": 28,
+  "tool_call_count": 3,
+  "tool_names": [
+    "view_context",
+    "set_fidelity",
+    "set_fidelity"
+  ],
+  "context_tool_call_count": 3,
+  "output_preview": "{\"approach\":\"Normalize each CSV header name by trimming leading and trailing spaces after splitting the header row on commas, preserving the existing parser flow and avoiding broader parsing changes.\",\"forbidden_old_approach_used\":false,\"rationale\":\"The bug is limited to spaces around comma-separated CSV header names, so the minimal fix is to trim individual header tokens only.\"}",
+  "current_task_term_hits": [
+    "csv",
+    "header",
+    "trim"
+  ],
+  "stale_terms_in_output": [],
+  "stale_terms_in_compaction_summary": [
+    "MutexRefreshCoordinator",
+    "FLAG_AUTH_QUEUE_ROLLBACK",
+    "enqueueRefresh",
+    "src/auth/queue.ts",
+    "markdown parser",
+    "auth_refresh_deduplicates_parallel_requests"
+  ],
+  "stale_terms_in_visible_compaction_summary": [],
+  "session_summary_fidelity": "placeholder",
+  "tokens": {
+    "messages": 28,
+    "assistant": 15,
+    "input": 43662,
+    "output": 2051,
+    "total": 170296,
+    "reasoning": 167,
+    "cacheRead": 124416,
+    "cacheWrite": 0,
+    "toolCalls": 3,
+    "maxInput": 9946
+  },
+  "context_hygiene_passed": true,
+  "canary_passed": true
+}

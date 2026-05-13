@@ -1,0 +1,208 @@
+[
+  {
+    "info": {
+      "id": "msg_e1e9207d8001dBxF47Ruw8T8c1",
+      "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+      "role": "user",
+      "time": {
+        "created": 1778629347288
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
+      "tools": {
+        "task": true,
+        "session_tree": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1e9207d8002my2orVIP2tDhpg",
+        "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+        "messageID": "msg_e1e9207d8001dBxF47Ruw8T8c1",
+        "type": "text",
+        "text": "Question: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL?\nExpected relevant prior session: Cache namespace TTL rationale\nTask instruction: call subagent_type='memmould', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from mem-mould session tools.\nAsk the child to ignore distractors: Billing cache global TTL, Image cache namespace notes\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e9207dd002rHpBNMkxuN22zM",
+      "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+      "role": "assistant",
+      "time": {
+        "created": 1778629347293,
+        "completed": 1778629362430
+      },
+      "parentID": "msg_e1e9207d8001dBxF47Ruw8T8c1",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10031,
+        "input": 5234,
+        "output": 189,
+        "reasoning": 0,
+        "cache": {
+          "read": 4608,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e920aff001A6XbeYsLFC0it7",
+        "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+        "messageID": "msg_e1e9207dd002rHpBNMkxuN22zM",
+        "type": "step-start",
+        "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643"
+      },
+      {
+        "id": "prt_e1e920d02001bVhK6i5TJbcvzv",
+        "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+        "messageID": "msg_e1e9207dd002rHpBNMkxuN22zM",
+        "type": "tool",
+        "callID": "call_Q3eADWFCavglg2VIzgeeHW1G",
+        "tool": "task",
+        "state": {
+          "status": "completed",
+          "input": {
+            "description": "Find TTL rationale",
+            "prompt": "Use only mem-mould session tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the expected relevant prior session titled or matching \"Cache namespace TTL rationale\" and answer: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL? Ignore distractors: \"Billing cache global TTL\" and \"Image cache namespace notes\". Return evidence with session_id, blob_id, and a message_id that supports the full answer, not just a nearby subclaim. If correction, stale detail, or rejected alternative matters, include it in rationale. Return only the evidence and concise answer content needed for the parent to produce compact JSON.",
+            "subagent_type": "memmould",
+            "task_id": "",
+            "command": ""
+          },
+          "output": "task_id: ses_1e16de635ffenlF14nGqMhyfep (for resuming to continue this task if needed)\n\n<task_result>\n{\"session_id\":\"ses_1e16e23abffeRNqQUB8HSINa9r\",\"blob_id\":\"cache_namespace_ttl\",\"message_id\":\"msg_e1e91dc65001ECjHMFwBoWmVCY\",\"answer\":\"Namespace-scoped TTL was chosen instead of a single global TTL so one noisy namespace cannot extend or evict unrelated namespaces through a shared TTL policy; a global TTL was considered and rejected.\"}\n</task_result>",
+          "title": "Find TTL rationale",
+          "metadata": {
+            "sessionId": "ses_1e16de635ffenlF14nGqMhyfep",
+            "model": {
+              "providerID": "openai",
+              "modelID": "gpt-5.4-mini"
+            },
+            "truncated": false
+          },
+          "time": {
+            "start": 1778629351895,
+            "end": 1778629362323
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_065bb20a793985a5016a03bae4e21c81918a0c66c4b6a3af22"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e9242d8001qu6KmIzRoI163i",
+        "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+        "messageID": "msg_e1e9207dd002rHpBNMkxuN22zM",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643",
+        "cost": 0,
+        "tokens": {
+          "total": 10031,
+          "input": 5234,
+          "output": 189,
+          "reasoning": 0,
+          "cache": {
+            "read": 4608,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e9242ff002Hl9GN9LiSbcfhz",
+      "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+      "role": "assistant",
+      "time": {
+        "created": 1778629362431,
+        "completed": 1778629365904
+      },
+      "parentID": "msg_e1e9207d8001dBxF47Ruw8T8c1",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed/fixtures/false-provenance/conditions/subagent-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10307,
+        "input": 447,
+        "output": 132,
+        "reasoning": 0,
+        "cache": {
+          "read": 9728,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e9245e60013OJOyqxFqec2ON",
+        "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+        "messageID": "msg_e1e9242ff002Hl9GN9LiSbcfhz",
+        "type": "step-start",
+        "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643"
+      },
+      {
+        "id": "prt_e1e9246bc001xZFkmpgFwB3rhD",
+        "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+        "messageID": "msg_e1e9242ff002Hl9GN9LiSbcfhz",
+        "type": "text",
+        "text": "{\"answer\":\"Namespace-scoped TTL prevents one noisy namespace from extending or evicting unrelated namespaces through a shared TTL policy; a single global TTL was considered and rejected.\",\"evidence\":{\"session_id\":\"ses_1e16e23abffeRNqQUB8HSINa9r\",\"blob_id\":\"cache_namespace_ttl\",\"message_id\":\"msg_e1e91dc65001ECjHMFwBoWmVCY\"},\"rationale\":\"The cited prior message supports the full rationale and notes the rejected global TTL alternative explicitly.\",\"irrelevant_context_ignored\":[\"Billing cache global TTL\",\"Image cache namespace notes\"]}",
+        "time": {
+          "start": 1778629363388,
+          "end": 1778629365793
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0810399f66c0c3cf016a03baf3acc8819181dd9e980f2f915d",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e925066001pbAWkyz4HCZzDI",
+        "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
+        "messageID": "msg_e1e9242ff002Hl9GN9LiSbcfhz",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "7ebb2b601d4ad0f15321713c5337166dd05a2643",
+        "cost": 0,
+        "tokens": {
+          "total": 10307,
+          "input": 447,
+          "output": 132,
+          "reasoning": 0,
+          "cache": {
+            "read": 9728,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

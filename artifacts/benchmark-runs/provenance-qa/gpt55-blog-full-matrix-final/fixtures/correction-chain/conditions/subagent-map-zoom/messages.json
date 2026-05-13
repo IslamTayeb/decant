@@ -1,0 +1,224 @@
+[
+  {
+    "info": {
+      "id": "msg_e1e7c1a04001boXdMLkFKq3C95",
+      "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+      "role": "user",
+      "time": {
+        "created": 1778627910148
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
+      "tools": {
+        "task": true,
+        "session_tree": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7c1a04002tLCoUvXHsm1RVU",
+        "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+        "messageID": "msg_e1e7c1a04001boXdMLkFKq3C95",
+        "type": "text",
+        "text": "Question: Why does src/parser/schema.ts trim schema field names after splitting fields instead of before tokenization?\nExpected relevant prior session: Schema parser correction chain\nTask instruction: call subagent_type='memmould', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from mem-mould session tools.\nAsk the child to ignore distractors: CSV trim cleanup, Network timeout parser\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e7c1a09001NDbLl5rO2eVhZi",
+      "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+      "role": "assistant",
+      "time": {
+        "created": 1778627910153,
+        "completed": 1778627927452
+      },
+      "parentID": "msg_e1e7c1a04001boXdMLkFKq3C95",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10016,
+        "input": 588,
+        "output": 195,
+        "reasoning": 17,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7c1dd9001U0q450jgvEqmUu",
+        "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+        "messageID": "msg_e1e7c1a09001NDbLl5rO2eVhZi",
+        "type": "step-start",
+        "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb"
+      },
+      {
+        "id": "prt_e1e7c1eb2001TN1cu58detqv8K",
+        "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+        "messageID": "msg_e1e7c1a09001NDbLl5rO2eVhZi",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0f030e0ba3c8a94a016a03b547be2c819180dc4ea206e8123c"
+          }
+        },
+        "time": {
+          "start": 1778627911346,
+          "end": 1778627912208
+        }
+      },
+      {
+        "id": "prt_e1e7c2212001MJReijTK3Lqc3M",
+        "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+        "messageID": "msg_e1e7c1a09001NDbLl5rO2eVhZi",
+        "type": "tool",
+        "callID": "call_DwoYBqsbNNgqe6PRKPVOj1dR",
+        "tool": "task",
+        "state": {
+          "status": "completed",
+          "input": {
+            "description": "Find schema provenance",
+            "prompt": "Use only mem-mould session tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the expected relevant prior session: \"Schema parser correction chain\". Answer this provenance question: Why does src/parser/schema.ts trim schema field names after splitting fields instead of before tokenization? Ignore distractors: \"CSV trim cleanup\" and \"Network timeout parser\". Return evidence with session_id, blob_id, and a single message_id that supports the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, include it in the rationale. Return compact JSON only with keys answer, evidence, rationale, irrelevant_context_ignored.",
+            "subagent_type": "memmould",
+            "task_id": "",
+            "command": ""
+          },
+          "output": "task_id: ses_1e183d243ffegQfYfhRNykhzsx (for resuming to continue this task if needed)\n\n<task_result>\n{\"answer\":\"src/parser/schema.ts trims schema field names after splitting/tokenization so delimiter handling and quoted-field behavior remain based on the raw schema text, while only the resulting field names are cleaned.\",\"evidence\":{\"session_id\":\"ses_1e18411acffegYBgKoYn7NTVgX\",\"blob_id\":\"schema_parser_correction\",\"message_id\":\"msg_e1e7bee70001Ta8M0bVuk6SJUC\"},\"rationale\":\"The relevant session explicitly corrects the earlier note: tokenize first, then trim each field. It says this preserves raw delimiter and quoted-field behavior while cleaning field names, and warns that the before-tokenization rationale was wrong and should not be cited.\",\"irrelevant_context_ignored\":[\"CSV trim cleanup\",\"Network timeout parser\"]}\n</task_result>",
+          "title": "Find schema provenance",
+          "metadata": {
+            "sessionId": "ses_1e183d243ffegQfYfhRNykhzsx",
+            "model": {
+              "modelID": "gpt-5.5",
+              "providerID": "openai"
+            },
+            "truncated": false
+          },
+          "time": {
+            "start": 1778627915211,
+            "end": 1778627927373
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0f030e0ba3c8a94a016a03b54897448191930c4414d260d381"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7c5d7f001pdrxx19ygzwghK",
+        "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+        "messageID": "msg_e1e7c1a09001NDbLl5rO2eVhZi",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb",
+        "cost": 0,
+        "tokens": {
+          "total": 10016,
+          "input": 588,
+          "output": 195,
+          "reasoning": 17,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e7c5d9d001shfdtr3HfJ7kLP",
+      "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+      "role": "assistant",
+      "time": {
+        "created": 1778627927453,
+        "completed": 1778627931718
+      },
+      "parentID": "msg_e1e7c1a04001boXdMLkFKq3C95",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/correction-chain/conditions/subagent-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10373,
+        "input": 1010,
+        "output": 147,
+        "reasoning": 0,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7c60c2001imS9jQc6dS1uSz",
+        "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+        "messageID": "msg_e1e7c5d9d001shfdtr3HfJ7kLP",
+        "type": "step-start",
+        "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb"
+      },
+      {
+        "id": "prt_e1e7c6350001T8w31T0RI4bRqt",
+        "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+        "messageID": "msg_e1e7c5d9d001shfdtr3HfJ7kLP",
+        "type": "text",
+        "text": "{\"answer\":\"src/parser/schema.ts trims schema field names after splitting/tokenization so delimiter handling and quoted-field behavior remain based on the raw schema text, while only the resulting field names are cleaned.\",\"evidence\":{\"session_id\":\"ses_1e18411acffegYBgKoYn7NTVgX\",\"blob_id\":\"schema_parser_correction\",\"message_id\":\"msg_e1e7bee70001Ta8M0bVuk6SJUC\"},\"rationale\":\"The relevant session corrected the earlier rationale: tokenize first, then trim each field. The rejected before-tokenization explanation was stale and should not be cited.\",\"irrelevant_context_ignored\":[\"CSV trim cleanup\",\"Network timeout parser\"]}",
+        "time": {
+          "start": 1778627928912,
+          "end": 1778627931520
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_075cc7dc7196dde4016a03b5593a508191b390d9d577c54e21",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7c6e20001ApXULh4WtMfyNX",
+        "sessionID": "ses_1e183e605ffeT3RhTmPpw6Siks",
+        "messageID": "msg_e1e7c5d9d001shfdtr3HfJ7kLP",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "532337866eafc4fc356ef031cf791091986ae0bb",
+        "cost": 0,
+        "tokens": {
+          "total": 10373,
+          "input": 1010,
+          "output": 147,
+          "reasoning": 0,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,808 @@
+[
+  {
+    "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+    "messages": [
+      {
+        "info": {
+          "id": "msg_e1ebece3c0027I86Am7DSUnwOt",
+          "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+          "role": "user",
+          "time": {
+            "created": 1778632281661
+          },
+          "summary": {
+            "diffs": []
+          },
+          "agent": "transcript",
+          "model": {
+            "providerID": "openai",
+            "modelID": "gpt-5.5"
+          },
+          "tools": {}
+        },
+        "parts": [
+          {
+            "id": "prt_e1ebece3d0015DGiKxjQKqG3DC",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebece3c0027I86Am7DSUnwOt",
+            "type": "text",
+            "text": "Use RLM-style transcript search only with glob/grep/read and optional read-only bash. Do not use mem-mould/session tools. Transcript directory: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts\n\nQuestion: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\n\nIgnore distractors: Auth queue related reuse, Markdown table parser.\n\nReturn evidence sufficient for the parent to answer in compact JSON. The cited message_id must support the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly. Return session_id, blob_id, message_id, and concise answer/rationale."
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1ebece46001rzZe1fqLbcvb4P",
+          "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+          "role": "assistant",
+          "time": {
+            "created": 1778632281670,
+            "completed": 1778632288200
+          },
+          "parentID": "msg_e1ebece3c0027I86Am7DSUnwOt",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 6320,
+            "input": 433,
+            "output": 230,
+            "reasoning": 25,
+            "cache": {
+              "read": 5632,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1ebed3bb0010il2wrOPZBw9zK",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebece46001rzZe1fqLbcvb4P",
+            "type": "step-start",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+          },
+          {
+            "id": "prt_e1ebed496001j1G8MWStXeEcJl",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebece46001rzZe1fqLbcvb4P",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_04e9910494b922f9016a03c65b6ab481918213f2ef327245a3"
+              }
+            },
+            "time": {
+              "start": 1778632283286,
+              "end": 1778632283971
+            }
+          },
+          {
+            "id": "prt_e1ebed747001OUP4YS6ElkDo8B",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebece46001rzZe1fqLbcvb4P",
+            "type": "text",
+            "text": "I’ll search the transcript directory for references to `src/tsv/schema.ts`, CSV parser lessons, and the named distractors, then read only the relevant transcript snippets for evidence.",
+            "time": {
+              "start": 1778632283975,
+              "end": 1778632287794
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_04e9910494b922f9016a03c65c268c8191a40cdbff2c40c0ac",
+                "phase": "commentary"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebee633001Q1we2EDViB0nhK",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebece46001rzZe1fqLbcvb4P",
+            "type": "tool",
+            "callID": "call_wZSkLDUPlaWL9U5udFIPMtKX",
+            "tool": "grep",
+            "state": {
+              "status": "completed",
+              "input": {
+                "pattern": "src/tsv/schema\\.ts|CSV parser|csv parser|Markdown table parser|Auth queue|stale",
+                "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts",
+                "include": "*"
+              },
+              "output": "Found 14 matches\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_8.md:\n  Line 6: Decoy 8: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_6.md:\n  Line 6: Decoy 6: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_7.md:\n  Line 6: Decoy 7: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_5.md:\n  Line 6: Decoy 5: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md:\n  Line 6: Decoy 1: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md:\n  Line 1: # CSV parser lesson for related reuse\n\n  Line 3: title: CSV parser lesson for related reuse\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md:\n  Line 1: # Markdown table parser\n\n  Line 3: title: Markdown table parser\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_3.md:\n  Line 6: Decoy 3: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_4.md:\n  Line 6: Decoy 4: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md:\n  Line 1: # Auth queue related reuse\n\n  Line 3: title: Auth queue related reuse\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_2.md:\n  Line 6: Decoy 2: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n",
+              "title": "src/tsv/schema\\.ts|CSV parser|csv parser|Markdown table parser|Auth queue|stale",
+              "metadata": {
+                "matches": 14,
+                "truncated": false
+              },
+              "time": {
+                "start": 1778632287805,
+                "end": 1778632287825
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_04e9910494b922f9016a03c65ffdcc8191b5a7871a50bb05d7"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebee63f0016ylZIlOkbHkUr5",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebece46001rzZe1fqLbcvb4P",
+            "type": "tool",
+            "callID": "call_nBz3vDW8P7f2lwzMRVyeN1Zj",
+            "tool": "glob",
+            "state": {
+              "status": "completed",
+              "input": {
+                "pattern": "**/*",
+                "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts"
+              },
+              "output": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_7.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_6.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_8.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_5.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_4.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_3.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_2.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md",
+              "title": "memory/transcripts",
+              "metadata": {
+                "count": 11,
+                "truncated": false
+              },
+              "time": {
+                "start": 1778632287809,
+                "end": 1778632287827
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_04e9910494b922f9016a03c65ffdd881918089bbf9bf598e90"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebee798001VEi3OPRiwM4CDy",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebece46001rzZe1fqLbcvb4P",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+            "cost": 0,
+            "tokens": {
+              "total": 6320,
+              "input": 433,
+              "output": 230,
+              "reasoning": 25,
+              "cache": {
+                "read": 5632,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1ebee7ca001icpswLZoC6cyne",
+          "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+          "role": "assistant",
+          "time": {
+            "created": 1778632288202,
+            "completed": 1778632294477
+          },
+          "parentID": "msg_e1ebece3c0027I86Am7DSUnwOt",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 8298,
+            "input": 2396,
+            "output": 257,
+            "reasoning": 13,
+            "cache": {
+              "read": 5632,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1ebeeaf4001RfN5WUe9xmurY8",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebee7ca001icpswLZoC6cyne",
+            "type": "step-start",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+          },
+          {
+            "id": "prt_e1ebeebf1001cOZNFt8qfIOey6",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebee7ca001icpswLZoC6cyne",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0766684180098978016a03c6618660819188726d8af97300bb"
+              }
+            },
+            "time": {
+              "start": 1778632289265,
+              "end": 1778632294150
+            }
+          },
+          {
+            "id": "prt_e1ebeff0a001lbX81kPg2782Ro",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebee7ca001icpswLZoC6cyne",
+            "type": "tool",
+            "callID": "call_NYarTEQOrSAapxCFworGGldZ",
+            "tool": "read",
+            "state": {
+              "status": "completed",
+              "input": {
+                "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md",
+                "offset": 1,
+                "limit": 200
+              },
+              "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md</path>\n<type>file</type>\n<content>\n1: # CSV parser lesson for related reuse\n2: session_id: csv_parser_lesson_session\n3: title: CSV parser lesson for related reuse\n4: \n5: ## message reuse_fact_1\n6: Reusable lesson: trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries.\n7: \n8: ## message reuse_fact_2\n9: Stale detail: do not copy comma-specific CSV splitting into TSV; use tab delimiters for TSV.\n\n(End of file - total 9 lines)\n</content>",
+              "title": "memory/transcripts/csv_parser_lesson_session.md",
+              "metadata": {
+                "preview": "# CSV parser lesson for related reuse\nsession_id: csv_parser_lesson_session\ntitle: CSV parser lesson for related reuse\n\n## message reuse_fact_1\nReusable lesson: trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries.\n\n## message reuse_fact_2\nStale detail: do not copy comma-specific CSV splitting into TSV; use tab delimiters for TSV.",
+                "truncated": false,
+                "loaded": []
+              },
+              "time": {
+                "start": 1778632294165,
+                "end": 1778632294187
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0766684180098978016a03c66664d88191a6fa6e3c52869746"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebeff1d0019rKCzobXdXzp79",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebee7ca001icpswLZoC6cyne",
+            "type": "tool",
+            "callID": "call_UxVbrqrlD46Ynzd1n9p390JC",
+            "tool": "read",
+            "state": {
+              "status": "completed",
+              "input": {
+                "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md",
+                "offset": 1,
+                "limit": 80
+              },
+              "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md</path>\n<type>file</type>\n<content>\n1: # Auth queue related reuse\n2: session_id: auth_related_session\n3: title: Auth queue related reuse\n4: \n5: ## message auth_related_fact_1\n6: Auth refresh queue reuse involved per-tenant dedupe and is unrelated to TSV parsing.\n\n(End of file - total 6 lines)\n</content>",
+              "title": "memory/transcripts/auth_related_session.md",
+              "metadata": {
+                "preview": "# Auth queue related reuse\nsession_id: auth_related_session\ntitle: Auth queue related reuse\n\n## message auth_related_fact_1\nAuth refresh queue reuse involved per-tenant dedupe and is unrelated to TSV parsing.",
+                "truncated": false,
+                "loaded": []
+              },
+              "time": {
+                "start": 1778632294177,
+                "end": 1778632294189
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0766684180098978016a03c66664e4819187a731a1ccf9790a"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebeff220017hAwdyG1rYMCa5",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebee7ca001icpswLZoC6cyne",
+            "type": "tool",
+            "callID": "call_JoY4qbXUFHyahWabRYCQ4WCG",
+            "tool": "read",
+            "state": {
+              "status": "completed",
+              "input": {
+                "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md",
+                "offset": 1,
+                "limit": 80
+              },
+              "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md</path>\n<type>file</type>\n<content>\n1: # Markdown table parser\n2: session_id: markdown_table_session\n3: title: Markdown table parser\n4: \n5: ## message md_fact_1\n6: Markdown tables use pipes and alignment markers; do not use this as TSV schema rationale.\n\n(End of file - total 6 lines)\n</content>",
+              "title": "memory/transcripts/markdown_table_session.md",
+              "metadata": {
+                "preview": "# Markdown table parser\nsession_id: markdown_table_session\ntitle: Markdown table parser\n\n## message md_fact_1\nMarkdown tables use pipes and alignment markers; do not use this as TSV schema rationale.",
+                "truncated": false,
+                "loaded": []
+              },
+              "time": {
+                "start": 1778632294251,
+                "end": 1778632294254
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0766684180098978016a03c66664ec8191a2f0ef729caaa168"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebf001e001nPPiK6648AwIps",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebee7ca001icpswLZoC6cyne",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+            "cost": 0,
+            "tokens": {
+              "total": 8298,
+              "input": 2396,
+              "output": 257,
+              "reasoning": 13,
+              "cache": {
+                "read": 5632,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1ebf004f001cOLgHl99NNDJhc",
+          "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+          "role": "assistant",
+          "time": {
+            "created": 1778632294479,
+            "completed": 1778632297621
+          },
+          "parentID": "msg_e1ebece3c0027I86Am7DSUnwOt",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 8902,
+            "input": 1114,
+            "output": 83,
+            "reasoning": 25,
+            "cache": {
+              "read": 7680,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1ebf02d80012ECwX4pfEcSveO",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf004f001cOLgHl99NNDJhc",
+            "type": "step-start",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+          },
+          {
+            "id": "prt_e1ebf0482001Kbj3G17Rh4hd2h",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf004f001cOLgHl99NNDJhc",
+            "type": "reasoning",
+            "text": "**Considering JSON return**\n\nI need to focus on returning a compact JSON. It seems like I might need the blob_id, possibly the file too? I’m wondering if that’s necessary only when it's not in a transcript. I should probably search for the blob_id to figure things out. Alright, I’ll keep that in mind as I work through this to ensure everything is in order.",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_088d7fee40fab915016a03c667ce6c8191ab44fe0186a86ba5"
+              }
+            },
+            "time": {
+              "start": 1778632295554,
+              "end": 1778632297166
+            }
+          },
+          {
+            "id": "prt_e1ebf0ad1001QM68viNE2bOmZu",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf004f001cOLgHl99NNDJhc",
+            "type": "tool",
+            "callID": "call_qAgm5mnjM8CH1m4SyzOR029w",
+            "tool": "grep",
+            "state": {
+              "status": "completed",
+              "input": {
+                "pattern": "blob_id|blob",
+                "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts",
+                "include": "*.md"
+              },
+              "output": "No files found",
+              "title": "blob_id|blob",
+              "metadata": {
+                "matches": 0,
+                "truncated": false
+              },
+              "time": {
+                "start": 1778632297513,
+                "end": 1778632297521
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_088d7fee40fab915016a03c66968dc81919bd092f9ebb08f31"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebf0c6e0015kKMZGtoq5645T",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf004f001cOLgHl99NNDJhc",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+            "cost": 0,
+            "tokens": {
+              "total": 8902,
+              "input": 1114,
+              "output": 83,
+              "reasoning": 25,
+              "cache": {
+                "read": 7680,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1ebf0c970018iNY30rSysUqQB",
+          "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+          "role": "assistant",
+          "time": {
+            "created": 1778632297623,
+            "completed": 1778632302360
+          },
+          "parentID": "msg_e1ebece3c0027I86Am7DSUnwOt",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 9114,
+            "input": 212,
+            "output": 94,
+            "reasoning": 104,
+            "cache": {
+              "read": 8704,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1ebf0f3b001vMSwyiUVSqTcMG",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf0c970018iNY30rSysUqQB",
+            "type": "step-start",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+          },
+          {
+            "id": "prt_e1ebf1018001TWuFNyfEEfiOwm",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf0c970018iNY30rSysUqQB",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_08d99e6ea064ab1d016a03c66ac80881919c42931e9e6919ed"
+              }
+            },
+            "time": {
+              "start": 1778632298520,
+              "end": 1778632300924
+            }
+          },
+          {
+            "id": "prt_e1ebf1987001AihDrItpKQCIOP",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf0c970018iNY30rSysUqQB",
+            "type": "tool",
+            "callID": "call_VEBvwhMziQTGQwGc6Y0kXSZV",
+            "tool": "grep",
+            "state": {
+              "status": "completed",
+              "input": {
+                "pattern": "trim fields|comma-specific|tab delimiters|raw parse boundaries|clean",
+                "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts",
+                "include": "*.md"
+              },
+              "output": "Found 2 matches\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md:\n  Line 6: Reusable lesson: trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries.\n\n  Line 9: Stale detail: do not copy comma-specific CSV splitting into TSV; use tab delimiters for TSV.\n",
+              "title": "trim fields|comma-specific|tab delimiters|raw parse boundaries|clean",
+              "metadata": {
+                "matches": 2,
+                "truncated": false
+              },
+              "time": {
+                "start": 1778632302132,
+                "end": 1778632302166
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_08d99e6ea064ab1d016a03c66d2d988191b68b32d56a6ad923"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebf1ee0001wszYfYJJPxKWon",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf0c970018iNY30rSysUqQB",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+            "cost": 0,
+            "tokens": {
+              "total": 9114,
+              "input": 212,
+              "output": 94,
+              "reasoning": 104,
+              "cache": {
+                "read": 8704,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1ebf1f19002kppvT7x5SyhYWH",
+          "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+          "role": "assistant",
+          "time": {
+            "created": 1778632302361,
+            "completed": 1778632310613
+          },
+          "parentID": "msg_e1ebece3c0027I86Am7DSUnwOt",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 9636,
+            "input": 537,
+            "output": 186,
+            "reasoning": 209,
+            "cache": {
+              "read": 8704,
+              "write": 0
+            }
+          },
+          "finish": "tool-calls"
+        },
+        "parts": [
+          {
+            "id": "prt_e1ebf219e001yl72lFQmRdNY7s",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf1f19002kppvT7x5SyhYWH",
+            "type": "step-start",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+          },
+          {
+            "id": "prt_e1ebf224c001xuZpmvkyPGR5HQ",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf1f19002kppvT7x5SyhYWH",
+            "type": "reasoning",
+            "text": "",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0183d040c9fd7228016a03c66f6fe88191ae9a0f61e9af8318"
+              }
+            },
+            "time": {
+              "start": 1778632303180,
+              "end": 1778632310325
+            }
+          },
+          {
+            "id": "prt_e1ebf3e37001x3uW6Zj7IEXjvy",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf1f19002kppvT7x5SyhYWH",
+            "type": "tool",
+            "callID": "call_aGFxfxK6uOijFybd7UC1El74",
+            "tool": "read",
+            "state": {
+              "status": "completed",
+              "input": {
+                "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md",
+                "offset": 1,
+                "limit": 60
+              },
+              "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md</path>\n<type>file</type>\n<content>\n1: # Related past work reuse decoy 1\n2: session_id: related_reuse_decoy_1\n3: title: Related past work reuse decoy 1\n4: \n5: ## message decoy_fact_1\n6: Decoy 1: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_1\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+              "title": "memory/transcripts/related_reuse_decoy_1.md",
+              "metadata": {
+                "preview": "# Related past work reuse decoy 1\nsession_id: related_reuse_decoy_1\ntitle: Related past work reuse decoy 1\n\n## message decoy_fact_1\nDecoy 1: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_1\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
+                "truncated": false,
+                "loaded": []
+              },
+              "time": {
+                "start": 1778632310329,
+                "end": 1778632310334
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0183d040c9fd7228016a03c6769378819195134a3bf184424a"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebf3e3f001mnXlmT4tyN36X7",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf1f19002kppvT7x5SyhYWH",
+            "type": "tool",
+            "callID": "call_GFSalcKkNfRKnHQBQDAd8pNA",
+            "tool": "read",
+            "state": {
+              "status": "completed",
+              "input": {
+                "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_8.md",
+                "offset": 1,
+                "limit": 60
+              },
+              "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_8.md</path>\n<type>file</type>\n<content>\n1: # Related past work reuse decoy 8\n2: session_id: related_reuse_decoy_8\n3: title: Related past work reuse decoy 8\n4: \n5: ## message decoy_fact_8\n6: Decoy 8: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_8\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+              "title": "memory/transcripts/related_reuse_decoy_8.md",
+              "metadata": {
+                "preview": "# Related past work reuse decoy 8\nsession_id: related_reuse_decoy_8\ntitle: Related past work reuse decoy 8\n\n## message decoy_fact_8\nDecoy 8: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_8\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
+                "truncated": false,
+                "loaded": []
+              },
+              "time": {
+                "start": 1778632310339,
+                "end": 1778632310341
+              }
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "fc_0183d040c9fd7228016a03c67693848191a6193c2a41327428"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebf3f31001eivmg3ej0eP40g",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf1f19002kppvT7x5SyhYWH",
+            "type": "step-finish",
+            "reason": "tool-calls",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+            "cost": 0,
+            "tokens": {
+              "total": 9636,
+              "input": 537,
+              "output": 186,
+              "reasoning": 209,
+              "cache": {
+                "read": 8704,
+                "write": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "info": {
+          "id": "msg_e1ebf3f56001VCv5ttTR5TJAJd",
+          "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+          "role": "assistant",
+          "time": {
+            "created": 1778632310614,
+            "completed": 1778632317603
+          },
+          "parentID": "msg_e1ebece3c0027I86Am7DSUnwOt",
+          "modelID": "gpt-5.5",
+          "providerID": "openai",
+          "mode": "transcript",
+          "agent": "transcript",
+          "path": {
+            "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree",
+            "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree"
+          },
+          "cost": 0,
+          "tokens": {
+            "total": 10395,
+            "input": 1358,
+            "output": 133,
+            "reasoning": 200,
+            "cache": {
+              "read": 8704,
+              "write": 0
+            }
+          },
+          "finish": "stop"
+        },
+        "parts": [
+          {
+            "id": "prt_e1ebf41e6001EmSKwlXWurY7EL",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf3f56001VCv5ttTR5TJAJd",
+            "type": "step-start",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+          },
+          {
+            "id": "prt_e1ebf42c1001X34hoN7gjF96wT",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf3f56001VCv5ttTR5TJAJd",
+            "type": "reasoning",
+            "text": "**Finalizing compact JSON**\n\nI need to create the final compact JSON. I wonder if I can use the file path as the blob_id instead of an explicit one. The user asked for a blob_id, so maybe I can set it to the filename. For the JSON, I think I'll include session_id, and the message_ids might need to be plural. I also need to mention any rejected alternatives with evidence, but keep it compact. It's important to ensure the structure supports the full answer with citations. This is my final step!",
+            "metadata": {
+              "openai": {
+                "itemId": "rs_0aead8ed9ec7dc46016a03c677c0308191b2c065b9d784e000"
+              }
+            },
+            "time": {
+              "start": 1778632311489,
+              "end": 1778632316357
+            }
+          },
+          {
+            "id": "prt_e1ebf55c6001QAPMYUrEnrsmt2",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf3f56001VCv5ttTR5TJAJd",
+            "type": "text",
+            "text": "{\n  \"session_id\": \"csv_parser_lesson_session\",\n  \"blob_id\": \"csv_parser_lesson_session.md\",\n  \"message_id\": [\"reuse_fact_1\", \"reuse_fact_2\"],\n  \"answer\": \"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without changing raw parse boundaries. Do not copy the stale comma-specific CSV splitting detail; TSV should use tab delimiters.\",\n  \"rationale\": \"The CSV lesson transcript explicitly gives the reusable trimming lesson and separately flags comma-specific splitting as stale for TSV. Auth queue and Markdown table parser are unrelated distractors.\"\n}",
+            "time": {
+              "start": 1778632316358,
+              "end": 1778632317510
+            },
+            "metadata": {
+              "openai": {
+                "itemId": "msg_0aead8ed9ec7dc46016a03c67c99ac8191a6db055c99c81e53",
+                "phase": "final_answer"
+              }
+            }
+          },
+          {
+            "id": "prt_e1ebf5a7a001xpCwhPJpPnNFJ4",
+            "sessionID": "ses_1e14131c6ffehRcpCk1JCGxwbe",
+            "messageID": "msg_e1ebf3f56001VCv5ttTR5TJAJd",
+            "type": "step-finish",
+            "reason": "stop",
+            "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+            "cost": 0,
+            "tokens": {
+              "total": 10395,
+              "input": 1358,
+              "output": 133,
+              "reasoning": 200,
+              "cache": {
+                "read": 8704,
+                "write": 0
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

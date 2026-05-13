@@ -1,0 +1,712 @@
+[
+  {
+    "info": {
+      "id": "msg_e1e7e99d9001RXq3G19VafkBJ3",
+      "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+      "role": "user",
+      "time": {
+        "created": 1778628073945
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use only glob, grep, and read over transcript files before answering. Do not use bash or mem-mould/session tools. Cite exact session_id and message_id.",
+      "tools": {
+        "glob": true,
+        "grep": true,
+        "read": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7e99da001Sm7sU96k298V4P",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7e99d9001RXq3G19VafkBJ3",
+        "type": "text",
+        "text": "Transcript directory: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts\nQuestion: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\nDistractors include: Auth queue related reuse, Markdown table parser\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e7e99e0001qAtvIXTtWq03hS",
+      "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+      "role": "assistant",
+      "time": {
+        "created": 1778628073952,
+        "completed": 1778628078053
+      },
+      "parentID": "msg_e1e7e99d9001RXq3G19VafkBJ3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9501,
+        "input": 678,
+        "output": 100,
+        "reasoning": 19,
+        "cache": {
+          "read": 8704,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7e9d67001h17f7rZLwy2DSt",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7e99e0001qAtvIXTtWq03hS",
+        "type": "step-start",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+      },
+      {
+        "id": "prt_e1e7ea0bf001ulR1xRVViI6Iq6",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7e99e0001qAtvIXTtWq03hS",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_09ff43a5f5780dbc016a03b5ec18f48191b11ea403eca30f54"
+          }
+        },
+        "time": {
+          "start": 1778628075711,
+          "end": 1778628076499
+        }
+      },
+      {
+        "id": "prt_e1e7ea3d5001ZYnxCZPLL3Pnw6",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7e99e0001qAtvIXTtWq03hS",
+        "type": "tool",
+        "callID": "call_A7bWXp3DVlg6UQfE6KM3mCBm",
+        "tool": "grep",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "CSV parser|csv parser|src/tsv/schema.ts|schema.ts|stale|Markdown table|Auth queue",
+            "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts",
+            "include": "*"
+          },
+          "output": "Found 15 matches\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_7.md:\n  Line 6: Decoy 7: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_8.md:\n  Line 6: Decoy 8: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_6.md:\n  Line 6: Decoy 6: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md:\n  Line 1: # Auth queue related reuse\n\n  Line 3: title: Auth queue related reuse\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_3.md:\n  Line 6: Decoy 3: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_2.md:\n  Line 6: Decoy 2: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_5.md:\n  Line 6: Decoy 5: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md:\n  Line 6: Decoy 1: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_4.md:\n  Line 6: Decoy 4: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md:\n  Line 1: # Markdown table parser\n\n  Line 3: title: Markdown table parser\n\n  Line 6: Markdown tables use pipes and alignment markers; do not use this as TSV schema rationale.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md:\n  Line 1: # CSV parser lesson for related reuse\n\n  Line 3: title: CSV parser lesson for related reuse\n",
+          "title": "CSV parser|csv parser|src/tsv/schema.ts|schema.ts|stale|Markdown table|Auth queue",
+          "metadata": {
+            "matches": 15,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778628077875,
+            "end": 1778628077896
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_09ff43a5f5780dbc016a03b5ece0988191b33d135399fb8337"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7ea9c7001FAGkekSybdyK18",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7e99e0001qAtvIXTtWq03hS",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+        "cost": 0,
+        "tokens": {
+          "total": 9501,
+          "input": 678,
+          "output": 100,
+          "reasoning": 19,
+          "cache": {
+            "read": 8704,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e7ea9e60024Vw6J6hx6FFzij",
+      "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+      "role": "assistant",
+      "time": {
+        "created": 1778628078054,
+        "completed": 1778628080732
+      },
+      "parentID": "msg_e1e7e99d9001RXq3G19VafkBJ3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10613,
+        "input": 1315,
+        "output": 82,
+        "reasoning": 0,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7eaccc001u7qjObR287Ifmx",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ea9e60024Vw6J6hx6FFzij",
+        "type": "step-start",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+      },
+      {
+        "id": "prt_e1e7eaeb4001wTWFGss10auFPe",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ea9e60024Vw6J6hx6FFzij",
+        "type": "tool",
+        "callID": "call_UnkSSTRhV8v6Uy0AbKnYcjGx",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md",
+            "offset": 1,
+            "limit": 200
+          },
+          "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md</path>\n<type>file</type>\n<content>\n1: # CSV parser lesson for related reuse\n2: session_id: csv_parser_lesson_session\n3: title: CSV parser lesson for related reuse\n4: \n5: ## message reuse_fact_1\n6: Reusable lesson: trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries.\n7: \n8: ## message reuse_fact_2\n9: Stale detail: do not copy comma-specific CSV splitting into TSV; use tab delimiters for TSV.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "memory/transcripts/csv_parser_lesson_session.md",
+          "metadata": {
+            "preview": "# CSV parser lesson for related reuse\nsession_id: csv_parser_lesson_session\ntitle: CSV parser lesson for related reuse\n\n## message reuse_fact_1\nReusable lesson: trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries.\n\n## message reuse_fact_2\nStale detail: do not copy comma-specific CSV splitting into TSV; use tab delimiters for TSV.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778628080642,
+            "end": 1778628080646
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_033a2071d285c3f3016a03b5efae588191ae90b0b5610b7f5a"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7eb43c001VpY6yOA5MJfLrH",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ea9e60024Vw6J6hx6FFzij",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+        "cost": 0,
+        "tokens": {
+          "total": 10613,
+          "input": 1315,
+          "output": 82,
+          "reasoning": 0,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e7eb45e001llgCHgjijmxjY5",
+      "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+      "role": "assistant",
+      "time": {
+        "created": 1778628080734,
+        "completed": 1778628085037
+      },
+      "parentID": "msg_e1e7e99d9001RXq3G19VafkBJ3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10945,
+        "input": 10809,
+        "output": 99,
+        "reasoning": 37,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7eb7420019HDOfch7bY6dAv",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7eb45e001llgCHgjijmxjY5",
+        "type": "step-start",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+      },
+      {
+        "id": "prt_e1e7ebad3001m5lYgHmZDrwNpr",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7eb45e001llgCHgjijmxjY5",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0f4da5ba78cd9def016a03b5f2c8488191a44a2dbdda845d3a"
+          }
+        },
+        "time": {
+          "start": 1778628082387,
+          "end": 1778628083498
+        }
+      },
+      {
+        "id": "prt_e1e7ebf2e001E9GSHGktnYlBGy",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7eb45e001llgCHgjijmxjY5",
+        "type": "tool",
+        "callID": "call_fyzIHHeVCMrZcqhYmekgvicV",
+        "tool": "grep",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "trim fields after delimiter splitting|comma-specific|tab delimiters|raw parse boundaries|full answer|reuse_fact",
+            "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts",
+            "include": "*.md"
+          },
+          "output": "Found 4 matches\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md:\n  Line 5: ## message reuse_fact_1\n\n  Line 6: Reusable lesson: trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries.\n\n  Line 8: ## message reuse_fact_2\n\n  Line 9: Stale detail: do not copy comma-specific CSV splitting into TSV; use tab delimiters for TSV.\n",
+          "title": "trim fields after delimiter splitting|comma-specific|tab delimiters|raw parse boundaries|full answer|reuse_fact",
+          "metadata": {
+            "matches": 4,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778628084863,
+            "end": 1778628084872
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0f4da5ba78cd9def016a03b5f3e2c881919add8fcf82864757"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7ec50d00156jOxIQSkaiRT0",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7eb45e001llgCHgjijmxjY5",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+        "cost": 0,
+        "tokens": {
+          "total": 10945,
+          "input": 10809,
+          "output": 99,
+          "reasoning": 37,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e7ec52f001PJSr5gSRqf9Gdm",
+      "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+      "role": "assistant",
+      "time": {
+        "created": 1778628085039,
+        "completed": 1778628090130
+      },
+      "parentID": "msg_e1e7e99d9001RXq3G19VafkBJ3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11292,
+        "input": 854,
+        "output": 73,
+        "reasoning": 125,
+        "cache": {
+          "read": 10240,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7ec834001Uqmifh3Gr3QKwD",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ec52f001PJSr5gSRqf9Gdm",
+        "type": "step-start",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+      },
+      {
+        "id": "prt_e1e7ec9880019nTUQfQDiaQueX",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ec52f001PJSr5gSRqf9Gdm",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_00d8c41c49c08520016a03b5f68b948191aba0bf42f2d8a1e1"
+          }
+        },
+        "time": {
+          "start": 1778628086152,
+          "end": 1778628088829
+        }
+      },
+      {
+        "id": "prt_e1e7ed404001WwgcGbPUeDOG6t",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ec52f001PJSr5gSRqf9Gdm",
+        "type": "tool",
+        "callID": "call_qWXo4un8V9zr0AitBEafDiyp",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "*.md",
+            "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts"
+          },
+          "output": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_7.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_6.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_8.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_1.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_5.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_4.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_3.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_2.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md",
+          "title": "memory/transcripts",
+          "metadata": {
+            "count": 11,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778628089764,
+            "end": 1778628089780
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_00d8c41c49c08520016a03b5f939048191b2e41a1445b7830d"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7ed8bc0014QhdBLFQf3LNfB",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ec52f001PJSr5gSRqf9Gdm",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+        "cost": 0,
+        "tokens": {
+          "total": 11292,
+          "input": 854,
+          "output": 73,
+          "reasoning": 125,
+          "cache": {
+            "read": 10240,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e7ed913002FG2aa4uf7T6NQn",
+      "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+      "role": "assistant",
+      "time": {
+        "created": 1778628090131,
+        "completed": 1778628097339
+      },
+      "parentID": "msg_e1e7e99d9001RXq3G19VafkBJ3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12268,
+        "input": 1710,
+        "output": 253,
+        "reasoning": 65,
+        "cache": {
+          "read": 10240,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7edc04001MzahbJoHV9kIcs",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ed913002FG2aa4uf7T6NQn",
+        "type": "step-start",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+      },
+      {
+        "id": "prt_e1e7edd64001jdo2rztEdRqmI0",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ed913002FG2aa4uf7T6NQn",
+        "type": "reasoning",
+        "text": "**Investigating file details**\n\nI’m considering the options regarding reading a potential decoy but I’m unsure if it's final. The user seems to have distractors, possibly related to authentication markdown. I think I need a blob_id, but the file doesn’t contain one. Maybe the filename could help? I should check the decoy and explore any hidden metadata to gather more information. It feels like I’m piecing together a puzzle here!",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0e318bdd649d4912016a03b5fba240819192108f31ab202f62"
+          }
+        },
+        "time": {
+          "start": 1778628091236,
+          "end": 1778628096997
+        }
+      },
+      {
+        "id": "prt_e1e7ef3e8001ogymb8SRCSPTge",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ed913002FG2aa4uf7T6NQn",
+        "type": "tool",
+        "callID": "call_6iClcKN33o1oyi59eEDqq2z3",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_7.md",
+            "offset": 1,
+            "limit": 80
+          },
+          "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/related_reuse_decoy_7.md</path>\n<type>file</type>\n<content>\n1: # Related past work reuse decoy 7\n2: session_id: related_reuse_decoy_7\n3: title: Related past work reuse decoy 7\n4: \n5: ## message decoy_fact_7\n6: Decoy 7: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_7\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "memory/transcripts/related_reuse_decoy_7.md",
+          "metadata": {
+            "preview": "# Related past work reuse decoy 7\nsession_id: related_reuse_decoy_7\ntitle: Related past work reuse decoy 7\n\n## message decoy_fact_7\nDecoy 7: mentions src/tsv/schema.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_7\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778628097015,
+            "end": 1778628097036
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0e318bdd649d4912016a03b60162948191bb17b4cfd29486ce"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7ef3fb001E8fyu0r3Jk7yDo",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ed913002FG2aa4uf7T6NQn",
+        "type": "tool",
+        "callID": "call_in9yG6Kr9wiHY6wR8gauuZzz",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md",
+            "offset": 1,
+            "limit": 80
+          },
+          "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_related_session.md</path>\n<type>file</type>\n<content>\n1: # Auth queue related reuse\n2: session_id: auth_related_session\n3: title: Auth queue related reuse\n4: \n5: ## message auth_related_fact_1\n6: Auth refresh queue reuse involved per-tenant dedupe and is unrelated to TSV parsing.\n\n(End of file - total 6 lines)\n</content>",
+          "title": "memory/transcripts/auth_related_session.md",
+          "metadata": {
+            "preview": "# Auth queue related reuse\nsession_id: auth_related_session\ntitle: Auth queue related reuse\n\n## message auth_related_fact_1\nAuth refresh queue reuse involved per-tenant dedupe and is unrelated to TSV parsing.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778628097108,
+            "end": 1778628097114
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0e318bdd649d4912016a03b60162a8819184661eb5e7941d2e"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7ef4550018eWOgnCx0U13Ia",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ed913002FG2aa4uf7T6NQn",
+        "type": "tool",
+        "callID": "call_nVkNr38W8TBuZZ1unFpGwPhZ",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md",
+            "offset": 1,
+            "limit": 80
+          },
+          "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_table_session.md</path>\n<type>file</type>\n<content>\n1: # Markdown table parser\n2: session_id: markdown_table_session\n3: title: Markdown table parser\n4: \n5: ## message md_fact_1\n6: Markdown tables use pipes and alignment markers; do not use this as TSV schema rationale.\n\n(End of file - total 6 lines)\n</content>",
+          "title": "memory/transcripts/markdown_table_session.md",
+          "metadata": {
+            "preview": "# Markdown table parser\nsession_id: markdown_table_session\ntitle: Markdown table parser\n\n## message md_fact_1\nMarkdown tables use pipes and alignment markers; do not use this as TSV schema rationale.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778628097111,
+            "end": 1778628097116
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0e318bdd649d4912016a03b60162ac819198c11fdd2b9659e5"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7ef506001j4ITcuHX5dh7j3",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ed913002FG2aa4uf7T6NQn",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+        "cost": 0,
+        "tokens": {
+          "total": 12268,
+          "input": 1710,
+          "output": 253,
+          "reasoning": 65,
+          "cache": {
+            "read": 10240,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e7ef53d001Nh8mWksAs9pzGq",
+      "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+      "role": "assistant",
+      "time": {
+        "created": 1778628097341,
+        "completed": 1778628110420
+      },
+      "parentID": "msg_e1e7e99d9001RXq3G19VafkBJ3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13405,
+        "input": 998,
+        "output": 156,
+        "reasoning": 475,
+        "cache": {
+          "read": 11776,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e7ef81d001DAeoyMhMo3ViqC",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ef53d001Nh8mWksAs9pzGq",
+        "type": "step-start",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4"
+      },
+      {
+        "id": "prt_e1e7efb6d001dNUibL24wMnmdW",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ef53d001Nh8mWksAs9pzGq",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_05a7ef2906202ba6016a03b60352b88191a72436cdda5e428d"
+          }
+        },
+        "time": {
+          "start": 1778628098925,
+          "end": 1778628109069
+        }
+      },
+      {
+        "id": "prt_e1e7f2310001K1RtTAqr0fRI6H",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ef53d001Nh8mWksAs9pzGq",
+        "type": "text",
+        "text": "{\"answer\":\"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without changing raw parse boundaries; do not copy comma-specific CSV splitting into src/tsv/schema.ts, because TSV must use tab delimiters.\",\"evidence\":{\"session_id\":\"csv_parser_lesson_session\",\"blob_id\":\"csv_parser_lesson_session.md\",\"message_id\":\"reuse_fact_1,reuse_fact_2\"},\"rationale\":\"The relevant CSV parser transcript gives the reusable lesson in reuse_fact_1 and the stale detail to reject in reuse_fact_2. The stale comma-specific detail matters because TSV requires tab delimiters instead.\",\"irrelevant_context_ignored\":[\"Auth queue related reuse\",\"Markdown table parser\",\"related_reuse_decoy_*\"]}",
+        "time": {
+          "start": 1778628109072,
+          "end": 1778628110309
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_05a7ef2906202ba6016a03b60d75ac81918aede2f4a7d6e344",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e7f2830001ckRwgVzHC2VHee",
+        "sessionID": "ses_1e1816634ffe7ud9GYjSY44elo",
+        "messageID": "msg_e1e7ef53d001Nh8mWksAs9pzGq",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "d69025785825c906b5f8e8a1c24df8f11e3eaaa4",
+        "cost": 0,
+        "tokens": {
+          "total": 13405,
+          "input": 998,
+          "output": 156,
+          "reasoning": 475,
+          "cache": {
+            "read": 11776,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

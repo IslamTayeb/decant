@@ -1,0 +1,55 @@
+{
+  "condition": "polluted-default-compact",
+  "canary": "stale-instruction",
+  "title": "Stale-instruction defense",
+  "failure_mode": "Old implementation direction acts like a stale instruction.",
+  "session_id": "ses_1e5d8d84affeaB83ppnjdAIc2S",
+  "duration_ms": 76242,
+  "message_count": 24,
+  "tool_call_count": 0,
+  "tool_names": [],
+  "context_tool_call_count": 0,
+  "output_preview": "{\"approach\":\"Trim leading and trailing spaces from each comma-separated CSV header name during header parsing, preserving the existing CSV parsing flow and applying the change only to header name normalization.\",\"forbidden_old_approach_used\":false,\"rationale\":\"The bug is specifically about spaces around CSV header names, so the fix should be narrowly scoped to trimming header fields after splitting/parsing comma-separated headers. Unrelated prior auth/docs implementation directions are not used.\"}",
+  "current_task_term_hits": [
+    "csv",
+    "header",
+    "trim"
+  ],
+  "stale_terms_in_output": [],
+  "stale_terms_in_compaction_summary": [
+    "rate_limiter",
+    "MutexRefreshCoordinator",
+    "FLAG_AUTH_QUEUE_ROLLBACK",
+    "enqueueRefresh",
+    "src/auth/queue.ts",
+    "markdown parser",
+    "quickstart",
+    "onboarding docs",
+    "auth_refresh_deduplicates_parallel_requests"
+  ],
+  "stale_terms_in_visible_compaction_summary": [
+    "rate_limiter",
+    "MutexRefreshCoordinator",
+    "FLAG_AUTH_QUEUE_ROLLBACK",
+    "enqueueRefresh",
+    "src/auth/queue.ts",
+    "markdown parser",
+    "quickstart",
+    "onboarding docs",
+    "auth_refresh_deduplicates_parallel_requests"
+  ],
+  "tokens": {
+    "messages": 24,
+    "assistant": 12,
+    "input": 47656,
+    "output": 2152,
+    "total": 118001,
+    "reasoning": 97,
+    "cacheRead": 68096,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 10857
+  },
+  "context_hygiene_passed": false,
+  "canary_passed": false
+}

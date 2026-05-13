@@ -1,0 +1,727 @@
+[
+  {
+    "info": {
+      "id": "msg_e1ec398cb001wkPiYGVYUt3Qzh",
+      "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+      "role": "user",
+      "time": {
+        "created": 1778632595659
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use RLM-style transcript search with glob/grep/read and optional read-only bash before answering. If you use bash, do not modify files. Do not use mem-mould/session tools. Cite exact session_id and message_id.",
+      "tools": {
+        "glob": true,
+        "grep": true,
+        "read": true,
+        "bash": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec398cc001iQej9vbjBvGDxT",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec398cb001wkPiYGVYUt3Qzh",
+        "type": "text",
+        "text": "Transcript directory: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts\nQuestion: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2?\nDistractors include: Billing TTL distractor, Markdown TTL distractor\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec398d3001m0Eiyy9b0i3d15",
+      "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+      "role": "assistant",
+      "time": {
+        "created": 1778632595667,
+        "completed": 1778632599015
+      },
+      "parentID": "msg_e1ec398cb001wkPiYGVYUt3Qzh",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9551,
+        "input": 743,
+        "output": 74,
+        "reasoning": 30,
+        "cache": {
+          "read": 8704,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec39cff00175wMDycVnhl79x",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec398d3001m0Eiyy9b0i3d15",
+        "type": "step-start",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9"
+      },
+      {
+        "id": "prt_e1ec39e1a001z4OBCtJhOC8CGF",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec398d3001m0Eiyy9b0i3d15",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_06ae415c77510074016a03c79546f08191ab9e9edc0d8a745f"
+          }
+        },
+        "time": {
+          "start": 1778632597018,
+          "end": 1778632598637
+        }
+      },
+      {
+        "id": "prt_e1ec3a472001wrgOCmsMH47DQ6",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec398d3001m0Eiyy9b0i3d15",
+        "type": "tool",
+        "callID": "call_4ehLYsQyP9MiE33VplWUMG8S",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "**/*",
+            "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts"
+          },
+          "output": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_5.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_4.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_8.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_7.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_3.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_6.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_1.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_billing_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_markdown_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_2.md",
+          "title": "memory/transcripts",
+          "metadata": {
+            "count": 11,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632598911,
+            "end": 1778632598921
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_06ae415c77510074016a03c796e3588191afb0623e7f50456e"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec3a5bf001ChenI2A8Jd8Hvs",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec398d3001m0Eiyy9b0i3d15",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9",
+        "cost": 0,
+        "tokens": {
+          "total": 9551,
+          "input": 743,
+          "output": 74,
+          "reasoning": 30,
+          "cache": {
+            "read": 8704,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec3a5e9001CdGLIUXh2mPntV",
+      "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+      "role": "assistant",
+      "time": {
+        "created": 1778632599017,
+        "completed": 1778632604080
+      },
+      "parentID": "msg_e1ec398cb001wkPiYGVYUt3Qzh",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10414,
+        "input": 1526,
+        "output": 184,
+        "reasoning": 0,
+        "cache": {
+          "read": 8704,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec3a8d90010K4MExghYGof7M",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3a5e9001CdGLIUXh2mPntV",
+        "type": "step-start",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9"
+      },
+      {
+        "id": "prt_e1ec3b8bd001M1UPrkO4tGCq9j",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3a5e9001CdGLIUXh2mPntV",
+        "type": "tool",
+        "callID": "call_YO61aCV53krvN1j8cl9foLKM",
+        "tool": "grep",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "namespaceMaxSeconds|src/cache/ttl|TTL|ttl.ts",
+            "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts",
+            "include": "*.md"
+          },
+          "output": "Found 18 matches\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_6.md:\n  Line 6: Decoy 6: mentions src/cache/ttl.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_4.md:\n  Line 6: Decoy 4: mentions src/cache/ttl.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_7.md:\n  Line 6: Decoy 7: mentions src/cache/ttl.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_5.md:\n  Line 6: Decoy 5: mentions src/cache/ttl.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_3.md:\n  Line 6: Decoy 3: mentions src/cache/ttl.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_8.md:\n  Line 6: Decoy 8: mentions src/cache/ttl.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_2.md:\n  Line 6: Decoy 2: mentions src/cache/ttl.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md:\n  Line 1: # TTL blame rationale session\n\n  Line 3: title: TTL blame rationale session\n\n  Line 6: The code line was introduced in src/cache/ttl.ts.\n\n  Line 9: Line 2 caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_billing_session.md:\n  Line 1: # Billing TTL distractor\n\n  Line 3: title: Billing TTL distractor\n\n  Line 6: Billing TTL is capped by provider policy, not namespaceMaxSeconds.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_1.md:\n  Line 6: Decoy 1: mentions src/cache/ttl.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_markdown_session.md:\n  Line 1: # Markdown TTL distractor\n\n  Line 3: title: Markdown TTL distractor\n\n  Line 6: Markdown preview TTL was shortened for docs preview freshness.\n",
+          "title": "namespaceMaxSeconds|src/cache/ttl|TTL|ttl.ts",
+          "metadata": {
+            "matches": 18,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632603840,
+            "end": 1778632603855
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0c3d0da5271d4cba016a03c79bfc4c8191b2446b38dbc2e034"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec3b8c1001L7F3LXB6eJJWo6",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3a5e9001CdGLIUXh2mPntV",
+        "type": "tool",
+        "callID": "call_5r4fZ5dSNexC0xwFCsoXPyMY",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md",
+            "offset": 1,
+            "limit": 2000
+          },
+          "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md</path>\n<type>file</type>\n<content>\n1: # TTL blame rationale session\n2: session_id: ttl_blame_session\n3: title: TTL blame rationale session\n4: \n5: ## message ttl_fact_1\n6: The code line was introduced in src/cache/ttl.ts.\n7: \n8: ## message ttl_fact_2\n9: Line 2 caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "memory/transcripts/ttl_blame_session.md",
+          "metadata": {
+            "preview": "# TTL blame rationale session\nsession_id: ttl_blame_session\ntitle: TTL blame rationale session\n\n## message ttl_fact_1\nThe code line was introduced in src/cache/ttl.ts.\n\n## message ttl_fact_2\nLine 2 caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778632603842,
+            "end": 1778632603857
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0c3d0da5271d4cba016a03c79bfc5c81919d213cf6098afb90"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec3b980001wxCw7VIWnaYpME",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3a5e9001CdGLIUXh2mPntV",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9",
+        "cost": 0,
+        "tokens": {
+          "total": 10414,
+          "input": 1526,
+          "output": 184,
+          "reasoning": 0,
+          "cache": {
+            "read": 8704,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec3b9b100230lJEIDwTZqbhx",
+      "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+      "role": "assistant",
+      "time": {
+        "created": 1778632604081,
+        "completed": 1778632611370
+      },
+      "parentID": "msg_e1ec398cb001wkPiYGVYUt3Qzh",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11991,
+        "input": 11696,
+        "output": 257,
+        "reasoning": 38,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec3bd770010Ya9nXZpxR53PD",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3b9b100230lJEIDwTZqbhx",
+        "type": "step-start",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9"
+      },
+      {
+        "id": "prt_e1ec3c02e001kzCQYPcnlwYYPu",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3b9b100230lJEIDwTZqbhx",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_035e49b01154ba1b016a03c79dff2c8191a2af8bcae9853cbb"
+          }
+        },
+        "time": {
+          "start": 1778632605742,
+          "end": 1778632611060
+        }
+      },
+      {
+        "id": "prt_e1ec3d4f6001xVlhkcV4u18OWW",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3b9b100230lJEIDwTZqbhx",
+        "type": "tool",
+        "callID": "call_q673nmxwu1k3IaMi3trX255q",
+        "tool": "grep",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "blob_id|blob|ttl_fact_2",
+            "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory",
+            "include": "*.md"
+          },
+          "output": "Found 1 matches\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md:\n  Line 8: ## message ttl_fact_2\n",
+          "title": "blob_id|blob|ttl_fact_2",
+          "metadata": {
+            "matches": 1,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632611065,
+            "end": 1778632611082
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_035e49b01154ba1b016a03c7a35080819197b3d6ce07ddee7f"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec3d4fa001Us7hMk4DwnXdpZ",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3b9b100230lJEIDwTZqbhx",
+        "type": "tool",
+        "callID": "call_eiLOtr3CdRGKPAUXu6WTMSjc",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_billing_session.md",
+            "offset": 1,
+            "limit": 100
+          },
+          "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_billing_session.md</path>\n<type>file</type>\n<content>\n1: # Billing TTL distractor\n2: session_id: ttl_billing_session\n3: title: Billing TTL distractor\n4: \n5: ## message ttl_billing_fact_1\n6: Billing TTL is capped by provider policy, not namespaceMaxSeconds.\n\n(End of file - total 6 lines)\n</content>",
+          "title": "memory/transcripts/ttl_billing_session.md",
+          "metadata": {
+            "preview": "# Billing TTL distractor\nsession_id: ttl_billing_session\ntitle: Billing TTL distractor\n\n## message ttl_billing_fact_1\nBilling TTL is capped by provider policy, not namespaceMaxSeconds.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778632611079,
+            "end": 1778632611095
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_035e49b01154ba1b016a03c7a3508c8191880497195ac6bea5"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec3d5080012VKjgakYxOCYlS",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3b9b100230lJEIDwTZqbhx",
+        "type": "tool",
+        "callID": "call_QRDiGR2TYgnaZNOlPl9amIOj",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_markdown_session.md",
+            "offset": 1,
+            "limit": 100
+          },
+          "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_markdown_session.md</path>\n<type>file</type>\n<content>\n1: # Markdown TTL distractor\n2: session_id: ttl_markdown_session\n3: title: Markdown TTL distractor\n4: \n5: ## message ttl_md_fact_1\n6: Markdown preview TTL was shortened for docs preview freshness.\n\n(End of file - total 6 lines)\n</content>",
+          "title": "memory/transcripts/ttl_markdown_session.md",
+          "metadata": {
+            "preview": "# Markdown TTL distractor\nsession_id: ttl_markdown_session\ntitle: Markdown TTL distractor\n\n## message ttl_md_fact_1\nMarkdown preview TTL was shortened for docs preview freshness.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778632611166,
+            "end": 1778632611169
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_035e49b01154ba1b016a03c7a3509481918135c56c1130d559"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec3d5fc001SK0G57cfpoxP15",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3b9b100230lJEIDwTZqbhx",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9",
+        "cost": 0,
+        "tokens": {
+          "total": 11991,
+          "input": 11696,
+          "output": 257,
+          "reasoning": 38,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec3d62c001xiEkpvYkN7FL02",
+      "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+      "role": "assistant",
+      "time": {
+        "created": 1778632611372,
+        "completed": 1778632615000
+      },
+      "parentID": "msg_e1ec398cb001wkPiYGVYUt3Qzh",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12473,
+        "input": 1107,
+        "output": 72,
+        "reasoning": 30,
+        "cache": {
+          "read": 11264,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec3d957001otP3A3y1JxNGia",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3d62c001xiEkpvYkN7FL02",
+        "type": "step-start",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9"
+      },
+      {
+        "id": "prt_e1ec3da02001Jc2C0PZ7KbPFRM",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3d62c001xiEkpvYkN7FL02",
+        "type": "reasoning",
+        "text": "**Inspecting blob ID**\n\nI need to figure out what the blob ID is. Maybe the filename could be the blob ID? The user’s request requires clarity on the blob ID. I should inspect the metadata, possibly in JSON format. I’ll gather all relevant memory. There’s a bit of complexity here since I want to ensure I understand how everything links together. Let’s see if I can find the necessary details and piece it all together!",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_078c4b5a3dc99058016a03c7a49b1c8191807be59ac586cc6a"
+          }
+        },
+        "time": {
+          "start": 1778632612354,
+          "end": 1778632614718
+        }
+      },
+      {
+        "id": "prt_e1ec3e3400010rO0Eu3ix3307E",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3d62c001xiEkpvYkN7FL02",
+        "type": "tool",
+        "callID": "call_sXXCPQJ9yZzCkVnihm3SDacC",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "**/*",
+            "path": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory"
+          },
+          "output": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_5.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_4.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_8.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_7.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_3.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_6.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/manifest.json\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_1.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_billing_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/ttl_markdown_session.md\n/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/blame_line_rationale_decoy_2.md",
+          "title": "memory",
+          "metadata": {
+            "count": 12,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632614897,
+            "end": 1778632614914
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_078c4b5a3dc99058016a03c7a6f52c8191b31ab8c1ab417322"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec3e430001gRSfC4XyUst22q",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3d62c001xiEkpvYkN7FL02",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9",
+        "cost": 0,
+        "tokens": {
+          "total": 12473,
+          "input": 1107,
+          "output": 72,
+          "reasoning": 30,
+          "cache": {
+            "read": 11264,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec3e45a0013Y0sBhreYaNp0B",
+      "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+      "role": "assistant",
+      "time": {
+        "created": 1778632615002,
+        "completed": 1778632618000
+      },
+      "parentID": "msg_e1ec398cb001wkPiYGVYUt3Qzh",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13283,
+        "input": 917,
+        "output": 78,
+        "reasoning": 0,
+        "cache": {
+          "read": 12288,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec3e76c00158BjSruUvZbMF3",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3e45a0013Y0sBhreYaNp0B",
+        "type": "step-start",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9"
+      },
+      {
+        "id": "prt_e1ec3ea34001fd3j2xHjDU6eut",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3e45a0013Y0sBhreYaNp0B",
+        "type": "tool",
+        "callID": "call_qxIF59q48ADtSEcptImFj7te",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/manifest.json",
+            "offset": 1,
+            "limit": 2000
+          },
+          "output": "<path>/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree/memory/manifest.json</path>\n<type>file</type>\n<content>\n1: {\n2:   \"fixture\": \"blame-line-rationale\",\n3:   \"transcript_dir\": \"memory/transcripts\",\n4:   \"sessions\": [\n5:     {\n6:       \"session_id\": \"ttl_blame_session\",\n7:       \"title\": \"TTL blame rationale session\",\n8:       \"file\": \"ttl_blame_session.md\"\n9:     },\n10:     {\n11:       \"session_id\": \"ttl_billing_session\",\n12:       \"title\": \"Billing TTL distractor\",\n13:       \"file\": \"ttl_billing_session.md\"\n14:     },\n15:     {\n16:       \"session_id\": \"ttl_markdown_session\",\n17:       \"title\": \"Markdown TTL distractor\",\n18:       \"file\": \"ttl_markdown_session.md\"\n19:     },\n20:     {\n21:       \"session_id\": \"blame_line_rationale_decoy_1\",\n22:       \"title\": \"Blame line rationale decoy 1\",\n23:       \"file\": \"blame_line_rationale_decoy_1.md\"\n24:     },\n25:     {\n26:       \"session_id\": \"blame_line_rationale_decoy_2\",\n27:       \"title\": \"Blame line rationale decoy 2\",\n28:       \"file\": \"blame_line_rationale_decoy_2.md\"\n29:     },\n30:     {\n31:       \"session_id\": \"blame_line_rationale_decoy_3\",\n32:       \"title\": \"Blame line rationale decoy 3\",\n33:       \"file\": \"blame_line_rationale_decoy_3.md\"\n34:     },\n35:     {\n36:       \"session_id\": \"blame_line_rationale_decoy_4\",\n37:       \"title\": \"Blame line rationale decoy 4\",\n38:       \"file\": \"blame_line_rationale_decoy_4.md\"\n39:     },\n40:     {\n41:       \"session_id\": \"blame_line_rationale_decoy_5\",\n42:       \"title\": \"Blame line rationale decoy 5\",\n43:       \"file\": \"blame_line_rationale_decoy_5.md\"\n44:     },\n45:     {\n46:       \"session_id\": \"blame_line_rationale_decoy_6\",\n47:       \"title\": \"Blame line rationale decoy 6\",\n48:       \"file\": \"blame_line_rationale_decoy_6.md\"\n49:     },\n50:     {\n51:       \"session_id\": \"blame_line_rationale_decoy_7\",\n52:       \"title\": \"Blame line rationale decoy 7\",\n53:       \"file\": \"blame_line_rationale_decoy_7.md\"\n54:     },\n55:     {\n56:       \"session_id\": \"blame_line_rationale_decoy_8\",\n57:       \"title\": \"Blame line rationale decoy 8\",\n58:       \"file\": \"blame_line_rationale_decoy_8.md\"\n59:     }\n60:   ]\n61: }\n\n(End of file - total 61 lines)\n</content>",
+          "title": "memory/manifest.json",
+          "metadata": {
+            "preview": "{\n  \"fixture\": \"blame-line-rationale\",\n  \"transcript_dir\": \"memory/transcripts\",\n  \"sessions\": [\n    {\n      \"session_id\": \"ttl_blame_session\",\n      \"title\": \"TTL blame rationale session\",\n      \"file\": \"ttl_blame_session.md\"\n    },\n    {\n      \"session_id\": \"ttl_billing_session\",\n      \"title\": \"Billing TTL distractor\",\n      \"file\": \"ttl_billing_session.md\"\n    },\n    {\n      \"session_id\": \"ttl_markdown_session\",\n      \"title\": \"Markdown TTL distractor\",\n      \"file\": \"ttl_markdown_session.md\"\n    },\n    {",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778632617828,
+            "end": 1778632617835
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_094e043fb53a35eb016a03c7a8c1b08191a688e54d23e687e1"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec3efe9001NQpEPyM3aztudO",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3e45a0013Y0sBhreYaNp0B",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9",
+        "cost": 0,
+        "tokens": {
+          "total": 13283,
+          "input": 917,
+          "output": 78,
+          "reasoning": 0,
+          "cache": {
+            "read": 12288,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec3f0120013xQtRIJEA7kH03",
+      "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+      "role": "assistant",
+      "time": {
+        "created": 1778632618002,
+        "completed": 1778632622762
+      },
+      "parentID": "msg_e1ec398cb001wkPiYGVYUt3Qzh",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree",
+        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 14235,
+        "input": 1234,
+        "output": 155,
+        "reasoning": 46,
+        "cache": {
+          "read": 12800,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec3f34f001oiCNVnNXn0xOah",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3f0120013xQtRIJEA7kH03",
+        "type": "step-start",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9"
+      },
+      {
+        "id": "prt_e1ec3f392001CLYqMulFb8XbY3",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3f0120013xQtRIJEA7kH03",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0b60e8426214daac016a03c7ab283c8191a825237b940b9c3e"
+          }
+        },
+        "time": {
+          "start": 1778632618898,
+          "end": 1778632619986
+        }
+      },
+      {
+        "id": "prt_e1ec3f7d60015Po9DJwUihx9X8",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3f0120013xQtRIJEA7kH03",
+        "type": "text",
+        "text": "{\"answer\":\"Line 2 caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ttl_blame_session\",\"blob_id\":\"ttl_blame_session.md\",\"message_id\":\"ttl_fact_2\"},\"rationale\":\"The cited message directly states the reason for the cap. I ignored TTL billing and Markdown TTL material because those are separate distractors; no correction, stale detail, or rejected alternative changes the cited rationale.\",\"irrelevant_context_ignored\":[\"Billing TTL distractor: provider policy cap, not namespaceMaxSeconds\",\"Markdown TTL distractor: docs preview freshness\",\"Decoy blame-line rationale files that mention src/cache/ttl.ts but say not to cite them\"]}",
+        "time": {
+          "start": 1778632619990,
+          "end": 1778632622559
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0b60e8426214daac016a03c7ac3e408191b163b8bec90ad9b7",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec40285001EfbXGMnq3ONuok",
+        "sessionID": "ses_1e13c6746ffe82mVM7wE1pr3wJ",
+        "messageID": "msg_e1ec3f0120013xQtRIJEA7kH03",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "fded8b64d5fe3dd2658d1a339ac21ab0056288a9",
+        "cost": 0,
+        "tokens": {
+          "total": 14235,
+          "input": 1234,
+          "output": 155,
+          "reasoning": 46,
+          "cache": {
+            "read": 12800,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]
