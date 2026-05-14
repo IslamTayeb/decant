@@ -1,6 +1,6 @@
 # Context Canary Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/context-canaries/runs/task-switch-smoke
+- Run: ./benchmarks/context-canaries/runs/task-switch-smoke
 - Generated: 2026-05-12T02:43:20.288Z
 
 ## Aggregate

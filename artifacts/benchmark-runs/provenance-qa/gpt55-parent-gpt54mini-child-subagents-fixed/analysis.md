@@ -1,6 +1,6 @@
 # Provenance Blog Benchmark Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed
+- Run: ./benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents-fixed
 - Generated: 2026-05-12T23:46:44.175Z
 - Passed: 10/12
 

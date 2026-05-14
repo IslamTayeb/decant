@@ -1,6 +1,6 @@
 # Provenance Blog Benchmark Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-policy
+- Run: ./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-policy
 - Generated: 2026-05-12T22:56:16.341Z
 - Passed: 20/25
 

@@ -1,6 +1,6 @@
 # Context Canary Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/context-canaries/runs/gpt55-all-hypotheses
+- Run: ./benchmarks/context-canaries/runs/gpt55-all-hypotheses
 - Generated: 2026-05-12T03:16:17.351Z
 
 ## Aggregate

@@ -1,6 +1,6 @@
 # SWE-Bench Context Stress Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/swebench-context/runs/gpt55-cache-stable-hard-primary
+- Run: ./benchmarks/swebench-context/runs/gpt55-cache-stable-hard-primary
 - Generated: 2026-05-11T23:02:44.873Z
 
 ## Aggregate

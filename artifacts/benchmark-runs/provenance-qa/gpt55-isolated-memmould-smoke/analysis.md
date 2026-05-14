@@ -1,6 +1,6 @@
 # Provenance QA Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-isolated-memmould-smoke
+- Run: ./benchmarks/provenance-qa/runs/gpt55-isolated-memmould-smoke
 - Generated: 2026-05-12T06:25:31.058Z
 - Passed: 1/1
 - Aggregate input tokens: 4,918

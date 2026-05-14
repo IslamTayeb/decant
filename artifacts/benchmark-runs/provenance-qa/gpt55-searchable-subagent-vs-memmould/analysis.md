@@ -1,6 +1,6 @@
 # Provenance QA Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-searchable-subagent-vs-memmould
+- Run: ./benchmarks/provenance-qa/runs/gpt55-searchable-subagent-vs-memmould
 - Generated: 2026-05-12T07:16:35.110Z
 - Passed: 4/4
 - Aggregate input tokens: 82,035

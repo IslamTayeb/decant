@@ -1,6 +1,6 @@
 # SWE-Bench Context Stress Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/swebench-context/runs/gpt55-cache-stable-boundary-final
+- Run: ./benchmarks/swebench-context/runs/gpt55-cache-stable-boundary-final
 - Generated: 2026-05-11T17:51:47.818Z
 
 ## Aggregate

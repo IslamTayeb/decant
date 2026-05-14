@@ -1,6 +1,6 @@
 # Provenance QA Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-searchable-vs-memmould
+- Run: ./benchmarks/provenance-qa/runs/gpt55-searchable-vs-memmould
 - Generated: 2026-05-12T07:12:19.263Z
 - Passed: 3/3
 - Aggregate input tokens: 46,365

@@ -1,6 +1,6 @@
 # SWE-Bench Context Stress Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/swebench-context/runs/boundary-diagnostic-full-fallback
+- Run: ./benchmarks/swebench-context/runs/boundary-diagnostic-full-fallback
 - Generated: 2026-05-11T17:38:02.327Z
 
 ## Aggregate

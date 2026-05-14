@@ -26,7 +26,7 @@
         "sessionID": "ses_1e189b180ffeecxlrpt1OJ2Ehb",
         "messageID": "msg_e1e764e900011y9DgeIz5RmkQ1",
         "type": "text",
-        "text": "Transcript directory: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts\nQuestion: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2?\nAsk the child to ignore distractors: Billing TTL distractor, Markdown TTL distractor\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+        "text": "Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts\nQuestion: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2?\nAsk the child to ignore distractors: Billing TTL distractor, Markdown TTL distractor\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
       }
     ]
   },
@@ -45,8 +45,8 @@
       "mode": "build",
       "agent": "build",
       "path": {
-        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree",
-        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree"
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree"
       },
       "cost": 0,
       "tokens": {
@@ -96,12 +96,12 @@
           "status": "completed",
           "input": {
             "description": "Find TTL provenance",
-            "prompt": "Search only transcript files under /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts to answer: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2? Ignore distractors explicitly named: Billing TTL distractor, Markdown TTL distractor. You must use only glob, grep, and read tools over transcript files. Do not use bash or mem-mould/session tools. Return the single best evidence with session_id, blob_id, and message_id. The cited message_id must support the full answer, including any correction/stale detail/rejected alternative if relevant. Return concise findings only.",
+            "prompt": "Search only transcript files under ./benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts to answer: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2? Ignore distractors explicitly named: Billing TTL distractor, Markdown TTL distractor. You must use only glob, grep, and read tools over transcript files. Do not use bash or mem-mould/session tools. Return the single best evidence with session_id, blob_id, and message_id. The cited message_id must support the full answer, including any correction/stale detail/rejected alternative if relevant. Return concise findings only.",
             "subagent_type": "explore",
             "task_id": "",
             "command": ""
           },
-          "output": "task_id: ses_1e1899cb4ffe5nSW1hudFRFfhk (for resuming to continue this task if needed)\n\n<task_result>\nFinding: `src/cache/ttl.ts` line 2 caps requested TTL with `namespaceMaxSeconds` so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\n\nEvidence:\n- session_id: `ttl_blame_session`\n- blob_id: `/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md`\n- message_id: `ttl_fact_2`\n- quote: “Line 2 caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.”\n</task_result>",
+          "output": "task_id: ses_1e1899cb4ffe5nSW1hudFRFfhk (for resuming to continue this task if needed)\n\n<task_result>\nFinding: `src/cache/ttl.ts` line 2 caps requested TTL with `namespaceMaxSeconds` so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\n\nEvidence:\n- session_id: `ttl_blame_session`\n- blob_id: `./benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md`\n- message_id: `ttl_fact_2`\n- quote: “Line 2 caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.”\n</task_result>",
           "title": "Find TTL provenance",
           "metadata": {
             "sessionId": "ses_1e1899cb4ffe5nSW1hudFRFfhk",
@@ -157,8 +157,8 @@
       "mode": "build",
       "agent": "build",
       "path": {
-        "cwd": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree",
-        "root": "/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree"
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree"
       },
       "cost": 0,
       "tokens": {
@@ -186,7 +186,7 @@
         "sessionID": "ses_1e189b180ffeecxlrpt1OJ2Ehb",
         "messageID": "msg_e1e76dfbd001cbCMMyBtbEpZV5",
         "type": "text",
-        "text": "{\"answer\":\"It caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ttl_blame_session\",\"blob_id\":\"/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md\",\"message_id\":\"ttl_fact_2\"},\"rationale\":\"The cited message directly states the reason for line 2. No correction, stale detail, or rejected alternative was reported as relevant.\",\"irrelevant_context_ignored\":[\"Billing TTL distractor\",\"Markdown TTL distractor\"]}",
+        "text": "{\"answer\":\"It caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ttl_blame_session\",\"blob_id\":\"./benchmarks/provenance-qa/runs/gpt55-parent-gpt54mini-child-subagents/fixtures/blame-line-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/ttl_blame_session.md\",\"message_id\":\"ttl_fact_2\"},\"rationale\":\"The cited message directly states the reason for line 2. No correction, stale detail, or rejected alternative was reported as relevant.\",\"irrelevant_context_ignored\":[\"Billing TTL distractor\",\"Markdown TTL distractor\"]}",
         "time": {
           "start": 1778627569678,
           "end": 1778627572597

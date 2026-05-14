@@ -1,6 +1,6 @@
 # Provenance QA Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-full-matrix-v3
+- Run: ./benchmarks/provenance-qa/runs/gpt55-full-matrix-v3
 - Generated: 2026-05-12T06:21:27.555Z
 - Passed: 4/4
 - Aggregate input tokens: 28,117

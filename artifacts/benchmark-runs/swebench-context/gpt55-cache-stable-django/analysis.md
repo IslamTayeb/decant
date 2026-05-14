@@ -1,6 +1,6 @@
 # SWE-Bench Context Stress Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/swebench-context/runs/gpt55-cache-stable-django
+- Run: ./benchmarks/swebench-context/runs/gpt55-cache-stable-django
 - Generated: 2026-05-11T17:34:52.153Z
 
 ## Aggregate

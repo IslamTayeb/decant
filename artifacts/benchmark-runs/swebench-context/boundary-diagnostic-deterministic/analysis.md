@@ -1,6 +1,6 @@
 # SWE-Bench Context Stress Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/swebench-context/runs/boundary-diagnostic-deterministic
+- Run: ./benchmarks/swebench-context/runs/boundary-diagnostic-deterministic
 - Generated: 2026-05-11T17:43:16.537Z
 
 ## Aggregate

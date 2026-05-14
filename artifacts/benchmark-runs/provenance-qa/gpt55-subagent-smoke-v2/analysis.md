@@ -1,6 +1,6 @@
 # Provenance QA Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-subagent-smoke-v2
+- Run: ./benchmarks/provenance-qa/runs/gpt55-subagent-smoke-v2
 - Generated: 2026-05-12T06:16:17.336Z
 - Passed: 1/1
 - Aggregate input tokens: 1,488

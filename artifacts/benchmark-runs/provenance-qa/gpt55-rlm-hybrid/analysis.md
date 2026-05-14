@@ -1,6 +1,6 @@
 # Provenance Blog Benchmark Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-rlm-hybrid
+- Run: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid
 - Generated: 2026-05-13T00:39:20.463Z
 - Passed: 24/24
 

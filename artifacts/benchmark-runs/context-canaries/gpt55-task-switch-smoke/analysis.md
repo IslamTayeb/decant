@@ -1,6 +1,6 @@
 # Context Canary Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/context-canaries/runs/gpt55-task-switch-smoke
+- Run: ./benchmarks/context-canaries/runs/gpt55-task-switch-smoke
 - Generated: 2026-05-12T03:05:48.533Z
 
 ## Aggregate

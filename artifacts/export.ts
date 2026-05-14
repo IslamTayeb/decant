@@ -19,17 +19,16 @@ type Manifest = {
 const repoRoot = path.resolve(process.cwd());
 const artifactRoot = path.join(repoRoot, "artifacts", "benchmark-runs");
 const benchmarkRuns = [
+  path.join("benchmarks", "code-memory", "runs"),
   path.join("benchmarks", "context-canaries", "runs"),
   path.join("benchmarks", "provenance-qa", "runs"),
   path.join("benchmarks", "swebench-context", "runs"),
 ];
 
-const conditionNameMap = new Map([
-  ["searchable-transcript", "rlm-transcript-search"],
-  ["subagent-searchable-transcript", "subagent-rlm-transcript-search"],
-  ["memmould-rlm-hybrid", "memmould-guided-rlm"],
-  ["subagent-memmould-rlm-hybrid", "subagent-memmould-guided-rlm"],
-]);
+// Legacy provenance-qa condition names (`searchable-transcript`,
+// `subagent-searchable-transcript`, `memmould-rlm-hybrid`,
+// `subagent-memmould-rlm-hybrid`) were rewritten in place on 2026-05-14,
+// so the export-time translation map is no longer needed.
 
 const pathNameMap = new Map([
   [
@@ -167,6 +166,14 @@ async function copyPortableArtifacts(
     );
     if (entry.isDirectory()) {
       if (skippedDirectoryNames.has(entry.name)) {
+        if (entry.name === "worktree") {
+          await copyPortableWorktreeMemory(
+            sourcePath,
+            destinationPath,
+            runRoot,
+            manifest,
+          );
+        }
         skip(manifest, runRoot, sourcePath, "raw runtime directory");
         continue;
       }
@@ -207,6 +214,23 @@ async function copyPortableArtifacts(
   }
 }
 
+async function copyPortableWorktreeMemory(
+  worktreePath: string,
+  destinationPath: string,
+  runRoot: string,
+  manifest: Manifest,
+) {
+  const memoryPath = path.join(worktreePath, "memory");
+  const stat = await fs.stat(memoryPath).catch(() => undefined);
+  if (!stat?.isDirectory()) return;
+  await copyPortableArtifacts(
+    memoryPath,
+    path.join(destinationPath, "memory"),
+    runRoot,
+    manifest,
+  );
+}
+
 function skip(
   manifest: Manifest,
   runRoot: string,
@@ -227,9 +251,9 @@ function portableTextContent(filePath: string, content: string) {
   const ext = path.extname(filePath);
   if (ext === ".json") {
     try {
-      return `${normalizeConditionNames(JSON.stringify(redactJson(JSON.parse(content)), null, 2))}\n`;
+      return `${normalizeReferences(JSON.stringify(redactJson(JSON.parse(content)), null, 2))}\n`;
     } catch {
-      return normalizeConditionNames(content);
+      return normalizeReferences(content);
     }
   }
   if (ext === ".jsonl") {
@@ -237,16 +261,16 @@ function portableTextContent(filePath: string, content: string) {
     const normalized = lines.map((line) => {
       if (line.trim() === "") return line;
       try {
-        return normalizeConditionNames(
+        return normalizeReferences(
           JSON.stringify(redactJson(JSON.parse(line))),
         );
       } catch {
-        return normalizeConditionNames(line);
+        return normalizeReferences(line);
       }
     });
     return normalized.join("\n");
   }
-  return normalizeConditionNames(content);
+  return normalizeReferences(content);
 }
 
 function redactJson(value: unknown): unknown {
@@ -261,7 +285,7 @@ function redactJson(value: unknown): unknown {
 }
 
 function normalizePathSegment(segment: string) {
-  return conditionNameMap.get(segment) ?? normalizeConditionNames(segment);
+  return normalizeReferences(segment);
 }
 
 function normalizeRelativePath(relativePath: string) {
@@ -271,11 +295,8 @@ function normalizeRelativePath(relativePath: string) {
     .join("/");
 }
 
-function normalizeConditionNames(value: string) {
-  let next = value;
-  for (const [oldName, newName] of conditionNameMap) {
-    next = next.replaceAll(oldName, newName);
-  }
+function normalizeReferences(value: string) {
+  let next = value.replaceAll(repoRoot, ".");
   for (const [oldName, newName] of pathNameMap) {
     next = next.replaceAll(oldName, newName);
   }

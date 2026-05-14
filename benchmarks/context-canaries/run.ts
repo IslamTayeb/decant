@@ -573,11 +573,24 @@ async function buildOpenCodeEnv(input: {
     $schema: "https://opencode.ai/config.json",
     model: input.modelSlug,
   };
+  const plugins: string[] = [];
   if (input.plugin) {
-    config.plugin = [
+    plugins.push(
       pathToFileURL(path.join(repoRoot, "src", "server-plugin.ts")).href,
-    ];
+    );
   }
+  if (input.modelSlug.startsWith("cursor/")) {
+    plugins.push("opencode-cursor-oauth");
+    const modelID = input.modelSlug.slice("cursor/".length);
+    config.provider = {
+      cursor: {
+        name: "Cursor",
+        npm: "@ai-sdk/openai-compatible",
+        models: { [modelID]: { name: modelID } },
+      },
+    };
+  }
+  if (plugins.length > 0) config.plugin = plugins;
   return {
     ...process.env,
     HOME: input.opencodeRoot.home,

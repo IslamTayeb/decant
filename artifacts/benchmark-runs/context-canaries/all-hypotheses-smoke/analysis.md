@@ -1,6 +1,6 @@
 # Context Canary Analysis
 
-- Run: /Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/context-canaries/runs/all-hypotheses-smoke
+- Run: ./benchmarks/context-canaries/runs/all-hypotheses-smoke
 - Generated: 2026-05-12T02:49:05.385Z
 
 ## Aggregate

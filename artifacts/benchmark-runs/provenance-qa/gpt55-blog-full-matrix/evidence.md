@@ -29,11 +29,11 @@
 - Cache hit: 
 
 Error: timed out waiting for assistant message in ses_1e1ca82c1ffeBzhviic5jRS96s
-    at waitForAssistantMessage (/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/blog-run.ts:1311:9)
+    at waitForAssistantMessage (./benchmarks/provenance-qa/blog-run.ts:1311:9)
     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-    at async prompt (/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/blog-run.ts:1280:10)
-    at async runFixtureCondition (/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/blog-run.ts:712:5)
-    at async main (/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/blog-run.ts:645:22)
+    at async prompt (./benchmarks/provenance-qa/blog-run.ts:1280:10)
+    at async runFixtureCondition (./benchmarks/provenance-qa/blog-run.ts:712:5)
+    at async main (./benchmarks/provenance-qa/blog-run.ts:645:22)
 
 ## auth-queue-rationale / subagent-rlm-transcript-search
 
@@ -133,7 +133,7 @@ Error: timed out waiting for assistant message in ses_1e1ca82c1ffeBzhviic5jRS96s
 - Input tokens: 20,762
 - Cache hit: 70.3%
 
-{"answer":"src/parser/schema.ts trims schema field names after splitting so tokenization preserves raw delimiters and quoted-field behavior, then only the resulting field names are cleaned.","evidence":{"session_id":"schema_parser_session","blob_id":"/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix/fixtures/correction-chain/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/schema_parser_session.md","message_id":"schema_fact_2"},"rationale":"Trimming before tokenization could alter delimiter/quote-sensitive parsing; trimming after splitting preserves parser semantics while normalizing names.","irrelevant_context_ignored":["CSV trim cleanup","Network timeout parser"]}
+{"answer":"src/parser/schema.ts trims schema field names after splitting so tokenization preserves raw delimiters and quoted-field behavior, then only the resulting field names are cleaned.","evidence":{"session_id":"schema_parser_session","blob_id":"./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix/fixtures/correction-chain/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/schema_parser_session.md","message_id":"schema_fact_2"},"rationale":"Trimming before tokenization could alter delimiter/quote-sensitive parsing; trimming after splitting preserves parser semantics while normalizing names.","irrelevant_context_ignored":["CSV trim cleanup","Network timeout parser"]}
 
 ## false-provenance / memmould-map-zoom
 
@@ -253,5 +253,5 @@ Error: timed out waiting for assistant message in ses_1e1ca82c1ffeBzhviic5jRS96s
 - Input tokens: 10,735
 - Cache hit: 84.0%
 
-{"answer":"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without changing raw parse boundaries; do not copy the stale comma-specific splitting detail because src/tsv/schema.ts must use tab delimiters.","evidence":{"session_id":"csv_parser_lesson_session","blob_id":"/Users/islamtayeb/Documents/GitHub/mem-mould/benchmarks/provenance-qa/runs/gpt55-blog-full-matrix/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md","message_id":"reuse_fact_1, reuse_fact_2"},"rationale":"The child found the reusable lesson and the stale CSV-specific detail in the CSV parser transcript; the facts are adjacent in the same blob and together support the full answer.","irrelevant_context_ignored":["Auth queue related reuse","Markdown table parser"]}
+{"answer":"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without changing raw parse boundaries; do not copy the stale comma-specific splitting detail because src/tsv/schema.ts must use tab delimiters.","evidence":{"session_id":"csv_parser_lesson_session","blob_id":"./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/csv_parser_lesson_session.md","message_id":"reuse_fact_1, reuse_fact_2"},"rationale":"The child found the reusable lesson and the stale CSV-specific detail in the CSV parser transcript; the facts are adjacent in the same blob and together support the full answer.","irrelevant_context_ignored":["Auth queue related reuse","Markdown table parser"]}
 
