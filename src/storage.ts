@@ -3,12 +3,10 @@ import os from "node:os";
 import path from "node:path";
 
 import type {
-  BlobEntry,
   CommitMapEntry,
   CommitMapFile,
   ContextMapFile,
   ContextPreview,
-  MessageEntry,
 } from "./types";
 import { computeEffectiveTreatment } from "./core";
 

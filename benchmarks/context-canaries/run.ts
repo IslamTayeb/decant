@@ -12,6 +12,11 @@ import {
   requiredModelSlug,
   type ModelRef,
 } from "../../tools/model";
+import {
+  createSession as createOpenCodeSession,
+  listProviders,
+  listSessionMessages as listOpenCodeSessionMessages,
+} from "../../tools/opencode-sdk";
 
 const execFileAsync = promisify(execFile);
 
@@ -654,11 +659,7 @@ async function pickModel(
   modelSlug: string,
 ) {
   const requested = parseModelSlug(modelSlug);
-  const providers = (((await client.provider.list({ directory })) as any)
-    ?.data ?? {}) as {
-    all?: Array<{ id: string; models: Record<string, unknown> }>;
-    connected?: string[];
-  };
+  const providers = await listProviders(client, directory);
   const provider = (providers.all ?? []).find(
     (item) => item.id === requested.providerID,
   );
@@ -678,8 +679,7 @@ async function createSession(
   directory: string,
   title: string,
 ) {
-  const session = (((await client.session.create({ directory, title })) as any)
-    ?.data ?? {}) as { id?: string };
+  const session = await createOpenCodeSession(client, directory, title);
   assert.ok(session.id, "failed to create session");
   return session.id;
 }
@@ -713,7 +713,7 @@ async function forceCompaction(
     providerID: model.providerID,
     modelID: model.modelID,
     auto: false,
-  } as any);
+  });
 }
 
 async function prompt(
@@ -779,13 +779,11 @@ async function listSessionMessages(
   directory: string,
   sessionID: string,
 ) {
-  return ((
-    (await client.session.messages({
-      sessionID,
-      directory,
-      limit: 5000,
-    })) as any
-  )?.data ?? []) as SessionMessage[];
+  return (await listOpenCodeSessionMessages(
+    client,
+    directory,
+    sessionID,
+  )) as SessionMessage[];
 }
 
 async function withTimeout<T>(

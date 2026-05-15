@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn, execFile } from "node:child_process";
 import fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
@@ -13,6 +12,11 @@ import {
   requiredModelSlug,
   type ModelRef,
 } from "../../tools/model";
+import {
+  createSession as createOpenCodeSession,
+  listProviders,
+  listSessionMessages as listOpenCodeSessionMessages,
+} from "../../tools/opencode-sdk";
 
 const execFileAsync = promisify(execFile);
 
@@ -582,69 +586,6 @@ for row in ds:
     .map((line) => normalizeSwebenchRow(JSON.parse(line) as unknown));
 }
 
-async function loadInstancesFromHuggingFaceRows(
-  dataset: string,
-  split: string,
-  instanceIDs: string[],
-  found: Map<string, SwebenchInstance>,
-) {
-  const wanted = new Set(instanceIDs);
-  const pageSize = 100;
-  for (let offset = 0; found.size < wanted.size; offset += pageSize) {
-    const url = new URL("https://datasets-server.huggingface.co/rows");
-    url.searchParams.set("dataset", dataset);
-    url.searchParams.set("config", "default");
-    url.searchParams.set("split", split);
-    url.searchParams.set("offset", String(offset));
-    url.searchParams.set("length", String(pageSize));
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(
-        `${response.status} ${response.statusText} for ${url.toString()}`,
-      );
-    }
-    const body = (await response.json()) as {
-      rows?: Array<{ row?: unknown }>;
-      num_rows_total?: number;
-    };
-    const rows = body.rows ?? [];
-    for (const entry of rows) {
-      const row = normalizeSwebenchRow(entry.row);
-      if (wanted.has(row.instance_id)) found.set(row.instance_id, row);
-    }
-    if (rows.length === 0 || offset + pageSize >= (body.num_rows_total ?? 0))
-      break;
-  }
-}
-
-async function loadInstancesFromPythonDatasets(
-  dataset: string,
-  split: string,
-  instanceIDs: string[],
-  found: Map<string, SwebenchInstance>,
-) {
-  const script = String.raw`
-import json, sys
-from datasets import load_dataset
-dataset_name, split, ids_json = sys.argv[1:4]
-wanted = set(json.loads(ids_json))
-ds = load_dataset(dataset_name, split=split)
-for row in ds:
-    iid = row.get("instance_id")
-    if iid in wanted:
-        print(json.dumps(row))
-`;
-  const { stdout } = await execFileAsync(
-    "python3",
-    ["-c", script, dataset, split, JSON.stringify(instanceIDs)],
-    { maxBuffer: 50 * 1024 * 1024 },
-  );
-  for (const line of stdout.split("\n").filter(Boolean)) {
-    const row = normalizeSwebenchRow(JSON.parse(line) as unknown);
-    found.set(row.instance_id, row);
-  }
-}
-
 function normalizeSwebenchRow(row: unknown): SwebenchInstance {
   assert.ok(row && typeof row === "object", "invalid SWE-bench row");
   const record = row as Record<string, unknown>;
@@ -995,11 +936,7 @@ async function pickModel(
   modelSlug: string,
 ) {
   const requested = parseModelSlug(modelSlug);
-  const providers = (((await client.provider.list({ directory })) as any)
-    ?.data ?? {}) as {
-    all?: Array<{ id: string; models: Record<string, unknown> }>;
-    connected?: string[];
-  };
+  const providers = await listProviders(client, directory);
   const provider = (providers.all ?? []).find(
     (item) => item.id === requested.providerID,
   );
@@ -1020,10 +957,7 @@ async function createSession(
   directory: string,
   title: string,
 ) {
-  const session = (((await client.session.create({ directory, title })) as any)
-    ?.data ?? {}) as {
-    id: string;
-  };
+  const session = await createOpenCodeSession(client, directory, title);
   assert.ok(session.id, "failed to create session");
   return session.id;
 }
@@ -1094,7 +1028,7 @@ async function forceCompaction(
     providerID: model.providerID,
     modelID: model.modelID,
     auto: false,
-  } as any);
+  });
 }
 
 function buildIssuePrompt(instance: SwebenchInstance) {
@@ -1138,11 +1072,11 @@ async function prompt(
       system,
       tools,
       parts: [{ type: "text", text }],
-    }) as Promise<unknown>,
+    }),
     timeoutMs,
     `prompt timed out in ${sessionID}`,
-  )) as any;
-  const reply = raw?.data ?? raw ?? {};
+  )) as { data?: { error?: unknown }; error?: unknown };
+  const reply = raw.data ?? raw ?? {};
   if (reply.error) throw new Error(JSON.stringify(reply.error));
   return await waitForAssistantMessage(
     client,
@@ -1183,13 +1117,11 @@ async function listSessionMessages(
   directory: string,
   sessionID: string,
 ) {
-  return ((
-    (await client.session.messages({
-      sessionID,
-      directory,
-      limit: 5000,
-    })) as any
-  )?.data ?? []) as SessionMessage[];
+  return (await listOpenCodeSessionMessages(
+    client,
+    directory,
+    sessionID,
+  )) as SessionMessage[];
 }
 
 async function withTimeout<T>(

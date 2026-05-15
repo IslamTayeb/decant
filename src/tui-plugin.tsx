@@ -40,6 +40,41 @@ const PLUGIN_ID = "mem-mould.context-map-tui";
 
 type Tab = "blobs" | "messages";
 
+type KeymapLayer = {
+  commands: Array<{
+    name: string;
+    title: string;
+    category: string;
+    desc: string;
+    namespace: "palette";
+    slashName: string;
+    run: () => void;
+  }>;
+  bindings: Array<{
+    key: string;
+    cmd: string;
+    desc: string;
+  }>;
+};
+
+type KeymapLayerApi = {
+  registerLayer(layer: KeymapLayer): void;
+};
+
+function isKeymapLayerApi(value: unknown): value is KeymapLayerApi {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "registerLayer" in value &&
+    typeof value.registerLayer === "function"
+  );
+}
+
+function keymapLayerApi(api: TuiPluginApi): KeymapLayerApi | undefined {
+  if (!("keymap" in api)) return undefined;
+  return isKeymapLayerApi(api.keymap) ? api.keymap : undefined;
+}
+
 function ContextBar(props: { api: TuiPluginApi; map?: ContextMapFile }) {
   const preview = createMemo(() =>
     props.map ? computeContextPreview(props.map) : undefined,
@@ -970,23 +1005,56 @@ const tui: TuiPlugin = async (api) => {
     ));
   };
 
-  api.command.register(() => [
-    {
-      title: "Open context map",
-      value: "context-map.open",
-      category: "Plugin",
-      keybind: keys.get("plugin_context_open"),
-      slash: { name: "context" },
-      onSelect: () => openMap(),
-    },
-    {
-      title: "Blame lookup",
-      value: "context-map.blame",
-      category: "Plugin",
-      slash: { name: "blame" },
-      onSelect: () => openBlame(),
-    },
-  ]);
+  const keymap = keymapLayerApi(api);
+  if (keymap?.registerLayer) {
+    keymap.registerLayer({
+      commands: [
+        {
+          name: "context-map.open",
+          title: "Open context map",
+          category: "Plugin",
+          desc: "Inspect and control context map fidelity",
+          namespace: "palette",
+          slashName: "context",
+          run: () => openMap(),
+        },
+        {
+          name: "context-map.blame",
+          title: "Blame lookup",
+          category: "Plugin",
+          desc: "Open context from the session that touched a file line",
+          namespace: "palette",
+          slashName: "blame",
+          run: () => openBlame(),
+        },
+      ],
+      bindings: [
+        {
+          key: "ctrl+g",
+          cmd: "context-map.open",
+          desc: "Open context map",
+        },
+      ],
+    });
+  } else {
+    api.command.register(() => [
+      {
+        title: "Open context map",
+        value: "context-map.open",
+        category: "Plugin",
+        keybind: keys.get("plugin_context_open"),
+        slash: { name: "context" },
+        onSelect: () => openMap(),
+      },
+      {
+        title: "Blame lookup",
+        value: "context-map.blame",
+        category: "Plugin",
+        slash: { name: "blame" },
+        onSelect: () => openBlame(),
+      },
+    ]);
+  }
 
   api.slots.register({
     order: 110,

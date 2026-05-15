@@ -9,6 +9,7 @@ import { promisify } from "node:util";
 import { createOpencodeClient } from "@opencode-ai/sdk/v2";
 
 import type { ContextMapFile } from "../../src/types";
+import { createSession as createOpenCodeSession } from "../opencode-sdk";
 
 const execFileAsync = promisify(execFile);
 
@@ -57,12 +58,11 @@ async function main() {
 
   try {
     const client = createOpencodeClient({ baseUrl: server.url });
-    const session = ((
-      (await client.session.create({
-        directory: worktree,
-        title: "Blame TUI historical session",
-      })) as any
-    )?.data ?? {}) as { id?: string };
+    const session = await createOpenCodeSession(
+      client,
+      worktree,
+      "Blame TUI historical session",
+    );
     assert.ok(session.id, "failed to create historical OpenCode session");
 
     await writeHistoricalMap({
@@ -330,19 +330,6 @@ function createMockTuiApi(input: {
   let promptTitle = "";
   let historyDialogOpened = false;
 
-  const clientAdapter = {
-    ...input.client,
-    session: {
-      ...(input.client as any).session,
-      get(args: { sessionID: string; directory: string }) {
-        return (input.client as any).session.get(args);
-      },
-      messages(args: { sessionID: string; directory: string; limit?: number }) {
-        return (input.client as any).session.messages(args);
-      },
-    },
-  };
-
   const api = {
     app: { version: "sandbox" },
     command: {
@@ -425,7 +412,7 @@ function createMockTuiApi(input: {
         error: "red",
       },
     },
-    client: clientAdapter,
+    client: input.client,
     slots: {
       register() {},
     },

@@ -9,6 +9,7 @@ import { pathToFileURL } from "node:url";
 import { createOpencodeClient } from "@opencode-ai/sdk/v2";
 
 import { MODEL_ENV_VAR, parseModelSlug } from "../model";
+import { createSession as createOpenCodeSession } from "../opencode-sdk";
 
 const execFileAsync = promisify(execFile);
 
@@ -75,9 +76,7 @@ async function main() {
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "_")
         .replace(/^_|_$/g, "");
-      const res =
-        ((await client.session.create({ directory: repo, title })) as any)
-          ?.data ?? {};
+      const res = await createOpenCodeSession(client, repo, title);
       assert.ok(res.id, `failed to create session: ${title}`);
       sessions[key] = res.id;
       console.log(`  Created: ${title} -> ${res.id}`);
@@ -134,7 +133,7 @@ async function main() {
       directory: repo,
       worktree: repo,
       activeBlobID: blobID,
-      activeBlobLabel: (map?.blobs[blobID] as any)?.label ?? blobID,
+      activeBlobLabel: blobLabel(map?.blobs[blobID], blobID),
       activeBlobIDs: [blobID],
     };
   }
@@ -1727,6 +1726,18 @@ function buildContextMapFromSpec(spec: MapSpec, specIndex: number) {
   return map;
 }
 
+function blobLabel(blob: unknown, fallback: string) {
+  if (
+    blob &&
+    typeof blob === "object" &&
+    "label" in blob &&
+    typeof blob.label === "string"
+  ) {
+    return blob.label;
+  }
+  return fallback;
+}
+
 // ── Demo repo structure ───────────────────────────────────────────────
 
 async function createDemoRepo(projectRoot: string, repo: string) {
@@ -1824,11 +1835,12 @@ async function writeInitialFiles(repo: string) {
       "",
       "export type ApiRequest = { method: string; path: string; headers: Record<string, string>; body?: unknown }",
       "export type ApiResponse = { status: number; body: unknown }",
+      "type AuthBody = { email: string; name: string }",
       "",
       "export async function handleRequest(req: ApiRequest): Promise<ApiResponse> {",
       "  if (req.path === '/health') return { status: 200, body: { ok: true } }",
-      "  if (req.path === '/register' && req.method === 'POST') { const { email, name } = req.body as any; return { status: 201, body: await registerUser(email, name) } }",
-      "  if (req.path === '/login' && req.method === 'POST') { const { email } = req.body as any; return { status: 200, body: await loginUser(email) } }",
+      "  if (req.path === '/register' && req.method === 'POST') { const { email, name } = req.body as AuthBody; return { status: 201, body: await registerUser(email, name) } }",
+      "  if (req.path === '/login' && req.method === 'POST') { const { email } = req.body as Pick<AuthBody, 'email'>; return { status: 200, body: await loginUser(email) } }",
       "  const token = req.headers.authorization?.replace('Bearer ', ''); if (!token) return { status: 401, body: { error: 'Missing token' } }",
       "  const payload = decodeToken(token); if (!payload) return { status: 401, body: { error: 'Invalid or expired token' } }",
       "  if (req.path === '/me') return { status: 200, body: getUser(payload.userID) }",
@@ -2014,12 +2026,6 @@ function renderRateLimiter(useQueue: boolean) {
       "async function withMutex(userID: string, job: () => Promise<unknown>) { return await job() }",
     ].join("\n") + "\n"
   );
-}
-
-// ── Server utilities ──────────────────────────────────────────────────
-
-function shellQuote(v: string) {
-  return JSON.stringify(v);
 }
 
 async function gitHead(repo: string) {

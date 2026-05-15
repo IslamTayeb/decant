@@ -9,6 +9,11 @@ import { createOpencodeClient } from "@opencode-ai/sdk/v2";
 import { buildCompactionPrompt } from "../../src/core";
 import type { ContextMapFile } from "../../src/types";
 import { parseModelSlug, requiredModelSlug, type ModelRef } from "../model";
+import {
+  createSession as createOpenCodeSession,
+  dataOrThrow,
+  listProviders,
+} from "../opencode-sdk";
 
 const DEFAULT_COMPACTION_PROMPT = `Provide a detailed prompt for continuing our conversation above.
 Focus on information that would be helpful for continuing the conversation, including what we did, what we're doing, which files we're working on, and what we're going to do next.
@@ -229,14 +234,13 @@ async function summarize(
   transcript: string,
   prompt: string,
 ) {
-  const session = ((
-    (await client.session.create({
-      directory,
-      title: "compaction-eval",
-    })) as any
-  )?.data ?? {}) as { id: string };
-  const reply = ((
-    (await client.session.prompt({
+  const session = await createOpenCodeSession(
+    client,
+    directory,
+    "compaction-eval",
+  );
+  const reply = dataOrThrow(
+    await client.session.prompt({
       directory,
       sessionID: session.id,
       system:
@@ -248,8 +252,9 @@ async function summarize(
           text: `Conversation transcript:\n${transcript}\n\nCompaction instructions:\n${prompt}`,
         },
       ],
-    })) as any
-  )?.data ?? {}) as { parts: Array<{ type: string; text?: string }> };
+    }),
+    "prompt compaction eval",
+  );
   return reply.parts
     .filter((part) => part.type === "text")
     .map((part) => part.text ?? "")
@@ -261,22 +266,22 @@ async function recall(
   directory: string,
   summary: string,
 ) {
-  const session = ((
-    (await client.session.create({
-      directory,
-      title: "compaction-recall",
-    })) as any
-  )?.data ?? {}) as { id: string };
-  const reply = ((
-    (await client.session.prompt({
+  const session = await createOpenCodeSession(
+    client,
+    directory,
+    "compaction-recall",
+  );
+  const reply = dataOrThrow(
+    await client.session.prompt({
       directory,
       sessionID: session.id,
       system:
         "You are evaluating a compaction summary. Answer in strict JSON with keys race_location, failed_fix, final_fix, rollback_flag, queue_helper_path. Use null if the summary does not preserve the fact.",
       tools: {},
       parts: [{ type: "text", text: `Summary:\n${summary}` }],
-    })) as any
-  )?.data ?? {}) as { parts: Array<{ type: string; text?: string }> };
+    }),
+    "prompt compaction recall",
+  );
 
   const text = reply.parts
     .filter((part) => part.type === "text")
@@ -367,11 +372,7 @@ async function pickModel(
   modelSlug: string,
 ): Promise<ModelRef> {
   const requested = parseModelSlug(modelSlug);
-  const providers = (((await client.provider.list({ directory })) as any)
-    ?.data ?? {}) as {
-    all?: Array<{ id: string; models: Record<string, unknown> }>;
-    connected?: string[];
-  };
+  const providers = await listProviders(client, directory);
   const all = providers.all ?? [];
   const provider = all.find((item) => item.id === requested.providerID);
   assert.ok(provider, `provider is not available: ${requested.providerID}`);

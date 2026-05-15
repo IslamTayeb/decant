@@ -7,11 +7,12 @@ import { promisify } from "node:util";
 
 import { createOpencodeClient } from "@opencode-ai/sdk/v2";
 
+import { parseModelSlug, requiredModelSlug } from "../../tools/model";
 import {
-  parseModelSlug,
-  requiredModelSlug,
-  type ModelRef,
-} from "../../tools/model";
+  createSession as createOpenCodeSession,
+  listProviders,
+  listSessionMessages as listOpenCodeSessionMessages,
+} from "../../tools/opencode-sdk";
 
 const execFileAsync = promisify(execFile);
 
@@ -248,10 +249,10 @@ async function main() {
     return;
   }
 
-  const model = parseModelSlug(options.modelSlug);
+  parseModelSlug(options.modelSlug);
   const results: RunResult[] = [];
   for (const conditionID of options.conditions) {
-    const result = await runCondition(conditionID, model, options);
+    const result = await runCondition(conditionID, options);
     results.push(result);
     await writeSummary(options.outDir, results, options);
   }
@@ -265,7 +266,6 @@ async function main() {
 
 async function runCondition(
   conditionID: ConditionID,
-  model: ModelRef,
   options: Options,
 ): Promise<RunResult> {
   const condition = conditions[conditionID];
@@ -303,7 +303,7 @@ async function runCondition(
       worktree,
       `${conditionID} provenance qa`,
     );
-    const promptInput = buildPromptForCondition(conditionID, seeded, worktree);
+    const promptInput = buildPromptForCondition(conditionID, worktree);
     await prompt(
       client,
       worktree,
@@ -686,11 +686,7 @@ async function pickModel(
   modelSlug: string,
 ) {
   const requested = parseModelSlug(modelSlug);
-  const providers = (((await client.provider.list({ directory })) as any)
-    ?.data ?? {}) as {
-    all?: Array<{ id: string; models: Record<string, unknown> }>;
-    connected?: string[];
-  };
+  const providers = await listProviders(client, directory);
   const provider = (providers.all ?? []).find(
     (item) => item.id === requested.providerID,
   );
@@ -710,8 +706,7 @@ async function createSession(
   directory: string,
   title: string,
 ) {
-  const session = (((await client.session.create({ directory, title })) as any)
-    ?.data ?? {}) as { id?: string };
+  const session = await createOpenCodeSession(client, directory, title);
   assert.ok(session.id, "failed to create session");
   return session.id;
 }
@@ -803,7 +798,6 @@ function seedSystemPrompt() {
 
 function buildPromptForCondition(
   conditionID: ConditionID,
-  seeded: SeededSessions,
   worktree: string,
 ): PromptInput {
   const answerContract = [
@@ -968,7 +962,7 @@ async function prompt(
       system,
       tools,
       parts: [{ type: "text", text }],
-    }) as Promise<unknown>,
+    }),
     timeoutMs,
     `prompt timed out in ${sessionID}`,
   )) as { data?: { error?: unknown }; error?: unknown };
@@ -1013,13 +1007,11 @@ async function listSessionMessages(
   directory: string,
   sessionID: string,
 ) {
-  return ((
-    (await client.session.messages({
-      sessionID,
-      directory,
-      limit: 5000,
-    })) as any
-  )?.data ?? []) as SessionMessage[];
+  return (await listOpenCodeSessionMessages(
+    client,
+    directory,
+    sessionID,
+  )) as SessionMessage[];
 }
 
 async function withTimeout<T>(

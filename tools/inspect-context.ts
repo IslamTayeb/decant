@@ -11,6 +11,66 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import type { ContextMapFile } from "../src/types";
+
+type DebugLog = {
+  timestamp?: string;
+  totals?: { raw_tokens?: number; effective_tokens?: number };
+  blobs?: Array<{
+    label: string;
+    fidelity: string;
+    raw_tokens: number;
+    effective_tokens: number;
+  }>;
+};
+
+type TraceEvent = {
+  ts?: string;
+  event?: string;
+  blob_count?: number;
+  total_tokens?: number;
+  before_count?: number;
+  after_count?: number;
+  messages_removed?: number;
+  prompt_length?: number;
+  preview?: {
+    total_raw_tokens?: number;
+    total_effective_tokens?: number;
+    blobs?: Array<{
+      id?: string;
+      label?: string;
+      fidelity?: string;
+      effective_tokens?: number;
+      effective_label?: string;
+    }>;
+  };
+  blob_fidelities?: Record<string, string>;
+  payload_messages?: Array<{
+    id?: string;
+    role?: string;
+    blob_id?: string;
+    blob_label?: string;
+    effective_treatment?: string;
+    parts?: Array<{
+      type: string;
+      text?: string;
+      tool?: string;
+      status?: string;
+      output?: unknown;
+    }>;
+  }>;
+  had_annotation?: boolean;
+  annotation_blob?: string;
+  effective_tokens?: number;
+  blob_policies?: Array<{
+    id?: string;
+    label?: string;
+    fidelity?: string;
+    source?: string;
+    tokens?: number;
+  }>;
+};
+
 const tempRoot = process.argv[2];
 if (!tempRoot) {
   console.error(
@@ -48,7 +108,7 @@ async function main() {
     for (const file of files.sort()) {
       const map = JSON.parse(
         await fs.readFile(path.join(mapsDir, file), "utf8"),
-      );
+      ) as ContextMapFile;
       const blobCount = map.blobOrder?.length ?? 0;
       const msgCount = Object.keys(map.messages ?? {}).length;
       console.log(`  ${map.sessionID}  ${blobCount} blobs  ${msgCount} msgs`);
@@ -70,9 +130,9 @@ async function main() {
 
   // Show detailed state for one session
   const mapPath = path.join(mapsDir, `${sessionID}.json`);
-  let map: any;
+  let map: ContextMapFile;
   try {
-    map = JSON.parse(await fs.readFile(mapPath, "utf8"));
+    map = JSON.parse(await fs.readFile(mapPath, "utf8")) as ContextMapFile;
   } catch {
     console.error(`No context map found at ${mapPath}`);
     process.exit(1);
@@ -173,12 +233,12 @@ async function main() {
   // Check for debug log
   const debugPath = path.join(mapsDir, `${sessionID}.debug.json`);
   try {
-    const debug = JSON.parse(await fs.readFile(debugPath, "utf8"));
-    console.log(`\n── Debug Log (${debug.timestamp}) ──`);
+    const debug = JSON.parse(await fs.readFile(debugPath, "utf8")) as DebugLog;
+    console.log(`\n── Debug Log (${debug.timestamp ?? "unknown"}) ──`);
     console.log(
-      `  Raw: ${debug.totals.raw_tokens} tok  Effective: ${debug.totals.effective_tokens} tok`,
+      `  Raw: ${debug.totals?.raw_tokens ?? 0} tok  Effective: ${debug.totals?.effective_tokens ?? 0} tok`,
     );
-    for (const b of debug.blobs) {
+    for (const b of debug.blobs ?? []) {
       console.log(
         `  ${b.label.padEnd(30)} ${b.fidelity.padEnd(12)} raw:${b.raw_tokens} eff:${b.effective_tokens}`,
       );
@@ -194,7 +254,7 @@ async function main() {
       .trim()
       .split("\n")
       .filter(Boolean);
-    const events = lines.map((l) => JSON.parse(l));
+    const events = lines.map((l) => JSON.parse(l) as TraceEvent);
     console.log(`\n── Trace Log (${events.length} events) ──`);
     for (const e of events) {
       const ts = e.ts?.slice(11, 19) ?? "??";
@@ -212,7 +272,7 @@ async function main() {
           );
           for (const b of e.preview.blobs ?? []) {
             console.log(
-              `          ${(b.label ?? b.id).padEnd(25)} ${String(b.fidelity).padEnd(12)} eff=${String(b.effective_tokens).padStart(5)} ${b.effective_label}`,
+              `          ${(b.label ?? b.id ?? "unknown").padEnd(25)} ${String(b.fidelity).padEnd(12)} eff=${String(b.effective_tokens).padStart(5)} ${b.effective_label}`,
             );
           }
         }
@@ -256,9 +316,9 @@ async function main() {
           `  [${ts}] session.compacting  blobs=${e.blob_count} prompt_len=${e.prompt_length}`,
         );
         if (e.blob_policies) {
-          for (const p of e.blob_policies as any[]) {
+          for (const p of e.blob_policies) {
             console.log(
-              `          ${(p.label ?? p.id).padEnd(25)} ${p.fidelity?.padEnd(12)} src=${p.source} ~${p.tokens} tok`,
+              `          ${(p.label ?? p.id ?? "unknown").padEnd(25)} ${p.fidelity?.padEnd(12)} src=${p.source} ~${p.tokens} tok`,
             );
           }
         }

@@ -9,6 +9,7 @@ import { promisify } from "node:util";
 import { createOpencodeClient } from "@opencode-ai/sdk/v2";
 
 import type { ContextMapFile } from "../../src/types";
+import { createSession as createOpenCodeSession } from "../opencode-sdk";
 
 const execFileAsync = promisify(execFile);
 
@@ -187,12 +188,11 @@ async function seedOpenCodeSession(input: {
   const server = await startServer(env, input.worktree);
   try {
     const client = createOpencodeClient({ baseUrl: server.url });
-    const session = ((
-      (await client.session.create({
-        directory: input.worktree,
-        title: "Live TUI blame historical session",
-      })) as any
-    )?.data ?? {}) as { id?: string };
+    const session = await createOpenCodeSession(
+      client,
+      input.worktree,
+      "Live TUI blame historical session",
+    );
     assert.ok(session.id, "failed to create OpenCode session");
     await writeHistoricalMap({
       home: input.home,

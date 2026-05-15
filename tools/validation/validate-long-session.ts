@@ -8,6 +8,11 @@ import { pathToFileURL } from "node:url";
 import { createOpencodeClient } from "@opencode-ai/sdk/v2";
 
 import { parseModelSlug, requiredModelSlug, type ModelRef } from "../model";
+import {
+  createSession as createOpenCodeSession,
+  listProviders,
+  listSessionMessages as listOpenCodeSessionMessages,
+} from "../opencode-sdk";
 
 type SessionMessage = {
   info?: { id?: string; role?: string; finish?: string };
@@ -273,11 +278,7 @@ async function pickModel(
   modelSlug: string,
 ): Promise<ModelRef> {
   const requested = parseModelSlug(modelSlug);
-  const providers = (((await client.provider.list({ directory })) as any)
-    ?.data ?? {}) as {
-    all?: Array<{ id: string; models: Record<string, unknown> }>;
-    connected?: string[];
-  };
+  const providers = await listProviders(client, directory);
   const all = providers.all ?? [];
   const provider = all.find((item) => item.id === requested.providerID);
   assert.ok(provider, `provider is not available: ${requested.providerID}`);
@@ -297,8 +298,7 @@ async function createSession(
   directory: string,
   title: string,
 ) {
-  const session = (((await client.session.create({ directory, title })) as any)
-    ?.data ?? {}) as { id: string };
+  const session = await createOpenCodeSession(client, directory, title);
   assert.ok(session.id, "failed to create session");
   return session.id;
 }
@@ -313,14 +313,13 @@ async function prompt(
 ) {
   const before = await listSessionMessages(client, directory, sessionID);
   const beforeIDs = new Set(before.map((message) => message.info?.id));
-  const raw = (await client.session.promptAsync({
+  const reply = await client.session.promptAsync({
     directory,
     sessionID,
     system,
     tools,
     parts: [{ type: "text", text }],
-  })) as any;
-  const reply = raw?.data ?? raw ?? {};
+  });
   if (reply.error) throw new Error(JSON.stringify(reply.error));
   const assistant = await waitForAssistantMessage(
     client,
@@ -360,13 +359,11 @@ async function listSessionMessages(
   directory: string,
   sessionID: string,
 ) {
-  return ((
-    (await client.session.messages({
-      sessionID,
-      directory,
-      limit: 5000,
-    })) as any
-  )?.data ?? []) as SessionMessage[];
+  return (await listOpenCodeSessionMessages(
+    client,
+    directory,
+    sessionID,
+  )) as SessionMessage[];
 }
 
 function textFromParts(

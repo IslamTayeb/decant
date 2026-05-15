@@ -18,7 +18,6 @@ import {
   type MessageEntry,
   type MessageLike,
   type MessageFidelity,
-  type PendingRetroactiveMessage,
   type RetroactiveAnnotationItem,
   type SessionLike,
 } from "./types";

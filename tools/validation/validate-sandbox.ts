@@ -10,6 +10,12 @@ import { pathToFileURL } from "node:url";
 import { createOpencodeClient } from "@opencode-ai/sdk/v2";
 
 import { parseModelSlug, requiredModelSlug, type ModelRef } from "../model";
+import {
+  createSession as createOpenCodeSession,
+  dataOrThrow,
+  listProviders,
+  listSessionMessages as listOpenCodeSessionMessages,
+} from "../opencode-sdk";
 
 const execFileAsync = promisify(execFile);
 
@@ -78,13 +84,14 @@ async function main() {
     const model = await pickModel(client, repoRoot, validationModelSlug);
     console.log(`Using selected model ${model.providerID}/${model.modelID}`);
 
-    const toolList = ((
-      (await client.tool.list({
+    const toolList = dataOrThrow(
+      await client.tool.list({
         directory: repoRoot,
         provider: model.providerID,
         model: model.modelID,
-      })) as any
-    )?.data ?? []) as Array<{ id: string }>;
+      }),
+      "list tools",
+    );
     const toolIDs = new Set(toolList.map((tool) => tool.id));
     for (const required of [
       "view_context",
@@ -159,7 +166,7 @@ async function main() {
     assert.ok(authBlobID, "missing auth-like blob");
     assert.ok(docsBlobID, "missing docs-like blob");
 
-    const contextToolReply = await prompt(
+    await prompt(
       client,
       repoRoot,
       firstSession,
@@ -182,7 +189,7 @@ async function main() {
       "pending retroactive messages should be cleared after a tool-assisted text reply",
     );
 
-    const compressReply = await prompt(
+    await prompt(
       client,
       repoRoot,
       firstSession,
@@ -210,7 +217,7 @@ async function main() {
       repoRoot,
       "context-map historical lookup",
     );
-    const lookupReply = await prompt(
+    await prompt(
       client,
       repoRoot,
       secondSession,
@@ -259,7 +266,7 @@ async function main() {
       repoRoot,
       "context-map blame lookup",
     );
-    const blameReply = await prompt(
+    await prompt(
       client,
       repoRoot,
       thirdSession,
@@ -376,11 +383,7 @@ async function pickModel(
   modelSlug: string,
 ): Promise<ModelRef> {
   const requested = parseModelSlug(modelSlug);
-  const providers = (((await client.provider.list({ directory })) as any)
-    ?.data ?? {}) as {
-    all?: Array<{ id: string; models: Record<string, unknown> }>;
-    connected?: string[];
-  };
+  const providers = await listProviders(client, directory);
   const all = providers.all ?? [];
   const provider = all.find((item) => item.id === requested.providerID);
   assert.ok(provider, `provider is not available: ${requested.providerID}`);
@@ -400,8 +403,7 @@ async function createSession(
   directory: string,
   title: string,
 ) {
-  const session = (((await client.session.create({ directory, title })) as any)
-    ?.data ?? {}) as { id: string };
+  const session = await createOpenCodeSession(client, directory, title);
   assert.ok(session.id, "failed to create session");
   return session.id;
 }
@@ -416,14 +418,13 @@ async function prompt(
 ) {
   const before = await listSessionMessages(client, directory, sessionID);
   const beforeIDs = new Set(before.map((message) => message.info?.id));
-  const raw = (await client.session.promptAsync({
+  const reply = await client.session.promptAsync({
     directory,
     sessionID,
     system,
     tools,
     parts: [{ type: "text", text }],
-  })) as any;
-  const reply = raw?.data ?? raw ?? {};
+  });
   if (reply.error) throw new Error(JSON.stringify(reply.error));
   const assistant = await waitForAssistantMessage(
     client,
@@ -463,13 +464,11 @@ async function listSessionMessages(
   directory: string,
   sessionID: string,
 ) {
-  return ((
-    (await client.session.messages({
-      sessionID,
-      directory,
-      limit: 5000,
-    })) as any
-  )?.data ?? []) as SessionMessage[];
+  return (await listOpenCodeSessionMessages(
+    client,
+    directory,
+    sessionID,
+  )) as SessionMessage[];
 }
 
 async function dumpSessionDiagnostics(
