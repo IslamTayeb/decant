@@ -179,7 +179,13 @@ async function main() {
 
   if (options.analyzeRun) {
     const report = await analyzeRun(options.analyzeRun);
-    console.log(runAnalysisMarkdown(report));
+    const markdown = runAnalysisMarkdown(report);
+    await fs.writeFile(
+      path.join(options.analyzeRun, "analysis.json"),
+      `${JSON.stringify(report, null, 2)}\n`,
+    );
+    await fs.writeFile(path.join(options.analyzeRun, "analysis.md"), markdown);
+    console.log(markdown);
     console.log(
       `Analysis written to ${path.join(options.analyzeRun, "analysis.md")}`,
     );

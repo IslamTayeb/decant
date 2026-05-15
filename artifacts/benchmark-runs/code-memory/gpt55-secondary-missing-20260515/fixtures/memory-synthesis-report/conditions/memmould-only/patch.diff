@@ -1,0 +1,12 @@
+diff --git a/src/report.mjs b/src/report.mjs
+index 7479a88..7832d40 100644
+--- a/src/report.mjs
++++ b/src/report.mjs
+@@ -1,5 +1,7 @@
+ export function buildReport(input) {
+   return {
+     summary: input.summary,
++    ...("failed_test_ids" in input ? { failed_test_ids: input.failed_test_ids } : {}),
++    ...("retry_owner" in input ? { retry_owner: input.retry_owner } : {}),
+   };
+ }

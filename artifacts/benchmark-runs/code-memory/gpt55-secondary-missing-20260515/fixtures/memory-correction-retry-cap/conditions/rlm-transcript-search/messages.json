@@ -1,0 +1,679 @@
+[
+  {
+    "info": {
+      "id": "msg_e295c873c0010KwBVNmKxnpAx3",
+      "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+      "role": "user",
+      "time": {
+        "created": 1778810390332
+      },
+      "summary": {
+        "diffs": [
+          {
+            "file": "src/retry-delay.mjs",
+            "patch": "Index: src/retry-delay.mjs\n===================================================================\n--- src/retry-delay.mjs\t\n+++ src/retry-delay.mjs\t\n@@ -1,3 +1,3 @@\n export function retryDelayMs(attempt) {\n-  return Math.min(5000, 100 * 2 ** attempt);\n+  return Math.min(2000, 100 * 2 ** attempt);\n }\n",
+            "additions": 1,
+            "deletions": 1,
+            "status": "modified"
+          }
+        ]
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "You are solving a code-memory benchmark. Edit source files as needed, run focused tests if useful, and do not commit changes. Do not edit files under test/. Current repository files and tests are authoritative. Prior transcript files may be useful, irrelevant, or stale. Use RLM-style transcript search with glob/grep/read and optional read-only bash only when it helps the coding task. Do not use mem-mould session tools."
+    },
+    "parts": [
+      {
+        "id": "prt_e295c873d001hurGHxL2OMImWP",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c873c0010KwBVNmKxnpAx3",
+        "type": "text",
+        "text": "Task: Memory temporal correction retry cap\n\nFix retryDelayMs so it matches the latest accepted retry-delay decision.\nVisible tests cover the basic exponential schedule, but the cap comes from prior work.\nIf prior memory is available, use the latest correction rather than stale earlier notes.\n\nOptional transcript corpus: ./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts. Prior memory may be useful, irrelevant, or stale. Search only if it helps; if it is irrelevant or stale, ignore it.\n\nAfter editing, respond with compact JSON only:\n{\"summary\":\"...\",\"tests\":\"...\",\"memory_decision\":\"used|ignored|rejected|abstained|unavailable\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}\nIf you used a prior session, cite the exact session_id and message_id. If memory was irrelevant, stale, or unavailable, leave evidence fields empty and explain the decision briefly."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e295c8743001kfmAKg1Eg2PLgB",
+      "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+      "role": "assistant",
+      "time": {
+        "created": 1778810390339,
+        "completed": 1778810395431
+      },
+      "parentID": "msg_e295c873c0010KwBVNmKxnpAx3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9685,
+        "input": 781,
+        "output": 200,
+        "reasoning": 0,
+        "cache": {
+          "read": 8704,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e295c8a99001ao4x2zZQjGw2SE",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c8743001kfmAKg1Eg2PLgB",
+        "type": "step-start",
+        "snapshot": "218fcdcd7c3cae15964c10d03c9e2023e3931782"
+      },
+      {
+        "id": "prt_e295c8c300013cXeVoxfzFeS4J",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c8743001kfmAKg1Eg2PLgB",
+        "type": "text",
+        "text": "I’ll inspect the retry-delay implementation and relevant tests, then search the transcript corpus for the latest accepted cap decision before editing.",
+        "time": {
+          "start": 1778810391600,
+          "end": 1778810395221
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0939d80d68a18e1a016a067e17b6548191a69c4129734af6ec",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e295c9a57001ScTBJ7HhChznIw",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c8743001kfmAKg1Eg2PLgB",
+        "type": "tool",
+        "callID": "call_nvwPgKuFXn5X2AtplyA0Q8sG",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "**/*",
+            "path": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+          },
+          "output": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/opencode\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/logs/refs/heads/main\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/logs/HEAD\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/refs/heads/main\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/43/dd0736ed147a20fd788a93adc31ba294c873ac\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/COMMIT_EDITMSG\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/index\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/21/8fcdcd7c3cae15964c10d03c9e2023e3931782\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/1c/ab0ddb08c9a5ba61c82d8f64adb8e4fcc10840\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/be/e238261d78bb687f1f8d28932ea52c74f885df\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/ac/9bd383e7a23c156c3a0b2d3a7a2c4101bb31e0\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/d3/1ea551dd01ed41fb907bcde49b4a13ebc6558d\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/18/9f7bf68fc9abf5e1f8da7e30a9856468a87c2e\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/ab/ad998db233aa3d4977cc473ea50674359eb2bc\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/aa/1216c789a99a993749e8254b695451ddb16647\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/a7/d3b28f1b2214bfa25a9a5ddf9b0d363368914b\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/39/d6c807ca57e9dddded0ccf02a9ffa8cb802613\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/f3/0431f6c2430c55e963efaaee8a285728378418\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/2b/23a119cda255ab7c3d13b1c6b4796732f27b01\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/a1/37808f319b8b81f058b3f0398204647cb3c6c7\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/eb/ecfffeb51fad516ec932fbbd56ed0906fca3c0\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/0e/f15bc94c157239bdcc61ebd7d8a6655cc17e21\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/10/555d84123242845adf827cf8287748a2948a93\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/HEAD\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/config\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/push-to-checkout.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/update.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-push.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-applypatch.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-merge-commit.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/post-update.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/prepare-commit-msg.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-receive.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/fsmonitor-watchman.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/applypatch-msg.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-commit.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/sendemail-validate.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-rebase.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/description\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/commit-msg.sample\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/info/exclude\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/memory_correction_retry_cap_decoy_1.md\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/cache_ttl_distractor_session.md\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/memory_correction_retry_cap_decoy_4.md\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/memory_correction_retry_cap_decoy_3.md\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/memory_correction_retry_cap_decoy_2.md\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/package.json\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/test/retry-delay.test.mjs\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/manifest.json\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/retry_delay_stale_session.md\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/retry_delay_latest_correction_session.md",
+          "title": "",
+          "metadata": {
+            "count": 52,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810395243,
+            "end": 1778810395268
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0939d80d68a18e1a016a067e1b51488191861a7ff6c20a5df7"
+          }
+        }
+      },
+      {
+        "id": "prt_e295c9a6c001A0nQiccTypg1S7",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c8743001kfmAKg1Eg2PLgB",
+        "type": "tool",
+        "callID": "call_pxSIVeCa4dVpZpctuWQnuyLt",
+        "tool": "grep",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "retryDelayMs|retry delay|retry-delay|cap",
+            "path": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+            "include": "*"
+          },
+          "output": "Found 47 matches\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/logs/refs/heads/main:\n  Line 1: 0000000000000000000000000000000000000000 43dd0736ed147a20fd788a93adc31ba294c873ac Code Memory Benchmark <code-memory@example.com> 1778810389 +0300\tcommit (initial): seed memory-correction-retry-cap\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/logs/HEAD:\n  Line 1: 0000000000000000000000000000000000000000 43dd0736ed147a20fd788a93adc31ba294c873ac Code Memory Benchmark <code-memory@example.com> 1778810389 +0300\tcommit (initial): seed memory-correction-retry-cap\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/COMMIT_EDITMSG:\n  Line 1: seed memory-correction-retry-cap\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/memory_correction_retry_cap_decoy_1.md:\n  Line 1: # Memory temporal correction retry cap decoy 1\n\n  Line 2: session_id: memory_correction_retry_cap_decoy_1\n\n  Line 3: title: Memory temporal correction retry cap decoy 1\n\n  Line 6: Decoy 1: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/cache_ttl_distractor_session.md:\n  Line 1: # Cache TTL cap distractor\n\n  Line 3: title: Cache TTL cap distractor\n\n  Line 6: Cache TTLs use namespace-specific caps. This is unrelated to retryDelayMs.\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/memory_correction_retry_cap_decoy_3.md:\n  Line 1: # Memory temporal correction retry cap decoy 3\n\n  Line 2: session_id: memory_correction_retry_cap_decoy_3\n\n  Line 3: title: Memory temporal correction retry cap decoy 3\n\n  Line 6: Decoy 3: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/memory_correction_retry_cap_decoy_4.md:\n  Line 1: # Memory temporal correction retry cap decoy 4\n\n  Line 2: session_id: memory_correction_retry_cap_decoy_4\n\n  Line 3: title: Memory temporal correction retry cap decoy 4\n\n  Line 6: Decoy 4: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/memory_correction_retry_cap_decoy_2.md:\n  Line 1: # Memory temporal correction retry cap decoy 2\n\n  Line 2: session_id: memory_correction_retry_cap_decoy_2\n\n  Line 3: title: Memory temporal correction retry cap decoy 2\n\n  Line 6: Decoy 2: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/manifest.json:\n  Line 2:   \"fixture\": \"memory-correction-retry-cap\",\n\n  Line 13:       \"title\": \"Stale retry delay note\",\n\n  Line 18:       \"title\": \"Cache TTL cap distractor\",\n\n  Line 22:       \"session_id\": \"memory_correction_retry_cap_decoy_1\",\n\n  Line 23:       \"title\": \"Memory temporal correction retry cap decoy 1\",\n\n  Line 24:       \"file\": \"memory_correction_retry_cap_decoy_1.md\"\n\n  Line 27:       \"session_id\": \"memory_correction_retry_cap_decoy_2\",\n\n  Line 28:       \"title\": \"Memory temporal correction retry cap decoy 2\",\n\n  Line 29:       \"file\": \"memory_correction_retry_cap_decoy_2.md\"\n\n  Line 32:       \"session_id\": \"memory_correction_retry_cap_decoy_3\",\n\n  Line 33:       \"title\": \"Memory temporal correction retry cap decoy 3\",\n\n  Line 34:       \"file\": \"memory_correction_retry_cap_decoy_3.md\"\n\n  Line 37:       \"session_id\": \"memory_correction_retry_cap_decoy_4\",\n\n  Line 38:       \"title\": \"Memory temporal correction retry cap decoy 4\",\n\n  Line 39:       \"file\": \"memory_correction_retry_cap_decoy_4.md\"\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/test/retry-delay.test.mjs:\n  Line 3: import { retryDelayMs } from \"../src/retry-delay.mjs\";\n\n  Line 6:   assert.equal(retryDelayMs(0), 100);\n\n  Line 7:   assert.equal(retryDelayMs(1), 200);\n\n  Line 8:   assert.equal(retryDelayMs(3), 800);\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs:\n  Line 1: export function retryDelayMs(attempt) {\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/retry_delay_stale_session.md:\n  Line 1: # Stale retry delay note\n\n  Line 3: title: Stale retry delay note\n\n  Line 6: Stale earlier note: cap retry delays at 5000ms for batch workers.\n\n\n./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/retry_delay_latest_correction_session.md:\n  Line 6: Earlier retry-delay notes used a 5000ms cap, but that was superseded after mobile clients hit long backoff stalls.\n\n  Line 9: Latest accepted decision: cap retryDelayMs at 2000ms while keeping the 100ms exponential base.\n",
+          "title": "retryDelayMs|retry delay|retry-delay|cap",
+          "metadata": {
+            "matches": 47,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810395246,
+            "end": 1778810395264
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0939d80d68a18e1a016a067e1b51608191aa1136a482824201"
+          }
+        }
+      },
+      {
+        "id": "prt_e295c9b00001WGyMzFKW8XgCbQ",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c8743001kfmAKg1Eg2PLgB",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "218fcdcd7c3cae15964c10d03c9e2023e3931782",
+        "cost": 0,
+        "tokens": {
+          "total": 9685,
+          "input": 781,
+          "output": 200,
+          "reasoning": 0,
+          "cache": {
+            "read": 8704,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e295c9b28001tWJfj2dOdHNnnJ",
+      "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+      "role": "assistant",
+      "time": {
+        "created": 1778810395432,
+        "completed": 1778810403817
+      },
+      "parentID": "msg_e295c873c0010KwBVNmKxnpAx3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 15299,
+        "input": 14920,
+        "output": 379,
+        "reasoning": 0,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e295c9e30001FZLisK3Raki4jD",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c9b28001tWJfj2dOdHNnnJ",
+        "type": "step-start",
+        "snapshot": "218fcdcd7c3cae15964c10d03c9e2023e3931782"
+      },
+      {
+        "id": "prt_e295ca01e0011W20yALzRctTrG",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c9b28001tWJfj2dOdHNnnJ",
+        "type": "text",
+        "text": "The transcript corpus contains both a stale 5000ms cap and a later accepted 2000ms cap. I’m reading the source and exact transcript metadata now, then I’ll apply the cap minimally.",
+        "time": {
+          "start": 1778810396703,
+          "end": 1778810403647
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_029cb38928051085016a067e1cd1bc8191b69933b88ab1d831",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e295cbb41001yY4sKI8nIg6mCl",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c9b28001tWJfj2dOdHNnnJ",
+        "type": "tool",
+        "callID": "call_sDwb75wtn3IpqzbKDpBN84DY",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs",
+            "offset": 1,
+            "limit": 120
+          },
+          "output": "<path>./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs</path>\n<type>file</type>\n<content>\n1: export function retryDelayMs(attempt) {\n2:   return Math.min(5000, 100 * 2 ** attempt);\n3: }\n\n(End of file - total 3 lines)\n</content>",
+          "title": "src/retry-delay.mjs",
+          "metadata": {
+            "preview": "export function retryDelayMs(attempt) {\n  return Math.min(5000, 100 * 2 ** attempt);\n}",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778810403687,
+            "end": 1778810403712
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_029cb38928051085016a067e23abec81918498d2211db83fba"
+          }
+        }
+      },
+      {
+        "id": "prt_e295cbb69001LCjw4hWCNMLHZP",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c9b28001tWJfj2dOdHNnnJ",
+        "type": "tool",
+        "callID": "call_dU1RP0ISqyrLMGfDB6Js71c9",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/test/retry-delay.test.mjs",
+            "offset": 1,
+            "limit": 120
+          },
+          "output": "<path>./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/test/retry-delay.test.mjs</path>\n<type>file</type>\n<content>\n1: import test from \"node:test\";\n2: import assert from \"node:assert/strict\";\n3: import { retryDelayMs } from \"../src/retry-delay.mjs\";\n4: \n5: test(\"uses exponential base delay\", () => {\n6:   assert.equal(retryDelayMs(0), 100);\n7:   assert.equal(retryDelayMs(1), 200);\n8:   assert.equal(retryDelayMs(3), 800);\n9: });\n\n(End of file - total 9 lines)\n</content>",
+          "title": "test/retry-delay.test.mjs",
+          "metadata": {
+            "preview": "import test from \"node:test\";\nimport assert from \"node:assert/strict\";\nimport { retryDelayMs } from \"../src/retry-delay.mjs\";\n\ntest(\"uses exponential base delay\", () => {\n  assert.equal(retryDelayMs(0), 100);\n  assert.equal(retryDelayMs(1), 200);\n  assert.equal(retryDelayMs(3), 800);\n});",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778810403691,
+            "end": 1778810403713
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_029cb38928051085016a067e23ac08819181155ba78147694a"
+          }
+        }
+      },
+      {
+        "id": "prt_e295cbb6c002klPGJQVCNZkkTj",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c9b28001tWJfj2dOdHNnnJ",
+        "type": "tool",
+        "callID": "call_I5c3meB6M2ftjExtL6SkY94q",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/retry_delay_latest_correction_session.md",
+            "offset": 1,
+            "limit": 120
+          },
+          "output": "<path>./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/retry_delay_latest_correction_session.md</path>\n<type>file</type>\n<content>\n1: # Retry delay latest correction\n2: session_id: retry_delay_latest_correction_session\n3: title: Retry delay latest correction\n4: \n5: ## message retry_correction_fact_1\n6: Earlier retry-delay notes used a 5000ms cap, but that was superseded after mobile clients hit long backoff stalls.\n7: \n8: ## message retry_correction_fact_2\n9: Latest accepted decision: cap retryDelayMs at 2000ms while keeping the 100ms exponential base.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "memory/transcripts/retry_delay_latest_correction_session.md",
+          "metadata": {
+            "preview": "# Retry delay latest correction\nsession_id: retry_delay_latest_correction_session\ntitle: Retry delay latest correction\n\n## message retry_correction_fact_1\nEarlier retry-delay notes used a 5000ms cap, but that was superseded after mobile clients hit long backoff stalls.\n\n## message retry_correction_fact_2\nLatest accepted decision: cap retryDelayMs at 2000ms while keeping the 100ms exponential base.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778810403694,
+            "end": 1778810403721
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_029cb38928051085016a067e23ac1081919b6a5152d7ecb913"
+          }
+        }
+      },
+      {
+        "id": "prt_e295cbb6f001nxMGz7xtajV2M1",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c9b28001tWJfj2dOdHNnnJ",
+        "type": "tool",
+        "callID": "call_V8JaWEYK7zF91l8pkHBEu50F",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/package.json",
+            "offset": 1,
+            "limit": 120
+          },
+          "output": "<path>./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/package.json</path>\n<type>file</type>\n<content>\n1: {\n2:   \"type\": \"module\",\n3:   \"scripts\": { \"test\": \"node --test\" }\n4: }\n\n(End of file - total 4 lines)\n</content>",
+          "title": "package.json",
+          "metadata": {
+            "preview": "{\n  \"type\": \"module\",\n  \"scripts\": { \"test\": \"node --test\" }\n}",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778810403697,
+            "end": 1778810403710
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_029cb38928051085016a067e23ac188191bf0d98e161c0f3b7"
+          }
+        }
+      },
+      {
+        "id": "prt_e295cbbbc001EIJ6FUGoayEu7O",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295c9b28001tWJfj2dOdHNnnJ",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "218fcdcd7c3cae15964c10d03c9e2023e3931782",
+        "cost": 0,
+        "tokens": {
+          "total": 15299,
+          "input": 14920,
+          "output": 379,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e295cbbeb0013Rpfee2AjLN6M4",
+      "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+      "role": "assistant",
+      "time": {
+        "created": 1778810403819,
+        "completed": 1778810407680
+      },
+      "parentID": "msg_e295c873c0010KwBVNmKxnpAx3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 16082,
+        "input": 1097,
+        "output": 137,
+        "reasoning": 0,
+        "cache": {
+          "read": 14848,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e295cbe2d001S7rEfteWOZzIM5",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295cbbeb0013Rpfee2AjLN6M4",
+        "type": "step-start",
+        "snapshot": "218fcdcd7c3cae15964c10d03c9e2023e3931782"
+      },
+      {
+        "id": "prt_e295cc096001yZTIj5hjT7hcOK",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295cbbeb0013Rpfee2AjLN6M4",
+        "type": "tool",
+        "callID": "call_YqKxNCixoJhaJw0cCq5TiAc4",
+        "tool": "apply_patch",
+        "state": {
+          "status": "completed",
+          "input": {
+            "patchText": "*** Begin Patch\n*** Update File: ./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n@@\n export function retryDelayMs(attempt) {\n-  return Math.min(5000, 100 * 2 ** attempt);\n+  return Math.min(2000, 100 * 2 ** attempt);\n }\n*** End Patch"
+          },
+          "output": "Success. Updated the following files:\nM src/retry-delay.mjs",
+          "title": "Success. Updated the following files:\nM src/retry-delay.mjs",
+          "metadata": {
+            "diff": "Index: ./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n===================================================================\n--- ./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n+++ ./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n@@ -1,3 +1,3 @@\n export function retryDelayMs(attempt) {\n-  return Math.min(5000, 100 * 2 ** attempt);\n+  return Math.min(2000, 100 * 2 ** attempt);\n }\n\n",
+            "files": [
+              {
+                "filePath": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs",
+                "relativePath": "src/retry-delay.mjs",
+                "type": "update",
+                "patch": "Index: ./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n===================================================================\n--- ./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n+++ ./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n@@ -1,3 +1,3 @@\n export function retryDelayMs(attempt) {\n-  return Math.min(5000, 100 * 2 ** attempt);\n+  return Math.min(2000, 100 * 2 ** attempt);\n }\n",
+                "additions": 1,
+                "deletions": 1
+              }
+            ],
+            "diagnostics": {},
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810407414,
+            "end": 1778810407422
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_060603bbee5907e1016a067e2521a481919f863a0327eb23a6"
+          }
+        }
+      },
+      {
+        "id": "prt_e295ccabe001BkBu7fJQHeoolT",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295cbbeb0013Rpfee2AjLN6M4",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "2bcc000dbc5843360651e50940080d76484d0508",
+        "cost": 0,
+        "tokens": {
+          "total": 16082,
+          "input": 1097,
+          "output": 137,
+          "reasoning": 0,
+          "cache": {
+            "read": 14848,
+            "write": 0
+          }
+        }
+      },
+      {
+        "id": "prt_e295ccaff001xEb4VnNjnxg4K2",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295cbbeb0013Rpfee2AjLN6M4",
+        "type": "patch",
+        "hash": "218fcdcd7c3cae15964c10d03c9e2023e3931782",
+        "files": [
+          "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs"
+        ]
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e295ccb02001UNnx18F5x1uMey",
+      "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+      "role": "assistant",
+      "time": {
+        "created": 1778810407682,
+        "completed": 1778810411646
+      },
+      "parentID": "msg_e295c873c0010KwBVNmKxnpAx3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 16227,
+        "input": 6891,
+        "output": 120,
+        "reasoning": 0,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e295cce89001xwuPD6cUOOODMZ",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295ccb02001UNnx18F5x1uMey",
+        "type": "step-start",
+        "snapshot": "2bcc000dbc5843360651e50940080d76484d0508"
+      },
+      {
+        "id": "prt_e295ccfb40010wyJ3utEwUSwly",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295ccb02001UNnx18F5x1uMey",
+        "type": "text",
+        "text": "The implementation now uses the latest accepted 2000ms cap while preserving the existing exponential base schedule. I’ll run the focused test suite.",
+        "time": {
+          "start": 1778810408884,
+          "end": 1778810409870
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_09ab7b8d84302907016a067e28f8dc8191906c31e5bd9c065d",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e295cd393001bnCs9SM2meQ91R",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295ccb02001UNnx18F5x1uMey",
+        "type": "tool",
+        "callID": "call_3a6nJmXTv15XfRCbVftUmFZG",
+        "tool": "bash",
+        "state": {
+          "status": "completed",
+          "input": {
+            "command": "npm test",
+            "timeout": 120000,
+            "workdir": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+            "description": "Runs project test suite"
+          },
+          "output": "\n> test\n> node --test\n\n✔ uses exponential base delay (0.563708ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 73.731\n",
+          "title": "Runs project test suite",
+          "metadata": {
+            "output": "\n> test\n> node --test\n\n✔ uses exponential base delay (0.563708ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 73.731\n",
+            "exit": 0,
+            "description": "Runs project test suite",
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810411569,
+            "end": 1778810411575
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_09ab7b8d84302907016a067e29bfd08191804125e59cfcc96a"
+          }
+        }
+      },
+      {
+        "id": "prt_e295cda5e0013CyoYjeXGzCN5f",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295ccb02001UNnx18F5x1uMey",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "2bcc000dbc5843360651e50940080d76484d0508",
+        "cost": 0,
+        "tokens": {
+          "total": 16227,
+          "input": 6891,
+          "output": 120,
+          "reasoning": 0,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e295cda800010zW1XeZPa7wR7m",
+      "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+      "role": "assistant",
+      "time": {
+        "created": 1778810411648,
+        "completed": 1778810414454
+      },
+      "parentID": "msg_e295c873c0010KwBVNmKxnpAx3",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 16378,
+        "input": 438,
+        "output": 68,
+        "reasoning": 0,
+        "cache": {
+          "read": 15872,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e295cdd44001yv6MYQXgbSCn1P",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295cda800010zW1XeZPa7wR7m",
+        "type": "step-start",
+        "snapshot": "2bcc000dbc5843360651e50940080d76484d0508"
+      },
+      {
+        "id": "prt_e295cdff6001iz7ev2aV2rOAkR",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295cda800010zW1XeZPa7wR7m",
+        "type": "text",
+        "text": "{\"summary\":\"Updated retryDelayMs cap from stale 5000ms to latest accepted 2000ms while keeping 100ms exponential base.\",\"tests\":\"npm test passed\",\"memory_decision\":\"used\",\"evidence\":{\"session_id\":\"retry_delay_latest_correction_session\",\"message_id\":\"retry_correction_fact_2\"}}",
+        "time": {
+          "start": 1778810413046,
+          "end": 1778810414322
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0cf6c00d1517d3a8016a067e2d2888819199c4725a5b36bfd1",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e295ce54a001AYMxf9LzWubs3t",
+        "sessionID": "ses_1d6a378d6ffe9SCNdcbqWkPyMM",
+        "messageID": "msg_e295cda800010zW1XeZPa7wR7m",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "2bcc000dbc5843360651e50940080d76484d0508",
+        "cost": 0,
+        "tokens": {
+          "total": 16378,
+          "input": 438,
+          "output": 68,
+          "reasoning": 0,
+          "cache": {
+            "read": 15872,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

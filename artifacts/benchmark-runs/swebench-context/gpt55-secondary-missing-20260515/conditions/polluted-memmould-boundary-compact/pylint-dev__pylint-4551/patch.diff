@@ -1,0 +1,55 @@
+diff --git a/pylint/pyreverse/inspector.py b/pylint/pyreverse/inspector.py
+index 8fa12202..a1e6b4fd 100644
+--- a/pylint/pyreverse/inspector.py
++++ b/pylint/pyreverse/inspector.py
+@@ -231,6 +231,25 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+         """
+         try:
+             values = set(node.infer())
++            assign_node = node.parent
++            if (
++                isinstance(assign_node, astroid.Assign)
++                and isinstance(assign_node.value, astroid.Name)
++            ):
++                frame = node.frame()
++                try:
++                    arguments = frame.args
++                    name_index = [arg.name for arg in arguments.args].index(
++                        assign_node.value.name
++                    )
++                    annotation = arguments.annotations[name_index]
++                except (AttributeError, ValueError, IndexError):
++                    annotation = None
++                if annotation is not None:
++                    try:
++                        values.update(annotation.infer())
++                    except astroid.InferenceError:
++                        pass
+             current = set(parent.instance_attrs_type[node.attrname])
+             parent.instance_attrs_type[node.attrname] = list(current | values)
+         except astroid.InferenceError:
+diff --git a/tests/unittest_pyreverse_inspector.py b/tests/unittest_pyreverse_inspector.py
+index e1ff6378..6bda0294 100644
+--- a/tests/unittest_pyreverse_inspector.py
++++ b/tests/unittest_pyreverse_inspector.py
+@@ -71,6 +71,20 @@ def test_instance_attrs_resolution(project):
+     assert type_dict["_id"][0] is astroid.Uninferable
+ 
+ 
++def test_instance_attr_gets_type_from_annotation():
++    module = astroid.parse(
++        """
++    class C:
++        def __init__(self, value: str = None):
++            self.value = value
++    """
++    )
++    inspector.Linker(None).visit(module)
++
++    values = module["C"].instance_attrs_type["value"]
++    assert "str" in {value.name for value in values if hasattr(value, "name")}
++
++
+ def test_concat_interfaces():
+     cls = astroid.extract_node(
+         '''

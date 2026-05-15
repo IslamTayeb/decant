@@ -1,0 +1,77 @@
+diff --git a/pylint/pyreverse/inspector.py b/pylint/pyreverse/inspector.py
+index 8fa12202..7fd9ab5b 100644
+--- a/pylint/pyreverse/inspector.py
++++ b/pylint/pyreverse/inspector.py
+@@ -223,6 +223,19 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+         except astroid.InferenceError:
+             pass
+ 
++    @staticmethod
++    def _annotation_from_assignattr(node):
++        assign_value = getattr(node.parent, "value", None)
++        if not isinstance(assign_value, astroid.Name):
++            return None
++        frame = node.frame()
++        if not isinstance(frame, astroid.FunctionDef):
++            return None
++        for arg, annotation in zip(frame.args.args, frame.args.annotations):
++            if arg.name == assign_value.name:
++                return annotation
++        return None
++
+     @staticmethod
+     def handle_assignattr_type(node, parent):
+         """handle an astroid.assignattr node
+@@ -230,7 +243,15 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+         handle instance_attrs_type
+         """
+         try:
+-            values = set(node.infer())
++            values = set()
++            annotation = Linker._annotation_from_assignattr(node)
++            if annotation is not None:
++                try:
++                    values.update(annotation.infer())
++                except astroid.InferenceError:
++                    pass
++            if not values:
++                values = set(node.infer())
+             current = set(parent.instance_attrs_type[node.attrname])
+             parent.instance_attrs_type[node.attrname] = list(current | values)
+         except astroid.InferenceError:
+diff --git a/tests/unittest_pyreverse_inspector.py b/tests/unittest_pyreverse_inspector.py
+index e1ff6378..ab3e8cf2 100644
+--- a/tests/unittest_pyreverse_inspector.py
++++ b/tests/unittest_pyreverse_inspector.py
+@@ -19,7 +19,7 @@ import astroid
+ import pytest
+ from unittest_pyreverse_writer import get_project
+ 
+-from pylint.pyreverse import inspector
++from pylint.pyreverse import diagrams, inspector
+ 
+ 
+ @pytest.fixture
+@@ -71,6 +71,22 @@ def test_instance_attrs_resolution(project):
+     assert type_dict["_id"][0] is astroid.Uninferable
+ 
+ 
++def test_instance_attrs_annotation_resolution():
++    module = astroid.parse(
++        """
++    class C(object):
++        def __init__(self, a: str = None):
++            self.a = a
++    """
++    )
++    linker = inspector.Linker(None)
++    linker.visit(module)
++
++    attrs = diagrams.ClassDiagram("test", "ALL").get_attrs(module["C"])
++
++    assert "a : str" in attrs
++
++
+ def test_concat_interfaces():
+     cls = astroid.extract_node(
+         '''

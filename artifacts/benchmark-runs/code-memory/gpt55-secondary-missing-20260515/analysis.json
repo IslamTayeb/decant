@@ -1,0 +1,931 @@
+{
+  "outDir": "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515",
+  "generatedAt": "2026-05-15T02:05:04.340Z",
+  "rows": [
+    {
+      "fixture": "memory-correction-retry-cap",
+      "title": "Memory temporal correction retry cap",
+      "memory_role": "correction",
+      "condition": "code-only",
+      "benchmark_passed": false,
+      "tests_passed": false,
+      "public_tests_passed": true,
+      "hidden_tests_passed": false,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/retry-delay.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 289,
+      "output_preview": "{\"summary\":\"Changed retryDelayMs cap from 5000ms to 1000ms while preserving the exponential base schedule.\",\"tests\":\"npm test passed\",\"memory_decision\":\"unavailable\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}",
+      "tool_names": [
+        "grep",
+        "glob",
+        "read",
+        "read",
+        "read",
+        "bash",
+        "bash",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 4,
+      "bash_tool_call_count": 3,
+      "message_detail_call_count": 0,
+      "memory_decision": "unavailable",
+      "citation_hits": [],
+      "relevant_session_id": "retry_delay_latest_correction_session",
+      "relevant_message_ids": [
+        "retry_correction_fact_2"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses exponential base delay (0.603208ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 76.42925\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": false,
+        "exitCode": 1,
+        "stdout": "✖ uses the latest accepted cap (1.114041ms)\n✔ uses exponential base delay (0.59925ms)\nℹ tests 2\nℹ suites 0\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 78.376875\n\n✖ failing tests:\n\ntest at test/hidden-retry-delay.test.mjs:5:1\n✖ uses the latest accepted cap (1.114041ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  1000 !== 2000\n  \n      at TestContext.<anonymous> (file://./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/code-only/worktree/test/hidden-retry-delay.test.mjs:6:10)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1201:25)\n      at Test.start (node:internal/test_runner/test:1096:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 1000,\n    expected: 2000,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+        "stderr": "",
+        "error": "Error: Command failed: node --test\n\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+      },
+      "tokens": {
+        "messages": 8,
+        "assistant": 7,
+        "input": 16572,
+        "output": 1100,
+        "total": 90537,
+        "reasoning": 1185,
+        "cacheRead": 71680,
+        "cacheWrite": 0,
+        "toolCalls": 10,
+        "maxInput": 9371
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 58844
+    },
+    {
+      "fixture": "memory-correction-retry-cap",
+      "title": "Memory temporal correction retry cap",
+      "memory_role": "correction",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/retry-delay.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 289,
+      "output_preview": "{\"summary\":\"Updated retryDelayMs cap from stale 5000ms to latest accepted 2000ms while keeping 100ms exponential base.\",\"tests\":\"npm test passed\",\"memory_decision\":\"used\",\"evidence\":{\"session_id\":\"retry_delay_latest_correction_session\",\"message_id\":\"retry_correction_fact_2\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [
+        "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/rlm-transcript-search/worktree/memory/transcripts/retry_delay_latest_correction_session.md"
+      ],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 4,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "memory_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "retry_delay_latest_correction_session",
+      "relevant_message_ids": [
+        "retry_correction_fact_2"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses exponential base delay (0.625958ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.0605\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses the latest accepted cap (0.623833ms)\n✔ uses exponential base delay (0.6005ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 77.877\n",
+        "stderr": ""
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 24127,
+        "output": 904,
+        "total": 73671,
+        "reasoning": 0,
+        "cacheRead": 48640,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 14920
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 25580
+    },
+    {
+      "fixture": "memory-correction-retry-cap",
+      "title": "Memory temporal correction retry cap",
+      "memory_role": "correction",
+      "condition": "memmould-only",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/retry-delay.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 289,
+      "output_preview": "{\"summary\":\"Updated retryDelayMs cap from stale 5000ms to latest accepted 2000ms while preserving 100ms exponential base.\",\"tests\":\"npm test passed (1 test).\",\"memory_decision\":\"used\",\"evidence\":{\"session_id\":\"ses_1d6a2f755ffeyeaa2DdGI6CPUx\",\"message_id\":\"msg_e295d08d1001YND9eJE6NdorUD\"}}",
+      "tool_names": [
+        "session_lookup",
+        "glob",
+        "session_detail",
+        "read",
+        "read",
+        "read",
+        "message_detail",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 1,
+      "read_tool_call_count": 5,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "memory_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "ses_1d6a2f755ffeyeaa2DdGI6CPUx",
+      "relevant_message_ids": [
+        "msg_e295d08d1001YND9eJE6NdorUD",
+        "msg_e295d08de001i4Dxx2uJIWpBIQ"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses exponential base delay (0.5955ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.046083\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses the latest accepted cap (0.819292ms)\n✔ uses exponential base delay (0.820792ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 84.562167\n",
+        "stderr": ""
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 8069,
+        "output": 1092,
+        "total": 85553,
+        "reasoning": 104,
+        "cacheRead": 76288,
+        "cacheWrite": 0,
+        "toolCalls": 11,
+        "maxInput": 3518
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 52458
+    },
+    {
+      "fixture": "memory-correction-retry-cap",
+      "title": "Memory temporal correction retry cap",
+      "memory_role": "correction",
+      "condition": "memmould-guided-rlm",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/retry-delay.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 289,
+      "output_preview": "{\"summary\":\"Updated retryDelayMs cap from stale 5000ms to latest accepted 2000ms while preserving the 100ms exponential base.\",\"tests\":\"npm test passed\",\"memory_decision\":\"used\",\"evidence\":{\"session_id\":\"ses_1d6a22e8effeAqAcu2LhI7XK2f\",\"message_id\":\"msg_e295dd18a001zZsR04iUAlpxTr\"}}",
+      "tool_names": [
+        "grep",
+        "session_lookup",
+        "read",
+        "glob",
+        "read",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [
+        "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-correction-retry-cap/conditions/memmould-guided-rlm/worktree/memory/transcripts/retry_delay_latest_correction_session--ses_1d6a22e8effeAqAcu2LhI7XK2f.md"
+      ],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 1,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 5,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "memory_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "ses_1d6a22e8effeAqAcu2LhI7XK2f",
+      "relevant_message_ids": [
+        "msg_e295dd18a001zZsR04iUAlpxTr",
+        "msg_e295dd193001hHKTd2CqiQO1gw"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses exponential base delay (0.697625ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 96.7325\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses the latest accepted cap (0.811042ms)\n✔ uses exponential base delay (0.9635ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 276.582333\n",
+        "stderr": ""
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 16659,
+        "output": 1138,
+        "total": 77773,
+        "reasoning": 72,
+        "cacheRead": 59904,
+        "cacheWrite": 0,
+        "toolCalls": 10,
+        "maxInput": 11198
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 53747
+    },
+    {
+      "fixture": "memory-missing-pagination",
+      "title": "Memory missing pagination fix",
+      "memory_role": "missing",
+      "condition": "code-only",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/pagination.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 325,
+      "output_preview": "{\"summary\":\"Fixed totalPages to include partial pages by using Math.ceil.\",\"tests\":\"npm test (pass)\",\"memory_decision\":\"unavailable\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "glob",
+        "apply_patch",
+        "read",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 3,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "memory_decision": "unavailable",
+      "citation_hits": [],
+      "relevant_session_id": "",
+      "relevant_message_ids": [],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ counts full and partial pages (0.683125ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 91.475625\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ rounds up without inventing pages (0.614083ms)\n✔ counts full and partial pages (0.611041ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 82.497791\n",
+        "stderr": ""
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 22599,
+        "output": 767,
+        "total": 62790,
+        "reasoning": 0,
+        "cacheRead": 39424,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 10424
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 27627
+    },
+    {
+      "fixture": "memory-missing-pagination",
+      "title": "Memory missing pagination fix",
+      "memory_role": "missing",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/pagination.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 325,
+      "output_preview": "{\"summary\":\"Fixed totalPages to round up partial pages with Math.ceil while preserving the invalid pageSize guard.\",\"tests\":\"node --test test/pagination.test.mjs (passed)\",\"memory_decision\":\"ignored\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 2,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "memory_decision": "ignored",
+      "citation_hits": [],
+      "relevant_session_id": "",
+      "relevant_message_ids": [],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ counts full and partial pages (0.642166ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 84.81425\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ rounds up without inventing pages (0.615458ms)\n✔ counts full and partial pages (0.593708ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 77.325625\n",
+        "stderr": ""
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 22435,
+        "output": 680,
+        "total": 53323,
+        "reasoning": 0,
+        "cacheRead": 30208,
+        "cacheWrite": 0,
+        "toolCalls": 6,
+        "maxInput": 10770
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 20397
+    },
+    {
+      "fixture": "memory-missing-pagination",
+      "title": "Memory missing pagination fix",
+      "memory_role": "missing",
+      "condition": "memmould-only",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/pagination.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 325,
+      "output_preview": "{\"summary\":\"Fixed totalPages to include partial pages using Math.ceil.\",\"tests\":\"npm test passed.\",\"memory_decision\":\"ignored\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 4,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "memory_decision": "ignored",
+      "citation_hits": [],
+      "relevant_session_id": "",
+      "relevant_message_ids": [],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ counts full and partial pages (0.625083ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 78.291542\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ rounds up without inventing pages (0.594875ms)\n✔ counts full and partial pages (0.601ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 78.418833\n",
+        "stderr": ""
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 24062,
+        "output": 824,
+        "total": 66460,
+        "reasoning": 102,
+        "cacheRead": 41472,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 11646
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 41034
+    },
+    {
+      "fixture": "memory-missing-pagination",
+      "title": "Memory missing pagination fix",
+      "memory_role": "missing",
+      "condition": "memmould-guided-rlm",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/pagination.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 325,
+      "output_preview": "{\"summary\":\"Fixed totalPages to use Math.ceil so partial pages are counted.\",\"tests\":\"npm test passed\",\"memory_decision\":\"ignored\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 4,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "memory_decision": "ignored",
+      "citation_hits": [],
+      "relevant_session_id": "",
+      "relevant_message_ids": [],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ counts full and partial pages (0.587875ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 81.227583\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ rounds up without inventing pages (0.590833ms)\n✔ counts full and partial pages (0.604209ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 76.92325\n",
+        "stderr": ""
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 13788,
+        "output": 878,
+        "total": 67955,
+        "reasoning": 41,
+        "cacheRead": 53248,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 9882
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 45754
+    },
+    {
+      "fixture": "memory-synthesis-report",
+      "title": "Memory synthesis report fields",
+      "memory_role": "synthesis",
+      "condition": "code-only",
+      "benchmark_passed": false,
+      "tests_passed": false,
+      "public_tests_passed": true,
+      "hidden_tests_passed": false,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/report.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 245,
+      "output_preview": "{\"summary\":\"Updated buildReport to preserve all input report fields while keeping summary behavior.\",\"tests\":\"npm test\",\"memory_decision\":\"unavailable\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "memory_decision": "unavailable",
+      "citation_hits": [],
+      "relevant_session_id": "report_parent_synthesis_session",
+      "relevant_message_ids": [
+        "report_synthesis_fact_1",
+        "report_synthesis_fact_2"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ keeps report summary (1.331291ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.467209\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": false,
+        "exitCode": 1,
+        "stdout": "✖ keeps synthesized child-agent fields (4.653208ms)\n✔ keeps report summary (2.683917ms)\nℹ tests 2\nℹ suites 0\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 86.139083\n\n✖ failing tests:\n\ntest at test/hidden-report.test.mjs:5:1\n✖ keeps synthesized child-agent fields (4.653208ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n    {\n  +   failedTestIDs: [\n  -   failed_test_ids: [\n        'auth-smoke',\n        'retry-smoke'\n      ],\n  +   retryOwner: 'infra-oncall',\n  -   retry_owner: 'infra-oncall',\n      summary: 'failed smoke run'\n    }\n  \n      at TestContext.<anonymous> (file://./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-synthesis-report/conditions/code-only/worktree/test/hidden-report.test.mjs:6:10)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1201:25)\n      at Test.start (node:internal/test_runner/test:1096:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: { summary: 'failed smoke run', failedTestIDs: [ 'auth-smoke', 'retry-smoke' ], retryOwner: 'infra-oncall' },\n    expected: { summary: 'failed smoke run', failed_test_ids: [ 'auth-smoke', 'retry-smoke' ], retry_owner: 'infra-oncall' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+        "stderr": "",
+        "error": "Error: Command failed: node --test\n\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 16674,
+        "output": 695,
+        "total": 59088,
+        "reasoning": 247,
+        "cacheRead": 41472,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 11472
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 29700
+    },
+    {
+      "fixture": "memory-synthesis-report",
+      "title": "Memory synthesis report fields",
+      "memory_role": "synthesis",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": false,
+      "tests_passed": false,
+      "public_tests_passed": true,
+      "hidden_tests_passed": false,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/report.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 444,
+      "output_preview": "{\"summary\":\"Updated buildReport to preserve failed_test_ids and retry_owner when provided while keeping summary-only output unchanged.\",\"tests\":\"npm test passed\",\"memory_decision\":\"used\",\"evidence\":{\"session_id\":\"report_parent_synthesis_session\",\"message_id\":\"report_synthesis_fact_1; report_synthesis_fact_2\"}}",
+      "tool_names": [
+        "glob",
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "read",
+        "bash"
+      ],
+      "transcript_files_read": [
+        "./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-synthesis-report/conditions/rlm-transcript-search/worktree/memory/transcripts/report_parent_synthesis_session.md"
+      ],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 3,
+      "read_tool_call_count": 5,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "memory_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "report_parent_synthesis_session",
+      "relevant_message_ids": [
+        "report_synthesis_fact_1",
+        "report_synthesis_fact_2"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ keeps report summary (1.2715ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 84.995417\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": false,
+        "exitCode": 1,
+        "stdout": "✖ keeps synthesized child-agent fields (2.737709ms)\n✔ keeps report summary (1.161042ms)\nℹ tests 2\nℹ suites 0\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 84.467625\n\n✖ failing tests:\n\ntest at test/hidden-report.test.mjs:5:1\n✖ keeps synthesized child-agent fields (2.737709ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n    {\n  -   failed_test_ids: [\n  -     'auth-smoke',\n  -     'retry-smoke'\n  -   ],\n  -   retry_owner: 'infra-oncall',\n      summary: 'failed smoke run'\n    }\n  \n      at TestContext.<anonymous> (file://./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-synthesis-report/conditions/rlm-transcript-search/worktree/test/hidden-report.test.mjs:6:10)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1201:25)\n      at Test.start (node:internal/test_runner/test:1096:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: { summary: 'failed smoke run' },\n    expected: { summary: 'failed smoke run', failed_test_ids: [ 'auth-smoke', 'retry-smoke' ], retry_owner: 'infra-oncall' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+        "stderr": "",
+        "error": "Error: Command failed: node --test\n\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 14764,
+        "output": 977,
+        "total": 73786,
+        "reasoning": 189,
+        "cacheRead": 57856,
+        "cacheWrite": 0,
+        "toolCalls": 10,
+        "maxInput": 6657
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 33641
+    },
+    {
+      "fixture": "memory-synthesis-report",
+      "title": "Memory synthesis report fields",
+      "memory_role": "synthesis",
+      "condition": "memmould-only",
+      "benchmark_passed": false,
+      "tests_passed": false,
+      "public_tests_passed": true,
+      "hidden_tests_passed": false,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/report.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 385,
+      "output_preview": "{\"summary\":\"Preserved accepted synthesized report fields failed_test_ids and retry_owner when present, while keeping absent fields out of the output.\",\"tests\":\"npm test\",\"memory_decision\":\"used\",\"evidence\":{\"session_id\":\"ses_1d6a0676affeFXgVpNYUH1j0Vj\",\"message_id\":\"msg_e295f98b3001nKWR0p1yl0KR8h\"}}",
+      "tool_names": [
+        "glob",
+        "session_lookup",
+        "read",
+        "read",
+        "session_detail",
+        "read",
+        "message_detail",
+        "apply_patch",
+        "apply_patch",
+        "read",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 1,
+      "read_tool_call_count": 4,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "memory_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "ses_1d6a0676affeFXgVpNYUH1j0Vj",
+      "relevant_message_ids": [
+        "msg_e295f98b3001nKWR0p1yl0KR8h",
+        "msg_e295f98bd001OdMZQDgVWlIup6"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ keeps report summary (1.152042ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 78.908625\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": false,
+        "exitCode": 1,
+        "stdout": "✖ keeps synthesized child-agent fields (2.211416ms)\n✔ keeps report summary (1.1425ms)\nℹ tests 2\nℹ suites 0\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 83.171917\n\n✖ failing tests:\n\ntest at test/hidden-report.test.mjs:5:1\n✖ keeps synthesized child-agent fields (2.211416ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n    {\n  -   failed_test_ids: [\n  -     'auth-smoke',\n  -     'retry-smoke'\n  -   ],\n  -   retry_owner: 'infra-oncall',\n      summary: 'failed smoke run'\n    }\n  \n      at TestContext.<anonymous> (file://./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-synthesis-report/conditions/memmould-only/worktree/test/hidden-report.test.mjs:6:10)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1201:25)\n      at Test.start (node:internal/test_runner/test:1096:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: { summary: 'failed smoke run' },\n    expected: { summary: 'failed smoke run', failed_test_ids: [ 'auth-smoke', 'retry-smoke' ], retry_owner: 'infra-oncall' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+        "stderr": "",
+        "error": "Error: Command failed: node --test\n\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+      },
+      "tokens": {
+        "messages": 9,
+        "assistant": 8,
+        "input": 32110,
+        "output": 1142,
+        "total": 114262,
+        "reasoning": 114,
+        "cacheRead": 80896,
+        "cacheWrite": 0,
+        "toolCalls": 11,
+        "maxInput": 14093
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 56757
+    },
+    {
+      "fixture": "memory-synthesis-report",
+      "title": "Memory synthesis report fields",
+      "memory_role": "synthesis",
+      "condition": "memmould-guided-rlm",
+      "benchmark_passed": false,
+      "tests_passed": false,
+      "public_tests_passed": true,
+      "hidden_tests_passed": false,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "memory_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/report.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 444,
+      "output_preview": "{\"summary\":\"Updated buildReport to preserve accepted synthesized fields failed_test_ids and retry_owner when present.\",\"tests\":\"npm test passed\",\"memory_decision\":\"used\",\"evidence\":{\"session_id\":\"ses_1d69f76edffetlLo5JH9HfYau1\",\"message_id\":\"msg_e29608928001L7Ng3dwFtcS0L5\"}}",
+      "tool_names": [
+        "glob",
+        "session_lookup",
+        "session_detail",
+        "read",
+        "read",
+        "read",
+        "message_detail",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 1,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "memory_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "ses_1d69f76edffetlLo5JH9HfYau1",
+      "relevant_message_ids": [
+        "msg_e29608928001L7Ng3dwFtcS0L5",
+        "msg_e2960893d001AlfUAzSoR38L33"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ keeps report summary (1.26775ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.823583\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": false,
+        "exitCode": 1,
+        "stdout": "✖ keeps synthesized child-agent fields (2.272625ms)\n✔ keeps report summary (1.161458ms)\nℹ tests 2\nℹ suites 0\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 83.039917\n\n✖ failing tests:\n\ntest at test/hidden-report.test.mjs:5:1\n✖ keeps synthesized child-agent fields (2.272625ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n    {\n  -   failed_test_ids: [\n  -     'auth-smoke',\n  -     'retry-smoke'\n  -   ],\n  -   retry_owner: 'infra-oncall',\n      summary: 'failed smoke run'\n    }\n  \n      at TestContext.<anonymous> (file://./benchmarks/code-memory/runs/gpt55-secondary-missing-20260515/fixtures/memory-synthesis-report/conditions/memmould-guided-rlm/worktree/test/hidden-report.test.mjs:6:10)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1201:25)\n      at Test.start (node:internal/test_runner/test:1096:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: { summary: 'failed smoke run' },\n    expected: { summary: 'failed smoke run', failed_test_ids: [ 'auth-smoke', 'retry-smoke' ], retry_owner: 'infra-oncall' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+        "stderr": "",
+        "error": "Error: Command failed: node --test\n\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 23561,
+        "output": 986,
+        "total": 87101,
+        "reasoning": 90,
+        "cacheRead": 62464,
+        "cacheWrite": 0,
+        "toolCalls": 9,
+        "maxInput": 15437
+      },
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 62458
+    }
+  ]
+}

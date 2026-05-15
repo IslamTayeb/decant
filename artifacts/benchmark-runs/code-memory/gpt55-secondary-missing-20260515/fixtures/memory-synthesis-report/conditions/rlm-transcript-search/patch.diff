@@ -1,0 +1,21 @@
+diff --git a/src/report.mjs b/src/report.mjs
+index 7479a88..45e090c 100644
+--- a/src/report.mjs
++++ b/src/report.mjs
+@@ -1,5 +1,15 @@
+ export function buildReport(input) {
+-  return {
++  const report = {
+     summary: input.summary,
+   };
++
++  if ("failed_test_ids" in input) {
++    report.failed_test_ids = input.failed_test_ids;
++  }
++
++  if ("retry_owner" in input) {
++    report.retry_owner = input.retry_owner;
++  }
++
++  return report;
+ }

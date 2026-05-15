@@ -1,0 +1,126 @@
+{
+  "timestamp": "2026-05-15T02:02:00.337Z",
+  "session_id": "ses_1d6a1fec8ffeYLDf0xWqvGPwMZ",
+  "blobs": [
+    {
+      "id": "task_memory_temporal",
+      "label": "task_memory_temporal",
+      "fidelity": "full",
+      "raw_tokens": 2880,
+      "effective_tokens": 2880,
+      "message_count": 7,
+      "effective_label": "7 msgs 2.9k"
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg_e295e013e001Da4IWtkCNC7RMw",
+      "role": "user",
+      "blob_id": "task_memory_temporal",
+      "blob_label": "task_memory_temporal",
+      "blob_fidelity": "full",
+      "summary": "User request: Task: Memory temporal correction retry cap Fix retryDelayMs so it matches the latest accepted retry-delay decision. Visible tests cover the basic exponential schedule, but the cap comes from prior work. If prior memory is a...",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 272,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e295e0142002ygMqTU6xOuCfB0",
+      "role": "assistant",
+      "blob_id": "task_memory_temporal",
+      "blob_label": "task_memory_temporal",
+      "blob_fidelity": "full",
+      "summary": "Assistant response: I’ll check the retry delay implementation and prior memory for the latest accepted cap before editing.",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 826,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e295e14ad001h4KanRPk5ih81u",
+      "role": "assistant",
+      "blob_id": "task_memory_temporal",
+      "blob_label": "task_memory_temporal",
+      "blob_fidelity": "full",
+      "summary": "Assistant response: Prior memory search surfaced both a stale 5000ms note and a newer accepted 2000ms correction; I’m going to verify the transcript metadata and patch only the implementation.",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 1434,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e295e36dd002ndp702CkKpbruN",
+      "role": "assistant",
+      "blob_id": "task_memory_temporal",
+      "blob_label": "task_memory_temporal",
+      "blob_fidelity": "full",
+      "summary": "Tool activity: src/retry-delay.mjs, read, package.json",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 198,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e295e5068001SRWVaIhXAL0sQ4",
+      "role": "assistant",
+      "blob_id": "task_memory_temporal",
+      "blob_label": "task_memory_temporal",
+      "blob_fidelity": "full",
+      "summary": "Assistant response: The implementation still uses the stale 5000ms cap, so I’m replacing only that cap with the accepted 2000ms value while preserving the 100ms exponential base.",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 74,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e295e6587002Thvld550xAA59g",
+      "role": "assistant",
+      "blob_id": "task_memory_temporal",
+      "blob_label": "task_memory_temporal",
+      "blob_fidelity": "full",
+      "summary": "Assistant response: I’ll run the focused test suite now to confirm the visible schedule still passes with the corrected cap.",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 75,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    },
+    {
+      "id": "msg_e295e7671001LyRGWE0Oc4bYRK",
+      "role": "assistant",
+      "blob_id": "task_memory_temporal",
+      "blob_label": "task_memory_temporal",
+      "blob_fidelity": "full",
+      "summary": "Assistant step without text content",
+      "hidden": false,
+      "hidden_source": "default",
+      "fidelity_override": "inherit",
+      "fidelity_source": "default",
+      "token_estimate": 1,
+      "source": "derived",
+      "effective_treatment": "kept-full"
+    }
+  ],
+  "totals": {
+    "raw_tokens": 2880,
+    "effective_tokens": 2880
+  }
+}

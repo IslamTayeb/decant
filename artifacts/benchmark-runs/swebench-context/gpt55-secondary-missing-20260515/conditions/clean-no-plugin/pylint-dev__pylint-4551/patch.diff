@@ -1,0 +1,77 @@
+diff --git a/pylint/pyreverse/inspector.py b/pylint/pyreverse/inspector.py
+index 8fa12202..8ab80ffc 100644
+--- a/pylint/pyreverse/inspector.py
++++ b/pylint/pyreverse/inspector.py
+@@ -229,12 +229,44 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+ 
+         handle instance_attrs_type
+         """
++        values = set()
+         try:
+             values = set(node.infer())
+-            current = set(parent.instance_attrs_type[node.attrname])
+-            parent.instance_attrs_type[node.attrname] = list(current | values)
+         except astroid.InferenceError:
+             pass
++        annotation_values = Linker._get_assignattr_annotation_type(node)
++        if annotation_values:
++            values = annotation_values
++        if values:
++            current = set(parent.instance_attrs_type[node.attrname])
++            parent.instance_attrs_type[node.attrname] = list(current | values)
++
++    @staticmethod
++    def _get_assignattr_annotation_type(node):
++        """Return inferred annotation nodes for attributes assigned from arguments."""
++        value = getattr(node.parent, "value", None)
++        value_name = getattr(value, "name", None)
++        frame = node.frame()
++        if value_name is None or not isinstance(frame, astroid.FunctionDef):
++            return ()
++
++        arguments = frame.args
++        annotated_args = (
++            (
++                getattr(arguments, "posonlyargs", ()),
++                getattr(arguments, "posonlyargs_annotations", ()),
++            ),
++            (arguments.args, getattr(arguments, "annotations", ())),
++            (arguments.kwonlyargs, getattr(arguments, "kwonlyargs_annotations", ())),
++        )
++        for args, annotations in annotated_args:
++            for argument, annotation in zip(args, annotations):
++                if argument.name == value_name and annotation is not None:
++                    try:
++                        return set(annotation.infer())
++                    except astroid.InferenceError:
++                        return ()
++        return ()
+ 
+     def visit_import(self, node):
+         """visit an astroid.Import node
+diff --git a/tests/unittest_pyreverse_inspector.py b/tests/unittest_pyreverse_inspector.py
+index e1ff6378..520a3fe4 100644
+--- a/tests/unittest_pyreverse_inspector.py
++++ b/tests/unittest_pyreverse_inspector.py
+@@ -71,6 +71,21 @@ def test_instance_attrs_resolution(project):
+     assert type_dict["_id"][0] is astroid.Uninferable
+ 
+ 
++def test_instance_attrs_annotation_resolution():
++    module = astroid.parse(
++        """
++    class C(object):
++        def __init__(self, a: str = None):
++            self.a = a
++    """
++    )
++    linker = inspector.Linker(None)
++    linker.visit(module)
++
++    klass = module["C"]
++    assert sorted(node.name for node in klass.instance_attrs_type["a"]) == ["str"]
++
++
+ def test_concat_interfaces():
+     cls = astroid.extract_node(
+         '''
