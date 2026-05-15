@@ -52,15 +52,16 @@ The setup command prints a launch script for a disposable OpenCode test repo. Ru
 
 ## Use In A Real Project
 
-The plugin is not packaged yet. For local testing, link the source files into a project's OpenCode plugin directory:
+The plugin is not packaged yet. For local testing with a local OpenCode install, link both plugin entrypoints into the target project:
 
 ```sh
+cd /path/to/target-project
 mkdir -p .opencode/plugins
 ln -s /path/to/mem-mould/src/server-plugin.ts .opencode/plugins/context-map.ts
 ln -s /path/to/mem-mould/src/tui-plugin.tsx .opencode/plugins/context-map-tui.tsx
 ```
 
-Then add `.opencode/tui.json`:
+OpenCode auto-loads server plugins from `.opencode/plugins`. To load the TUI plugin too, add `.opencode/tui.json`:
 
 ```json
 {
@@ -68,20 +69,52 @@ Then add `.opencode/tui.json`:
 }
 ```
 
+Start OpenCode from that target project. The plugin adds:
+
+- Sidebar context preview.
+- `/context` for topic and message fidelity controls.
+- `/blame <file>:<line>` for git-blame-linked historical context.
+- Agent tools: `view_context`, `set_fidelity`, `session_lookup`, `session_detail`, `message_detail`, and `blame_lookup`.
+
 ## Development
+
+Install dependencies once:
+
+```sh
+npm install
+```
+
+Fast checks that do not require a live model:
 
 ```sh
 npm run typecheck
 npm test
-npm run validate:sandbox
-npm run validate:long-session
+npm run validate:blame-tui
+npm run validate:blame-tui-live
+npm run setup:test-env
+npm run artifacts:export
 ```
 
-Live validation and benchmarks require an OpenCode-accessible model:
+Model-backed validations require an OpenCode-accessible model:
 
 ```sh
 export MEM_MOULD_E2E_MODEL="<provider>/<model>"
+npm run validate:sandbox
+npm run validate:long-session
+npm run evaluate:compaction
 ```
+
+Benchmarks also require `MEM_MOULD_E2E_MODEL`:
+
+```sh
+export MEM_MOULD_E2E_MODEL="<provider>/<model>"
+npm run benchmark:context-canaries
+npm run benchmark:code-memory
+npm run benchmark:provenance-qa
+npm run benchmark:swebench-context
+```
+
+`benchmark:provenance-blog` can also use `MEM_MOULD_E2E_CHILD_MODEL` for child-agent runs. Raw benchmark outputs stay ignored under `benchmarks/*/runs/`; export the curated public allowlist with `npm run artifacts:export`.
 
 ## Repo Shape
 
