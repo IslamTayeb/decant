@@ -158,7 +158,7 @@ export function toMessageLikes(messages: SessionMessage[]): MessageLike[] {
 }
 
 export function keybindPrint(api: TuiPluginApi, key: string) {
-  return api.keybind.print(key);
+  return api.keybind?.print?.(key);
 }
 
 export async function loadMap(api: TuiPluginApi, sessionID: string) {

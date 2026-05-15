@@ -943,7 +943,7 @@ function HistoryDialog(props: {
 }
 
 const tui: TuiPlugin = async (api) => {
-  const keys = api.keybind.create({
+  const keys = api.keybind?.create?.({
     plugin_context_open: "<leader>'",
   });
 
@@ -1042,7 +1042,7 @@ const tui: TuiPlugin = async (api) => {
         title: "Open context map",
         value: "context-map.open",
         category: "Plugin",
-        keybind: keys.get("plugin_context_open"),
+        keybind: keys?.get("plugin_context_open"),
         slash: { name: "context" },
         onSelect: () => openMap(),
       },
