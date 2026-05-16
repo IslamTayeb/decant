@@ -40,7 +40,7 @@ test("git hook install preserves existing hook and records commit mapping", asyn
 
     const hookText = await fs.readFile(postCommit, "utf8");
     assert.match(hookText, /existing hook/);
-    assert.match(hookText, /mem-mould-context-map start/);
+    assert.match(hookText, /decant-context-map start/);
 
     await fs.writeFile(
       path.join(contextRoot, "sess_primary.json"),
@@ -96,7 +96,14 @@ test("git hook install preserves existing hook and records commit mapping", asyn
     ) as {
       entries: Record<
         string,
-        { sessionID: string; activeBlobID?: string; activeBlobLabel?: string }
+        {
+          sessionID: string;
+          activeBlobID?: string;
+          activeBlobLabel?: string;
+          activeBlobLabels?: string[];
+          changedFiles?: string[];
+          commitSubject?: string;
+        }
       >;
     };
     assert.equal(firstCommitMap.entries[firstHash]?.sessionID, "sess_primary");
@@ -107,6 +114,21 @@ test("git hook install preserves existing hook and records commit mapping", asyn
     assert.equal(
       firstCommitMap.entries[firstHash]?.activeBlobLabel,
       "auth_debugging",
+    );
+    assert.deepEqual(firstCommitMap.entries[firstHash]?.activeBlobLabels, [
+      "auth_debugging",
+    ]);
+    assert.deepEqual(firstCommitMap.entries[firstHash]?.changedFiles, [
+      "README.md",
+    ]);
+    assert.equal(firstCommitMap.entries[firstHash]?.commitSubject, "initial");
+
+    const firstSessionMap = JSON.parse(
+      await fs.readFile(path.join(contextRoot, "sess_primary.json"), "utf8"),
+    ) as { blobs?: Record<string, { commitHashes?: string[] }> };
+    assert.deepEqual(
+      firstSessionMap.blobs?.auth_debugging?.commitHashes,
+      [firstHash],
     );
 
     await execFileAsync("git", ["checkout", "-b", "feature/context-map"], {

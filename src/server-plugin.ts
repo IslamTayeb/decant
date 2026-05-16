@@ -45,11 +45,11 @@ import type {
   SessionLike,
 } from "./types";
 
-const PLUGIN_ID = "mem-mould.context-map";
+const PLUGIN_ID = "decant.context-map";
 
 function tracePayloadEnabled() {
   return ["1", "true", "yes", "on"].includes(
-    (process.env.MEM_MOULD_TRACE_CONTEXT_PAYLOAD ?? "").toLowerCase(),
+    (process.env.DECANT_TRACE_CONTEXT_PAYLOAD ?? "").toLowerCase(),
   );
 }
 
@@ -60,7 +60,7 @@ function envFlag(name: string) {
 }
 
 function cacheStableModeEnabled() {
-  return envFlag("MEM_MOULD_CACHE_STABLE");
+  return envFlag("DECANT_CACHE_STABLE");
 }
 
 function staticPluginGuidanceSystemPrompt() {
@@ -127,7 +127,7 @@ function isCompactionSystemPrompt(system: string[]) {
 
 const server: Plugin = async (ctx) => {
   await ensureContextMapRoot().catch(() => undefined);
-  if (process.env.MEM_MOULD_DISABLE_GIT_HOOK_INSTALL !== "1") {
+  if (process.env.DECANT_DISABLE_GIT_HOOK_INSTALL !== "1") {
     await ensureContextMapGitHook({
       $: ctx.$ as never,
       worktree: ctx.worktree,
@@ -249,7 +249,7 @@ const server: Plugin = async (ctx) => {
       compactedAt,
       includeMessageID: input.includeMessageID,
       archivePath,
-      summaryFidelity: envFlag("MEM_MOULD_TASK_BOUNDARY")
+      summaryFidelity: envFlag("DECANT_TASK_BOUNDARY")
         ? "placeholder"
         : undefined,
     });
@@ -280,11 +280,11 @@ const server: Plugin = async (ctx) => {
       directory: directory ?? ctx.directory,
       worktree: ctx.worktree,
     });
-    if (cacheStableModeEnabled() || envFlag("MEM_MOULD_STABLE_PLACEHOLDERS")) {
+    if (cacheStableModeEnabled() || envFlag("DECANT_STABLE_PLACEHOLDERS")) {
       map.settings.stablePlaceholders = true;
       map.settings.stablePlaceholdersSource = "system";
     }
-    if (cacheStableModeEnabled() || envFlag("MEM_MOULD_STABLE_ANCHORS")) {
+    if (cacheStableModeEnabled() || envFlag("DECANT_STABLE_ANCHORS")) {
       map.settings.stableAnchors = true;
       map.settings.stableAnchorsSource = "system";
     }
@@ -430,10 +430,11 @@ const server: Plugin = async (ctx) => {
   async function blameLookup(file: string, line: number) {
     const blame = await ctx.$.cwd(
       ctx.worktree,
-    ).nothrow()`git blame -L ${line},${line} -- ${file}`
+    ).nothrow()`git blame --porcelain -L ${line},${line} -- ${file}`
       .quiet()
       .text();
-    const commitHash = blame.trim().split(/\s+/)[0];
+    const blameLines = blame.split("\n");
+    const commitHash = blameLines[0]?.trim().split(/\s+/)[0];
     if (!commitHash) {
       return {
         commit_hash: undefined,
@@ -441,6 +442,9 @@ const server: Plugin = async (ctx) => {
         error: `Could not resolve git blame for ${file}:${line}`,
       };
     }
+
+    const lineText =
+      blameLines.find((item) => item.startsWith("\t"))?.slice(1) ?? "";
 
     const commits = await readCommitMap();
     const entry = commits.entries[commitHash];
@@ -452,20 +456,57 @@ const server: Plugin = async (ctx) => {
       };
     }
 
+    const activeBlobIDs =
+      entry.activeBlobIDs?.length
+        ? entry.activeBlobIDs
+        : entry.activeBlobID
+          ? [entry.activeBlobID]
+          : [];
+    const commitSubject =
+      entry.commitSubject ||
+      (
+        await ctx.$.cwd(
+          ctx.worktree,
+        ).nothrow()`git show -s --format=%s ${commitHash}`
+          .quiet()
+          .text()
+      ).trim();
+    const changedFiles =
+      entry.changedFiles && entry.changedFiles.length > 0
+        ? entry.changedFiles
+        : (
+            await ctx.$.cwd(
+              ctx.worktree,
+            ).nothrow()`git show --pretty=format: --name-only ${commitHash}`
+              .quiet()
+              .text()
+          )
+            .split("\n")
+            .map((item) => item.trim())
+            .filter(Boolean);
+
     const { session, map } = await ensureHistoricalMap(entry.sessionID);
     return {
       commit_hash: commitHash,
       mapped: true,
+      file,
+      line,
+      line_text: lineText,
+      commit_subject: commitSubject,
+      changed_files: changedFiles,
       session_id: entry.sessionID,
       active_blob_id: entry.activeBlobID,
       active_blob_label: entry.activeBlobLabel,
+      active_blob_ids: activeBlobIDs,
+      active_blob_labels: entry.activeBlobLabels ?? [],
       overview: buildHistoricalOverview({
         map,
         session,
         commitEntry: entry,
-        matchedBlobIDs: entry.activeBlobID ? [entry.activeBlobID] : [],
+        matchedBlobIDs: activeBlobIDs,
       }),
       next_steps: [
+        "Use active_blob_ids first; they are the blobs active when the blamed commit was made.",
         "Inspect overview.blobs[].compressedSummary to choose relevant blobs.",
         "Call session_detail with detail='messages' to see message summaries for a blob.",
         "Call message_detail with a message_id to fetch the full historical message only when needed.",

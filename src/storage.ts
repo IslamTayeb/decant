@@ -13,7 +13,7 @@ import { computeEffectiveTreatment } from "./core";
 const MAP_VERSION = 1 as const;
 
 function homeDir() {
-  return os.homedir();
+  return process.env.HOME || os.homedir();
 }
 
 export function contextMapRoot() {

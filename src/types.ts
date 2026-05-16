@@ -135,7 +135,10 @@ export type CommitMapEntry = {
   worktree?: string;
   activeBlobID?: string;
   activeBlobLabel?: string;
-  activeBlobIDs: string[];
+  activeBlobIDs?: string[];
+  activeBlobLabels?: string[];
+  commitSubject?: string;
+  changedFiles?: string[];
 };
 
 export type CommitMapFile = {

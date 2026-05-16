@@ -16,8 +16,8 @@ type Shell = {
   };
 };
 
-const MARKER_START = "# mem-mould-context-map start";
-const MARKER_END = "# mem-mould-context-map end";
+const MARKER_START = "# decant-context-map start";
+const MARKER_END = "# decant-context-map end";
 const HOOKS = ["post-commit", "post-merge", "post-rewrite"] as const;
 
 export async function ensureContextMapGitHook(input: {
@@ -74,6 +74,7 @@ commit_hash="$(git rev-parse HEAD 2>/dev/null)"
 [ -n "$commit_hash" ] || exit 0
 
 node - "$session_id" "$commit_hash" ${root} <<'NODE'
+const childProcess = require('child_process')
 const fs = require('fs')
 const path = require('path')
 
@@ -83,6 +84,24 @@ const sessionFile = path.join(root, sessionID + '.json')
 let activeBlobID
 let activeBlobLabel
 let activeBlobIDs = []
+let activeBlobLabels = []
+
+function git(args) {
+  try {
+    return childProcess.execFileSync('git', args, { encoding: 'utf8' }).trim()
+  } catch {
+    return ''
+  }
+}
+
+function unique(items) {
+  return [...new Set(items.filter(Boolean))]
+}
+
+const commitSubject = git(['show', '-s', '--format=%s', commitHash])
+const changedFiles = unique(
+  git(['show', '--pretty=format:', '--name-only', commitHash]).split('\\n').map((item) => item.trim()),
+)
 
 try {
   const session = JSON.parse(fs.readFileSync(sessionFile, 'utf8'))
@@ -90,6 +109,12 @@ try {
   if (activeBlobID && session.blobs && session.blobs[activeBlobID]) {
     activeBlobLabel = session.blobs[activeBlobID].label
     activeBlobIDs = [activeBlobID]
+    activeBlobLabels = [activeBlobLabel]
+    const blob = session.blobs[activeBlobID]
+    blob.commitHashes = unique([...(blob.commitHashes || []), commitHash])
+    const tempSession = sessionFile + '.tmp-' + process.pid + '-' + Date.now()
+    fs.writeFileSync(tempSession, JSON.stringify(session, null, 2))
+    fs.renameSync(tempSession, sessionFile)
   }
 } catch {}
 
@@ -108,6 +133,9 @@ file.entries[commitHash] = {
   activeBlobID,
   activeBlobLabel,
   activeBlobIDs,
+  activeBlobLabels,
+  commitSubject,
+  changedFiles,
 }
 file.updatedAt = Date.now()
 

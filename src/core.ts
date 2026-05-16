@@ -1286,7 +1286,13 @@ export function buildHistoricalOverview(input: {
   commitEntry?: CommitMapEntry;
   matchedBlobIDs?: string[];
 }): HistoricalSessionOverview {
-  const activeBlobIDs = new Set(input.commitEntry?.activeBlobIDs ?? []);
+  const activeBlobIDs = new Set(
+    input.commitEntry?.activeBlobIDs?.length
+      ? input.commitEntry.activeBlobIDs
+      : input.commitEntry?.activeBlobID
+        ? [input.commitEntry.activeBlobID]
+        : [],
+  );
   return {
     sessionID: input.session.id,
     title: input.session.title ?? input.session.id,
