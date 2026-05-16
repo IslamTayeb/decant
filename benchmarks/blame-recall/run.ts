@@ -190,7 +190,7 @@ const fixtures: BlameFixture[] = [
       lineText: "  const ttlMs = Math.min(requestedTtlMs, 30_000);",
     },
     required: [
-      { id: "ttl_cap", patterns: [/30\s*seconds?/i, /30_?000/i] },
+      { id: "ttl_cap", patterns: [/30[-\s]*seconds?/i, /30_?000/i] },
       {
         id: "mobile_heartbeat",
         patterns: [/mobile/i, /25\s*seconds?\s*heartbeat/i, /heartbeat/i],
@@ -201,7 +201,15 @@ const fixtures: BlameFixture[] = [
       },
       {
         id: "caller_ttl_rejected",
-        patterns: [/caller'?s? TTL/i, /trusting the caller/i, /2\s*minutes?/i],
+        patterns: [
+          /caller[- ]provided TTL/i,
+          /caller[- ]supplied (longer )?TTLs?/i,
+          /callers? .*longer TTLs?/i,
+          /caller'?s? TTL/i,
+          /trusting (the )?caller/i,
+          /2\s*minutes?/i,
+          /two\s*minutes?/i,
+        ],
       },
     ],
     forbidden: ["billing retry", "markdown parser", "payment provider"],
@@ -664,7 +672,6 @@ async function writeRecallFiles(
         sessions: entries.map((entry) => ({
           session_id: entry.sessionID,
           title: entry.title,
-          role: entry.role,
           file: entry.file,
         })),
       },
@@ -681,7 +688,6 @@ async function writeRecallFiles(
         sessions: entries.map((entry) => ({
           session_id: entry.sessionID,
           title: entry.title,
-          role: entry.role,
           file: `transcripts/${entry.file}`,
           text: entry.text,
         })),
@@ -746,7 +752,7 @@ if (!cmd || cmd === "help") {
 }
 
 if (cmd === "list") {
-  console.log(JSON.stringify(index.sessions.map(({ session_id, title, role, file }) => ({ session_id, title, role, file })), null, 2));
+  console.log(JSON.stringify(index.sessions.map(({ session_id, title, file }) => ({ session_id, title, file })), null, 2));
 } else if (cmd === "search") {
   const query = args.join(" ");
   const queryTerms = terms(query);
@@ -755,7 +761,7 @@ if (cmd === "list") {
     .filter((doc) => doc.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, 5)
-    .map(({ session_id, title, role, file, score }) => ({ session_id, title, role, file, score }));
+    .map(({ session_id, title, file, score }) => ({ session_id, title, file, score }));
   console.log(JSON.stringify({ query, hits }, null, 2));
 } else if (cmd === "show") {
   const sessionID = args[0];
@@ -1237,15 +1243,31 @@ async function waitForAssistantMessage(
   while (Date.now() < deadline) {
     await new Promise((resolve) => setTimeout(resolve, 1_000));
     const messages = await listSessionMessages(client, directory, sessionID);
-    const assistant = [...messages].reverse().find((message) => {
+    const errored = [...messages].reverse().find((message) => {
       const role = message.info?.role ?? message.role;
       const id = message.info?.id ?? message.id;
-      return role === "assistant" && id && !beforeIDs.has(id);
+      return (
+        role === "assistant" &&
+        id &&
+        !beforeIDs.has(id) &&
+        (message.info?.finish === "error" || message.error)
+      );
     });
-    if (!assistant) continue;
-    const finish = assistant.info?.finish;
-    if (finish === "error") throw new Error(JSON.stringify(assistant.error));
-    if (finish) return assistant;
+    if (errored) throw new Error(JSON.stringify(errored.error));
+
+    const completed = [...messages].reverse().find((message) => {
+      const role = message.info?.role ?? message.role;
+      const id = message.info?.id ?? message.id;
+      const finish = message.info?.finish;
+      return (
+        role === "assistant" &&
+        id &&
+        !beforeIDs.has(id) &&
+        finish &&
+        finish !== "tool-calls"
+      );
+    });
+    if (completed) return completed;
   }
   throw new Error(`timed out waiting for assistant in ${sessionID}`);
 }
@@ -1426,8 +1448,10 @@ function transcriptReadFiles(tools: ToolCall[]) {
 }
 
 function outputText(messages: SessionMessage[]) {
-  return messages
-    .flatMap((message) => message.parts ?? [])
+  const latestAssistant = [...messages]
+    .reverse()
+    .find((message) => (message.info?.role ?? message.role) === "assistant");
+  return (latestAssistant?.parts ?? [])
     .filter((part) => part.type === "text" && typeof part.text === "string")
     .map((part) => part.text)
     .join("\n");
