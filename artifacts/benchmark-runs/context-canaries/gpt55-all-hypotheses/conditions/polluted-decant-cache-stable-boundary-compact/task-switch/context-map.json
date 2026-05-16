@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "sessionID": "ses_1e5d53e0cffelG7RTSn5fa5cm2",
+  "directory": "./benchmarks/context-canaries/runs/gpt55-all-hypotheses/conditions/polluted-decant-cache-stable-boundary-compact/task-switch/worktree",
+  "worktree": "./benchmarks/context-canaries/runs/gpt55-all-hypotheses/conditions/polluted-decant-cache-stable-boundary-compact/task-switch/worktree",
+  "createdAt": 1778555529859,
+  "updatedAt": 1778555529859,
+  "totalTokenEstimate": 427,
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "default",
+    "toolHistoryCleanup": true,
+    "stablePlaceholders": true,
+    "stablePlaceholdersSource": "system",
+    "stableAnchors": true,
+    "stableAnchorsSource": "system"
+  },
+  "blobOrder": [
+    "are_working_wholly",
+    "session_summary"
+  ],
+  "blobs": {
+    "are_working_wholly": {
+      "id": "are_working_wholly",
+      "label": "are_working_wholly",
+      "summary": "User request: We are now working on a wholly unrelated parser issue in this repository. Current task: a CSV header parser should trim spaces around comma-separated header names. Return JSON with keys current_task, proposed_fix, stale_con... Assistant step without text content",
+      "placeholder": "User request: We are now working on a wholly unrelated parser issue in this r...",
+      "keyFacts": [],
+      "fidelity": "full",
+      "fidelitySource": "system",
+      "messageIDs": [
+        "msg_e1a2b9b890016nRuodwhPhoX4p",
+        "msg_e1a2b9b8c001835GyhqfRup1j8"
+      ],
+      "tokenEstimate": 87,
+      "createdAt": 1778555526025,
+      "lastActiveAt": 1778555526028,
+      "commitHashes": []
+    },
+    "session_summary": {
+      "id": "session_summary",
+      "label": "session_summary",
+      "summary": "## Goal\nContinue the auth refresh race fix. Final direction is an async queue helper that deduplicates refresh work per tenant.\n\n## Instructions\n- Do not revive the mutex approach except as a known failed design.\n- Keep docs/onboarding cleanup separate from auth work.\n- Treat the old markdown parser caching hypothesis as unrelated noise; it was wrong and belongs only to docs cleanup.\n- Prioritize the same-tenant concurrency test.\n\n## Discoveries\n- `MutexRefreshCoordinator` failed under concurrent testing.\n- Failing test name: `auth_refresh_deduplicates_parallel_requests`.\n- The desired design is a per-tenant async queue / single-flight helper.\n- Rollback must be controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n- The queue helper should expose a narrow API: `enqueueRefresh`.\n- Needed auth tests:\n  - same-tenant refresh dedupe, highest priority\n  - different-tenant parallelism\n  - rollback flag behavior\n  - failure propagation when a queued refresh rejects\n  - cleanup after rejection so later refresh can retry\n\n## Accomplished\n- Identified mutex approach as insufficient / failed.\n- Chosen async queue as final direction.\n- Defined rollback flag name.\n- Defined helper location and public API.\n\n## Relevant files / directories\n- `src/auth/queue.ts`\n- `FLAG_AUTH_QUEUE_ROLLBACK`\n- `MutexRefreshCoordinator`\n- `auth_refresh_deduplicates_parallel_requests`",
+      "placeholder": "Historical context compacted",
+      "keyFacts": [],
+      "fidelity": "placeholder",
+      "fidelitySource": "system",
+      "messageIDs": [
+        "msg_e1a2b7ffa00181Hbk9aXgCGcpA"
+      ],
+      "tokenEstimate": 340,
+      "createdAt": 1778555518970,
+      "lastActiveAt": 1778555518970,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_e1a2b9b890016nRuodwhPhoX4p": {
+      "id": "msg_e1a2b9b890016nRuodwhPhoX4p",
+      "role": "user",
+      "blobID": "are_working_wholly",
+      "summary": "User request: We are now working on a wholly unrelated parser issue in this repository. Current task: a CSV header parser should trim spaces around comma-separated header names. Return JSON with keys current_task, proposed_fix, stale_con...",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 86,
+      "createdAt": 1778555526025,
+      "updatedAt": 1778555529859,
+      "source": "derived",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_e1a2b9b8c001835GyhqfRup1j8": {
+      "id": "msg_e1a2b9b8c001835GyhqfRup1j8",
+      "role": "assistant",
+      "blobID": "are_working_wholly",
+      "summary": "Assistant step without text content",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1,
+      "createdAt": 1778555526028,
+      "updatedAt": 1778555529859,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_e1a2b7ffa00181Hbk9aXgCGcpA": {
+      "id": "msg_e1a2b7ffa00181Hbk9aXgCGcpA",
+      "role": "assistant",
+      "blobID": "session_summary",
+      "summary": "## Goal\nContinue the auth refresh race fix. Final direction is an async queue helper that deduplicates refresh work per tenant.\n\n## Instructions\n- Do not revive the mutex approach except as a known failed design.\n- Keep docs/onboarding cleanup separate from auth work.\n- Treat the old markdown parser caching hypothesis as unrelated noise; it was wrong and belongs only to docs cleanup.\n- Prioritize the same-tenant concurrency test.\n\n## Discoveries\n- `MutexRefreshCoordinator` failed under concurrent testing.\n- Failing test name: `auth_refresh_deduplicates_parallel_requests`.\n- The desired design is a per-tenant async queue / single-flight helper.\n- Rollback must be controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n- The queue helper should expose a narrow API: `enqueueRefresh`.\n- Needed auth tests:\n  - same-tenant refresh dedupe, highest priority\n  - different-tenant parallelism\n  - rollback flag behavior\n  - failure propagation when a queued refresh rejects\n  - cleanup after rejection so later refresh can retry\n\n## Accomplished\n- Identified mutex approach as insufficient / failed.\n- Chosen async queue as final direction.\n- Defined rollback flag name.\n- Defined helper location and public API.\n\n## Relevant files / directories\n- `src/auth/queue.ts`\n- `FLAG_AUTH_QUEUE_ROLLBACK`\n- `MutexRefreshCoordinator`\n- `auth_refresh_deduplicates_parallel_requests`",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 340,
+      "createdAt": 1778555518970,
+      "updatedAt": 1778555518970,
+      "source": "derived",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    }
+  },
+  "pendingRetroactive": {},
+  "lastActiveBlobID": "are_working_wholly",
+  "compaction": {
+    "compactedAt": 1778555518970,
+    "summaryMessageID": "msg_e1a2b7ffa00181Hbk9aXgCGcpA",
+    "summaryBlobID": "session_summary",
+    "archivePath": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/decant-e2e-openai-AtKY9G/home/.opencode/context-maps/archive/ses_1e5d53e0cffelG7RTSn5fa5cm2/1778555518970.json"
+  }
+}

@@ -3,7 +3,7 @@
 - Model: openai/gpt-5.5
 - Dataset: SWE-bench/SWE-bench_Verified
 - Instances: django__django-16560
-- Conditions: polluted-memmould-cache-stable-boundary-compact
+- Conditions: polluted-decant-cache-stable-boundary-compact
 - Evaluation runner: uv
 - SWE-bench evaluation: attempted
 - Diagnostic after compaction: no
@@ -12,7 +12,7 @@
 
 | Condition | Instance | Resolved | F2P | P2P Regr. | Quality | Patch | Stats | Error |
 |---|---|---:|---:|---:|---:|---|---|---|
-| polluted-memmould-cache-stable-boundary-compact | django__django-16560 | true | 8/8 | 0 | 1.000 | [patch](conditions/polluted-memmould-cache-stable-boundary-compact/django__django-16560/patch.diff) | [stats](conditions/polluted-memmould-cache-stable-boundary-compact/django__django-16560/stats.json) |  |
+| polluted-decant-cache-stable-boundary-compact | django__django-16560 | true | 8/8 | 0 | 1.000 | [patch](conditions/polluted-decant-cache-stable-boundary-compact/django__django-16560/patch.diff) | [stats](conditions/polluted-decant-cache-stable-boundary-compact/django__django-16560/stats.json) |  |
 
 ## Caveat
 

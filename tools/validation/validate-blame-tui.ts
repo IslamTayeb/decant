@@ -16,7 +16,7 @@ const execFileAsync = promisify(execFile);
 async function main() {
   const repoRoot = path.resolve(process.cwd());
   const tempRoot = await fs.mkdtemp(
-    path.join(os.tmpdir(), "mem-mould-blame-tui-"),
+    path.join(os.tmpdir(), "decant-blame-tui-"),
   );
   const home = path.join(tempRoot, "home");
   const data = path.join(tempRoot, "data");
@@ -45,7 +45,7 @@ async function main() {
     XDG_CACHE_HOME: cache,
     OPENCODE_DB: path.join(tempRoot, "opencode.sqlite"),
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
-    MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
+    DECANT_DISABLE_GIT_HOOK_INSTALL: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",
       plugin: [serverPluginSpec],
@@ -93,7 +93,7 @@ async function main() {
       blameInput: "src/auth/rate_limiter.ts:42",
     });
     await tui(mock.api, undefined, {
-      id: "mem-mould.context-map-tui",
+      id: "decant.context-map-tui",
       source: "file",
       spec: pathToFileURL(path.join(repoRoot, "src/tui-plugin.tsx")).href,
     });
@@ -149,7 +149,7 @@ async function main() {
     await server.close();
     if (previousHome === undefined) delete process.env.HOME;
     else process.env.HOME = previousHome;
-    if (!passed || process.env.MEM_MOULD_KEEP_BLAME_TUI_TEMP === "1") {
+    if (!passed || process.env.DECANT_KEEP_BLAME_TUI_TEMP === "1") {
       console.error(`Preserved blame TUI temp root: ${tempRoot}`);
     } else {
       await fs.rm(tempRoot, { recursive: true, force: true });
@@ -174,9 +174,9 @@ async function prepareGitFixture(worktree: string) {
     "git",
     [
       "-c",
-      "user.name=Mem Mould Test",
+      "user.name=Decant Test",
       "-c",
-      "user.email=mem-mould@example.invalid",
+      "user.email=decant@example.invalid",
       "commit",
       "-m",
       "Add auth rate limiter fixture",

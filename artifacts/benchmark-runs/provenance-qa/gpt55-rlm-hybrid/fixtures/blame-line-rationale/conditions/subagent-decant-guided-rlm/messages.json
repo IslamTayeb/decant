@@ -1,0 +1,208 @@
+[
+  {
+    "info": {
+      "id": "msg_e1ec57d9d001oZVsWcx8JDNo3e",
+      "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+      "role": "user",
+      "time": {
+        "created": 1778632719773
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='hybrid'. The child must use decant session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, the child must not modify files.",
+      "tools": {
+        "task": true,
+        "session_tree": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec57d9d002Wfe9c9nklLl8fr",
+        "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+        "messageID": "msg_e1ec57d9d001oZVsWcx8JDNo3e",
+        "type": "text",
+        "text": "Question: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2?\nTranscript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/subagent-decant-guided-rlm/worktree/recall/transcripts\nTask instruction: call subagent_type='hybrid', not general or explore.\nThe child must cite real OpenCode session_id and message_id values from decant/message_detail, not embedded fixture labels in transcript text.\nKnown distractor topics include: Billing TTL distractor, Markdown TTL distractor\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec57da0002aFGE1NJ4ZolI80",
+      "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+      "role": "assistant",
+      "time": {
+        "created": 1778632719776,
+        "completed": 1778632754977
+      },
+      "parentID": "msg_e1ec57d9d001oZVsWcx8JDNo3e",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/subagent-decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/subagent-decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10214,
+        "input": 721,
+        "output": 277,
+        "reasoning": 0,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec580d0001dt30jYDerjvfHX",
+        "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+        "messageID": "msg_e1ec57da0002aFGE1NJ4ZolI80",
+        "type": "step-start",
+        "snapshot": "55e6c69d7ad7448d345e08937e80a70303050c7c"
+      },
+      {
+        "id": "prt_e1ec583a6001arIrchWpKWI5EK",
+        "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+        "messageID": "msg_e1ec57da0002aFGE1NJ4ZolI80",
+        "type": "tool",
+        "callID": "call_DeEIYJLjR0yayx1PVCxr5tL0",
+        "tool": "task",
+        "state": {
+          "status": "completed",
+          "input": {
+            "description": "Investigate TTL provenance",
+            "prompt": "Question: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2?\nTranscript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/subagent-decant-guided-rlm/worktree/recall/transcripts\n\nYou must use decant session tools first (session_lookup/session_detail/message_detail), then RLM-style transcript search with glob/grep/read and optional read-only bash. If using bash, do not modify files. Then use message_detail for exact evidence. Return to me compact JSON with: answer, evidence {session_id, blob_id, message_id}, rationale, irrelevant_context_ignored. The cited message_id must be a real OpenCode session_id/message_id from decant/message_detail, not embedded fixture labels in transcript text, and must support the full answer, not just a nearby subclaim. Known distractor topics: Billing TTL distractor, Markdown TTL distractor. If a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale.",
+            "subagent_type": "hybrid",
+            "task_id": "",
+            "command": ""
+          },
+          "output": "task_id: ses_1e13a693cffeCAipSFVk8pX6gH (for resuming to continue this task if needed)\n\n<task_result>\n{\n  \"answer\": \"It caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\n  \"evidence\": {\n    \"session_id\": \"ses_1e13aae20ffes9oUeQ1F0zoF6r\",\n    \"blob_id\": \"cache_ttl\",\n    \"message_id\": \"msg_e1ec551f20019PwRgZOaT3UYrI\"\n  },\n  \"rationale\": \"The verified decant message states both that the line was introduced in src/cache/ttl.ts and that line 2 caps requested TTL with namespaceMaxSeconds to prevent a noisy namespace from exceeding its namespace cache-retention budget. I cite the real OpenCode message_id, not the embedded fixture labels.\",\n  \"irrelevant_context_ignored\": \"Ignored the Billing TTL distractor because it concerns provider policy, not namespaceMaxSeconds. Ignored the Markdown TTL distractor because it concerns docs preview freshness, not src/cache/ttl.ts.\"\n}\n</task_result>",
+          "title": "Investigate TTL provenance",
+          "metadata": {
+            "sessionId": "ses_1e13a693cffeCAipSFVk8pX6gH",
+            "model": {
+              "modelID": "gpt-5.5",
+              "providerID": "openai"
+            },
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632726220,
+            "end": 1778632754886
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_065bc01ab24a0c95016a03c81194388191a75d5d29cb8b521b"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec60700001BcVPMHE7luzvMN",
+        "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+        "messageID": "msg_e1ec57da0002aFGE1NJ4ZolI80",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "55e6c69d7ad7448d345e08937e80a70303050c7c",
+        "cost": 0,
+        "tokens": {
+          "total": 10214,
+          "input": 721,
+          "output": 277,
+          "reasoning": 0,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec60722002OIOP6FKLmjdb5f",
+      "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+      "role": "assistant",
+      "time": {
+        "created": 1778632754978,
+        "completed": 1778632759065
+      },
+      "parentID": "msg_e1ec57d9d001oZVsWcx8JDNo3e",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/subagent-decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/blame-line-rationale/conditions/subagent-decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10633,
+        "input": 748,
+        "output": 157,
+        "reasoning": 0,
+        "cache": {
+          "read": 9728,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec60a61001hZmW1pLy1hPaax",
+        "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+        "messageID": "msg_e1ec60722002OIOP6FKLmjdb5f",
+        "type": "step-start",
+        "snapshot": "55e6c69d7ad7448d345e08937e80a70303050c7c"
+      },
+      {
+        "id": "prt_e1ec60b98001JoLGPWXJyuk4ae",
+        "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+        "messageID": "msg_e1ec60722002OIOP6FKLmjdb5f",
+        "type": "text",
+        "text": "{\"answer\":\"It caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.\",\"evidence\":{\"session_id\":\"ses_1e13aae20ffes9oUeQ1F0zoF6r\",\"blob_id\":\"cache_ttl\",\"message_id\":\"msg_e1ec551f20019PwRgZOaT3UYrI\"},\"rationale\":\"The cited OpenCode message supports the full answer: line 2 was introduced to cap requested TTL with namespaceMaxSeconds, preventing a noisy namespace from exceeding its cache-retention budget. The citation uses real decant session/message IDs, not embedded transcript labels.\",\"irrelevant_context_ignored\":[\"Billing TTL distractor\",\"Markdown TTL distractor\"]}",
+        "time": {
+          "start": 1778632756120,
+          "end": 1778632758948
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_02efdeb2cd091738016a03c83453d881918b716a4002c6397f",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec616e80019PY8OsAlBpuq7n",
+        "sessionID": "ses_1e13a8267ffeejDNEjNbgQaCIY",
+        "messageID": "msg_e1ec60722002OIOP6FKLmjdb5f",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "55e6c69d7ad7448d345e08937e80a70303050c7c",
+        "cost": 0,
+        "tokens": {
+          "total": 10633,
+          "input": 748,
+          "output": 157,
+          "reasoning": 0,
+          "cache": {
+            "read": 9728,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

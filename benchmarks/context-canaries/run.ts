@@ -46,7 +46,7 @@ type SessionMessage = {
 
 type ConditionID =
   | "polluted-default-compact"
-  | "polluted-memmould-cache-stable-boundary-compact";
+  | "polluted-decant-cache-stable-boundary-compact";
 
 type CanaryID =
   | "task-switch"
@@ -173,8 +173,8 @@ const conditions: Record<ConditionID, ConditionConfig> = {
     cacheStable: false,
     taskBoundary: false,
   },
-  "polluted-memmould-cache-stable-boundary-compact": {
-    id: "polluted-memmould-cache-stable-boundary-compact",
+  "polluted-decant-cache-stable-boundary-compact": {
+    id: "polluted-decant-cache-stable-boundary-compact",
     plugin: true,
     contextCleanup: true,
     cacheStable: true,
@@ -419,7 +419,7 @@ function parseOptions(): Options {
       ? splitList(conditionArg)
       : [
           "polluted-default-compact",
-          "polluted-memmould-cache-stable-boundary-compact",
+          "polluted-decant-cache-stable-boundary-compact",
         ]
   ) as ConditionID[];
   const canaryList = (
@@ -533,7 +533,7 @@ type OpenCodeRoot = {
 async function resolveOpenCodeRoot(
   conditionDir: string,
 ): Promise<OpenCodeRoot> {
-  const seeded = process.env.MEM_MOULD_E2E_TEMP_ROOT;
+  const seeded = process.env.DECANT_E2E_TEMP_ROOT;
   if (seeded) {
     return {
       home: path.join(seeded, "home"),
@@ -586,15 +586,15 @@ async function buildOpenCodeEnv(input: {
     XDG_CACHE_HOME: input.opencodeRoot.cache,
     OPENCODE_DB: path.join(input.conditionDir, "opencode.sqlite"),
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
-    MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
+    DECANT_DISABLE_GIT_HOOK_INSTALL: "1",
     ...(input.cacheStable
       ? {
-          MEM_MOULD_CACHE_STABLE: "1",
-          MEM_MOULD_STABLE_PLACEHOLDERS: "1",
-          MEM_MOULD_STABLE_ANCHORS: "1",
+          DECANT_CACHE_STABLE: "1",
+          DECANT_STABLE_PLACEHOLDERS: "1",
+          DECANT_STABLE_ANCHORS: "1",
         }
       : {}),
-    ...(input.taskBoundary ? { MEM_MOULD_TASK_BOUNDARY: "1" } : {}),
+    ...(input.taskBoundary ? { DECANT_TASK_BOUNDARY: "1" } : {}),
     OPENCODE_CONFIG_CONTENT: JSON.stringify(config),
   } satisfies NodeJS.ProcessEnv;
 }

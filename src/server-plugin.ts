@@ -28,6 +28,13 @@ import {
 } from "./core";
 import { ensureContextMapGitHook } from "./git";
 import {
+  findGitAiLineAttributions,
+  gitAiPromptDecantKey,
+  gitAiPromptTranscriptHash,
+  parseGitAiAuthorshipLog,
+  type GitAiPromptRecord,
+} from "./git-ai";
+import {
   ensureContextMapRoot,
   readCommitMap,
   readContextMap,
@@ -36,10 +43,12 @@ import {
   writeDebugLog,
   appendTrace,
   archiveContextMapForCompaction,
+  readGitAiDecantIndex,
 } from "./storage";
 import { buildFallbackMapFromMessages } from "./core";
 import type {
   ContextMapFile,
+  GitAiDecantIndexFile,
   HistoricalSessionOverview,
   MessageLike,
   SessionLike,
@@ -123,6 +132,115 @@ function isCompactionSystemPrompt(system: string[]) {
       "You are an anchored context summarization assistant for coding sessions.",
     ),
   );
+}
+
+function summarizeGitAiPrompt(
+  prompt: GitAiPromptRecord | undefined,
+  decant: ReturnType<typeof gitAiDecantStatus>,
+) {
+  if (!prompt) {
+    return {
+      prompt_found: false,
+      decant_state: decant.state,
+      decant_key: decant.key,
+      transcript_hash: decant.transcriptHash,
+      messages_available: false,
+    };
+  }
+
+  const messages = Array.isArray(prompt.messages) ? prompt.messages : [];
+  return {
+    prompt_found: true,
+    decant_state: decant.state,
+    decant_key: decant.key,
+    transcript_hash: decant.transcriptHash,
+    decant_map_session_id: decant.mapSessionID,
+    stale_reason: decant.staleReason,
+    tool: prompt.agent_id?.tool,
+    model: prompt.agent_id?.model,
+    conversation_id: prompt.agent_id?.id,
+    human_author: prompt.human_author,
+    summary: typeof prompt.summary === "string" ? prompt.summary : undefined,
+    messages_available: messages.length > 0 || Boolean(prompt.messages_url),
+    messages_embedded: messages.length > 0,
+    messages_count: messages.length,
+    messages_url: prompt.messages_url,
+    messages_preview: messages.slice(0, 3).map(summarizeGitAiMessage),
+    stats: {
+      total_additions: prompt.total_additions,
+      total_deletions: prompt.total_deletions,
+      accepted_lines: prompt.accepted_lines,
+      overriden_lines: prompt.overriden_lines,
+    },
+  };
+}
+
+function gitAiDecantStatus(
+  index: GitAiDecantIndexFile | undefined,
+  promptID: string,
+  prompt: GitAiPromptRecord | undefined,
+) {
+  const transcriptHash = gitAiPromptTranscriptHash(prompt);
+  const key = gitAiPromptDecantKey({ promptID, transcriptHash });
+  if (!prompt) {
+    return {
+      state: "unavailable" as const,
+      key,
+      transcriptHash,
+    };
+  }
+
+  const entry = index?.entries[key];
+  if (entry) {
+    return {
+      state: entry.state,
+      key,
+      transcriptHash,
+      mapSessionID: entry.mapSessionID,
+    };
+  }
+
+  const staleEntry = Object.values(index?.entries ?? {}).find(
+    (item) =>
+      item.promptID === promptID &&
+      item.state === "decanted" &&
+      item.transcriptHash !== transcriptHash,
+  );
+  if (staleEntry) {
+    return {
+      state: "stale" as const,
+      key,
+      transcriptHash,
+      mapSessionID: staleEntry.mapSessionID,
+      staleReason: "Stored Decant summary was generated for a different Git AI transcript hash.",
+    };
+  }
+
+  return {
+    state: "raw_only" as const,
+    key,
+    transcriptHash,
+  };
+}
+
+function summarizeGitAiMessage(message: unknown) {
+  if (!message || typeof message !== "object") {
+    return { type: "unknown", preview: String(message).slice(0, 400) };
+  }
+  const record = message as Record<string, unknown>;
+  const text = typeof record.text === "string" ? record.text : undefined;
+  const input =
+    record.input && typeof record.input === "object"
+      ? (record.input as Record<string, unknown>)
+      : undefined;
+  return {
+    type: typeof record.type === "string" ? record.type : "unknown",
+    name: typeof record.name === "string" ? record.name : undefined,
+    timestamp:
+      typeof record.timestamp === "string" ? record.timestamp : undefined,
+    text_preview: text ? text.slice(0, 400) : undefined,
+    input_keys: input ? Object.keys(input).slice(0, 20) : undefined,
+  };
 }
 
 const server: Plugin = async (ctx) => {
@@ -427,6 +545,77 @@ const server: Plugin = async (ctx) => {
     );
   }
 
+  async function gitAiLookup(input: {
+    commitHash: string;
+    file: string;
+    line: number;
+  }) {
+    const note = await ctx.$.cwd(
+      ctx.worktree,
+    ).nothrow()`git notes --ref=ai show ${input.commitHash}`
+      .quiet()
+      .text();
+    if (!note.trim()) {
+      return {
+        mapped: false,
+        note_present: false,
+        original_file: input.file,
+        original_line: input.line,
+      };
+    }
+
+    try {
+      const log = parseGitAiAuthorshipLog(note);
+      const attributions = findGitAiLineAttributions({
+        log,
+        file: input.file,
+        line: input.line,
+      });
+      const decantIndex = await readGitAiDecantIndex().catch(() => undefined);
+      return {
+        mapped: attributions.length > 0,
+        note_present: true,
+        original_file: input.file,
+        original_line: input.line,
+        schema_version: log.metadata.schema_version,
+        git_ai_version: log.metadata.git_ai_version,
+        base_commit_sha: log.metadata.base_commit_sha,
+        prompts: attributions.map((attribution) => {
+          const decant = gitAiDecantStatus(
+            decantIndex,
+            attribution.prompt_id,
+            attribution.prompt,
+          );
+          return {
+            prompt_id: attribution.prompt_id,
+            file: attribution.file,
+            line: attribution.line,
+            line_spec: attribution.line_spec,
+            ...summarizeGitAiPrompt(attribution.prompt, decant),
+          };
+        }),
+        next_steps:
+          attributions.length > 0
+            ? [
+                "Use Git AI attribution to identify the external agent/tool/model that produced this line.",
+                "Use messages_preview and summary first; Git AI messages are raw transcripts, not Decant-compressed blobs.",
+                "Only fetch messages_url or full external transcript content when the preview is insufficient.",
+              ]
+            : [
+                "Git AI authorship note exists for this commit, but no prompt mapped to the blamed original file/line.",
+              ],
+      };
+    } catch (error) {
+      return {
+        mapped: false,
+        note_present: true,
+        original_file: input.file,
+        original_line: input.line,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
   async function blameLookup(file: string, line: number) {
     const blame = await ctx.$.cwd(
       ctx.worktree,
@@ -434,7 +623,8 @@ const server: Plugin = async (ctx) => {
       .quiet()
       .text();
     const blameLines = blame.split("\n");
-    const commitHash = blameLines[0]?.trim().split(/\s+/)[0];
+    const blameHeader = blameLines[0]?.trim().split(/\s+/) ?? [];
+    const commitHash = blameHeader[0];
     if (!commitHash) {
       return {
         commit_hash: undefined,
@@ -445,14 +635,41 @@ const server: Plugin = async (ctx) => {
 
     const lineText =
       blameLines.find((item) => item.startsWith("\t"))?.slice(1) ?? "";
+    const originalLine = Number(blameHeader[1]);
+    const originalFile =
+      blameLines
+        .find((item) => item.startsWith("filename "))
+        ?.slice("filename ".length) || file;
+    const gitAiLine = Number.isInteger(originalLine) ? originalLine : line;
+    const gitAi = await gitAiLookup({
+      commitHash,
+      file: originalFile,
+      line: gitAiLine,
+    });
 
     const commits = await readCommitMap();
     const entry = commits.entries[commitHash];
     if (!entry) {
       return {
         commit_hash: commitHash,
-        mapped: false,
-        error: `No session mapping found for commit ${commitHash}.`,
+        mapped: gitAi.mapped,
+        decant_mapped: false,
+        git_ai_mapped: gitAi.mapped,
+        file,
+        line,
+        original_file: originalFile,
+        original_line: gitAiLine,
+        line_text: lineText,
+        git_ai: gitAi,
+        error: gitAi.mapped
+          ? undefined
+          : `No session mapping found for commit ${commitHash}.`,
+        next_steps: gitAi.mapped
+          ? [
+              "No Decant session map was found for this commit.",
+              "Use git_ai.prompts[] for cross-agent provenance, then request only the exact external transcript detail needed.",
+            ]
+          : undefined,
       };
     }
 
@@ -489,8 +706,12 @@ const server: Plugin = async (ctx) => {
     return {
       commit_hash: commitHash,
       mapped: true,
+      decant_mapped: true,
+      git_ai_mapped: gitAi.mapped,
       file,
       line,
+      original_file: originalFile,
+      original_line: gitAiLine,
       line_text: lineText,
       commit_subject: commitSubject,
       changed_files: changedFiles,
@@ -505,11 +726,13 @@ const server: Plugin = async (ctx) => {
         commitEntry: entry,
         matchedBlobIDs: activeBlobIDs,
       }),
+      git_ai: gitAi,
       next_steps: [
         "Use active_blob_ids first; they are the blobs active when the blamed commit was made.",
         "Inspect overview.blobs[].compressedSummary to choose relevant blobs.",
         "Call session_detail with detail='messages' to see message summaries for a blob.",
         "Call message_detail with a message_id to fetch the full historical message only when needed.",
+        "If git_ai.mapped is true, use it as cross-agent attribution; prefer Decant summaries before raw Git AI transcript detail.",
       ],
     };
   }

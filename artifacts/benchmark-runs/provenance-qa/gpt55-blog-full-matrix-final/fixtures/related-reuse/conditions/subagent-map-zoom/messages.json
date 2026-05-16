@@ -15,7 +15,7 @@
         "providerID": "openai",
         "modelID": "gpt-5.5"
       },
-      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='decant'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
       "tools": {
         "task": true,
         "session_tree": true
@@ -27,7 +27,7 @@
         "sessionID": "ses_1e17f4d60ffe6KBBhWTuve2d3L",
         "messageID": "msg_e1e80b2b6001S2q5GUBjhaBO6C",
         "type": "text",
-        "text": "Question: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\nExpected relevant prior session: CSV parser lesson for related reuse\nTask instruction: call subagent_type='memmould', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from mem-mould session tools.\nAsk the child to ignore distractors: Auth queue related reuse, Markdown table parser\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+        "text": "Question: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\nExpected relevant prior session: CSV parser lesson for related reuse\nTask instruction: call subagent_type='decant', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from decant session tools.\nAsk the child to ignore distractors: Auth queue related reuse, Markdown table parser\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
       }
     ]
   },
@@ -81,8 +81,8 @@
           "status": "completed",
           "input": {
             "description": "Investigate CSV lesson",
-            "prompt": "Use only mem-mould session tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the expected relevant prior session: \"CSV parser lesson for related reuse\". Ignore distractors: \"Auth queue related reuse\" and \"Markdown table parser\". Determine for src/tsv/schema.ts what prior CSV parser lesson should be reused and what stale detail should not be copied. Return evidence with session_id, blob_id, and a single message_id that supports the full answer, including any correction, stale detail, or rejected alternative if relevant.",
-            "subagent_type": "memmould",
+            "prompt": "Use only decant session tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the expected relevant prior session: \"CSV parser lesson for related reuse\". Ignore distractors: \"Auth queue related reuse\" and \"Markdown table parser\". Determine for src/tsv/schema.ts what prior CSV parser lesson should be reused and what stale detail should not be copied. Return evidence with session_id, blob_id, and a single message_id that supports the full answer, including any correction, stale detail, or rejected alternative if relevant.",
+            "subagent_type": "decant",
             "task_id": "",
             "command": ""
           },

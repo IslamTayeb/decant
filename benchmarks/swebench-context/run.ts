@@ -79,11 +79,11 @@ type SessionMessage = {
 type ConditionID =
   | "clean-no-plugin"
   | "polluted-default-compact"
-  | "polluted-memmould-compact"
-  | "polluted-memmould-boundary-compact"
-  | "polluted-memmould-cache-stable-boundary-compact"
+  | "polluted-decant-compact"
+  | "polluted-decant-boundary-compact"
+  | "polluted-decant-cache-stable-boundary-compact"
   | "polluted-no-compact"
-  | "polluted-memmould-tools-no-compact";
+  | "polluted-decant-tools-no-compact";
 
 type ConditionConfig = {
   id: ConditionID;
@@ -137,24 +137,24 @@ const conditionConfigs: Record<ConditionID, ConditionConfig> = {
     forceCompaction: true,
     contextCleanup: false,
   },
-  "polluted-memmould-compact": {
-    id: "polluted-memmould-compact",
+  "polluted-decant-compact": {
+    id: "polluted-decant-compact",
     plugin: true,
     prelude: true,
     forceCompaction: true,
     contextCleanup: true,
     cleanupMode: "standard",
   },
-  "polluted-memmould-boundary-compact": {
-    id: "polluted-memmould-boundary-compact",
+  "polluted-decant-boundary-compact": {
+    id: "polluted-decant-boundary-compact",
     plugin: true,
     prelude: true,
     forceCompaction: true,
     contextCleanup: true,
     cleanupMode: "boundary",
   },
-  "polluted-memmould-cache-stable-boundary-compact": {
-    id: "polluted-memmould-cache-stable-boundary-compact",
+  "polluted-decant-cache-stable-boundary-compact": {
+    id: "polluted-decant-cache-stable-boundary-compact",
     plugin: true,
     prelude: true,
     forceCompaction: true,
@@ -169,8 +169,8 @@ const conditionConfigs: Record<ConditionID, ConditionConfig> = {
     forceCompaction: false,
     contextCleanup: false,
   },
-  "polluted-memmould-tools-no-compact": {
-    id: "polluted-memmould-tools-no-compact",
+  "polluted-decant-tools-no-compact": {
+    id: "polluted-decant-tools-no-compact",
     plugin: true,
     prelude: true,
     forceCompaction: false,
@@ -442,7 +442,7 @@ async function parseOptions(): Promise<Options> {
       : [
           "clean-no-plugin",
           "polluted-default-compact",
-          "polluted-memmould-compact",
+          "polluted-decant-compact",
         ]
   ) as ConditionID[];
   for (const condition of conditions) {
@@ -805,7 +805,7 @@ type OpenCodeRoot = {
 async function resolveOpenCodeRoot(
   conditionDir: string,
 ): Promise<OpenCodeRoot> {
-  const seeded = process.env.MEM_MOULD_E2E_TEMP_ROOT;
+  const seeded = process.env.DECANT_E2E_TEMP_ROOT;
   if (seeded) {
     return {
       home: path.join(seeded, "home"),
@@ -863,15 +863,15 @@ async function buildOpenCodeEnv(input: {
     XDG_CACHE_HOME: input.opencodeRoot.cache,
     OPENCODE_DB: path.join(input.conditionDir, "opencode.sqlite"),
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
-    MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
+    DECANT_DISABLE_GIT_HOOK_INSTALL: "1",
     ...(input.cacheStable
       ? {
-          MEM_MOULD_CACHE_STABLE: "1",
-          MEM_MOULD_STABLE_PLACEHOLDERS: "1",
-          MEM_MOULD_STABLE_ANCHORS: "1",
+          DECANT_CACHE_STABLE: "1",
+          DECANT_STABLE_PLACEHOLDERS: "1",
+          DECANT_STABLE_ANCHORS: "1",
         }
       : {}),
-    ...(input.taskBoundary ? { MEM_MOULD_TASK_BOUNDARY: "1" } : {}),
+    ...(input.taskBoundary ? { DECANT_TASK_BOUNDARY: "1" } : {}),
     OPENCODE_CONFIG_CONTENT: JSON.stringify(config),
   } satisfies NodeJS.ProcessEnv;
 }
@@ -1194,7 +1194,7 @@ async function runSwebenchEval(
   predictionPath: string,
 ) {
   const runID =
-    `mem-mould-${condition.id}-${instance.instance_id}-${Date.now()}`.replaceAll(
+    `decant-${condition.id}-${instance.instance_id}-${Date.now()}`.replaceAll(
       /[^a-zA-Z0-9_.-]/g,
       "-",
     );
@@ -1809,11 +1809,15 @@ function runAnalysisMarkdown(analysis: RunAnalysis) {
   const aggregateRows = Array.from(byCondition.entries()).map(
     ([condition, rows]) => {
       const tokens = combineTokenBuckets(rows.map((row) => row.tokens));
+      const setupTokens = combineTokenBuckets(rows.map(setupPhaseTokens));
+      const solveTokens = combineTokenBuckets(
+        rows.map((row) => row.phases.solve ?? emptyTokenBucket()),
+      );
       const resolved = rows.filter((row) => row.resolved).length;
       const staleSummaries = rows.filter(
         (row) => row.staleTermsInVisibleCompactionSummary.length > 0,
       ).length;
-      return `| ${condition} | ${resolved}/${rows.length} | ${sumF2p(rows)} | ${tokens.input.toLocaleString()} | ${tokens.cacheRead.toLocaleString()} | ${formatPercent(cacheHitShare(tokens))} | ${staleSummaries}/${rows.length} |`;
+      return `| ${condition} | ${resolved}/${rows.length} | ${sumF2p(rows)} | ${tokens.input.toLocaleString()} | ${setupTokens.input.toLocaleString()} | ${solveTokens.input.toLocaleString()} | ${formatPercent(cacheHitShare(solveTokens))} | ${tokens.cacheRead.toLocaleString()} | ${formatPercent(cacheHitShare(tokens))} | ${staleSummaries}/${rows.length} |`;
     },
   );
   return [
@@ -1824,20 +1828,31 @@ function runAnalysisMarkdown(analysis: RunAnalysis) {
     "",
     "## Aggregate",
     "",
-    "| Condition | Resolved | F2P | Input Tok | Cache Read Tok | Cache Hit Share | Stale Summaries |",
-    "|---|---:|---:|---:|---:|---:|---:|",
+    "| Condition | Resolved | F2P | Input Tok | Setup Input Tok | Solve Input Tok | Solve Cache Hit | Cache Read Tok | Cache Hit Share | Stale Summaries |",
+    "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ...aggregateRows,
     "",
     "## Rows",
     "",
-    "| Condition | Instance | Resolved | F2P | P2P Regr. | Input Tok | Cache Hit | Summary Fidelity | Eff. Tok Last | Removed Last | Visible Stale Summary Terms | Stale After Issue |",
-    "|---|---|---:|---:|---:|---:|---:|---|---:|---:|---|---|",
+    "| Condition | Instance | Resolved | F2P | P2P Regr. | Input Tok | Setup Input Tok | Solve Input Tok | Solve Cache Hit | Cache Hit | Ctx Tools | Summary Fidelity | Eff. Tok Last | Removed Last | Visible Stale Summary Terms | Stale After Issue |",
+    "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---|---|",
     ...analysis.rows.map(
-      (row) =>
-        `| ${row.condition} | ${row.instance} | ${String(row.resolved)} | ${row.failToPass} | ${row.passToPassRegressions} | ${row.tokens.input.toLocaleString()} | ${formatPercent(row.cacheHitShare)} | ${row.sessionSummaryFidelity ?? ""} | ${row.trace?.lastEffectiveTokens ?? ""} | ${row.trace?.lastMessagesRemoved ?? ""} | ${row.staleTermsInVisibleCompactionSummary.join(", ").replaceAll("|", "\\|")} | ${row.staleTermsAfterIssue.join(", ").replaceAll("|", "\\|")} |`,
+      (row) => {
+        const setupTokens = setupPhaseTokens(row);
+        const solveTokens = row.phases.solve ?? emptyTokenBucket();
+        return `| ${row.condition} | ${row.instance} | ${String(row.resolved)} | ${row.failToPass} | ${row.passToPassRegressions} | ${row.tokens.input.toLocaleString()} | ${setupTokens.input.toLocaleString()} | ${solveTokens.input.toLocaleString()} | ${formatPercent(cacheHitShare(solveTokens))} | ${formatPercent(row.cacheHitShare)} | ${row.contextToolCalls} | ${row.sessionSummaryFidelity ?? ""} | ${row.trace?.lastEffectiveTokens ?? ""} | ${row.trace?.lastMessagesRemoved ?? ""} | ${row.staleTermsInVisibleCompactionSummary.join(", ").replaceAll("|", "\\|")} | ${row.staleTermsAfterIssue.join(", ").replaceAll("|", "\\|")} |`;
+      },
     ),
     "",
   ].join("\n");
+}
+
+function setupPhaseTokens(row: AnalysisRow) {
+  return combineTokenBuckets(
+    Object.entries(row.phases)
+      .filter(([phase]) => phase !== "solve")
+      .map(([, bucket]) => bucket),
+  );
 }
 
 function sumF2p(rows: AnalysisRow[]) {

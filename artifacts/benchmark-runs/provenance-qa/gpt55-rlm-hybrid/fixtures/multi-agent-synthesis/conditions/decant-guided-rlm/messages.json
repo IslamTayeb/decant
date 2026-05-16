@@ -1,0 +1,694 @@
+[
+  {
+    "info": {
+      "id": "msg_e1ec25155001W7r56umX7Vn9zy",
+      "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+      "role": "user",
+      "time": {
+        "created": 1778632511829
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use decant session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, do not modify files. Cite real OpenCode session_id and message_id values, not embedded fixture labels.",
+      "tools": {
+        "session_lookup": true,
+        "session_detail": true,
+        "message_detail": true,
+        "session_tree": true,
+        "glob": true,
+        "grep": true,
+        "read": true,
+        "bash": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec25155002FskaKKXMESnKne",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec25155001W7r56umX7Vn9zy",
+        "type": "text",
+        "text": "Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report?\nTranscript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts\nKnown distractor topics include: Docs writer child session, Style reviewer child session\nRequired route: use session_lookup/session_detail to identify the likely prior session, search transcript files only as corroborating RLM-style evidence, then call message_detail for the final cited message.\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec25157002TFFSR6NxIToga6",
+      "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+      "role": "assistant",
+      "time": {
+        "created": 1778632511831,
+        "completed": 1778632516027
+      },
+      "parentID": "msg_e1ec25155001W7r56umX7Vn9zy",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9976,
+        "input": 705,
+        "output": 36,
+        "reasoning": 19,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec25496001hnMLUm6rFYqWBu",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec25157002TFFSR6NxIToga6",
+        "type": "step-start",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f"
+      },
+      {
+        "id": "prt_e1ec259c5001WVtw4G8WXNETe0",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec25157002TFFSR6NxIToga6",
+        "type": "reasoning",
+        "text": "**Preparing for tool usage**\n\nI’m focusing on the need to provide the answer strictly in JSON format. I also realize I need to use the tools available for this task. The first step involves performing a session lookup before diving deeper into what comes next. It’s all about making sure I follow the right sequence to get everything sorted out properly and effectively! Let’s keep this organized and get the work done as efficiently as possible.",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_05b045322da53d29016a03c7423f0881918d97741ae3326496"
+          }
+        },
+        "time": {
+          "start": 1778632513989,
+          "end": 1778632515728
+        }
+      },
+      {
+        "id": "prt_e1ec26097001FnhjuiHUacBvMm",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec25157002TFFSR6NxIToga6",
+        "type": "tool",
+        "callID": "call_kJ8Rtjf2r9zRNoFMakNsDzCh",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "src/report/summary.ts failed-test IDs final report child agent finding",
+            "limit": 5
+          },
+          "output": "{\n  \"query\": \"src/report/summary.ts failed-test IDs final report child agent finding\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e13daeadffeddIbxVzNlox6Xd\",\n      \"title\": \"multi-agent-synthesis decant-guided-rlm\",\n      \"updatedAt\": 1778632511909,\n      \"matchedBlobIDs\": [\n        \"report_summary\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"report_summary\",\n          \"label\": \"report_summary\",\n          \"summary\": \"User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Transcript directory: ./benchmarks/provenance-qa/runs/gpt5...\",\n          \"compressedSummary\": \"[Blob summary: report_summary] User request: Question: Which child agent's prior finding explains why src/report/summary.ts keeps failed-test IDs in the final report? Transcript directory: ./benchmarks/provenance-qa/runs/gpt5...\",\n          \"placeholder\": \"User request: Question: Which child agent's prior finding explains why src/re...\",\n          \"tokenEstimate\": 246,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e13dba85ffeffcQJXAiWE5qO7\",\n      \"title\": \"Style reviewer child session\",\n      \"updatedAt\": 1778632511752,\n      \"matchedBlobIDs\": [\n        \"style_reviewer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"style_reviewer_child\",\n          \"label\": \"style_reviewer_child\",\n          \"summary\": \"User request: # Style reviewer child session session_id: style_reviewer_child_session title: Style reviewer child session ## message style_child_fact_1 The style reviewer child wanted field names alphabetized; not the rationale for faile... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: style_reviewer_child] User request: # Style reviewer child session session_id: style_reviewer_child_session title: Style reviewer child session ## message style_child_fact_1 The style reviewer child wanted field names alphabetized; not the rationale for faile... Assistant step without text content\",\n          \"placeholder\": \"User request: # Style reviewer child session session_id: style_reviewer_child...\",\n          \"tokenEstimate\": 60,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e13dc26bffe6AOeDS8nngmwDj\",\n      \"title\": \"Docs writer child session\",\n      \"updatedAt\": 1778632508690,\n      \"matchedBlobIDs\": [\n        \"docs_writer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"docs_writer_child\",\n          \"label\": \"docs_writer_child\",\n          \"summary\": \"User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: docs_writer_child] User request: # Docs writer child session session_id: docs_writer_child_session title: Docs writer child session ## message docs_child_fact_1 The docs writer child asked for shorter report prose and no debugging IDs. Assistant step without text content\",\n          \"placeholder\": \"User request: # Docs writer child session session_id: docs_writer_child_sessi...\",\n          \"tokenEstimate\": 52,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e13dd238ffeaJAQzy6ngBqgSc\",\n      \"title\": \"Test investigator child session\",\n      \"updatedAt\": 1778632506684,\n      \"matchedBlobIDs\": [\n        \"test_investigator_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"test_investigator_child\",\n          \"label\": \"test_investigator_child\",\n          \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: test_investigator_child] User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n          \"placeholder\": \"User request: # Test investigator child session session_id: test_investigator...\",\n          \"tokenEstimate\": 101,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632515842,
+            "end": 1778632515858
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_05b045322da53d29016a03c743fa3881919ed89fbc425c71ad"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec2618a001PpLEW2YeiJJbf4",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec25157002TFFSR6NxIToga6",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f",
+        "cost": 0,
+        "tokens": {
+          "total": 9976,
+          "input": 705,
+          "output": 36,
+          "reasoning": 19,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec261bd002z97vUMHmuZLr93",
+      "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+      "role": "assistant",
+      "time": {
+        "created": 1778632516030,
+        "completed": 1778632519498
+      },
+      "parentID": "msg_e1ec25155001W7r56umX7Vn9zy",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11220,
+        "input": 1432,
+        "output": 51,
+        "reasoning": 9,
+        "cache": {
+          "read": 9728,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec264d7001YKVJGUbra4BC60",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec261bd002z97vUMHmuZLr93",
+        "type": "step-start",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f"
+      },
+      {
+        "id": "prt_e1ec26a3b001nqc2nIBU9WioXE",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec261bd002z97vUMHmuZLr93",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0d0e1d073ae932c0016a03c74675bc81919fe87893b4526a9d"
+          }
+        },
+        "time": {
+          "start": 1778632518203,
+          "end": 1778632518888
+        }
+      },
+      {
+        "id": "prt_e1ec26ced001i03k45T4artgTT",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec261bd002z97vUMHmuZLr93",
+        "type": "tool",
+        "callID": "call_ez5ZVmyBfFdqj60NJMB7KqZY",
+        "tool": "session_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1e13dd238ffeaJAQzy6ngBqgSc",
+            "blob_id": "test_investigator_child",
+            "detail": "messages"
+          },
+          "output": "{\n  \"session_id\": \"ses_1e13dd238ffeaJAQzy6ngBqgSc\",\n  \"blob_id\": \"test_investigator_child\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"test_investigator_child\",\n    \"label\": \"test_investigator_child\",\n    \"compressedSummary\": \"[Blob summary: test_investigator_child] User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report... Assistant step without text content\",\n    \"tokenEstimate\": 101,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e1ec22dd9001x1EMAOKQ2Og4Pd\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 100,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778632502745\n    },\n    {\n      \"id\": \"msg_e1ec22de0001OnDIR8ZqbI325M\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 1,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778632502752\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632519288,
+            "end": 1778632519296
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0d0e1d073ae932c0016a03c74725288191a4ddd711deaa2213"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec26f28001ywyINSZjJY2ie0",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec261bd002z97vUMHmuZLr93",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f",
+        "cost": 0,
+        "tokens": {
+          "total": 11220,
+          "input": 1432,
+          "output": 51,
+          "reasoning": 9,
+          "cache": {
+            "read": 9728,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec26f4c0016ZadetOTX5eT3M",
+      "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+      "role": "assistant",
+      "time": {
+        "created": 1778632519500,
+        "completed": 1778632525134
+      },
+      "parentID": "msg_e1ec25155001W7r56umX7Vn9zy",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11838,
+        "input": 879,
+        "output": 189,
+        "reasoning": 18,
+        "cache": {
+          "read": 10752,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec272510010lyBLSPw6GHFft",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec26f4c0016ZadetOTX5eT3M",
+        "type": "step-start",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f"
+      },
+      {
+        "id": "prt_e1ec2755a001XYv5PGKCymJJH7",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec26f4c0016ZadetOTX5eT3M",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0dbf3dbec890390b016a03c7494f548191ae1cb81e155e2d52"
+          }
+        },
+        "time": {
+          "start": 1778632521050,
+          "end": 1778632524819
+        }
+      },
+      {
+        "id": "prt_e1ec28417001C9ngjApawZMRtU",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec26f4c0016ZadetOTX5eT3M",
+        "type": "tool",
+        "callID": "call_Mmz94SCbZ4yok1BunmuqJKTE",
+        "tool": "grep",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "failed-test IDs|failed test IDs|must remain|final report|failure badges|summary\\.ts",
+            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts",
+            "include": "*"
+          },
+          "output": "Found 11 matches\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_7.md:\n  Line 6: Decoy 7: mentions src/report/summary.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_1.md:\n  Line 6: Decoy 1: mentions src/report/summary.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_3.md:\n  Line 6: Decoy 3: mentions src/report/summary.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_2.md:\n  Line 6: Decoy 2: mentions src/report/summary.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_6.md:\n  Line 6: Decoy 6: mentions src/report/summary.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_8.md:\n  Line 6: Decoy 8: mentions src/report/summary.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_4.md:\n  Line 6: Decoy 4: mentions src/report/summary.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_5.md:\n  Line 6: Decoy 5: mentions src/report/summary.ts and similar terms, but it is not the final rationale and should not be cited.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/style_reviewer_child_session--ses_1e13dba85ffeffcQJXAiWE5qO7.md:\n  Line 7: - The style reviewer child wanted field names alphabetized; not the rationale for failed-test IDs.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/test_investigator_child_session--ses_1e13dd238ffeaJAQzy6ngBqgSc.md:\n  Line 7: - The test investigator child found that failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures.\n\n  Line 8: - The parent accepted this child finding and kept failed_test_ids in src/report/summary.ts.\n",
+          "title": "failed-test IDs|failed test IDs|must remain|final report|failure badges|summary\\.ts",
+          "metadata": {
+            "matches": 11,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632524832,
+            "end": 1778632524864
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0dbf3dbec890390b016a03c74d11248191abd76b152d1ad891"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec28428001aOoNH8btH6RBvr",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec26f4c0016ZadetOTX5eT3M",
+        "type": "tool",
+        "callID": "call_xNIIoWESQN5qPvoEY1zEPeN3",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "**/*",
+            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts"
+          },
+          "output": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_8.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_3.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_7.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_6.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_2.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_5.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_1.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/multi_agent_synthesis_decoy_4.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/style_reviewer_child_session--ses_1e13dba85ffeffcQJXAiWE5qO7.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/docs_writer_child_session--ses_1e13dc26bffe6AOeDS8nngmwDj.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/test_investigator_child_session--ses_1e13dd238ffeaJAQzy6ngBqgSc.md",
+          "title": "recall/transcripts",
+          "metadata": {
+            "count": 11,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632524847,
+            "end": 1778632524868
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0dbf3dbec890390b016a03c74d1134819199abaaf0e00bd957"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec2852e0013Fi7o7VpPmYuQi",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec26f4c0016ZadetOTX5eT3M",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f",
+        "cost": 0,
+        "tokens": {
+          "total": 11838,
+          "input": 879,
+          "output": 189,
+          "reasoning": 18,
+          "cache": {
+            "read": 10752,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec2854f001dOuq42fBvBobFV",
+      "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+      "role": "assistant",
+      "time": {
+        "created": 1778632525135,
+        "completed": 1778632529367
+      },
+      "parentID": "msg_e1ec25155001W7r56umX7Vn9zy",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13790,
+        "input": 2407,
+        "output": 108,
+        "reasoning": 11,
+        "cache": {
+          "read": 11264,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec2886d001569A5C72SnDEu6",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec2854f001dOuq42fBvBobFV",
+        "type": "step-start",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f"
+      },
+      {
+        "id": "prt_e1ec28c6c001QtVQXUMa9ZA0I0",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec2854f001dOuq42fBvBobFV",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0280b36f03a82b81016a03c74f373c81918c58b2f20ace7f39"
+          }
+        },
+        "time": {
+          "start": 1778632526956,
+          "end": 1778632527567
+        }
+      },
+      {
+        "id": "prt_e1ec28ed1001HfKOxkZv4338h3",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec2854f001dOuq42fBvBobFV",
+        "type": "tool",
+        "callID": "call_GrTJCQQs6sjiL0wR5oSGww9d",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/test_investigator_child_session--ses_1e13dd238ffeaJAQzy6ngBqgSc.md",
+            "offset": 1,
+            "limit": 40
+          },
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree/recall/transcripts/test_investigator_child_session--ses_1e13dd238ffeaJAQzy6ngBqgSc.md</path>\n<type>file</type>\n<content>\n1: # Test investigator child session\n2: session_id: ses_1e13dd238ffeaJAQzy6ngBqgSc\n3: title: Test investigator child session\n4: id_policy: cite the heading message id below, not fixture fact labels\n5: \n6: ## message msg_e1ec22dd9001x1EMAOKQ2Og4Pd\n7: - The test investigator child found that failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures.\n8: - The parent accepted this child finding and kept failed_test_ids in src/report/summary.ts.\n\n(End of file - total 8 lines)\n</content>",
+          "title": "recall/transcripts/test_investigator_child_session--ses_1e13dd238ffeaJAQzy6ngBqgSc.md",
+          "metadata": {
+            "preview": "# Test investigator child session\nsession_id: ses_1e13dd238ffeaJAQzy6ngBqgSc\ntitle: Test investigator child session\nid_policy: cite the heading message id below, not fixture fact labels\n\n## message msg_e1ec22dd9001x1EMAOKQ2Og4Pd\n- The test investigator child found that failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures.\n- The parent accepted this child finding and kept failed_test_ids in src/report/summary.ts.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778632529132,
+            "end": 1778632529150
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0280b36f03a82b81016a03c74fd3508191b00822a46be1cb50"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec295b4001kT9yC6mmr1oIRg",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec2854f001dOuq42fBvBobFV",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f",
+        "cost": 0,
+        "tokens": {
+          "total": 13790,
+          "input": 2407,
+          "output": 108,
+          "reasoning": 11,
+          "cache": {
+            "read": 11264,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec295d8001HhJEbI9G2uRZqg",
+      "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+      "role": "assistant",
+      "time": {
+        "created": 1778632529368,
+        "completed": 1778632531956
+      },
+      "parentID": "msg_e1ec25155001W7r56umX7Vn9zy",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 14111,
+        "input": 730,
+        "output": 59,
+        "reasoning": 10,
+        "cache": {
+          "read": 13312,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec2992a001ql53RA8q9mE76E",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec295d8001HhJEbI9G2uRZqg",
+        "type": "step-start",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f"
+      },
+      {
+        "id": "prt_e1ec29a38001ZjD5m5jk8OoaKa",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec295d8001HhJEbI9G2uRZqg",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0647b7d98560d902016a03c752bfa08191ac0af92f797d26cb"
+          }
+        },
+        "time": {
+          "start": 1778632530488,
+          "end": 1778632531075
+        }
+      },
+      {
+        "id": "prt_e1ec29c86001MYql3UAzlQoy4t",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec295d8001HhJEbI9G2uRZqg",
+        "type": "tool",
+        "callID": "call_AckVS3qj1VUnCGix2bzxVLFy",
+        "tool": "message_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1e13dd238ffeaJAQzy6ngBqgSc",
+            "message_id": "msg_e1ec22dd9001x1EMAOKQ2Og4Pd"
+          },
+          "output": "{\n  \"session_id\": \"ses_1e13dd238ffeaJAQzy6ngBqgSc\",\n  \"message_id\": \"msg_e1ec22dd9001x1EMAOKQ2Og4Pd\",\n  \"ok\": true,\n  \"message\": {\n    \"id\": \"msg_e1ec22dd9001x1EMAOKQ2Og4Pd\",\n    \"role\": \"user\",\n    \"blobID\": \"test_investigator_child\",\n    \"blobLabel\": \"test_investigator_child\",\n    \"summary\": \"User request: # Test investigator child session session_id: test_investigator_child_session title: Test investigator child session ## message child_fact_1 The test investigator child found that failed-test IDs must remain in final report...\",\n    \"keyFacts\": [],\n    \"tokenEstimate\": 100,\n    \"createdAt\": 1778632502745,\n    \"parts\": [\n      {\n        \"id\": \"prt_e1ec22dda0017iKOPdqX3npfA3\",\n        \"type\": \"text\",\n        \"text\": \"# Test investigator child session\\nsession_id: test_investigator_child_session\\ntitle: Test investigator child session\\n\\n## message child_fact_1\\nThe test investigator child found that failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures.\\n\\n## message child_fact_2\\nThe parent accepted this child finding and kept failed_test_ids in src/report/summary.ts.\\n\"\n      }\n    ]\n  }\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632531765,
+            "end": 1778632531776
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0647b7d98560d902016a03c75354ac8191824b3725cb47e75d"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec29fcd001a6886B54RimduT",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec295d8001HhJEbI9G2uRZqg",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f",
+        "cost": 0,
+        "tokens": {
+          "total": 14111,
+          "input": 730,
+          "output": 59,
+          "reasoning": 10,
+          "cache": {
+            "read": 13312,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ec29ff60013ZrWhQPdorsmX9",
+      "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+      "role": "assistant",
+      "time": {
+        "created": 1778632531958,
+        "completed": 1778632539847
+      },
+      "parentID": "msg_e1ec25155001W7r56umX7Vn9zy",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/multi-agent-synthesis/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 14789,
+        "input": 624,
+        "output": 257,
+        "reasoning": 84,
+        "cache": {
+          "read": 13824,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ec2a309001ZDS95GdR8tbmfh",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec29ff60013ZrWhQPdorsmX9",
+        "type": "step-start",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f"
+      },
+      {
+        "id": "prt_e1ec2a5ef001jKqS3XyPbsUUMv",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec29ff60013ZrWhQPdorsmX9",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0985d7a0f2f12c48016a03c755bf64819186d60fa5e01e53f0"
+          }
+        },
+        "time": {
+          "start": 1778632533487,
+          "end": 1778632535376
+        }
+      },
+      {
+        "id": "prt_e1ec2ad53001ZcOI2lAD9YCY6r",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec29ff60013ZrWhQPdorsmX9",
+        "type": "text",
+        "text": "{\"answer\":\"Test investigator child session: it found failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures, and the parent kept failed_test_ids in src/report/summary.ts for that reason.\",\"evidence\":{\"session_id\":\"ses_1e13dd238ffeaJAQzy6ngBqgSc\",\"blob_id\":\"test_investigator_child\",\"message_id\":\"msg_e1ec22dd9001x1EMAOKQ2Og4Pd\"},\"rationale\":\"session_lookup identified the test_investigator_child blob as the relevant prior session; transcript search corroborated it and warned to cite the real OpenCode message id rather than fixture labels. message_detail for msg_e1ec22dd9001x1EMAOKQ2Og4Pd contains both the child finding and the parent acceptance keeping failed_test_ids in src/report/summary.ts.\",\"irrelevant_context_ignored\":[\"Docs writer child session asked for shorter prose and no debugging IDs, which conflicts with the accepted rationale.\",\"Style reviewer child session only wanted alphabetized field names and explicitly was not the rationale for failed-test IDs.\",\"multi_agent_synthesis_decoy_* files mention similar terms but state they are not the final rationale.\"]}",
+        "time": {
+          "start": 1778632535379,
+          "end": 1778632539665
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0985d7a0f2f12c48016a03c757a1a48191a7658fb26d6bee67",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ec2bea4001FF8tSPeowHp164",
+        "sessionID": "ses_1e13daeadffeddIbxVzNlox6Xd",
+        "messageID": "msg_e1ec29ff60013ZrWhQPdorsmX9",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "8a0d4700618896898381ecfbb62362d0b0f7b11f",
+        "cost": 0,
+        "tokens": {
+          "total": 14789,
+          "input": 624,
+          "output": 257,
+          "reasoning": 84,
+          "cache": {
+            "read": 13824,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

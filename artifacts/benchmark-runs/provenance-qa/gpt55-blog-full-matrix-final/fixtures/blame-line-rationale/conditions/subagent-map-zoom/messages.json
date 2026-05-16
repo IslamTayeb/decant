@@ -15,7 +15,7 @@
         "providerID": "openai",
         "modelID": "gpt-5.5"
       },
-      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='decant'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
       "tools": {
         "task": true,
         "session_tree": true
@@ -27,7 +27,7 @@
         "sessionID": "ses_1e17acb29ffeHWpW9AtOt7HF1S",
         "messageID": "msg_e1e8534e5001QjeUWpPQZ6K5CK",
         "type": "text",
-        "text": "Question: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2?\nExpected relevant prior session: TTL blame rationale session\nTask instruction: call subagent_type='memmould', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from mem-mould session tools.\nAsk the child to ignore distractors: Billing TTL distractor, Markdown TTL distractor\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+        "text": "Question: Using provenance, why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2?\nExpected relevant prior session: TTL blame rationale session\nTask instruction: call subagent_type='decant', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from decant session tools.\nAsk the child to ignore distractors: Billing TTL distractor, Markdown TTL distractor\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
       }
     ]
   },
@@ -98,7 +98,7 @@
           "input": {
             "description": "Investigate TTL rationale",
             "prompt": "Find provenance for the question: why does src/cache/ttl.ts cap requested TTL with namespaceMaxSeconds on line 2? Expected relevant prior session: TTL blame rationale session. Ignore distractors named Billing TTL distractor and Markdown TTL distractor. Use only session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Return evidence with session_id, blob_id, and message_id. The cited message_id must support the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale.",
-            "subagent_type": "memmould",
+            "subagent_type": "decant",
             "task_id": "",
             "command": ""
           },

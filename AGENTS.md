@@ -2,7 +2,7 @@
 
 ## Project
 
-mem-mould is an OpenCode plugin prototype for LLM context visualization, context control, and multi-agent context coordination.
+decant is an OpenCode plugin prototype for LLM context visualization, context control, and multi-agent context coordination.
 
 Core thesis: long-running agent sessions should expose a compact topic map. Current work can stay full, finished work can become summaries, distant topics can become placeholders, and dead ends can be dropped. When detail is needed later, the agent or user should zoom into the relevant topic instead of rereading the full transcript.
 
@@ -25,19 +25,19 @@ What has evidence:
 - Annotation reliability: assistant turns can produce usable topic metadata while keeping visible conversation clean.
 - Map navigation: models can pick relevant placeholder topics and request zoom when needed.
 - Sub-agent investigation: child agents can inspect old session maps and return focused evidence.
-- Context canaries: mem-mould can remove planted stale context from visible compaction summaries.
-- Provenance QA: mem-mould can route an agent to prior rationale through low-fidelity maps plus selective message zoom.
+- Context canaries: decant can remove planted stale context from visible compaction summaries.
+- Provenance QA: decant can route an agent to prior rationale through low-fidelity maps plus selective message zoom.
 
 Do not overclaim:
 
-- Current SWE-bench/code-memory evidence supports context hygiene and provenance routing, not general solve-rate improvement.
+- Current SWE-bench/code-recall evidence supports context hygiene and provenance routing, not general solve-rate improvement.
 - Treat token/cache metrics as diagnostics unless a benchmark README says otherwise.
 - Blog/public claims should point at curated artifacts under `artifacts/benchmark-runs/`, not raw local runs.
 
 ## Repository Shape
 
 ```
-mem-mould/
+decant/
   AGENTS.md
   README.md                   # Simple public overview
   src/                        # OpenCode plugin source
@@ -93,7 +93,7 @@ npm run artifacts:export
 Live validation and benchmarks require an OpenCode-accessible model slug:
 
 ```sh
-export MEM_MOULD_E2E_MODEL="<provider>/<model>"
+export DECANT_E2E_MODEL="<provider>/<model>"
 ```
 
 ## OpenCode Plugin Development Rules

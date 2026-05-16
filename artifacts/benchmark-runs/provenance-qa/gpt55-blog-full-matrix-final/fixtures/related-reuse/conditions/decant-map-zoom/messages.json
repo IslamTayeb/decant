@@ -1,0 +1,397 @@
+[
+  {
+    "info": {
+      "id": "msg_e1e80361400152A6sD41Z8ODit",
+      "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+      "role": "user",
+      "time": {
+        "created": 1778628179476
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use session_lookup, then session_detail detail='messages', then message_detail before answering. Do not use glob, grep, read, bash, or transcript files.",
+      "tools": {
+        "session_lookup": true,
+        "session_detail": true,
+        "message_detail": true,
+        "session_tree": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1e803614002lGe7nSn14ruVM0",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e80361400152A6sD41Z8ODit",
+        "type": "text",
+        "text": "Question: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\nSearch hint: CSV parser lesson for related reuse. Ignore distractors: Auth queue related reuse, Markdown table parser\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e803619001BVspDXKurHHaZj",
+      "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+      "role": "assistant",
+      "time": {
+        "created": 1778628179481,
+        "completed": 1778628183542
+      },
+      "parentID": "msg_e1e80361400152A6sD41Z8ODit",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/decant-map-zoom/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/decant-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9816,
+        "input": 537,
+        "output": 40,
+        "reasoning": 23,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e803966001nDUcS1Q62M5dC7",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e803619001BVspDXKurHHaZj",
+        "type": "step-start",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a"
+      },
+      {
+        "id": "prt_e1e803e7f001hDwQ8mzWwr4Zc4",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e803619001BVspDXKurHHaZj",
+        "type": "reasoning",
+        "text": "**Following user instructions**\n\nI need to stick to the user's request for compact JSON outputs only, which means I should format my responses accordingly. It’s also important to use the necessary tools in the right order, like session_lookup and others as specified. I want to ensure I'm following these guidelines closely so I can provide the best possible assistance! I’ll focus on being concise and accurate in my responses using this method.",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0318990ffa063ebc016a03b656072081918db1d4679fc01da8"
+          }
+        },
+        "time": {
+          "start": 1778628181631,
+          "end": 1778628183284
+        }
+      },
+      {
+        "id": "prt_e1e8044f5002R2h2IqkFi9xJ51",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e803619001BVspDXKurHHaZj",
+        "type": "tool",
+        "callID": "call_YQslk918WHhfrQWllILLSd94",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "CSV parser lesson related reuse src/tsv/schema.ts stale detail should not be copied",
+            "limit": 5
+          },
+          "output": "{\n  \"query\": \"CSV parser lesson related reuse src/tsv/schema.ts stale detail should not be copied\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e17fc9f2ffeltdI96ANRt6HWy\",\n      \"title\": \"related-reuse decant-map-zoom\",\n      \"updatedAt\": 1778628179535,\n      \"matchedBlobIDs\": [\n        \"tsv_schema\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"tsv_schema\",\n          \"label\": \"tsv_schema\",\n          \"summary\": \"User request: Question: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied? Search hint: CSV parser lesson for related reuse. Ignore distractors: Auth queue related reuse, Mar...\",\n          \"compressedSummary\": \"[Blob summary: tsv_schema] User request: Question: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied? Search hint: CSV parser lesson for related reuse. Ignore distractors: Auth queue related reuse, Mar...\",\n          \"placeholder\": \"User request: Question: For src/tsv/schema.ts, what prior CSV parser lesson s...\",\n          \"tokenEstimate\": 151,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e17fd5e3ffeIBHSiV0sBRmDW1\",\n      \"title\": \"Markdown table parser\",\n      \"updatedAt\": 1778628179128,\n      \"matchedBlobIDs\": [\n        \"markdown_table_parser\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"markdown_table_parser\",\n          \"label\": \"markdown_table_parser\",\n          \"summary\": \"User request: # Markdown table parser session_id: markdown_table_session title: Markdown table parser ## message md_fact_1 Markdown tables use pipes and alignment markers; do not use this as TSV schema rationale. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: markdown_table_parser] User request: # Markdown table parser session_id: markdown_table_session title: Markdown table parser ## message md_fact_1 Markdown tables use pipes and alignment markers; do not use this as TSV schema rationale. Assistant step without text content\",\n          \"placeholder\": \"User request: # Markdown table parser session_id: markdown_table_session titl...\",\n          \"tokenEstimate\": 52,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e17fddd4ffeyzVqefOhzFldn9\",\n      \"title\": \"Auth queue related reuse\",\n      \"updatedAt\": 1778628176499,\n      \"matchedBlobIDs\": [\n        \"auth_queue_related\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"auth_queue_related\",\n          \"label\": \"auth_queue_related\",\n          \"summary\": \"User request: # Auth queue related reuse session_id: auth_related_session title: Auth queue related reuse ## message auth_related_fact_1 Auth refresh queue reuse involved per-tenant dedupe and is unrelated to TSV parsing. Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: auth_queue_related] User request: # Auth queue related reuse session_id: auth_related_session title: Auth queue related reuse ## message auth_related_fact_1 Auth refresh queue reuse involved per-tenant dedupe and is unrelated to TSV parsing. Assistant step without text content\",\n          \"placeholder\": \"User request: # Auth queue related reuse session_id: auth_related_session tit...\",\n          \"tokenEstimate\": 54,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e17feda7ffecLyXKslLYG1Lqg\",\n      \"title\": \"CSV parser lesson for related reuse\",\n      \"updatedAt\": 1778628173469,\n      \"matchedBlobIDs\": [\n        \"csv_parser_lesson\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"csv_parser_lesson\",\n          \"label\": \"csv_parser_lesson\",\n          \"summary\": \"User request: # CSV parser lesson for related reuse session_id: csv_parser_lesson_session title: CSV parser lesson for related reuse ## message reuse_fact_1 Reusable lesson: trim fields after delimiter splitting so cell names are clean w... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: csv_parser_lesson] User request: # CSV parser lesson for related reuse session_id: csv_parser_lesson_session title: CSV parser lesson for related reuse ## message reuse_fact_1 Reusable lesson: trim fields after delimiter splitting so cell names are clean w... Assistant step without text content\",\n          \"placeholder\": \"User request: # CSV parser lesson for related reuse session_id: csv_parser_le...\",\n          \"tokenEstimate\": 96,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778628183430,
+            "end": 1778628183451
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0318990ffa063ebc016a03b657ab148191b776345d43990cae"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e8045cd0015Ixyx1q0YWl5t1",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e803619001BVspDXKurHHaZj",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a",
+        "cost": 0,
+        "tokens": {
+          "total": 9816,
+          "input": 537,
+          "output": 40,
+          "reasoning": 23,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e8045f7001XfsMr7d0KYFjmQ",
+      "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+      "role": "assistant",
+      "time": {
+        "created": 1778628183543,
+        "completed": 1778628185643
+      },
+      "parentID": "msg_e1e80361400152A6sD41Z8ODit",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/decant-map-zoom/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/decant-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11048,
+        "input": 1782,
+        "output": 50,
+        "reasoning": 0,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e80494e001F4BaxSCXE05ajq",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e8045f7001XfsMr7d0KYFjmQ",
+        "type": "step-start",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a"
+      },
+      {
+        "id": "prt_e1e804aae00150esTp6BDVrtXQ",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e8045f7001XfsMr7d0KYFjmQ",
+        "type": "tool",
+        "callID": "call_817dZn3npxGAvh60nERFoAib",
+        "tool": "session_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1e17feda7ffecLyXKslLYG1Lqg",
+            "blob_id": "csv_parser_lesson",
+            "detail": "messages"
+          },
+          "output": "{\n  \"session_id\": \"ses_1e17feda7ffecLyXKslLYG1Lqg\",\n  \"blob_id\": \"csv_parser_lesson\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"csv_parser_lesson\",\n    \"label\": \"csv_parser_lesson\",\n    \"compressedSummary\": \"[Blob summary: csv_parser_lesson] User request: # CSV parser lesson for related reuse session_id: csv_parser_lesson_session title: CSV parser lesson for related reuse ## message reuse_fact_1 Reusable lesson: trim fields after delimiter splitting so cell names are clean w... Assistant step without text content\",\n    \"tokenEstimate\": 96,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e1e801269001PyUjSoOD56voVT\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # CSV parser lesson for related reuse session_id: csv_parser_lesson_session title: CSV parser lesson for related reuse ## message reuse_fact_1 Reusable lesson: trim fields after delimiter splitting so cell names are clean w...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 95,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778628170345\n    },\n    {\n      \"id\": \"msg_e1e80126f001Kaaxe5nJLA9m7m\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 1,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778628170351\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778628185548,
+            "end": 1778628185564
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_07321e647b2d5c24016a03b65926b88191936848a65e6eb121"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e804e090016NJzo1ccZim7NX",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e8045f7001XfsMr7d0KYFjmQ",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a",
+        "cost": 0,
+        "tokens": {
+          "total": 11048,
+          "input": 1782,
+          "output": 50,
+          "reasoning": 0,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e804e2c002Gl1JE26O21P8v1",
+      "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+      "role": "assistant",
+      "time": {
+        "created": 1778628185644,
+        "completed": 1778628188706
+      },
+      "parentID": "msg_e1e80361400152A6sD41Z8ODit",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/decant-map-zoom/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/decant-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11522,
+        "input": 713,
+        "output": 57,
+        "reasoning": 0,
+        "cache": {
+          "read": 10752,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e8051a0001OdRUuMIaaBudWN",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e804e2c002Gl1JE26O21P8v1",
+        "type": "step-start",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a"
+      },
+      {
+        "id": "prt_e1e8055ce001ViX05rWxDvZsFY",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e804e2c002Gl1JE26O21P8v1",
+        "type": "tool",
+        "callID": "call_OknBCjepgRyYo65PzxuS4p9S",
+        "tool": "message_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1e17feda7ffecLyXKslLYG1Lqg",
+            "message_id": "msg_e1e801269001PyUjSoOD56voVT"
+          },
+          "output": "{\n  \"session_id\": \"ses_1e17feda7ffecLyXKslLYG1Lqg\",\n  \"message_id\": \"msg_e1e801269001PyUjSoOD56voVT\",\n  \"ok\": true,\n  \"message\": {\n    \"id\": \"msg_e1e801269001PyUjSoOD56voVT\",\n    \"role\": \"user\",\n    \"blobID\": \"csv_parser_lesson\",\n    \"blobLabel\": \"csv_parser_lesson\",\n    \"summary\": \"User request: # CSV parser lesson for related reuse session_id: csv_parser_lesson_session title: CSV parser lesson for related reuse ## message reuse_fact_1 Reusable lesson: trim fields after delimiter splitting so cell names are clean w...\",\n    \"keyFacts\": [],\n    \"tokenEstimate\": 95,\n    \"createdAt\": 1778628170345,\n    \"parts\": [\n      {\n        \"id\": \"prt_e1e80126a001eLhv2L3IhvmPoT\",\n        \"type\": \"text\",\n        \"text\": \"# CSV parser lesson for related reuse\\nsession_id: csv_parser_lesson_session\\ntitle: CSV parser lesson for related reuse\\n\\n## message reuse_fact_1\\nReusable lesson: trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries.\\n\\n## message reuse_fact_2\\nStale detail: do not copy comma-specific CSV splitting into TSV; use tab delimiters for TSV.\\n\"\n      }\n    ]\n  }\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778628188510,
+            "end": 1778628188520
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_052f13fedebe3573016a03b65bffc0819183048164bed65486"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e8059f8001Lh2pGLUxym6sut",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e804e2c002Gl1JE26O21P8v1",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a",
+        "cost": 0,
+        "tokens": {
+          "total": 11522,
+          "input": 713,
+          "output": 57,
+          "reasoning": 0,
+          "cache": {
+            "read": 10752,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1e805a23002IZD6mMzgsm2Kbj",
+      "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+      "role": "assistant",
+      "time": {
+        "created": 1778628188707,
+        "completed": 1778628192969
+      },
+      "parentID": "msg_e1e80361400152A6sD41Z8ODit",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/decant-map-zoom/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/related-reuse/conditions/decant-map-zoom/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12027,
+        "input": 595,
+        "output": 168,
+        "reasoning": 0,
+        "cache": {
+          "read": 11264,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1e805d2b001FHyoT9UdyxfErJ",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e805a23002IZD6mMzgsm2Kbj",
+        "type": "step-start",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a"
+      },
+      {
+        "id": "prt_e1e805e5d001WaJMNsizxEPdAo",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e805a23002IZD6mMzgsm2Kbj",
+        "type": "text",
+        "text": "{\"answer\":\"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without altering raw parse boundaries. Do not copy the stale comma-specific CSV splitting detail; src/tsv/schema.ts should use tab delimiters for TSV.\",\"evidence\":{\"session_id\":\"ses_1e17feda7ffecLyXKslLYG1Lqg\",\"blob_id\":\"csv_parser_lesson\",\"message_id\":\"msg_e1e801269001PyUjSoOD56voVT\"},\"rationale\":\"The cited CSV parser lesson explicitly says the reusable part is post-split field trimming, while the stale detail is comma-specific CSV splitting, which must be rejected for TSV in favor of tab delimiters.\",\"irrelevant_context_ignored\":[\"Auth queue related reuse\",\"Markdown table parser\"]}",
+        "time": {
+          "start": 1778628189789,
+          "end": 1778628192863
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0c03712b261f9217016a03b65e306081919b03d0e881865b5b",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1e806a9a001jfNag6ZkTct1zf",
+        "sessionID": "ses_1e17fc9f2ffeltdI96ANRt6HWy",
+        "messageID": "msg_e1e805a23002IZD6mMzgsm2Kbj",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "257c758b678dae6a9a786b69443131becb1b6b2a",
+        "cost": 0,
+        "tokens": {
+          "total": 12027,
+          "input": 595,
+          "output": 168,
+          "reasoning": 0,
+          "cache": {
+            "read": 11264,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

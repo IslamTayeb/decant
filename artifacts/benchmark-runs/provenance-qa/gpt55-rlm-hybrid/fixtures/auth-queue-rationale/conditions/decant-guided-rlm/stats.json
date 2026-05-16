@@ -1,0 +1,90 @@
+{
+  "fixture": "auth-queue-rationale",
+  "condition": "decant-guided-rlm",
+  "benchmark_passed": true,
+  "answer_passed": true,
+  "provenance_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "required_hits": [
+    "per_tenant",
+    "same_tenant_coalesce",
+    "different_tenants_parallel",
+    "global_mutex_rejected"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [],
+  "citation_hits": [
+    "session",
+    "message",
+    "blob"
+  ],
+  "output_preview": "{\"answer\":\"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce, while refreshes for unrelated tenants can continue in parallel. A single global mutex was rejected because it would make unrelated tenants block each other, contradicting the auth_refresh_different_tenants_parallel requirement.\",\"evidence\":{\"session_id\":\"ses_1e1485115ffeVYOJjwMWwXjJmo\",\"blob_id\":\"auth_refresh_queue\",\"message_id\":\"msg_e1eb7aefb001MmtTPy0IKNs0PW\"},\"rationale\":\"session_lookup identified the Auth refresh queue rationale session, transcript search corroborated the same facts, and message_detail supplied the final cited OpenCode message. The embedded fixture labels such as auth_fact_1/auth_fact_2/auth_fact_3 were not used as citations because the transcript explicitly says to cite the heading message id; the rejected alternative was the global mutex.\",\"irrelevant_context_ignored\":[\"Billing retry queue rationale\",\"Markdown parser onboarding cleanup\"]}",
+  "tool_names": [
+    "session_lookup",
+    "session_detail",
+    "glob",
+    "grep",
+    "read",
+    "message_detail"
+  ],
+  "tool_call_count": 6,
+  "context_tool_call_count": 3,
+  "search_tool_call_count": 2,
+  "read_tool_call_count": 1,
+  "bash_tool_call_count": 0,
+  "task_tool_call_count": 0,
+  "message_detail_call_count": 1,
+  "blame_lookup_call_count": 0,
+  "transcript_files_read": [
+    "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_refresh_session--ses_1e1485115ffeVYOJjwMWwXjJmo.md"
+  ],
+  "irrelevant_transcript_reads": [],
+  "child_session_count": 0,
+  "parent_tokens": {
+    "messages": 8,
+    "assistant": 7,
+    "input": 6133,
+    "output": 650,
+    "total": 84213,
+    "reasoning": 118,
+    "cacheRead": 77312,
+    "cacheWrite": 0,
+    "toolCalls": 6,
+    "maxInput": 1684
+  },
+  "child_tokens": {
+    "messages": 0,
+    "assistant": 0,
+    "input": 0,
+    "output": 0,
+    "total": 0,
+    "reasoning": 0,
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 0
+  },
+  "tokens": {
+    "messages": 8,
+    "assistant": 7,
+    "input": 6133,
+    "output": 650,
+    "total": 84213,
+    "reasoning": 118,
+    "cacheRead": 77312,
+    "cacheWrite": 0,
+    "toolCalls": 6,
+    "maxInput": 1684
+  },
+  "parent_models": [
+    "openai/gpt-5.5"
+  ],
+  "child_models": [],
+  "duration_ms": 49625,
+  "relevant_session_id": "ses_1e1485115ffeVYOJjwMWwXjJmo",
+  "relevant_message_ids": [
+    "msg_e1eb7aefb001MmtTPy0IKNs0PW",
+    "msg_e1eb7af02001BFV2cwBIljYIxG"
+  ]
+}

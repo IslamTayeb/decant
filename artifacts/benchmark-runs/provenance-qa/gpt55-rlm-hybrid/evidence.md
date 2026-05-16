@@ -1,6 +1,6 @@
 # Evidence Snippets
 
-## auth-queue-rationale / memmould-guided-rlm
+## auth-queue-rationale / decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -20,7 +20,7 @@
 
 {"answer":"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce, while refreshes for different tenants can still run in parallel; one global mutex would unnecessarily block unrelated tenants.","evidence":{"session_id":"auth_refresh_session","blob_id":"auth_refresh_session.md","message_id":"auth_fact_3"},"rationale":"The relevant auth rationale says RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel. This also makes the rejected global-mutex alternative stale for auth because it would serialize unrelated tenants.","irrelevant_context_ignored":["Billing retry queue rationale","Markdown parser onboarding cleanup","Auth queue rationale decoys"]}
 
-## auth-queue-rationale / subagent-memmould-guided-rlm
+## auth-queue-rationale / subagent-decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -38,9 +38,9 @@
 - Input tokens: 19,711
 - Cache hit: 62.8%
 
-{"answer":"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce, while refreshes for different tenants can still run in parallel instead of being blocked behind one global mutex.","evidence":{"session_id":"auth_refresh_session","blob_id":"memory/transcripts/auth_refresh_session.md","message_id":"auth_fact_3"},"rationale":"auth_fact_3 supports the full answer by stating both same-tenant coalescing and cross-tenant parallelism. The rejected global mutex alternative matters because it would block unrelated tenants, which was explicitly rejected.","irrelevant_context_ignored":["Billing retry queue rationale","Markdown parser onboarding cleanup","auth_queue_rationale_decoy_* files"]}
+{"answer":"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce, while refreshes for different tenants can still run in parallel instead of being blocked behind one global mutex.","evidence":{"session_id":"auth_refresh_session","blob_id":"recall/transcripts/auth_refresh_session.md","message_id":"auth_fact_3"},"rationale":"auth_fact_3 supports the full answer by stating both same-tenant coalescing and cross-tenant parallelism. The rejected global mutex alternative matters because it would block unrelated tenants, which was explicitly rejected.","irrelevant_context_ignored":["Billing retry queue rationale","Markdown parser onboarding cleanup","auth_queue_rationale_decoy_* files"]}
 
-## blame-line-rationale / memmould-guided-rlm
+## blame-line-rationale / decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -60,7 +60,7 @@
 
 {"answer":"Line 2 caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.","evidence":{"session_id":"ttl_blame_session","blob_id":"ttl_blame_session.md","message_id":"ttl_fact_2"},"rationale":"The cited message directly states the reason for the cap. I ignored TTL billing and Markdown TTL material because those are separate distractors; no correction, stale detail, or rejected alternative changes the cited rationale.","irrelevant_context_ignored":["Billing TTL distractor: provider policy cap, not namespaceMaxSeconds","Markdown TTL distractor: docs preview freshness","Decoy blame-line rationale files that mention src/cache/ttl.ts but say not to cite them"]}
 
-## blame-line-rationale / subagent-memmould-guided-rlm
+## blame-line-rationale / subagent-decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -68,7 +68,7 @@
 - Input tokens: 8,892
 - Cache hit: 88.4%
 
-{"answer":"It caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.","evidence":{"session_id":"ses_1e13aae20ffes9oUeQ1F0zoF6r","blob_id":"cache_ttl","message_id":"msg_e1ec551f20019PwRgZOaT3UYrI"},"rationale":"The cited OpenCode message supports the full answer: line 2 was introduced to cap requested TTL with namespaceMaxSeconds, preventing a noisy namespace from exceeding its cache-retention budget. The citation uses real mem-mould session/message IDs, not embedded transcript labels.","irrelevant_context_ignored":["Billing TTL distractor","Markdown TTL distractor"]}
+{"answer":"It caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.","evidence":{"session_id":"ses_1e13aae20ffes9oUeQ1F0zoF6r","blob_id":"cache_ttl","message_id":"msg_e1ec551f20019PwRgZOaT3UYrI"},"rationale":"The cited OpenCode message supports the full answer: line 2 was introduced to cap requested TTL with namespaceMaxSeconds, preventing a noisy namespace from exceeding its cache-retention budget. The citation uses real decant session/message IDs, not embedded transcript labels.","irrelevant_context_ignored":["Billing TTL distractor","Markdown TTL distractor"]}
 
 ## blame-line-rationale / subagent-rlm-transcript-search
 
@@ -80,7 +80,7 @@
 
 {"answer":"src/cache/ttl.ts caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.","evidence":{"session_id":"ttl_blame_session","blob_id":"ttl_blame_session.md","message_id":"ttl_fact_2"},"rationale":"The cited provenance directly states that line 2 enforces the namespace TTL budget by capping requested TTLs, preventing noisy namespaces from retaining stale cache entries longer than allowed. No correction, stale detail, or rejected alternative was indicated as relevant.","irrelevant_context_ignored":["Billing TTL distractor","Markdown TTL distractor"]}
 
-## correction-chain / memmould-guided-rlm
+## correction-chain / decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -100,7 +100,7 @@
 
 {"answer":"Because tokenizing first preserves the raw delimiter and quoted-field behavior, then trimming each resulting field cleans only the schema field names.","evidence":{"session_id":"schema_parser_session","blob_id":"schema_parser_session.md","message_id":"schema_fact_2"},"rationale":"The final corrected rationale is in schema_fact_2. The earlier idea to trim the whole schema header before tokenization was explicitly superseded/rejected, so it should not be treated as the answer.","irrelevant_context_ignored":["CSV trim cleanup","Network timeout parser","correction chain decoys"]}
 
-## correction-chain / subagent-memmould-guided-rlm
+## correction-chain / subagent-decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -120,7 +120,7 @@
 
 {"answer":"src/parser/schema.ts trims schema field names after splitting/tokenization so the tokenizer still sees the raw delimiters and quoted-field structure, while the resulting field names are cleaned afterward.","evidence":{"session_id":"schema_parser_session","blob_id":"schema_parser_session.md","message_id":"schema_fact_2"},"rationale":"schema_fact_2 explicitly corrects the earlier approach: tokenize first, then trim each field. This preserves delimiter and quoted-field behavior during tokenization while still cleaning final field names. The earlier before-tokenization rationale was stale and superseded.","irrelevant_context_ignored":["CSV trim cleanup","Network timeout parser"]}
 
-## false-provenance / memmould-guided-rlm
+## false-provenance / decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -128,7 +128,7 @@
 - Input tokens: 6,727
 - Cache hit: 91.0%
 
-{"answer":"src/cache/index.ts scopes TTL by namespace because a global TTL was considered but rejected: one noisy namespace could otherwise extend or evict unrelated namespaces through a shared global TTL policy.","evidence":{"session_id":"ses_1e1435f95ffeXBaacyEGj1u9An","blob_id":"cache_namespace_ttl","message_id":"msg_e1ebca081001X6e58gqCl1AAdH"},"rationale":"Mem-mould lookup identified the Cache namespace TTL rationale session, transcript search corroborated the same real session and message id, and message_detail confirmed both the rejected global TTL alternative and the namespace-scoped reason. The embedded fixture labels cache_namespace_session/cache_fact_* were not used as citations.","irrelevant_context_ignored":["Billing cache global TTL","Image cache namespace notes","false_provenance_decoy_* files"]}
+{"answer":"src/cache/index.ts scopes TTL by namespace because a global TTL was considered but rejected: one noisy namespace could otherwise extend or evict unrelated namespaces through a shared global TTL policy.","evidence":{"session_id":"ses_1e1435f95ffeXBaacyEGj1u9An","blob_id":"cache_namespace_ttl","message_id":"msg_e1ebca081001X6e58gqCl1AAdH"},"rationale":"Decant lookup identified the Cache namespace TTL rationale session, transcript search corroborated the same real session and message id, and message_detail confirmed both the rejected global TTL alternative and the namespace-scoped reason. The embedded fixture labels cache_namespace_session/cache_fact_* were not used as citations.","irrelevant_context_ignored":["Billing cache global TTL","Image cache namespace notes","false_provenance_decoy_* files"]}
 
 ## false-provenance / rlm-transcript-search
 
@@ -140,7 +140,7 @@
 
 {"answer":"src/cache/index.ts scopes TTL by namespace so one noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy.","evidence":{"session_id":"cache_namespace_session","blob_id":"cache_namespace_session.md","message_id":"cache_fact_2"},"rationale":"The supporting message explicitly states namespace-scoped TTL was chosen to isolate namespaces from each other. A global TTL was considered, but that alternative was not chosen.","irrelevant_context_ignored":["Billing cache global TTL","Image cache namespace notes","false_provenance_decoy_*"]}
 
-## false-provenance / subagent-memmould-guided-rlm
+## false-provenance / subagent-decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -160,7 +160,7 @@
 
 {"answer":"src/cache/index.ts scopes TTL by namespace so one noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy.","evidence":{"session_id":"cache_namespace_session","blob_id":"cache_namespace_session.md","message_id":"cache_fact_2"},"rationale":"The cited message directly explains the namespace-scoped TTL rationale and rejects the global TTL alternative because it would let activity in one namespace affect unrelated namespaces.","irrelevant_context_ignored":["Billing cache global TTL","Image cache namespace notes","false provenance decoys"]}
 
-## multi-agent-synthesis / memmould-guided-rlm
+## multi-agent-synthesis / decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -180,7 +180,7 @@
 
 {"answer":"Test investigator child session","evidence":{"session_id":"test_investigator_child_session","blob_id":"test_investigator_child_session.md","message_id":"child_fact_1"},"rationale":"The cited message states that the test investigator child found failed-test IDs must remain in final reports so a later agent can reproduce and triage exact failures. The parent later accepted that finding and kept failed_test_ids in src/report/summary.ts; the docs writer's contrary preference for no debugging IDs was not adopted.","irrelevant_context_ignored":["Docs writer child session","Style reviewer child session","multi_agent_synthesis_decoy_*"]}
 
-## multi-agent-synthesis / subagent-memmould-guided-rlm
+## multi-agent-synthesis / subagent-decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -200,7 +200,7 @@
 
 {"answer":"Test investigator child","evidence":{"session_id":"test_investigator_child_session","blob_id":"e48db1db2758cd8108e70e318cd2947941e60014","message_id":"child_fact_1"},"rationale":"The cited message directly says the test investigator child found failed-test IDs must remain in final reports so later agents can reproduce and triage exact failures. A later parent acceptance for src/report/summary.ts only confirms the finding; it is not the originating child finding.","irrelevant_context_ignored":["Docs writer child session","Style reviewer child session"]}
 
-## related-reuse / memmould-guided-rlm
+## related-reuse / decant-guided-rlm
 
 - Pass: true
 - Tool policy: true
@@ -220,7 +220,7 @@
 
 {"answer":"Reuse the CSV parser lesson to trim fields after delimiter splitting so cell names are clean without changing raw parse boundaries; do not copy comma-specific CSV splitting into src/tsv/schema.ts, because TSV should use tab delimiters.","evidence":{"session_id":"csv_parser_lesson_session","blob_id":"csv_parser_lesson_session.md","message_id":"reuse_fact_1;reuse_fact_2"},"rationale":"The CSV parser transcript supplies both the reusable lesson and the stale detail: trimming after delimiter splitting remains applicable, but comma-specific CSV splitting is explicitly stale for TSV and must be replaced with tab delimiters.","irrelevant_context_ignored":["Auth queue related reuse","Markdown table parser","related_reuse_decoy_* mentions of src/tsv/schema.ts"]}
 
-## related-reuse / subagent-memmould-guided-rlm
+## related-reuse / subagent-decant-guided-rlm
 
 - Pass: true
 - Tool policy: true

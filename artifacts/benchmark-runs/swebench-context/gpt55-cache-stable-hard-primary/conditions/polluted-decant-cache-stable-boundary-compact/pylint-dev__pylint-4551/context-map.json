@@ -1,0 +1,639 @@
+{
+  "version": 1,
+  "sessionID": "ses_1e6c6d4e5ffehBNLEt8jta1Yi8",
+  "directory": "./benchmarks/swebench-context/runs/gpt55-cache-stable-hard-primary/conditions/polluted-decant-cache-stable-boundary-compact/pylint-dev__pylint-4551/worktree",
+  "worktree": "./benchmarks/swebench-context/runs/gpt55-cache-stable-hard-primary/conditions/polluted-decant-cache-stable-boundary-compact/pylint-dev__pylint-4551/worktree",
+  "createdAt": 1778539791378,
+  "updatedAt": 1778539791379,
+  "totalTokenEstimate": 21537,
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "default",
+    "toolHistoryCleanup": true,
+    "stablePlaceholders": true,
+    "stablePlaceholdersSource": "system",
+    "stableAnchors": true,
+    "stableAnchorsSource": "system"
+  },
+  "blobOrder": [
+    "are_solving_swe",
+    "session_summary"
+  ],
+  "blobs": {
+    "are_solving_swe": {
+      "id": "are_solving_swe",
+      "label": "are_solving_swe",
+      "summary": "User request: We are now solving SWE-bench instance pylint-dev__pylint-4551. Repository: pylint-dev/pylint Base commit: 99589b08de8c5a2c6cc61e13a37420a868c80599 Problem statement: Use Python type hints for UML generation It seems that py... Assistant response: I’ll inspect the pyreverse code paths for attribute type inference and annotation handling, then patch the smallest place that converts assignments into UML attribute types. Assistant response: The relevant machinery is in `pylint/pyreverse/inspector.py`, with existing tests in `tests/unittest_pyreverse_inspector.py`. I’m going to rea...",
+      "placeholder": "User request: We are now solving SWE-bench instance pylint-dev__pylint-4551....",
+      "keyFacts": [],
+      "fidelity": "full",
+      "fidelitySource": "system",
+      "messageIDs": [
+        "msg_e193a0983001qA5Uuwttyyth4O",
+        "msg_e193a0986001A6Dao2IHbG5PlI",
+        "msg_e193a16aa001D2Biv8eb3facgB",
+        "msg_e193a2bf4001gBAkB9yPMfI0fA",
+        "msg_e193a3888001Qe4MK5NU9tueXE",
+        "msg_e193a4e7a001hxNM6Td5ELRpaM",
+        "msg_e193a5718001lhjH6wXzNddu7Z",
+        "msg_e193a61ce001NNLPhqUDE30lXB",
+        "msg_e193a70a7001JgZG53bmVbLL2q",
+        "msg_e193a8ee5002IEWl48zn8RP5qw",
+        "msg_e193ac23b001GyZzg7d7ZSSy8d",
+        "msg_e193ad5f60015QPcWX7vawqqPu",
+        "msg_e193ae750001pQuQ81uQI1EKm7",
+        "msg_e193af204001rw17d4Ba26LPPH",
+        "msg_e193b04a5001Zz4HlbTZ10N5D1",
+        "msg_e193b0e75001r0Xmbm3DD51ia6",
+        "msg_e193b1945001YNOUJZfQwutD3y",
+        "msg_e193b33d6001wakUx3FDjS9PAV",
+        "msg_e193b42000012MJEYfcTwjx1J4",
+        "msg_e193b4dc2001fgHdP1wFh4H0ua",
+        "msg_e193b5c93001Vwj0QMtU3r5dBT",
+        "msg_e193b6a6a001F0dUyuqzYTE4cl"
+      ],
+      "tokenEstimate": 21174,
+      "createdAt": 1778539694467,
+      "lastActiveAt": 1778539784810,
+      "commitHashes": []
+    },
+    "session_summary": {
+      "id": "session_summary",
+      "label": "session_summary",
+      "summary": "## Goal\nContinue the auth refresh race work. Implement or reason about the final async queue direction for deduplicating refreshes per tenant, with rollback support.\n\n## Instructions\n- Do not revive unrelated docs/onboarding threads.\n- Do not reuse the old markdown parser/docs-generation caching hypothesis; it was wrong and unrelated to the auth fix.\n- Treat the mutex approach as already tried and failed.\n- Prefer a narrow async queue helper API: `enqueueRefresh`.\n- Keep deduplication scoped per tenant.\n- Rollback behavior must be controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n\n## Discoveries\n- The mutex-based approach failed under concurrent testing.\n- Failed approach name: `MutexRefreshCoordinator`.\n- Failing test: `auth_refresh_deduplicates_parallel_requests`.\n- Final direction is an async queue helper.\n- Required queue behavior:\n  - Deduplicate same-tenant refresh work.\n  - Allow different tenants to refresh in parallel.\n  - Propagate failures when a queued refresh rejects.\n  - Respect rollback flag behavior.\n\n## Accomplished\n- Auth test plan is complete enough for now:\n  - `auth_refresh_deduplicates_parallel_requests`\n  - `auth_refresh_allows_parallel_tenants`\n  - `auth_refresh_uses_rollback_flag`\n  - `auth_refresh_propagates_queue_errors`\n- Same-tenant dedupe remains the highest-priority test case.\n\n## Relevant files / directories\n- `src/auth/queue.ts`\n- `FLAG_AUTH_QUEUE_ROLLBACK`\n- `MutexRefreshCoordinator`\n- `enqueueRefresh`",
+      "placeholder": "Historical context compacted",
+      "keyFacts": [],
+      "fidelity": "placeholder",
+      "fidelitySource": "system",
+      "messageIDs": [
+        "msg_e1939f5b1001LjzApaenKvh2TY"
+      ],
+      "tokenEstimate": 363,
+      "createdAt": 1778539689393,
+      "lastActiveAt": 1778539689393,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_e193a0983001qA5Uuwttyyth4O": {
+      "id": "msg_e193a0983001qA5Uuwttyyth4O",
+      "role": "user",
+      "blobID": "are_solving_swe",
+      "summary": "User request: We are now solving SWE-bench instance pylint-dev__pylint-4551. Repository: pylint-dev/pylint Base commit: 99589b08de8c5a2c6cc61e13a37420a868c80599 Problem statement: Use Python type hints for UML generation It seems that py...",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 262,
+      "createdAt": 1778539694467,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_e193a0986001A6Dao2IHbG5PlI": {
+      "id": "msg_e193a0986001A6Dao2IHbG5PlI",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Assistant response: I’ll inspect the pyreverse code paths for attribute type inference and annotation handling, then patch the smallest place that converts assignments into UML attribute types.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 4507,
+      "createdAt": 1778539694470,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "text",
+        "tool",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "glob",
+        "grep"
+      ]
+    },
+    "msg_e193a16aa001D2Biv8eb3facgB": {
+      "id": "msg_e193a16aa001D2Biv8eb3facgB",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Assistant response: The relevant machinery is in `pylint/pyreverse/inspector.py`, with existing tests in `tests/unittest_pyreverse_inspector.py`. I’m going to read those next and wire annotations into the same `instance_attrs_type` map p...",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1314,
+      "createdAt": 1778539697834,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "text",
+        "tool",
+        "tool",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "read"
+      ]
+    },
+    "msg_e193a2bf4001gBAkB9yPMfI0fA": {
+      "id": "msg_e193a2bf4001gBAkB9yPMfI0fA",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: pylint/pyreverse/inspector.py, pylint/pyreverse/diagrams.py",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 5157,
+      "createdAt": 1778539703284,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "read"
+      ]
+    },
+    "msg_e193a3888001Qe4MK5NU9tueXE": {
+      "id": "msg_e193a3888001Qe4MK5NU9tueXE",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Inspect astroid annotation node structure",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 348,
+      "createdAt": 1778539706504,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e193a4e7a001hxNM6Td5ELRpaM": {
+      "id": "msg_e193a4e7a001hxNM6Td5ELRpaM",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Assistant step without text content",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 7,
+      "createdAt": 1778539712122,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "glob"
+      ]
+    },
+    "msg_e193a5718001lhjH6wXzNddu7Z": {
+      "id": "msg_e193a5718001lhjH6wXzNddu7Z",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: def visit_annassign|AnnAssign|annotation",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 77,
+      "createdAt": 1778539714328,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "grep",
+        "glob"
+      ]
+    },
+    "msg_e193a61ce001NNLPhqUDE30lXB": {
+      "id": "msg_e193a61ce001NNLPhqUDE30lXB",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: class AnnAssign|class Arguments|annotations|def postinit, tests/data/clientmodule_test.py",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 3333,
+      "createdAt": 1778539717070,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "tool",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "grep",
+        "read"
+      ]
+    },
+    "msg_e193a70a7001JgZG53bmVbLL2q": {
+      "id": "msg_e193a70a7001JgZG53bmVbLL2q",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Inspect astroid annotations with compatibility shim",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 488,
+      "createdAt": 1778539720871,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e193a8ee5002IEWl48zn8RP5qw": {
+      "id": "msg_e193a8ee5002IEWl48zn8RP5qw",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Assistant response: I found `AssignAttr.infer()` follows the assigned value, so `self.a = a` with `a: str = None` only gives `None`/uninferable. The minimal fix is to augment that inference with the assignment’s annotation source: direct...",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 122,
+      "createdAt": 1778539728613,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "text",
+        "tool",
+        "step-finish",
+        "patch"
+      ],
+      "toolNames": [
+        "apply_patch"
+      ]
+    },
+    "msg_e193ac23b001GyZzg7d7ZSSy8d": {
+      "id": "msg_e193ac23b001GyZzg7d7ZSSy8d",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Success. Updated the following files: M tests/unittest_pyreverse_inspector.py",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 151,
+      "createdAt": 1778539741755,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "step-finish",
+        "patch"
+      ],
+      "toolNames": [
+        "apply_patch"
+      ]
+    },
+    "msg_e193ad5f60015QPcWX7vawqqPu": {
+      "id": "msg_e193ad5f60015QPcWX7vawqqPu",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Assistant response: I added a focused regression test covering both `self.value = value` from a typed parameter and `self.other: int = None`. Now I’m running the pyreverse inspector tests to catch API or ordering issues.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1493,
+      "createdAt": 1778539746806,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "text",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e193ae750001pQuQ81uQI1EKm7": {
+      "id": "msg_e193ae750001pQuQ81uQI1EKm7",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Run focused tests without external plugins",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 683,
+      "createdAt": 1778539751248,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e193af204001rw17d4Ba26LPPH": {
+      "id": "msg_e193af204001rw17d4Ba26LPPH",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Find compatible Python interpreter",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 122,
+      "createdAt": 1778539753988,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e193b04a5001Zz4HlbTZ10N5D1": {
+      "id": "msg_e193b04a5001Zz4HlbTZ10N5D1",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Run focused tests with Python 3.9",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 60,
+      "createdAt": 1778539758757,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e193b0e75001r0Xmbm3DD51ia6": {
+      "id": "msg_e193b0e75001r0Xmbm3DD51ia6",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Run focused tests with pyenv Python",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 311,
+      "createdAt": 1778539761269,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e193b1945001YNOUJZfQwutD3y": {
+      "id": "msg_e193b1945001YNOUJZfQwutD3y",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: pylint/pyreverse/inspector.py, tests/unittest_pyreverse_inspector.py",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1473,
+      "createdAt": 1778539764037,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "read"
+      ]
+    },
+    "msg_e193b33d6001wakUx3FDjS9PAV": {
+      "id": "msg_e193b33d6001wakUx3FDjS9PAV",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Success. Updated the following files: M pylint/pyreverse/inspector.py",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 40,
+      "createdAt": 1778539770838,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "step-finish",
+        "patch"
+      ],
+      "toolNames": [
+        "apply_patch"
+      ]
+    },
+    "msg_e193b42000012MJEYfcTwjx1J4": {
+      "id": "msg_e193b42000012MJEYfcTwjx1J4",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Success. Updated the following files: M tests/unittest_pyreverse_inspector.py",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 43,
+      "createdAt": 1778539774464,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "tool",
+        "step-finish",
+        "patch"
+      ],
+      "toolNames": [
+        "apply_patch"
+      ]
+    },
+    "msg_e193b4dc2001fgHdP1wFh4H0ua": {
+      "id": "msg_e193b4dc2001fgHdP1wFh4H0ua",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Rerun pyreverse inspector tests",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 417,
+      "createdAt": 1778539777474,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e193b5c93001Vwj0QMtU3r5dBT": {
+      "id": "msg_e193b5c93001Vwj0QMtU3r5dBT",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Tool activity: Show patch diff, Show working tree status",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 764,
+      "createdAt": 1778539781267,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e193b6a6a001F0dUyuqzYTE4cl": {
+      "id": "msg_e193b6a6a001F0dUyuqzYTE4cl",
+      "role": "assistant",
+      "blobID": "are_solving_swe",
+      "summary": "Assistant step without text content",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 2,
+      "createdAt": 1778539784810,
+      "updatedAt": 1778539791378,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_e1939f5b1001LjzApaenKvh2TY": {
+      "id": "msg_e1939f5b1001LjzApaenKvh2TY",
+      "role": "assistant",
+      "blobID": "session_summary",
+      "summary": "## Goal\nContinue the auth refresh race work. Implement or reason about the final async queue direction for deduplicating refreshes per tenant, with rollback support.\n\n## Instructions\n- Do not revive unrelated docs/onboarding threads.\n- Do not reuse the old markdown parser/docs-generation caching hypothesis; it was wrong and unrelated to the auth fix.\n- Treat the mutex approach as already tried and failed.\n- Prefer a narrow async queue helper API: `enqueueRefresh`.\n- Keep deduplication scoped per tenant.\n- Rollback behavior must be controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n\n## Discoveries\n- The mutex-based approach failed under concurrent testing.\n- Failed approach name: `MutexRefreshCoordinator`.\n- Failing test: `auth_refresh_deduplicates_parallel_requests`.\n- Final direction is an async queue helper.\n- Required queue behavior:\n  - Deduplicate same-tenant refresh work.\n  - Allow different tenants to refresh in parallel.\n  - Propagate failures when a queued refresh rejects.\n  - Respect rollback flag behavior.\n\n## Accomplished\n- Auth test plan is complete enough for now:\n  - `auth_refresh_deduplicates_parallel_requests`\n  - `auth_refresh_allows_parallel_tenants`\n  - `auth_refresh_uses_rollback_flag`\n  - `auth_refresh_propagates_queue_errors`\n- Same-tenant dedupe remains the highest-priority test case.\n\n## Relevant files / directories\n- `src/auth/queue.ts`\n- `FLAG_AUTH_QUEUE_ROLLBACK`\n- `MutexRefreshCoordinator`\n- `enqueueRefresh`",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 363,
+      "createdAt": 1778539689393,
+      "updatedAt": 1778539689393,
+      "source": "derived",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    }
+  },
+  "pendingRetroactive": {},
+  "lastActiveBlobID": "are_solving_swe",
+  "compaction": {
+    "compactedAt": 1778539689393,
+    "summaryMessageID": "msg_e1939f5b1001LjzApaenKvh2TY",
+    "summaryBlobID": "session_summary",
+    "archivePath": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/decant-e2e-openai-AtKY9G/home/.opencode/context-maps/archive/ses_1e6c6d4e5ffehBNLEt8jta1Yi8/1778539689393.json"
+  }
+}

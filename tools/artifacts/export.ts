@@ -19,7 +19,7 @@ type Manifest = {
 const repoRoot = path.resolve(process.cwd());
 const artifactRoot = path.join(repoRoot, "artifacts", "benchmark-runs");
 const benchmarkRuns = [
-  path.join("benchmarks", "code-memory", "runs"),
+  path.join("benchmarks", "code-recall", "runs"),
   path.join("benchmarks", "context-canaries", "runs"),
   path.join("benchmarks", "provenance-qa", "runs"),
   path.join("benchmarks", "swebench-context", "runs"),
@@ -27,7 +27,7 @@ const benchmarkRuns = [
 
 const publishedRuns = new Map([
   [
-    "code-memory",
+    "code-recall",
     new Set(["gpt55-ablation-combined", "gpt55-secondary-missing-20260515"]),
   ],
   [
@@ -245,12 +245,12 @@ async function copyPortableWorktreeMemory(
   runRoot: string,
   manifest: Manifest,
 ) {
-  const memoryPath = path.join(worktreePath, "memory");
+  const memoryPath = path.join(worktreePath, "recall");
   const stat = await fs.stat(memoryPath).catch(() => undefined);
   if (!stat?.isDirectory()) return;
   await copyPortableArtifacts(
     memoryPath,
-    path.join(destinationPath, "memory"),
+    path.join(destinationPath, "recall"),
     runRoot,
     manifest,
   );

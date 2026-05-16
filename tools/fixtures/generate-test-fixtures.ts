@@ -18,7 +18,7 @@ const execFileAsync = promisify(execFile);
 async function main() {
   const projectRoot = path.resolve(process.cwd());
   const tempRoot = await fs.mkdtemp(
-    path.join(os.tmpdir(), "mem-mould-context-map-manual-"),
+    path.join(os.tmpdir(), "decant-context-map-manual-"),
   );
   const repo = path.join(tempRoot, "demo-repo");
   const home = path.join(tempRoot, "home");
@@ -45,7 +45,7 @@ async function main() {
     XDG_STATE_HOME: state,
     XDG_CACHE_HOME: cache,
     OPENCODE_DB: path.join(tempRoot, "opencode.sqlite"),
-    MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
+    DECANT_DISABLE_GIT_HOOK_INSTALL: "1",
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",

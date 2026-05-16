@@ -1,0 +1,62 @@
+# Code Recall Benchmark
+
+This benchmark tests whether prior session context helps, hurts, or should be ignored during a coding task. It is intentionally separate from provenance QA: the primary output is a patch plus passing tests.
+
+## Run
+
+```sh
+export DECANT_E2E_MODEL="<provider>/<model>"
+bun run benchmark:code-recall -- --prepare-only
+bun run benchmark:code-recall
+bun run benchmark:code-recall -- --model "<provider>/<model>" --prepare-only
+```
+
+Useful options:
+
+```sh
+bun run benchmark:code-recall -- --fixtures recall-helpful-schema
+bun run benchmark:code-recall -- --conditions code-only,rlm-transcript-search,decant-only,decant-guided-rlm
+bun run benchmark:code-recall -- --combine-runs benchmarks/code-recall/runs/run-a,benchmarks/code-recall/runs/run-b --out benchmarks/code-recall/runs/combined
+bun run benchmark:code-recall -- --model "<provider>/<model>" --fixtures recall-helpful-schema --conditions code-only --repeats 1
+bun run benchmark:code-recall -- --repeats 3 --out benchmarks/code-recall/runs/repeats
+bun run benchmark:code-recall -- --prompt-timeout-minutes 12
+bun run benchmark:code-recall -- --fixtures recall-unnecessary-slug --conditions code-only --workers 4
+bun run benchmark:code-recall -- --analyze-run benchmarks/code-recall/runs/<run>
+bun run benchmark:code-recall -- --out benchmarks/code-recall/runs/manual
+```
+
+## Conditions
+
+- `code-only`: no prior context corpus and no decant plugin; solve from the repository and tests.
+- `rlm-transcript-search`: prior sessions are transcript files under `recall/transcripts/`; the agent may use grep/read/bash as an RLM-style recall baseline.
+- `decant-only`: prior sessions are seeded as real OpenCode sessions with decant enabled; no transcript corpus is available.
+- `decant-guided-rlm`: prior sessions are seeded as real OpenCode sessions with decant enabled, and a transcript corpus with real session/message IDs is also available.
+
+Note: the `rlm-*` names here mean transcript-file search inspired by RLM-style externalized context. They are not paper-faithful Recursive Language Models: the harness does not place the full prompt in a persistent REPL variable, return answers from REPL state, or expose programmatic recursive LM/RLM calls from inside that REPL. Treat these conditions as offloaded transcript-search baselines.
+
+## Fixtures
+
+- `recall-unnecessary-slug`: current repo/tests fully specify the slug fix; prior context is distractor context and should be ignored.
+- `recall-helpful-schema`: visible tests cover a simple parser case, while hidden tests require a prior accepted quote-handling decision.
+- `recall-harmful-refresh`: old sessions contain stale/global-mutex queue guidance, while the current task requires per-tenant refresh coalescing.
+- `recall-missing-pagination`: prior sessions are related distractors; the agent should not invent provenance.
+- `recall-correction-retry-cap`: stale retry-delay context is superseded by a later accepted correction.
+- `recall-synthesis-report`: hidden behavior requires preserving a parent synthesis of child-agent findings.
+
+## Scoring
+
+Each run records:
+
+- public and hidden `node --test` results.
+- patch bytes, expected touched files, and unexpected file edits.
+- forbidden stale terms in patch/output.
+- transcript reads, irrelevant reads, context-tool calls, and token/cache metrics.
+- recall policy: unnecessary prior context should be avoided, helpful context should cite the relevant session/message, and harmful context should not be cited or copied.
+
+Fair claim if this benchmark separates conditions:
+
+> decant can act as a routing/provenance layer for coding-agent recall, helping decide when prior sessions are useful, irrelevant, or stale.
+
+Avoid claiming:
+
+> decant generally improves coding-agent solve rate.

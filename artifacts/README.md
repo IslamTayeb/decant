@@ -12,4 +12,4 @@ The exporter implementation lives at `tools/artifacts/export.ts`. It only export
 
 The exporter copies report files, charts, stats, model messages, patches, predictions, and evaluation output while skipping raw runtime state. It also normalizes old script-path references in exported text.
 
-For code-memory and RLM-style runs, the exporter preserves only the portable memory corpus from skipped worktrees: `worktree/memory/manifest.json` and `worktree/memory/transcripts/*.md`.
+For code-recall and RLM-style runs, the exporter preserves only the portable context corpus from skipped worktrees: `worktree/recall/manifest.json` and `worktree/recall/transcripts/*.md`.

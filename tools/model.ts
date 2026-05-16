@@ -5,8 +5,8 @@ export type ModelRef = {
   modelID: string;
 };
 
-export const MODEL_ENV_VAR = "MEM_MOULD_E2E_MODEL";
-export const CHILD_MODEL_ENV_VAR = "MEM_MOULD_E2E_CHILD_MODEL";
+export const MODEL_ENV_VAR = "DECANT_E2E_MODEL";
+export const CHILD_MODEL_ENV_VAR = "DECANT_E2E_CHILD_MODEL";
 
 export function requiredModelSlug(
   explicit?: string,

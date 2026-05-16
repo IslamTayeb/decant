@@ -1,0 +1,1024 @@
+[
+  {
+    "info": {
+      "id": "msg_e295fbc68001EsbdSu0PFAn3rM",
+      "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+      "role": "user",
+      "time": {
+        "created": 1778810600552
+      },
+      "summary": {
+        "diffs": [
+          {
+            "file": "src/report.mjs",
+            "patch": "Index: src/report.mjs\n===================================================================\n--- src/report.mjs\t\n+++ src/report.mjs\t\n@@ -1,5 +1,7 @@\n export function buildReport(input) {\n   return {\n     summary: input.summary,\n+    ...(\"failed_test_ids\" in input ? { failed_test_ids: input.failed_test_ids } : {}),\n+    ...(\"retry_owner\" in input ? { retry_owner: input.retry_owner } : {}),\n   };\n }\n",
+            "additions": 2,
+            "deletions": 0,
+            "status": "modified"
+          }
+        ]
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "You are solving a code-recall benchmark. Edit source files as needed, run focused tests if useful, and do not commit changes. Do not edit files under test/. Current repository files and tests are authoritative. Prior session maps may be useful, irrelevant, or stale. Use decant session tools when prior context may affect the fix. No transcript corpus is available; do not use transcript-file search as memory."
+    },
+    "parts": [
+      {
+        "id": "prt_e295fbc68002SMQNUrvYB3tT6K",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fbc68001EsbdSu0PFAn3rM",
+        "type": "text",
+        "text": "Task: Memory synthesis report fields\n\nFix buildReport so it matches the accepted parent synthesis of prior child-agent findings.\nVisible tests only cover the summary field; hidden tests require preserving the prior synthesized fields.\nIf prior context is available, cite the accepted synthesis rather than distractor style or docs requests.\n\nNo transcript corpus is available in this condition.\nUse session_lookup/session_detail/message_detail when a prior session may affect the fix.\nIf memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.\n\nAfter editing, respond with compact JSON only:\n{\"summary\":\"...\",\"tests\":\"...\",\"recall_decision\":\"used|ignored|rejected|abstained|unavailable\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}\nIf you used a prior session, cite the exact session_id and message_id. If memory was irrelevant, stale, or unavailable, leave evidence fields empty and explain the decision briefly."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e295fbc6c002z2LzFA4i4Q1NKP",
+      "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+      "role": "assistant",
+      "time": {
+        "created": 1778810600556,
+        "completed": 1778810605420
+      },
+      "parentID": "msg_e295fbc68001EsbdSu0PFAn3rM",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9962,
+        "input": 9817,
+        "output": 145,
+        "reasoning": 0,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e295fbf0c0013VNhSyE93pHXCc",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fbc6c002z2LzFA4i4Q1NKP",
+        "type": "step-start",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886"
+      },
+      {
+        "id": "prt_e295fc460001b40A5ZnSlahEs1",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fbc6c002z2LzFA4i4Q1NKP",
+        "type": "text",
+        "text": "I’ll inspect the report implementation and search prior context for the accepted synthesis before editing, since hidden tests depend on preserved fields.",
+        "time": {
+          "start": 1778810602592,
+          "end": 1778810605217
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_039e6e3c02a91743016a067eeab3a08191959269af03440382",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e295fcea3001C6RaA0xNfkb0ZJ",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fbc6c002z2LzFA4i4Q1NKP",
+        "type": "tool",
+        "callID": "call_mSdrVVN4PNTy4Zs3bvcCU8MT",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "**/*",
+            "path": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+          },
+          "output": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/opencode\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/refs/heads/main\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/logs/refs/heads/main\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/logs/HEAD\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/COMMIT_EDITMSG\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/47/556081778d70323b88ca9eb911ab6033c9dd1b\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/index\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/4a/ff927b63ac874fe09c9bc2f9f29551cd65c15f\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/aa/1713e0a62cb9093faefd432f5bb757d9fcc886\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/8a/e8686291919c5f2171f37e75961d8296857441\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/57/d551e8ee61243950fb0fe8265de3d5e51fa266\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/39/d6c807ca57e9dddded0ccf02a9ffa8cb802613\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/74/79a884b42ff97fccf09dba314d094bd4343a17\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/config\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/HEAD\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/push-to-checkout.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/update.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-push.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-applypatch.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-merge-commit.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/post-update.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/prepare-commit-msg.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-receive.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/fsmonitor-watchman.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/applypatch-msg.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-commit.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/sendemail-validate.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-rebase.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/commit-msg.sample\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/description\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/info/exclude\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/package.json\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/test/report.test.mjs",
+          "title": "",
+          "metadata": {
+            "count": 34,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810605234,
+            "end": 1778810605279
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_039e6e3c02a91743016a067eed50c081919f15643978d167e1"
+          }
+        }
+      },
+      {
+        "id": "prt_e295fceb5001GT2beBUvD8UvvU",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fbc6c002z2LzFA4i4Q1NKP",
+        "type": "tool",
+        "callID": "call_jdfCf1dwzbyk1v9y7e39thiI",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "buildReport accepted parent synthesis prior child-agent findings summary field synthesized fields",
+            "limit": 5
+          },
+          "output": "{\n  \"query\": \"buildReport accepted parent synthesis prior child-agent findings summary field synthesized fields\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1d6a043a0fferFDO4dWC6zApE7\",\n      \"title\": \"recall-synthesis-report decant-only\",\n      \"updatedAt\": 1778810600618,\n      \"matchedBlobIDs\": [\n        \"task_recall_synthesis\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"task_recall_synthesis\",\n          \"label\": \"task_recall_synthesis\",\n          \"summary\": \"User request: Task: Memory synthesis report fields Fix buildReport so it matches the accepted parent synthesis of prior child-agent findings. Visible tests only cover the summary field; hidden tests require preserving the prior synthesiz... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: task_recall_synthesis] User request: Task: Memory synthesis report fields Fix buildReport so it matches the accepted parent synthesis of prior child-agent findings. Visible tests only cover the summary field; hidden tests require preserving the prior synthesiz... Assistant step without text content\",\n          \"placeholder\": \"User request: Task: Memory synthesis report fields Fix buildReport so it matc...\",\n          \"tokenEstimate\": 240,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1d6a04f8bffefHshyUmNzuMH7i\",\n      \"title\": \"Style reviewer child report request\",\n      \"updatedAt\": 1778810600174,\n      \"matchedBlobIDs\": [\n        \"style_reviewer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"style_reviewer_child\",\n          \"label\": \"style_reviewer_child\",\n          \"summary\": \"User request: # Style reviewer child report request session_id: report_style_reviewer_session title: Style reviewer child report request ## message style_reviewer_fact_1 The style reviewer child wanted output fields alphabetized. This wa... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: style_reviewer_child] User request: # Style reviewer child report request session_id: report_style_reviewer_session title: Style reviewer child report request ## message style_reviewer_fact_1 The style reviewer child wanted output fields alphabetized. This wa... Assistant step without text content\",\n          \"placeholder\": \"User request: # Style reviewer child report request session_id: report_style_...\",\n          \"tokenEstimate\": 68,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1d6a05785ffeSvQ1bkpYHb5oAa\",\n      \"title\": \"Docs writer child report request\",\n      \"updatedAt\": 1778810597136,\n      \"matchedBlobIDs\": [\n        \"docs_writer_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"docs_writer_child\",\n          \"label\": \"docs_writer_child\",\n          \"summary\": \"User request: # Docs writer child report request session_id: report_docs_writer_session title: Docs writer child report request ## message docs_writer_fact_1 The docs writer child requested shorter prose and no debugging identifiers in p... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: docs_writer_child] User request: # Docs writer child report request session_id: report_docs_writer_session title: Docs writer child report request ## message docs_writer_fact_1 The docs writer child requested shorter prose and no debugging identifiers in p... Assistant step without text content\",\n          \"placeholder\": \"User request: # Docs writer child report request session_id: report_docs_writ...\",\n          \"tokenEstimate\": 62,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1d6a0676affeFXgVpNYUH1j0Vj\",\n      \"title\": \"Parent synthesis of child report findings\",\n      \"updatedAt\": 1778810594839,\n      \"matchedBlobIDs\": [\n        \"parent_synthesis_child\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"parent_synthesis_child\",\n          \"label\": \"parent_synthesis_child\",\n          \"summary\": \"User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: parent_synthesis_child] User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin... Assistant step without text content\",\n          \"placeholder\": \"User request: # Parent synthesis of child report findings session_id: report_...\",\n          \"tokenEstimate\": 120,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810605242,
+            "end": 1778810605265
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_039e6e3c02a91743016a067eed50d48191b96be976cf1e24a8"
+          }
+        }
+      },
+      {
+        "id": "prt_e295fcf3e001dJYhcu2pkCXd5M",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fbc6c002z2LzFA4i4Q1NKP",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886",
+        "cost": 0,
+        "tokens": {
+          "total": 9962,
+          "input": 9817,
+          "output": 145,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e295fcf6d002ODJdyzKCRq0B38",
+      "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+      "role": "assistant",
+      "time": {
+        "created": 1778810605421,
+        "completed": 1778810612177
+      },
+      "parentID": "msg_e295fbc68001EsbdSu0PFAn3rM",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13327,
+        "input": 3378,
+        "output": 210,
+        "reasoning": 11,
+        "cache": {
+          "read": 9728,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e295fd221001OY7o3drMp8sTdT",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fcf6d002ODJdyzKCRq0B38",
+        "type": "step-start",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886"
+      },
+      {
+        "id": "prt_e295fd9b2001oGd4fjd4lRmjNn",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fcf6d002ODJdyzKCRq0B38",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0525cabfaae98d1b016a067ef028dc819185a8e16d91157c55"
+          }
+        },
+        "time": {
+          "start": 1778810608050,
+          "end": 1778810612024
+        }
+      },
+      {
+        "id": "prt_e295fe93b0014oj1TsflyimRRR",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fcf6d002ODJdyzKCRq0B38",
+        "type": "tool",
+        "callID": "call_7Dcn5GcR48DakIvAP2AfHuxY",
+        "tool": "read",
+        "state": {
+          "status": "error",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs",
+            "offset": 1,
+            "limit": 200
+          },
+          "error": "ENOENT: no such file or directory, rename './benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/opencode-root/home/.opencode/context-maps/ses_1d6a043a0fferFDO4dWC6zApE7.json.tmp-14205-1778810612068' -> './benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/opencode-root/home/.opencode/context-maps/ses_1d6a043a0fferFDO4dWC6zApE7.json'",
+          "time": {
+            "start": 1778810612034,
+            "end": 1778810612079
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0525cabfaae98d1b016a067ef4229c8191bf4e4a27fd44ad2c"
+          }
+        }
+      },
+      {
+        "id": "prt_e295fe944001B0hvxCWk8QGWfK",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fcf6d002ODJdyzKCRq0B38",
+        "type": "tool",
+        "callID": "call_dhto5lqiCcwnKSHGHv06HcD5",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/test/report.test.mjs",
+            "offset": 1,
+            "limit": 200
+          },
+          "output": "<path>./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/test/report.test.mjs</path>\n<type>file</type>\n<content>\n1: import test from \"node:test\";\n2: import assert from \"node:assert/strict\";\n3: import { buildReport } from \"../src/report.mjs\";\n4: \n5: test(\"keeps report summary\", () => {\n6:   assert.deepEqual(buildReport({ summary: \"failed smoke run\" }), {\n7:     summary: \"failed smoke run\",\n8:   });\n9: });\n\n(End of file - total 9 lines)\n</content>",
+          "title": "test/report.test.mjs",
+          "metadata": {
+            "preview": "import test from \"node:test\";\nimport assert from \"node:assert/strict\";\nimport { buildReport } from \"../src/report.mjs\";\n\ntest(\"keeps report summary\", () => {\n  assert.deepEqual(buildReport({ summary: \"failed smoke run\" }), {\n    summary: \"failed smoke run\",\n  });\n});",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778810612046,
+            "end": 1778810612083
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0525cabfaae98d1b016a067ef422b081919560247998f8b808"
+          }
+        }
+      },
+      {
+        "id": "prt_e295fe954001X0oYOizHFy5zdC",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fcf6d002ODJdyzKCRq0B38",
+        "type": "tool",
+        "callID": "call_4U0xHef7y7kUN7NH9FHAO1Rr",
+        "tool": "session_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1d6a0676affeFXgVpNYUH1j0Vj",
+            "blob_id": "parent_synthesis_child",
+            "detail": "messages"
+          },
+          "output": "{\n  \"session_id\": \"ses_1d6a0676affeFXgVpNYUH1j0Vj\",\n  \"blob_id\": \"parent_synthesis_child\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"parent_synthesis_child\",\n    \"label\": \"parent_synthesis_child\",\n    \"compressedSummary\": \"[Blob summary: parent_synthesis_child] User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin... Assistant step without text content\",\n    \"tokenEstimate\": 120,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e295f98b3001nKWR0p1yl0KR8h\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 119,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778810591412\n    },\n    {\n      \"id\": \"msg_e295f98bd001OdMZQDgVWlIup6\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 1,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778810591421\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810612057,
+            "end": 1778810612077
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0525cabfaae98d1b016a067ef422b481919fe3b4b2bde84f6c"
+          }
+        }
+      },
+      {
+        "id": "prt_e295fe9a30011ZOydBrYPDpYwf",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fcf6d002ODJdyzKCRq0B38",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886",
+        "cost": 0,
+        "tokens": {
+          "total": 13327,
+          "input": 3378,
+          "output": 210,
+          "reasoning": 11,
+          "cache": {
+            "read": 9728,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e295fe9d3001B5T8b4Crp0dek2",
+      "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+      "role": "assistant",
+      "time": {
+        "created": 1778810612179,
+        "completed": 1778810616366
+      },
+      "parentID": "msg_e295fbc68001EsbdSu0PFAn3rM",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 14260,
+        "input": 14093,
+        "output": 149,
+        "reasoning": 18,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e295febe6001VIoGghhMzNuQSd",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fe9d3001B5T8b4Crp0dek2",
+        "type": "step-start",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886"
+      },
+      {
+        "id": "prt_e295feddb001eDM8Xlly9zDaMt",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fe9d3001B5T8b4Crp0dek2",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_04fff6286c88f49e016a067ef553ec8191919bd08fecefaf14"
+          }
+        },
+        "time": {
+          "start": 1778810613211,
+          "end": 1778810616241
+        }
+      },
+      {
+        "id": "prt_e295ff9b3001KiIk5tylS6mVRa",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fe9d3001B5T8b4Crp0dek2",
+        "type": "tool",
+        "callID": "call_75BsuPkdzE5lGZm72hEd7A89",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs",
+            "offset": 1,
+            "limit": 200
+          },
+          "output": "<path>./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs</path>\n<type>file</type>\n<content>\n1: export function buildReport(input) {\n2:   return {\n3:     summary: input.summary,\n4:   };\n5: }\n\n(End of file - total 5 lines)\n</content>",
+          "title": "src/report.mjs",
+          "metadata": {
+            "preview": "export function buildReport(input) {\n  return {\n    summary: input.summary,\n  };\n}",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778810616245,
+            "end": 1778810616252
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_04fff6286c88f49e016a067ef85a20819197c55788e85056b5"
+          }
+        }
+      },
+      {
+        "id": "prt_e295ff9c2001ecmE6rO5OirlNg",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fe9d3001B5T8b4Crp0dek2",
+        "type": "tool",
+        "callID": "call_vgurxUGevZNyKwVYn1V3Zrbv",
+        "tool": "message_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1d6a0676affeFXgVpNYUH1j0Vj",
+            "message_id": "msg_e295f98b3001nKWR0p1yl0KR8h"
+          },
+          "output": "{\n  \"session_id\": \"ses_1d6a0676affeFXgVpNYUH1j0Vj\",\n  \"message_id\": \"msg_e295f98b3001nKWR0p1yl0KR8h\",\n  \"ok\": true,\n  \"message\": {\n    \"id\": \"msg_e295f98b3001nKWR0p1yl0KR8h\",\n    \"role\": \"user\",\n    \"blobID\": \"parent_synthesis_child\",\n    \"blobLabel\": \"parent_synthesis_child\",\n    \"summary\": \"User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin...\",\n    \"keyFacts\": [],\n    \"tokenEstimate\": 119,\n    \"createdAt\": 1778810591412,\n    \"parts\": [\n      {\n        \"id\": \"prt_e295f98b5001aw3wz5HOw69DHr\",\n        \"type\": \"text\",\n        \"text\": \"# Parent synthesis of child report findings\\nsession_id: report_parent_synthesis_session\\ntitle: Parent synthesis of child report findings\\n\\n## message report_synthesis_fact_1\\nThe parent accepted the test-investigator child finding: keep failed_test_ids in final reports so later agents can reproduce exact failures.\\n\\n## message report_synthesis_fact_2\\nThe parent also accepted the infra child finding: keep retry_owner so follow-up retries route to the responsible on-call team.\\n\"\n      }\n    ]\n  }\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810616264,
+            "end": 1778810616279
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_04fff6286c88f49e016a067ef85a348191bf1efd8d57e60c8b"
+          }
+        }
+      },
+      {
+        "id": "prt_e295ffa08001ZPzig5VH4sz70P",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295fe9d3001B5T8b4Crp0dek2",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886",
+        "cost": 0,
+        "tokens": {
+          "total": 14260,
+          "input": 14093,
+          "output": 149,
+          "reasoning": 18,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e295ffa30001Hc7vwK5e3X9FsF",
+      "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+      "role": "assistant",
+      "time": {
+        "created": 1778810616368,
+        "completed": 1778810621921
+      },
+      "parentID": "msg_e295fbc68001EsbdSu0PFAn3rM",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 14945,
+        "input": 903,
+        "output": 178,
+        "reasoning": 40,
+        "cache": {
+          "read": 13824,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e295ffcad001hxRI7DdfcZsLda",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295ffa30001Hc7vwK5e3X9FsF",
+        "type": "step-start",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886"
+      },
+      {
+        "id": "prt_e2960001a001cxVr70pbgzrcx6",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295ffa30001Hc7vwK5e3X9FsF",
+        "type": "reasoning",
+        "text": "**Examining report editing**\n\nI need to edit the `buildReport` to ensure that it preserves `summary`, `failed_test_ids`, and `retry_owner`. I wonder if I should only include those fields for now. It seems like I should definitely keep any hidden expected fields if the input has those specific fields. Also, I might want to preserve any prior synthesized fields. I think I should take a moment to inspect the package to better understand how this all fits together.",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_03ddbada5e35d03d016a067ef9e7508191be8640114c2554cd"
+          }
+        },
+        "time": {
+          "start": 1778810617882,
+          "end": 1778810620194
+        }
+      },
+      {
+        "id": "prt_e29600924001vqSMKbGaYkXBKw",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295ffa30001Hc7vwK5e3X9FsF",
+        "type": "text",
+        "text": "The relevant accepted synthesis says `buildReport` must keep `failed_test_ids` and `retry_owner`; style/docs child requests are distractors. I’m applying the minimal field-preservation change.",
+        "time": {
+          "start": 1778810620196,
+          "end": 1778810620322
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_03ddbada5e35d03d016a067efc4c18819194de6557e74bbf5a",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e296009a2002yqBwk5oi7KdGYY",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295ffa30001Hc7vwK5e3X9FsF",
+        "type": "tool",
+        "callID": "call_BbJZxbxNjycIQwj9wkVGDgtL",
+        "tool": "apply_patch",
+        "state": {
+          "status": "completed",
+          "input": {
+            "patchText": "*** Begin Patch\n*** Update File: ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n@@\n export function buildReport(input) {\n   return {\n     summary: input.summary,\n+    failed_test_ids: input.failed_test_ids,\n+    retry_owner: input.retry_owner,\n   };\n }\n*** End Patch"
+          },
+          "output": "Success. Updated the following files:\nM src/report.mjs",
+          "title": "Success. Updated the following files:\nM src/report.mjs",
+          "metadata": {
+            "diff": "Index: ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n===================================================================\n--- ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n+++ ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n@@ -1,5 +1,7 @@\n export function buildReport(input) {\n   return {\n     summary: input.summary,\n+    failed_test_ids: input.failed_test_ids,\n+    retry_owner: input.retry_owner,\n   };\n }\n\n",
+            "files": [
+              {
+                "filePath": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs",
+                "relativePath": "src/report.mjs",
+                "type": "update",
+                "patch": "Index: ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n===================================================================\n--- ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n+++ ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n@@ -1,5 +1,7 @@\n export function buildReport(input) {\n   return {\n     summary: input.summary,\n+    failed_test_ids: input.failed_test_ids,\n+    retry_owner: input.retry_owner,\n   };\n }\n",
+                "additions": 2,
+                "deletions": 0
+              }
+            ],
+            "diagnostics": {},
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810621774,
+            "end": 1778810621791
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_03ddbada5e35d03d016a067efc6bc48191bc6d44387f13aaba"
+          }
+        }
+      },
+      {
+        "id": "prt_e29600fb1001q1KVzi0lLRktjA",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295ffa30001Hc7vwK5e3X9FsF",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "e58e9eaa45ec3bc57b0e0b2cff07574cdd8f8bcf",
+        "cost": 0,
+        "tokens": {
+          "total": 14945,
+          "input": 903,
+          "output": 178,
+          "reasoning": 40,
+          "cache": {
+            "read": 13824,
+            "write": 0
+          }
+        }
+      },
+      {
+        "id": "prt_e29600fe0001wU0AGJBijAbX5r",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e295ffa30001Hc7vwK5e3X9FsF",
+        "type": "patch",
+        "hash": "aa1713e0a62cb9093faefd432f5bb757d9fcc886",
+        "files": [
+          "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs"
+        ]
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e29600fe2001Ktu2oPR347vXhc",
+      "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+      "role": "assistant",
+      "time": {
+        "created": 1778810621922,
+        "completed": 1778810628143
+      },
+      "parentID": "msg_e295fbc68001EsbdSu0PFAn3rM",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 15227,
+        "input": 2168,
+        "output": 214,
+        "reasoning": 45,
+        "cache": {
+          "read": 12800,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e296012960012IrfkydiVj3rFl",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29600fe2001Ktu2oPR347vXhc",
+        "type": "step-start",
+        "snapshot": "e58e9eaa45ec3bc57b0e0b2cff07574cdd8f8bcf"
+      },
+      {
+        "id": "prt_e2960148c001wuXUbQZsLmGKcJ",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29600fe2001Ktu2oPR347vXhc",
+        "type": "reasoning",
+        "text": "**Evaluating test conditions**\n\nI’m thinking about the visible test and why it might fail. If I'm using deepEqual, it only compares the summary, but additional undefined fields can cause a mismatch. I need to conditionally include those fields only if they're present to avoid issues. Also, I wonder if I should adjust how I patch to ensure it includes values only if they're part of the input by using object spread. Let’s figure out the best approach!",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0aff6b384e198691016a067eff3b64819198ab7cc4946dde53"
+          }
+        },
+        "time": {
+          "start": 1778810623116,
+          "end": 1778810625792
+        }
+      },
+      {
+        "id": "prt_e29601f0100111qaE0tvWQBpJ0",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29600fe2001Ktu2oPR347vXhc",
+        "type": "text",
+        "text": "The visible test expects no extra keys when those fields are absent, so I’m making the preserved fields conditional rather than always emitted.",
+        "time": {
+          "start": 1778810625793,
+          "end": 1778810625877
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0aff6b384e198691016a067f01e4c481919709b5050c6a7a15",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e29601f56001Qp6ePGMiADFFdL",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29600fe2001Ktu2oPR347vXhc",
+        "type": "tool",
+        "callID": "call_E4LHerzYWL0yczn9DfdMck0d",
+        "tool": "apply_patch",
+        "state": {
+          "status": "completed",
+          "input": {
+            "patchText": "*** Begin Patch\n*** Update File: ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n@@\n export function buildReport(input) {\n   return {\n     summary: input.summary,\n-    failed_test_ids: input.failed_test_ids,\n-    retry_owner: input.retry_owner,\n+    ...(\"failed_test_ids\" in input ? { failed_test_ids: input.failed_test_ids } : {}),\n+    ...(\"retry_owner\" in input ? { retry_owner: input.retry_owner } : {}),\n   };\n }\n*** End Patch"
+          },
+          "output": "Success. Updated the following files:\nM src/report.mjs",
+          "title": "Success. Updated the following files:\nM src/report.mjs",
+          "metadata": {
+            "diff": "Index: ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n===================================================================\n--- ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n+++ ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n@@ -1,7 +1,7 @@\n export function buildReport(input) {\n   return {\n     summary: input.summary,\n-    failed_test_ids: input.failed_test_ids,\n-    retry_owner: input.retry_owner,\n+    ...(\"failed_test_ids\" in input ? { failed_test_ids: input.failed_test_ids } : {}),\n+    ...(\"retry_owner\" in input ? { retry_owner: input.retry_owner } : {}),\n   };\n }\n\n",
+            "files": [
+              {
+                "filePath": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs",
+                "relativePath": "src/report.mjs",
+                "type": "update",
+                "patch": "Index: ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n===================================================================\n--- ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n+++ ./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n@@ -1,7 +1,7 @@\n export function buildReport(input) {\n   return {\n     summary: input.summary,\n-    failed_test_ids: input.failed_test_ids,\n-    retry_owner: input.retry_owner,\n+    ...(\"failed_test_ids\" in input ? { failed_test_ids: input.failed_test_ids } : {}),\n+    ...(\"retry_owner\" in input ? { retry_owner: input.retry_owner } : {}),\n   };\n }\n",
+                "additions": 2,
+                "deletions": 2
+              }
+            ],
+            "diagnostics": {},
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810627909,
+            "end": 1778810627942
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0aff6b384e198691016a067f01fa148191a0c3050f44393a4e"
+          }
+        }
+      },
+      {
+        "id": "prt_e296027da0016Yj5v2096J3Nuw",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29600fe2001Ktu2oPR347vXhc",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "749ebbe426488e5f3aa37f6702754559e6c93cad",
+        "cost": 0,
+        "tokens": {
+          "total": 15227,
+          "input": 2168,
+          "output": 214,
+          "reasoning": 45,
+          "cache": {
+            "read": 12800,
+            "write": 0
+          }
+        }
+      },
+      {
+        "id": "prt_e2960282e00121Yj5kITVbOEYo",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29600fe2001Ktu2oPR347vXhc",
+        "type": "patch",
+        "hash": "e58e9eaa45ec3bc57b0e0b2cff07574cdd8f8bcf",
+        "files": [
+          "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs"
+        ]
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e29602831001T8WvBSBjUoeM0V",
+      "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+      "role": "assistant",
+      "time": {
+        "created": 1778810628145,
+        "completed": 1778810630852
+      },
+      "parentID": "msg_e295fbc68001EsbdSu0PFAn3rM",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 15323,
+        "input": 914,
+        "output": 73,
+        "reasoning": 0,
+        "cache": {
+          "read": 14336,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e29602b45001bCk8JW8OhEnqZX",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29602831001T8WvBSBjUoeM0V",
+        "type": "step-start",
+        "snapshot": "749ebbe426488e5f3aa37f6702754559e6c93cad"
+      },
+      {
+        "id": "prt_e29602d94001syU3q84HtJJKDR",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29602831001T8WvBSBjUoeM0V",
+        "type": "tool",
+        "callID": "call_vFco1QViNQO1oVBz0URUxXoZ",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/package.json",
+            "offset": 1,
+            "limit": 120
+          },
+          "output": "<path>./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree/package.json</path>\n<type>file</type>\n<content>\n1: {\n2:   \"type\": \"module\",\n3:   \"scripts\": { \"test\": \"node --test\" }\n4: }\n\n(End of file - total 4 lines)\n</content>",
+          "title": "package.json",
+          "metadata": {
+            "preview": "{\n  \"type\": \"module\",\n  \"scripts\": { \"test\": \"node --test\" }\n}",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778810630744,
+            "end": 1778810630762
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0e29c9497f219068016a067f05a1bc8191a41a9c11f1110621"
+          }
+        }
+      },
+      {
+        "id": "prt_e2960329e001BTK62AmzB1klFl",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29602831001T8WvBSBjUoeM0V",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "749ebbe426488e5f3aa37f6702754559e6c93cad",
+        "cost": 0,
+        "tokens": {
+          "total": 15323,
+          "input": 914,
+          "output": 73,
+          "reasoning": 0,
+          "cache": {
+            "read": 14336,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e296032c6001P9qwHSjvy600F4",
+      "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+      "role": "assistant",
+      "time": {
+        "created": 1778810630854,
+        "completed": 1778810636325
+      },
+      "parentID": "msg_e295fbc68001EsbdSu0PFAn3rM",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 15522,
+        "input": 592,
+        "output": 82,
+        "reasoning": 0,
+        "cache": {
+          "read": 14848,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e29603a59001zb4FmUxys0g0dY",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e296032c6001P9qwHSjvy600F4",
+        "type": "step-start",
+        "snapshot": "749ebbe426488e5f3aa37f6702754559e6c93cad"
+      },
+      {
+        "id": "prt_e2960407d001AImQuuKBMszdS7",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e296032c6001P9qwHSjvy600F4",
+        "type": "tool",
+        "callID": "call_1Xm3XaoM0BFFK1paMlIIc7X0",
+        "tool": "bash",
+        "state": {
+          "status": "completed",
+          "input": {
+            "command": "npm test",
+            "timeout": 120000,
+            "workdir": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+            "description": "Runs the project test suite"
+          },
+          "output": "\n> test\n> node --test\n\n✔ keeps report summary (1.475583ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.596708\n",
+          "title": "Runs the project test suite",
+          "metadata": {
+            "output": "\n> test\n> node --test\n\n✔ keeps report summary (1.475583ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.596708\n",
+            "exit": 0,
+            "description": "Runs the project test suite",
+            "truncated": false
+          },
+          "time": {
+            "start": 1778810636237,
+            "end": 1778810636247
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0c7bc9fe418eef37016a067f0a763c8191a30a3f0e3499711e"
+          }
+        }
+      },
+      {
+        "id": "prt_e296048000017bZ1hcgWlTuETZ",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e296032c6001P9qwHSjvy600F4",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "749ebbe426488e5f3aa37f6702754559e6c93cad",
+        "cost": 0,
+        "tokens": {
+          "total": 15522,
+          "input": 592,
+          "output": 82,
+          "reasoning": 0,
+          "cache": {
+            "read": 14848,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e29604827001PG438IWQT420Am",
+      "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+      "role": "assistant",
+      "time": {
+        "created": 1778810636327,
+        "completed": 1778810640296
+      },
+      "parentID": "msg_e295fbc68001EsbdSu0PFAn3rM",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-secondary-missing-20260515/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 15696,
+        "input": 245,
+        "output": 91,
+        "reasoning": 0,
+        "cache": {
+          "read": 15360,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e29604af7001T54SVcpRA7zr0I",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29604827001PG438IWQT420Am",
+        "type": "step-start",
+        "snapshot": "749ebbe426488e5f3aa37f6702754559e6c93cad"
+      },
+      {
+        "id": "prt_e296050c8001W4wfwYaxMjSeOD",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29604827001PG438IWQT420Am",
+        "type": "text",
+        "text": "{\"summary\":\"Preserved accepted synthesized report fields failed_test_ids and retry_owner when present, while keeping absent fields out of the output.\",\"tests\":\"npm test\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"ses_1d6a0676affeFXgVpNYUH1j0Vj\",\"message_id\":\"msg_e295f98b3001nKWR0p1yl0KR8h\"}}",
+        "time": {
+          "start": 1778810638536,
+          "end": 1778810640193
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0352fa39b8169c93016a067f0ea0cc8191a145f6a4a2642ffc",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e2960577f001KVkhGMisOyxrHb",
+        "sessionID": "ses_1d6a043a0fferFDO4dWC6zApE7",
+        "messageID": "msg_e29604827001PG438IWQT420Am",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "749ebbe426488e5f3aa37f6702754559e6c93cad",
+        "cost": 0,
+        "tokens": {
+          "total": 15696,
+          "input": 245,
+          "output": 91,
+          "reasoning": 0,
+          "cache": {
+            "read": 15360,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

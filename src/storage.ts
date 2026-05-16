@@ -7,6 +7,8 @@ import type {
   CommitMapFile,
   ContextMapFile,
   ContextPreview,
+  GitAiDecantIndexEntry,
+  GitAiDecantIndexFile,
 } from "./types";
 import { computeEffectiveTreatment } from "./core";
 
@@ -26,6 +28,10 @@ export function sessionMapPath(sessionID: string) {
 
 export function commitMapPath() {
   return path.join(contextMapRoot(), "_commits.json");
+}
+
+export function gitAiDecantIndexPath() {
+  return path.join(contextMapRoot(), "_git_ai_decants.json");
 }
 
 export function compactionArchivePath(sessionID: string, compactedAt: number) {
@@ -174,6 +180,43 @@ export async function recordCommitMapEntry(entry: CommitMapEntry) {
   file.entries[entry.commitHash] = entry;
   file.updatedAt = Date.now();
   await writeCommitMap(file);
+}
+
+export async function readGitAiDecantIndex(): Promise<GitAiDecantIndexFile> {
+  try {
+    const raw = await fs.readFile(gitAiDecantIndexPath(), "utf8");
+    const parsed = JSON.parse(raw) as Partial<GitAiDecantIndexFile>;
+    return {
+      version: MAP_VERSION,
+      updatedAt:
+        typeof parsed.updatedAt === "number" ? parsed.updatedAt : Date.now(),
+      entries:
+        parsed.entries && typeof parsed.entries === "object"
+          ? parsed.entries
+          : {},
+    };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    return {
+      version: MAP_VERSION,
+      updatedAt: Date.now(),
+      entries: {},
+    };
+  }
+}
+
+export async function writeGitAiDecantIndex(file: GitAiDecantIndexFile) {
+  await ensureContextMapRoot();
+  await writeJsonAtomic(gitAiDecantIndexPath(), file);
+}
+
+export async function recordGitAiDecantIndexEntry(
+  entry: GitAiDecantIndexEntry,
+) {
+  const file = await readGitAiDecantIndex();
+  file.entries[entry.key] = entry;
+  file.updatedAt = Date.now();
+  await writeGitAiDecantIndex(file);
 }
 
 export async function removeContextMap(sessionID: string) {

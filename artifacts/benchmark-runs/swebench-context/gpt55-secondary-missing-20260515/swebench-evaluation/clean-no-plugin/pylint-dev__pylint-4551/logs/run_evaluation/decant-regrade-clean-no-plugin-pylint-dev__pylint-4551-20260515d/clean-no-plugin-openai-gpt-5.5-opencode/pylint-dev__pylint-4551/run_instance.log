@@ -1,0 +1,177 @@
+2026-05-15 06:58:41,801 - INFO - Creating container for pylint-dev__pylint-4551...
+2026-05-15 06:58:42,682 - INFO - Container for pylint-dev__pylint-4551 created: 90d7a5d4846fc65006c29360b106f2aacd7d5083019bfc16bdecff9365d7183c
+2026-05-15 06:58:42,764 - INFO - Container for pylint-dev__pylint-4551 started: 90d7a5d4846fc65006c29360b106f2aacd7d5083019bfc16bdecff9365d7183c
+2026-05-15 06:58:42,764 - INFO - Intermediate patch for pylint-dev__pylint-4551 written to logs/run_evaluation/decant-regrade-clean-no-plugin-pylint-dev__pylint-4551-20260515d/clean-no-plugin-openai-gpt-5.5-opencode/pylint-dev__pylint-4551/patch.diff, now applying to container...
+2026-05-15 06:58:42,890 - INFO - >>>>> Applied Patch:
+Checking patch pylint/pyreverse/inspector.py...
+Checking patch tests/unittest_pyreverse_inspector.py...
+Applied patch pylint/pyreverse/inspector.py cleanly.
+Applied patch tests/unittest_pyreverse_inspector.py cleanly.
+
+2026-05-15 06:58:43,012 - INFO - Git diff before:
+diff --git a/pylint/pyreverse/inspector.py b/pylint/pyreverse/inspector.py
+index 8fa12202..8ab80ffc 100644
+--- a/pylint/pyreverse/inspector.py
++++ b/pylint/pyreverse/inspector.py
+@@ -229,12 +229,44 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+ 
+         handle instance_attrs_type
+         """
++        values = set()
+         try:
+             values = set(node.infer())
+-            current = set(parent.instance_attrs_type[node.attrname])
+-            parent.instance_attrs_type[node.attrname] = list(current | values)
+         except astroid.InferenceError:
+             pass
++        annotation_values = Linker._get_assignattr_annotation_type(node)
++        if annotation_values:
++            values = annotation_values
++        if values:
++            current = set(parent.instance_attrs_type[node.attrname])
++            parent.instance_attrs_type[node.attrname] = list(current | values)
++
++    @staticmethod
++    def _get_assignattr_annotation_type(node):
++        """Return inferred annotation nodes for attributes assigned from arguments."""
++        value = getattr(node.parent, "value", None)
++        value_name = getattr(value, "name", None)
++        frame = node.frame()
++        if value_name is None or not isinstance(frame, astroid.FunctionDef):
++            return ()
++
++        arguments = frame.args
++        annotated_args = (
++            (
++                getattr(arguments, "posonlyargs", ()),
++                getattr(arguments, "posonlyargs_annotations", ()),
++            ),
++            (arguments.args, getattr(arguments, "annotations", ())),
++            (arguments.kwonlyargs, getattr(arguments, "kwonlyargs_annotations", ())),
++        )
++        for args, annotations in annotated_args:
++            for argument, annotation in zip(args, annotations):
++                if argument.name == value_name and annotation is not None:
++                    try:
++                        return set(annotation.infer())
++                    except astroid.InferenceError:
++                        return ()
++        return ()
+ 
+     def visit_import(self, node):
+         """visit an astroid.Import node
+diff --git a/tests/unittest_pyreverse_inspector.py b/tests/unittest_pyreverse_inspector.py
+index e1ff6378..520a3fe4 100644
+--- a/tests/unittest_pyreverse_inspector.py
++++ b/tests/unittest_pyreverse_inspector.py
+@@ -71,6 +71,21 @@ def test_instance_attrs_resolution(project):
+     assert type_dict["_id"][0] is astroid.Uninferable
+ 
+ 
++def test_instance_attrs_annotation_resolution():
++    module = astroid.parse(
++        """
++    class C(object):
++        def __init__(self, a: str = None):
++            self.a = a
++    """
++    )
++    linker = inspector.Linker(None)
++    linker.visit(module)
++
++    klass = module["C"]
++    assert sorted(node.name for node in klass.instance_attrs_type["a"]) == ["str"]
++
++
+ def test_concat_interfaces():
+     cls = astroid.extract_node(
+         '''
+2026-05-15 06:58:43,013 - INFO - Eval script for pylint-dev__pylint-4551 written to logs/run_evaluation/decant-regrade-clean-no-plugin-pylint-dev__pylint-4551-20260515d/clean-no-plugin-openai-gpt-5.5-opencode/pylint-dev__pylint-4551/eval.sh; copying to container...
+2026-05-15 06:58:46,735 - INFO - Test runtime: 3.67 seconds
+2026-05-15 06:58:46,735 - INFO - Test output for pylint-dev__pylint-4551 written to logs/run_evaluation/decant-regrade-clean-no-plugin-pylint-dev__pylint-4551-20260515d/clean-no-plugin-openai-gpt-5.5-opencode/pylint-dev__pylint-4551/test_output.txt
+2026-05-15 06:58:46,826 - INFO - Git diff after:
+diff --git a/pylint/pyreverse/inspector.py b/pylint/pyreverse/inspector.py
+index 8fa12202..8ab80ffc 100644
+--- a/pylint/pyreverse/inspector.py
++++ b/pylint/pyreverse/inspector.py
+@@ -229,12 +229,44 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+ 
+         handle instance_attrs_type
+         """
++        values = set()
+         try:
+             values = set(node.infer())
+-            current = set(parent.instance_attrs_type[node.attrname])
+-            parent.instance_attrs_type[node.attrname] = list(current | values)
+         except astroid.InferenceError:
+             pass
++        annotation_values = Linker._get_assignattr_annotation_type(node)
++        if annotation_values:
++            values = annotation_values
++        if values:
++            current = set(parent.instance_attrs_type[node.attrname])
++            parent.instance_attrs_type[node.attrname] = list(current | values)
++
++    @staticmethod
++    def _get_assignattr_annotation_type(node):
++        """Return inferred annotation nodes for attributes assigned from arguments."""
++        value = getattr(node.parent, "value", None)
++        value_name = getattr(value, "name", None)
++        frame = node.frame()
++        if value_name is None or not isinstance(frame, astroid.FunctionDef):
++            return ()
++
++        arguments = frame.args
++        annotated_args = (
++            (
++                getattr(arguments, "posonlyargs", ()),
++                getattr(arguments, "posonlyargs_annotations", ()),
++            ),
++            (arguments.args, getattr(arguments, "annotations", ())),
++            (arguments.kwonlyargs, getattr(arguments, "kwonlyargs_annotations", ())),
++        )
++        for args, annotations in annotated_args:
++            for argument, annotation in zip(args, annotations):
++                if argument.name == value_name and annotation is not None:
++                    try:
++                        return set(annotation.infer())
++                    except astroid.InferenceError:
++                        return ()
++        return ()
+ 
+     def visit_import(self, node):
+         """visit an astroid.Import node
+diff --git a/tests/unittest_pyreverse_inspector.py b/tests/unittest_pyreverse_inspector.py
+index e1ff6378..520a3fe4 100644
+--- a/tests/unittest_pyreverse_inspector.py
++++ b/tests/unittest_pyreverse_inspector.py
+@@ -71,6 +71,21 @@ def test_instance_attrs_resolution(project):
+     assert type_dict["_id"][0] is astroid.Uninferable
+ 
+ 
++def test_instance_attrs_annotation_resolution():
++    module = astroid.parse(
++        """
++    class C(object):
++        def __init__(self, a: str = None):
++            self.a = a
++    """
++    )
++    linker = inspector.Linker(None)
++    linker.visit(module)
++
++    klass = module["C"]
++    assert sorted(node.name for node in klass.instance_attrs_type["a"]) == ["str"]
++
++
+ def test_concat_interfaces():
+     cls = astroid.extract_node(
+         '''
+2026-05-15 06:58:46,826 - INFO - Grading answer for pylint-dev__pylint-4551...
+2026-05-15 06:58:46,827 - INFO - report: {'pylint-dev__pylint-4551': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['tests/unittest_pyreverse_writer.py::test_dot_files[packages_No_Name.dot]', 'tests/unittest_pyreverse_writer.py::test_dot_files[classes_No_Name.dot]', 'tests/unittest_pyreverse_writer.py::test_get_visibility[names0-special]', 'tests/unittest_pyreverse_writer.py::test_get_visibility[names1-private]', 'tests/unittest_pyreverse_writer.py::test_get_visibility[names2-public]', 'tests/unittest_pyreverse_writer.py::test_get_visibility[names3-protected]', 'tests/unittest_pyreverse_writer.py::test_get_annotation_annassign[a:', 'tests/unittest_pyreverse_writer.py::test_get_annotation_assignattr[def', 'tests/unittest_pyreverse_writer.py::test_infer_node_1', 'tests/unittest_pyreverse_writer.py::test_infer_node_2']}, 'PASS_TO_PASS': {'success': [], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for pylint-dev__pylint-4551: resolved: False
+2026-05-15 06:58:46,828 - INFO - Attempting to stop container sweb.eval.pylint-dev__pylint-4551.decant-regrade-clean-no-plugin-pylint-dev__pylint-4551-20260515d...
+2026-05-15 06:59:02,039 - INFO - Attempting to remove container sweb.eval.pylint-dev__pylint-4551.decant-regrade-clean-no-plugin-pylint-dev__pylint-4551-20260515d...
+2026-05-15 06:59:02,063 - INFO - Container sweb.eval.pylint-dev__pylint-4551.decant-regrade-clean-no-plugin-pylint-dev__pylint-4551-20260515d removed.
+2026-05-15 06:59:02,063 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.pylint-dev_1776_pylint-4551:latest...
+2026-05-15 06:59:02,477 - INFO - Image swebench/sweb.eval.x86_64.pylint-dev_1776_pylint-4551:latest removed.

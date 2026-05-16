@@ -21,7 +21,7 @@ type ConditionID =
   | "keyword-snippets"
   | "rlm-transcript-search"
   | "subagent-rlm-transcript-search"
-  | "memmould-map-zoom"
+  | "decant-map-zoom"
   | "subagent-map-zoom";
 
 type Options = {
@@ -152,7 +152,7 @@ const conditions: Record<ConditionID, { plugin: boolean; subagent: boolean }> =
     "keyword-snippets": { plugin: false, subagent: false },
     "rlm-transcript-search": { plugin: false, subagent: false },
     "subagent-rlm-transcript-search": { plugin: false, subagent: true },
-    "memmould-map-zoom": { plugin: true, subagent: false },
+    "decant-map-zoom": { plugin: true, subagent: false },
     "subagent-map-zoom": { plugin: true, subagent: true },
   };
 
@@ -380,7 +380,7 @@ function parseOptions(): Options {
           "keyword-snippets",
           "rlm-transcript-search",
           "subagent-rlm-transcript-search",
-          "memmould-map-zoom",
+          "decant-map-zoom",
           "subagent-map-zoom",
         ]
   ) as ConditionID[];
@@ -435,7 +435,7 @@ async function prepareFixtureRepo(worktree: string) {
     [
       "# Provenance Fixture",
       "",
-      "Small fixture repository for mem-mould provenance QA.",
+      "Small fixture repository for decant provenance QA.",
       "The active question is about why auth refresh uses per-tenant queueing.",
       "",
     ].join("\n"),
@@ -476,14 +476,14 @@ async function prepareFixtureRepo(worktree: string) {
 }
 
 async function writeSearchableTranscriptCorpus(worktree: string) {
-  const transcriptsDir = path.join(worktree, "memory", "transcripts");
+  const transcriptsDir = path.join(worktree, "recall", "transcripts");
   await fs.mkdir(transcriptsDir, { recursive: true });
   await fs.writeFile(
-    path.join(worktree, "memory", "manifest.json"),
+    path.join(worktree, "recall", "manifest.json"),
     `${JSON.stringify(
       {
         corpus: "synthetic prior-agent transcripts",
-        transcript_dir: "memory/transcripts",
+        transcript_dir: "recall/transcripts",
         sessions: [
           {
             session_id: "auth_refresh_session",
@@ -610,17 +610,17 @@ async function buildOpenCodeEnv(input: {
     XDG_CACHE_HOME: input.opencodeRoot.cache,
     OPENCODE_DB: path.join(input.conditionDir, "opencode.sqlite"),
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
-    MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
-    MEM_MOULD_CACHE_STABLE: "1",
-    MEM_MOULD_STABLE_PLACEHOLDERS: "1",
-    MEM_MOULD_STABLE_ANCHORS: "1",
+    DECANT_DISABLE_GIT_HOOK_INSTALL: "1",
+    DECANT_CACHE_STABLE: "1",
+    DECANT_STABLE_PLACEHOLDERS: "1",
+    DECANT_STABLE_ANCHORS: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify(config),
     ...(authContent ? { OPENCODE_AUTH_CONTENT: authContent } : {}),
   } satisfies NodeJS.ProcessEnv;
 }
 
 async function seededAuthContent() {
-  const seeded = process.env.MEM_MOULD_E2E_TEMP_ROOT;
+  const seeded = process.env.DECANT_E2E_TEMP_ROOT;
   if (!seeded) return undefined;
   const authPath = path.join(seeded, "data", "opencode", "auth.json");
   return await fs.readFile(authPath, "utf8").catch(() => undefined);
@@ -839,12 +839,12 @@ function buildPromptForCondition(
   }
 
   if (conditionID === "rlm-transcript-search") {
-    const transcriptDir = path.join(worktree, "memory", "transcripts");
+    const transcriptDir = path.join(worktree, "recall", "transcripts");
     return {
       system: [
         "Answer with compact JSON only.",
         "Use the file tools to search prior transcript files before answering.",
-        "Required tool flow: glob memory/transcripts/*.md, grep relevant terms, then read the best transcript file.",
+        "Required tool flow: glob recall/transcripts/*.md, grep relevant terms, then read the best transcript file.",
         "Cite exact session_id and message_id from the transcript evidence. Do not cite a message unless it supports the full rationale.",
       ].join("\n"),
       tools: { glob: true, grep: true, read: true },
@@ -859,7 +859,7 @@ function buildPromptForCondition(
   }
 
   if (conditionID === "subagent-rlm-transcript-search") {
-    const transcriptDir = path.join(worktree, "memory", "transcripts");
+    const transcriptDir = path.join(worktree, "recall", "transcripts");
     return {
       system: [
         "Answer with compact JSON only.",
@@ -889,7 +889,7 @@ function buildPromptForCondition(
       ].join("\n"),
       tools: { task: true, session_tree: true },
       text: [
-        "Current task: answer a provenance question from prior session memory without loading all transcripts into this parent session.",
+        "Current task: answer a provenance question from prior session context without loading all transcripts into this parent session.",
         `Question: ${fixture.question}`,
         `Expected relevant prior-session title: ${fixture.relevantTitle}`,
         "Ask the sub-agent to ignore billing retry and markdown parser distractor sessions.",
@@ -911,7 +911,7 @@ function buildPromptForCondition(
       session_tree: true,
     },
     text: [
-      "Current task: answer a provenance question from prior session memory.",
+      "Current task: answer a provenance question from prior session context.",
       `Question: ${fixture.question}`,
       `Search hint: ${fixture.relevantTitle}; ignore billing retry and markdown parser distractors.`,
       answerContract,
@@ -1142,7 +1142,7 @@ function transcriptReadFiles(
       const filePath = typeof input.filePath === "string" ? input.filePath : "";
       return filePath;
     })
-    .filter((filePath) => filePath.includes("memory/transcripts"));
+    .filter((filePath) => filePath.includes("recall/transcripts"));
 }
 
 async function collectChildMessages(

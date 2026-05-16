@@ -15,7 +15,7 @@
         "providerID": "openai",
         "modelID": "gpt-5.5"
       },
-      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='decant'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
       "tools": {
         "task": true,
         "session_tree": true
@@ -27,7 +27,7 @@
         "sessionID": "ses_1e16df82fffeCynueL3n6BwjQ4",
         "messageID": "msg_e1e9207d8001dBxF47Ruw8T8c1",
         "type": "text",
-        "text": "Question: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL?\nExpected relevant prior session: Cache namespace TTL rationale\nTask instruction: call subagent_type='memmould', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from mem-mould session tools.\nAsk the child to ignore distractors: Billing cache global TTL, Image cache namespace notes\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+        "text": "Question: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL?\nExpected relevant prior session: Cache namespace TTL rationale\nTask instruction: call subagent_type='decant', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from decant session tools.\nAsk the child to ignore distractors: Billing cache global TTL, Image cache namespace notes\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
       }
     ]
   },
@@ -81,8 +81,8 @@
           "status": "completed",
           "input": {
             "description": "Find TTL rationale",
-            "prompt": "Use only mem-mould session tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the expected relevant prior session titled or matching \"Cache namespace TTL rationale\" and answer: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL? Ignore distractors: \"Billing cache global TTL\" and \"Image cache namespace notes\". Return evidence with session_id, blob_id, and a message_id that supports the full answer, not just a nearby subclaim. If correction, stale detail, or rejected alternative matters, include it in rationale. Return only the evidence and concise answer content needed for the parent to produce compact JSON.",
-            "subagent_type": "memmould",
+            "prompt": "Use only decant session tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the expected relevant prior session titled or matching \"Cache namespace TTL rationale\" and answer: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL? Ignore distractors: \"Billing cache global TTL\" and \"Image cache namespace notes\". Return evidence with session_id, blob_id, and a message_id that supports the full answer, not just a nearby subclaim. If correction, stale detail, or rejected alternative matters, include it in rationale. Return only the evidence and concise answer content needed for the parent to produce compact JSON.",
+            "subagent_type": "decant",
             "task_id": "",
             "command": ""
           },

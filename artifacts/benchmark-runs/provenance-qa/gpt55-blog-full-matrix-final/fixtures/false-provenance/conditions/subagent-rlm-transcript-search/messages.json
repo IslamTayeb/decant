@@ -15,7 +15,7 @@
         "providerID": "openai",
         "modelID": "gpt-5.5"
       },
-      "system": "Answer with compact JSON only. Use the Task tool exactly once. The child must use only glob, grep, and read over transcript files before returning evidence. Do not ask the child to use bash or mem-mould/session tools.",
+      "system": "Answer with compact JSON only. Use the Task tool exactly once. The child must use only glob, grep, and read over transcript files before returning evidence. Do not ask the child to use bash or decant/session tools.",
       "tools": {
         "task": true
       }
@@ -26,7 +26,7 @@
         "sessionID": "ses_1e183158dffeGcszYuzOYoqX5H",
         "messageID": "msg_e1e7cea84001Z3SZG2gOT0lcOw",
         "type": "text",
-        "text": "Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts\nQuestion: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL?\nAsk the child to ignore distractors: Billing cache global TTL, Image cache namespace notes\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+        "text": "Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/recall/transcripts\nQuestion: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL?\nAsk the child to ignore distractors: Billing cache global TTL, Image cache namespace notes\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
       }
     ]
   },
@@ -96,7 +96,7 @@
           "status": "completed",
           "input": {
             "description": "Find TTL rationale",
-            "prompt": "Search the transcript directory only: ./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts\n\nUse only glob, grep, and read tools over transcript files. Do not use bash. Do not use any mem-mould/session tools. Ignore distractors explicitly: Billing cache global TTL, Image cache namespace notes.\n\nQuestion to answer: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL?\n\nReturn only the best evidence needed: session_id, blob_id, message_id, and a concise answer/rationale. The cited message_id must support the full answer, not just a nearby subclaim. If there is a correction, stale detail, or rejected alternative that matters, mention it explicitly.",
+            "prompt": "Search the transcript directory only: ./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/false-provenance/conditions/subagent-rlm-transcript-search/worktree/recall/transcripts\n\nUse only glob, grep, and read tools over transcript files. Do not use bash. Do not use any decant/session tools. Ignore distractors explicitly: Billing cache global TTL, Image cache namespace notes.\n\nQuestion to answer: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL?\n\nReturn only the best evidence needed: session_id, blob_id, message_id, and a concise answer/rationale. The cited message_id must support the full answer, not just a nearby subclaim. If there is a correction, stale detail, or rejected alternative that matters, mention it explicitly.",
             "subagent_type": "explore",
             "task_id": "",
             "command": ""

@@ -15,7 +15,7 @@
         "providerID": "openai",
         "modelID": "gpt-5.5"
       },
-      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='transcript'. The child must use RLM-style transcript search with glob/grep/read and optional read-only bash before returning evidence. If using bash, the child must not modify files. Do not ask the child to use mem-mould/session tools.",
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='transcript'. The child must use RLM-style transcript search with glob/grep/read and optional read-only bash before returning evidence. If using bash, the child must not modify files. Do not ask the child to use decant/session tools.",
       "tools": {
         "task": true
       }
@@ -26,7 +26,7 @@
         "sessionID": "ses_1e1414b0cffemqsqa20fxxOqih",
         "messageID": "msg_e1ebeb506001ZKDGlR7eiD5Wsh",
         "type": "text",
-        "text": "Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts\nQuestion: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\nTask instruction: call subagent_type='transcript', not general or explore.\nAsk the child to ignore distractors: Auth queue related reuse, Markdown table parser\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+        "text": "Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/recall/transcripts\nQuestion: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\nTask instruction: call subagent_type='transcript', not general or explore.\nAsk the child to ignore distractors: Auth queue related reuse, Markdown table parser\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
       }
     ]
   },
@@ -80,7 +80,7 @@
           "status": "completed",
           "input": {
             "description": "Search prior transcript",
-            "prompt": "Use RLM-style transcript search only with glob/grep/read and optional read-only bash. Do not use mem-mould/session tools. Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts\n\nQuestion: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\n\nIgnore distractors: Auth queue related reuse, Markdown table parser.\n\nReturn evidence sufficient for the parent to answer in compact JSON. The cited message_id must support the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly. Return session_id, blob_id, message_id, and concise answer/rationale.",
+            "prompt": "Use RLM-style transcript search only with glob/grep/read and optional read-only bash. Do not use decant/session tools. Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/related-reuse/conditions/subagent-rlm-transcript-search/worktree/recall/transcripts\n\nQuestion: For src/tsv/schema.ts, what prior CSV parser lesson should be reused, and what stale detail should not be copied?\n\nIgnore distractors: Auth queue related reuse, Markdown table parser.\n\nReturn evidence sufficient for the parent to answer in compact JSON. The cited message_id must support the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly. Return session_id, blob_id, message_id, and concise answer/rationale.",
             "subagent_type": "transcript",
             "task_id": "",
             "command": ""

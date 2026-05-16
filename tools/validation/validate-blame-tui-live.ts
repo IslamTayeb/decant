@@ -16,7 +16,7 @@ const execFileAsync = promisify(execFile);
 async function main() {
   const repoRoot = path.resolve(process.cwd());
   const tempRoot = await fs.mkdtemp(
-    path.join(os.tmpdir(), "mem-mould-blame-live-"),
+    path.join(os.tmpdir(), "decant-blame-live-"),
   );
   const home = path.join(tempRoot, "home");
   const data = path.join(tempRoot, "data");
@@ -69,7 +69,7 @@ async function main() {
       `export XDG_CACHE_HOME=${shellQuote(cache)}`,
       `export OPENCODE_DB=${shellQuote(path.join(tempRoot, "opencode.sqlite"))}`,
       "export OPENCODE_DISABLE_PROJECT_CONFIG=1",
-      "export MEM_MOULD_DISABLE_GIT_HOOK_INSTALL=1",
+      "export DECANT_DISABLE_GIT_HOOK_INSTALL=1",
       `export OPENCODE_TUI_CONFIG=${shellQuote(tuiConfigPath)}`,
       `export OPENCODE_CONFIG_CONTENT=${shellQuote(
         JSON.stringify({
@@ -86,7 +86,7 @@ async function main() {
     { mode: 0o755 },
   );
 
-  const tmuxName = `mem-mould-blame-${process.pid}`;
+  const tmuxName = `decant-blame-${process.pid}`;
   let passed = false;
   try {
     await execFileAsync("tmux", [
@@ -149,7 +149,7 @@ async function main() {
     await execFileAsync("tmux", ["kill-session", "-t", tmuxName]).catch(
       () => undefined,
     );
-    if (!passed || process.env.MEM_MOULD_KEEP_BLAME_LIVE_TEMP === "1") {
+    if (!passed || process.env.DECANT_KEEP_BLAME_LIVE_TEMP === "1") {
       console.error(`Preserved live TUI temp root: ${tempRoot}`);
     } else {
       await fs.rm(tempRoot, { recursive: true, force: true });
@@ -177,7 +177,7 @@ async function seedOpenCodeSession(input: {
     XDG_CACHE_HOME: input.cache,
     OPENCODE_DB: path.join(input.tempRoot, "opencode.sqlite"),
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
-    MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
+    DECANT_DISABLE_GIT_HOOK_INSTALL: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",
       plugin: [
@@ -223,9 +223,9 @@ async function prepareGitFixture(worktree: string) {
     "git",
     [
       "-c",
-      "user.name=Mem Mould Test",
+      "user.name=Decant Test",
       "-c",
-      "user.email=mem-mould@example.invalid",
+      "user.email=decant@example.invalid",
       "commit",
       "-m",
       "Add auth rate limiter fixture",

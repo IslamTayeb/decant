@@ -49,7 +49,7 @@ const validationModelSlug = requiredModelSlug();
 async function main() {
   const repoRoot = path.resolve(process.cwd());
   const tempRoot = await fs.mkdtemp(
-    path.join(os.tmpdir(), "mem-mould-compaction-"),
+    path.join(os.tmpdir(), "decant-compaction-"),
   );
   const home = path.join(tempRoot, "home");
   const data = path.join(tempRoot, "data");

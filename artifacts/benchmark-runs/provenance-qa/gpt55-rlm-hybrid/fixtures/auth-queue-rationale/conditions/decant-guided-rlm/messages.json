@@ -1,0 +1,754 @@
+[
+  {
+    "info": {
+      "id": "msg_e1eb7d6a4001KjWnRIKWCHu61m",
+      "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+      "role": "user",
+      "time": {
+        "created": 1778631825060
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use decant session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, do not modify files. Cite real OpenCode session_id and message_id values, not embedded fixture labels.",
+      "tools": {
+        "session_lookup": true,
+        "session_detail": true,
+        "message_detail": true,
+        "session_tree": true,
+        "glob": true,
+        "grep": true,
+        "read": true,
+        "bash": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1eb7d6a4002MFJX7mhmIOeNrG",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7d6a4001KjWnRIKWCHu61m",
+        "type": "text",
+        "text": "Question: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex?\nTranscript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts\nKnown distractor topics include: Billing retry queue rationale, Markdown parser onboarding cleanup\nRequired route: use session_lookup/session_detail to identify the likely prior session, search transcript files only as corroborating RLM-style evidence, then call message_detail for the final cited message.\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eb7d6a8002Zl75zaiLxbbWBP",
+      "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+      "role": "assistant",
+      "time": {
+        "created": 1778631825064,
+        "completed": 1778631829802
+      },
+      "parentID": "msg_e1eb7d6a4001KjWnRIKWCHu61m",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9980,
+        "input": 703,
+        "output": 40,
+        "reasoning": 21,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eb7dad6001FpG6YKF3it2EwK",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7d6a8002Zl75zaiLxbbWBP",
+        "type": "step-start",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d"
+      },
+      {
+        "id": "prt_e1eb7e011001RdI0IxE1sCvxVs",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7d6a8002Zl75zaiLxbbWBP",
+        "type": "reasoning",
+        "text": "**Following instructions for JSON**\n\nI'm considering how to comply with the requirement for compact JSON. It seems I need to finalize the format appropriately, so it could be important to use the right tools for this task. First, I should perform a session lookup to set everything up properly. Keeping things organized and ensuring that I follow the guidelines is essential! Let's focus on getting this done as accurately as possible!",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0f56484cc6f550cd016a03c493bfe48191aa2348e86347e013"
+          }
+        },
+        "time": {
+          "start": 1778631827473,
+          "end": 1778631829586
+        }
+      },
+      {
+        "id": "prt_e1eb7e854001o7wM2iPZ7V267p",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7d6a8002Zl75zaiLxbbWBP",
+        "type": "tool",
+        "callID": "call_EgT9LPgfWdM8zUG9FVlicYbT",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "src/auth/queue.ts deduplicate refresh work per tenant global mutex tenant refresh queue rationale",
+            "limit": 5
+          },
+          "output": "{\n  \"query\": \"src/auth/queue.ts deduplicate refresh work per tenant global mutex tenant refresh queue rationale\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e1482960ffe2GZHqO3e1s0b3x\",\n      \"title\": \"auth-queue-rationale decant-guided-rlm\",\n      \"updatedAt\": 1778631825158,\n      \"matchedBlobIDs\": [\n        \"auth_queue\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"auth_queue\",\n          \"label\": \"auth_queue\",\n          \"summary\": \"User request: Question: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex? Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/f...\",\n          \"compressedSummary\": \"[Blob summary: auth_queue] User request: Question: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex? Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/f...\",\n          \"placeholder\": \"User request: Question: Why does src/auth/queue.ts deduplicate refresh work p...\",\n          \"tokenEstimate\": 245,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e1484149ffeHcTXb5ymFsYrXC\",\n      \"title\": \"Billing retry queue rationale\",\n      \"updatedAt\": 1778631821824,\n      \"matchedBlobIDs\": [\n        \"billing_retry_queue\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"billing_retry_queue\",\n          \"label\": \"billing_retry_queue\",\n          \"summary\": \"User request: # Billing retry queue rationale session_id: billing_retry_session title: Billing retry queue rationale ## message billing_fact_1 Billing retry queues used a global mutex because provider limits serialize all tenants. ## mes... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: billing_retry_queue] User request: # Billing retry queue rationale session_id: billing_retry_session title: Billing retry queue rationale ## message billing_fact_1 Billing retry queues used a global mutex because provider limits serialize all tenants. ## mes... Assistant step without text content\",\n          \"placeholder\": \"User request: # Billing retry queue rationale session_id: billing_retry_sessi...\",\n          \"tokenEstimate\": 75,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e1485115ffeVYOJjwMWwXjJmo\",\n      \"title\": \"Auth refresh queue rationale\",\n      \"updatedAt\": 1778631818670,\n      \"matchedBlobIDs\": [\n        \"auth_refresh_queue\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"auth_refresh_queue\",\n          \"label\": \"auth_refresh_queue\",\n          \"summary\": \"User request: # Auth refresh queue rationale session_id: auth_refresh_session title: Auth refresh queue rationale ## message auth_fact_1 The rejected design was one global mutex around all auth refresh work. ## message auth_fact_2 The gl... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: auth_refresh_queue] User request: # Auth refresh queue rationale session_id: auth_refresh_session title: Auth refresh queue rationale ## message auth_fact_1 The rejected design was one global mutex around all auth refresh work. ## message auth_fact_2 The gl... Assistant step without text content\",\n          \"placeholder\": \"User request: # Auth refresh queue rationale session_id: auth_refresh_session...\",\n          \"tokenEstimate\": 125,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778631829700,
+            "end": 1778631829719
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0f56484cc6f550cd016a03c495dac881918d6a2c8e47689f4b"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eb7e906001bfp27RjhMGDb6i",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7d6a8002Zl75zaiLxbbWBP",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d",
+        "cost": 0,
+        "tokens": {
+          "total": 9980,
+          "input": 703,
+          "output": 40,
+          "reasoning": 21,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eb7e92c0010qlWLjr3zXbkvQ",
+      "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+      "role": "assistant",
+      "time": {
+        "created": 1778631829804,
+        "completed": 1778631833272
+      },
+      "parentID": "msg_e1eb7d6a4001KjWnRIKWCHu61m",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10958,
+        "input": 1684,
+        "output": 49,
+        "reasoning": 9,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eb7ec2e001GKHwGmtlxHR3t2",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7e92c0010qlWLjr3zXbkvQ",
+        "type": "step-start",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d"
+      },
+      {
+        "id": "prt_e1eb7f1a50015t5ulONz7MVo4M",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7e92c0010qlWLjr3zXbkvQ",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0d3260a22caea43f016a03c49840e88191b19831400b594f8e"
+          }
+        },
+        "time": {
+          "start": 1778631831973,
+          "end": 1778631832455
+        }
+      },
+      {
+        "id": "prt_e1eb7f38a001TynVJ4AJ5A1q8A",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7e92c0010qlWLjr3zXbkvQ",
+        "type": "tool",
+        "callID": "call_nYF1SBrenyu7J3xltDplVOz6",
+        "tool": "session_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1e1485115ffeVYOJjwMWwXjJmo",
+            "blob_id": "auth_refresh_queue",
+            "detail": "messages"
+          },
+          "output": "{\n  \"session_id\": \"ses_1e1485115ffeVYOJjwMWwXjJmo\",\n  \"blob_id\": \"auth_refresh_queue\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"blob\": {\n    \"id\": \"auth_refresh_queue\",\n    \"label\": \"auth_refresh_queue\",\n    \"compressedSummary\": \"[Blob summary: auth_refresh_queue] User request: # Auth refresh queue rationale session_id: auth_refresh_session title: Auth refresh queue rationale ## message auth_fact_1 The rejected design was one global mutex around all auth refresh work. ## message auth_fact_2 The gl... Assistant step without text content\",\n    \"tokenEstimate\": 125,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e1eb7aefb001MmtTPy0IKNs0PW\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # Auth refresh queue rationale session_id: auth_refresh_session title: Auth refresh queue rationale ## message auth_fact_1 The rejected design was one global mutex around all auth refresh work. ## message auth_fact_2 The gl...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 124,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778631814907\n    },\n    {\n      \"id\": \"msg_e1eb7af02001BFV2cwBIljYIxG\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 1,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1778631814914\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778631833074,
+            "end": 1778631833082
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0d3260a22caea43f016a03c498b9ac8191a65fdbe838848f68"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eb7f694001juLVsGfDyJu5l7",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7e92c0010qlWLjr3zXbkvQ",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d",
+        "cost": 0,
+        "tokens": {
+          "total": 10958,
+          "input": 1684,
+          "output": 49,
+          "reasoning": 9,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eb7f6b9001UCbpDKWbntUyP6",
+      "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+      "role": "assistant",
+      "time": {
+        "created": 1778631833273,
+        "completed": 1778631837009
+      },
+      "parentID": "msg_e1eb7d6a4001KjWnRIKWCHu61m",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11469,
+        "input": 620,
+        "output": 78,
+        "reasoning": 19,
+        "cache": {
+          "read": 10752,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eb7f9d6001r2HpX1hzT6yshk",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7f6b9001UCbpDKWbntUyP6",
+        "type": "step-start",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d"
+      },
+      {
+        "id": "prt_e1eb7fb19001bixuzyYrThw76b",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7f6b9001UCbpDKWbntUyP6",
+        "type": "reasoning",
+        "text": "**Searching for transcripts**\n\nOkay, I need to search for transcript files specifically. I think using a glob pattern would work well for this task to find all the relevant files quickly. This should help me corroborate the information I need. I just want to make sure I'm only pulling in the right documents without any extra clutter. I hope this approach works efficiently so I can get the details I'm looking for!",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_073eed699f290d45016a03c49aa8f481919d7994dca8d43715"
+          }
+        },
+        "time": {
+          "start": 1778631834393,
+          "end": 1778631836675
+        }
+      },
+      {
+        "id": "prt_e1eb80405001iRbAbRMlZcACJs",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7f6b9001UCbpDKWbntUyP6",
+        "type": "tool",
+        "callID": "call_32GPtC2l5iajehwMVHil8wBa",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "**/*",
+            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts"
+          },
+          "output": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_queue_rationale_decoy_7.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_queue_rationale_decoy_6.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_queue_rationale_decoy_8.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_queue_rationale_decoy_5.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/markdown_parser_session--ses_1e1483564ffeIirOKBrd56QDtg.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_queue_rationale_decoy_3.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_queue_rationale_decoy_2.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_queue_rationale_decoy_1.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_queue_rationale_decoy_4.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/billing_retry_session--ses_1e1484149ffeHcTXb5ymFsYrXC.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_refresh_session--ses_1e1485115ffeVYOJjwMWwXjJmo.md",
+          "title": "recall/transcripts",
+          "metadata": {
+            "count": 11,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778631836898,
+            "end": 1778631836934
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_073eed699f290d45016a03c49cf1808191a9ea67c3222d4c2b"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eb8052f001yCWJSaTAGJav5I",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb7f6b9001UCbpDKWbntUyP6",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d",
+        "cost": 0,
+        "tokens": {
+          "total": 11469,
+          "input": 620,
+          "output": 78,
+          "reasoning": 19,
+          "cache": {
+            "read": 10752,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eb80552001fd3a42ZzbGGrfU",
+      "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+      "role": "assistant",
+      "time": {
+        "created": 1778631837010,
+        "completed": 1778631840367
+      },
+      "parentID": "msg_e1eb7d6a4001KjWnRIKWCHu61m",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12335,
+        "input": 971,
+        "output": 100,
+        "reasoning": 0,
+        "cache": {
+          "read": 11264,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eb8088d001ZZM8b9l79TObYt",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb80552001fd3a42ZzbGGrfU",
+        "type": "step-start",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d"
+      },
+      {
+        "id": "prt_e1eb80b240015bDOW5cWiLQGWm",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb80552001fd3a42ZzbGGrfU",
+        "type": "tool",
+        "callID": "call_rgcrIG9xccbNy7kMWJ4q0jVe",
+        "tool": "grep",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "global mutex|per tenant|tenant|refresh work|head-of-line|isolation|deduplicate",
+            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts",
+            "include": "*.md"
+          },
+          "output": "Found 4 matches\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/billing_retry_session--ses_1e1484149ffeHcTXb5ymFsYrXC.md:\n  Line 7: - Billing retry queues used a global mutex because provider limits serialize all tenants.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_refresh_session--ses_1e1485115ffeVYOJjwMWwXjJmo.md:\n  Line 7: - The rejected design was one global mutex around all auth refresh work.\n\n  Line 8: - The global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n\n  Line 9: - RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.\n",
+          "title": "global mutex|per tenant|tenant|refresh work|head-of-line|isolation|deduplicate",
+          "metadata": {
+            "matches": 4,
+            "truncated": false
+          },
+          "time": {
+            "start": 1778631840177,
+            "end": 1778631840199
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0f4834e5f8d0773f016a03c49ec62081919ec0f9432a2f3bf7"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eb8124d001NRWwPBMrQhd3ix",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb80552001fd3a42ZzbGGrfU",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d",
+        "cost": 0,
+        "tokens": {
+          "total": 12335,
+          "input": 971,
+          "output": 100,
+          "reasoning": 0,
+          "cache": {
+            "read": 11264,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eb81271001IpGivMn1IqiSCE",
+      "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+      "role": "assistant",
+      "time": {
+        "created": 1778631840369,
+        "completed": 1778631844797
+      },
+      "parentID": "msg_e1eb7d6a4001KjWnRIKWCHu61m",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12721,
+        "input": 831,
+        "output": 105,
+        "reasoning": 9,
+        "cache": {
+          "read": 11776,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eb815a1001cUbEOeEs79gw3c",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb81271001IpGivMn1IqiSCE",
+        "type": "step-start",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d"
+      },
+      {
+        "id": "prt_e1eb81acd001b4lS2a6XEHZ7KE",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb81271001IpGivMn1IqiSCE",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0c07ab5520222a75016a03c4a2c9c481919ccee63a3e32ea59"
+          }
+        },
+        "time": {
+          "start": 1778631842509,
+          "end": 1778631843821
+        }
+      },
+      {
+        "id": "prt_e1eb81ff1001Hq8k2ggsq4eGgu",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb81271001IpGivMn1IqiSCE",
+        "type": "tool",
+        "callID": "call_bqOjou7vFLrI53Cz056ITex5",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_refresh_session--ses_1e1485115ffeVYOJjwMWwXjJmo.md",
+            "offset": 1,
+            "limit": 120
+          },
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree/recall/transcripts/auth_refresh_session--ses_1e1485115ffeVYOJjwMWwXjJmo.md</path>\n<type>file</type>\n<content>\n1: # Auth refresh queue rationale\n2: session_id: ses_1e1485115ffeVYOJjwMWwXjJmo\n3: title: Auth refresh queue rationale\n4: id_policy: cite the heading message id below, not fixture fact labels\n5: \n6: ## message msg_e1eb7aefb001MmtTPy0IKNs0PW\n7: - The rejected design was one global mutex around all auth refresh work.\n8: - The global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n9: - RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/auth_refresh_session--ses_1e1485115ffeVYOJjwMWwXjJmo.md",
+          "metadata": {
+            "preview": "# Auth refresh queue rationale\nsession_id: ses_1e1485115ffeVYOJjwMWwXjJmo\ntitle: Auth refresh queue rationale\nid_policy: cite the heading message id below, not fixture fact labels\n\n## message msg_e1eb7aefb001MmtTPy0IKNs0PW\n- The rejected design was one global mutex around all auth refresh work.\n- The global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n- RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1778631844679,
+            "end": 1778631844698
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0c07ab5520222a75016a03c4a419c08191934de5f882ad442b"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eb82397001SDDZXUQOiZq1yJ",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb81271001IpGivMn1IqiSCE",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d",
+        "cost": 0,
+        "tokens": {
+          "total": 12721,
+          "input": 831,
+          "output": 105,
+          "reasoning": 9,
+          "cache": {
+            "read": 11776,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eb823bf001j7eYEc4bnuJIkv",
+      "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+      "role": "assistant",
+      "time": {
+        "created": 1778631844799,
+        "completed": 1778631847527
+      },
+      "parentID": "msg_e1eb7d6a4001KjWnRIKWCHu61m",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13060,
+        "input": 702,
+        "output": 60,
+        "reasoning": 10,
+        "cache": {
+          "read": 12288,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eb826a6001MhHfR5qj6BNqYo",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb823bf001j7eYEc4bnuJIkv",
+        "type": "step-start",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d"
+      },
+      {
+        "id": "prt_e1eb827b1001vIUO7XWS2OUqdx",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb823bf001j7eYEc4bnuJIkv",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_08df62f11780cdd5016a03c4a617088191b7c75ee4ce97cf1a"
+          }
+        },
+        "time": {
+          "start": 1778631845809,
+          "end": 1778631847182
+        }
+      },
+      {
+        "id": "prt_e1eb82d120015WTmGJQmwoMQmL",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb823bf001j7eYEc4bnuJIkv",
+        "type": "tool",
+        "callID": "call_qjVwQPX8ULnq4iff1Jt53Wd8",
+        "tool": "message_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1e1485115ffeVYOJjwMWwXjJmo",
+            "message_id": "msg_e1eb7aefb001MmtTPy0IKNs0PW"
+          },
+          "output": "{\n  \"session_id\": \"ses_1e1485115ffeVYOJjwMWwXjJmo\",\n  \"message_id\": \"msg_e1eb7aefb001MmtTPy0IKNs0PW\",\n  \"ok\": true,\n  \"message\": {\n    \"id\": \"msg_e1eb7aefb001MmtTPy0IKNs0PW\",\n    \"role\": \"user\",\n    \"blobID\": \"auth_refresh_queue\",\n    \"blobLabel\": \"auth_refresh_queue\",\n    \"summary\": \"User request: # Auth refresh queue rationale session_id: auth_refresh_session title: Auth refresh queue rationale ## message auth_fact_1 The rejected design was one global mutex around all auth refresh work. ## message auth_fact_2 The gl...\",\n    \"keyFacts\": [],\n    \"tokenEstimate\": 124,\n    \"createdAt\": 1778631814907,\n    \"parts\": [\n      {\n        \"id\": \"prt_e1eb7aefc0016yS7HV0PMvvuPo\",\n        \"type\": \"text\",\n        \"text\": \"# Auth refresh queue rationale\\nsession_id: auth_refresh_session\\ntitle: Auth refresh queue rationale\\n\\n## message auth_fact_1\\nThe rejected design was one global mutex around all auth refresh work.\\n\\n## message auth_fact_2\\nThe global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\\n\\n## message auth_fact_3\\nRefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.\\n\"\n      }\n    ]\n  }\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1778631847335,
+            "end": 1778631847346
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_08df62f11780cdd5016a03c4a7739c81918589bc41b9067cf2"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eb82e43001IYxsp2pygBZ8xB",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb823bf001j7eYEc4bnuJIkv",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d",
+        "cost": 0,
+        "tokens": {
+          "total": 13060,
+          "input": 702,
+          "output": 60,
+          "reasoning": 10,
+          "cache": {
+            "read": 12288,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1eb82e68002RdktY5l1Bqrf0z",
+      "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+      "role": "assistant",
+      "time": {
+        "created": 1778631847528,
+        "completed": 1778631853594
+      },
+      "parentID": "msg_e1eb7d6a4001KjWnRIKWCHu61m",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13690,
+        "input": 622,
+        "output": 218,
+        "reasoning": 50,
+        "cache": {
+          "read": 12800,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1eb831af001nCZuKhLhBWdOf3",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb82e68002RdktY5l1Bqrf0z",
+        "type": "step-start",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d"
+      },
+      {
+        "id": "prt_e1eb832cf001vJ9qrWrm2tBba8",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb82e68002RdktY5l1Bqrf0z",
+        "type": "reasoning",
+        "text": "**Clarifying JSON requirements**\n\nI need to focus on getting only the compact JSON. It seems I need to ignore irrelevant distractors in the process. Wait, there's a note about corrections related to the id_policy; it states to cite the heading message ID rather than fixture labels. I should also mention that transcript embedded fixture labels can be stale and shouldn't be cited; instead, I should use the actual OpenCode ID. Additionally, I need to consider the routing aspect.",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0e11283a51de1585016a03c4a8eae48191a78c2036c5210705"
+          }
+        },
+        "time": {
+          "start": 1778631848655,
+          "end": 1778631851335
+        }
+      },
+      {
+        "id": "prt_e1eb83d480010db5mLQ30S1fwv",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb82e68002RdktY5l1Bqrf0z",
+        "type": "text",
+        "text": "{\"answer\":\"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce, while refreshes for unrelated tenants can continue in parallel. A single global mutex was rejected because it would make unrelated tenants block each other, contradicting the auth_refresh_different_tenants_parallel requirement.\",\"evidence\":{\"session_id\":\"ses_1e1485115ffeVYOJjwMWwXjJmo\",\"blob_id\":\"auth_refresh_queue\",\"message_id\":\"msg_e1eb7aefb001MmtTPy0IKNs0PW\"},\"rationale\":\"session_lookup identified the Auth refresh queue rationale session, transcript search corroborated the same facts, and message_detail supplied the final cited OpenCode message. The embedded fixture labels such as auth_fact_1/auth_fact_2/auth_fact_3 were not used as citations because the transcript explicitly says to cite the heading message id; the rejected alternative was the global mutex.\",\"irrelevant_context_ignored\":[\"Billing retry queue rationale\",\"Markdown parser onboarding cleanup\"]}",
+        "time": {
+          "start": 1778631851336,
+          "end": 1778631853513
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0e11283a51de1585016a03c4ab9a8c8191944a1bea8fc6e4fa",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1eb845f9001zbjob8O03EKC6R",
+        "sessionID": "ses_1e1482960ffe2GZHqO3e1s0b3x",
+        "messageID": "msg_e1eb82e68002RdktY5l1Bqrf0z",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "96dd201ba030eea15262a2162500d4f30bdceb3d",
+        "cost": 0,
+        "tokens": {
+          "total": 13690,
+          "input": 622,
+          "output": 218,
+          "reasoning": 50,
+          "cache": {
+            "read": 12800,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

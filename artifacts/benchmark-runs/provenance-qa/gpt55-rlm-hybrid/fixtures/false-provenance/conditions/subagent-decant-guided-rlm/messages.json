@@ -1,0 +1,208 @@
+[
+  {
+    "info": {
+      "id": "msg_e1ebd782b001rjzcDZ7F9FGYU4",
+      "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+      "role": "user",
+      "time": {
+        "created": 1778632194091
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='hybrid'. The child must use decant session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, the child must not modify files.",
+      "tools": {
+        "task": true,
+        "session_tree": true
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e1ebd782c00199bZx6JfaRy0QX",
+        "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+        "messageID": "msg_e1ebd782b001rjzcDZ7F9FGYU4",
+        "type": "text",
+        "text": "Question: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL?\nTranscript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/false-provenance/conditions/subagent-decant-guided-rlm/worktree/recall/transcripts\nTask instruction: call subagent_type='hybrid', not general or explore.\nThe child must cite real OpenCode session_id and message_id values from decant/message_detail, not embedded fixture labels in transcript text.\nKnown distractor topics include: Billing cache global TTL, Image cache namespace notes\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ebd78300022c7crpr9qtg74o",
+      "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+      "role": "assistant",
+      "time": {
+        "created": 1778632194096,
+        "completed": 1778632227933
+      },
+      "parentID": "msg_e1ebd782b001rjzcDZ7F9FGYU4",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/false-provenance/conditions/subagent-decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/false-provenance/conditions/subagent-decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10217,
+        "input": 716,
+        "output": 285,
+        "reasoning": 0,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ebd7bb3001j0qc66Hgxlcrkv",
+        "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+        "messageID": "msg_e1ebd78300022c7crpr9qtg74o",
+        "type": "step-start",
+        "snapshot": "b2207c9f1eabd84f8e3ca6a02840b545f0ed5ea5"
+      },
+      {
+        "id": "prt_e1ebd8294001I4I7s3vCz5X12e",
+        "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+        "messageID": "msg_e1ebd78300022c7crpr9qtg74o",
+        "type": "tool",
+        "callID": "call_yBWIZvrcHEAR43j5Qv1DuAnv",
+        "tool": "task",
+        "state": {
+          "status": "completed",
+          "input": {
+            "description": "Investigate TTL provenance",
+            "prompt": "Answer the user's provenance question: Why does src/cache/index.ts scope TTL by namespace instead of using one global TTL?\n\nConstraints:\n- Use decant session tools first.\n- Then use RLM-style transcript search with glob/grep/read and optional read-only bash. If using bash, do not modify files.\n- Then use message_detail for exact evidence.\n- Cite real OpenCode session_id and message_id values from decant/message_detail, not embedded fixture labels in transcript text.\n- Known distractor topics: Billing cache global TTL, Image cache namespace notes.\n- Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/false-provenance/conditions/subagent-decant-guided-rlm/worktree/recall/transcripts\n- Return to me compact JSON only with fields answer, evidence {session_id, blob_id, message_id}, rationale, irrelevant_context_ignored.\n- The cited message_id must support the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale.",
+            "subagent_type": "hybrid",
+            "task_id": "",
+            "command": ""
+          },
+          "output": "task_id: ses_1e14269d7ffe5SqNMztiC3N7zj (for resuming to continue this task if needed)\n\n<task_result>\n{\"answer\":\"src/cache/index.ts scopes TTL by namespace because a single global TTL was considered but rejected: namespace-scoped TTL prevents one noisy namespace from extending or evicting unrelated namespaces through a shared global TTL policy.\",\"evidence\":{\"session_id\":\"ses_1e142b787ffeubNZ3c73KlPwOR\",\"blob_id\":\"cache_namespace_ttl\",\"message_id\":\"msg_e1ebd488d001OIfDC02zgqC718\"},\"rationale\":\"message_detail confirms the relevant decision: global TTL was considered, and namespace-scoped TTL was chosen to isolate namespaces from each other's TTL churn. The rejected alternative matters because the reason is specifically avoiding cross-namespace extension/eviction under one shared policy.\",\"irrelevant_context_ignored\":\"Ignored Billing cache global TTL because it concerns billing provider invalidation, not src/cache/index.ts. Ignored Image cache namespace notes because they concern CDN purge prefixes, not TTL rationale. Ignored false_provenance_decoy_* files because they explicitly say they are not the final rationale.\"}\n</task_result>",
+          "title": "Investigate TTL provenance",
+          "metadata": {
+            "sessionId": "ses_1e14269d7ffe5SqNMztiC3N7zj",
+            "model": {
+              "modelID": "gpt-5.5",
+              "providerID": "openai"
+            },
+            "truncated": false
+          },
+          "time": {
+            "start": 1778632201790,
+            "end": 1778632227845
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_033ff35d933ee738016a03c60507048191a949678d694abb1b"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ebdfc3b001njhbOJk6iB14Yq",
+        "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+        "messageID": "msg_e1ebd78300022c7crpr9qtg74o",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "b2207c9f1eabd84f8e3ca6a02840b545f0ed5ea5",
+        "cost": 0,
+        "tokens": {
+          "total": 10217,
+          "input": 716,
+          "output": 285,
+          "reasoning": 0,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e1ebdfc5e002iZpUDDWW26frSI",
+      "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+      "role": "assistant",
+      "time": {
+        "created": 1778632227934,
+        "completed": 1778632232669
+      },
+      "parentID": "msg_e1ebd782b001rjzcDZ7F9FGYU4",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/false-provenance/conditions/subagent-decant-guided-rlm/worktree",
+        "root": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/false-provenance/conditions/subagent-decant-guided-rlm/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10661,
+        "input": 754,
+        "output": 179,
+        "reasoning": 0,
+        "cache": {
+          "read": 9728,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e1ebdff7a001Gw1i9sXCOKHPrS",
+        "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+        "messageID": "msg_e1ebdfc5e002iZpUDDWW26frSI",
+        "type": "step-start",
+        "snapshot": "b2207c9f1eabd84f8e3ca6a02840b545f0ed5ea5"
+      },
+      {
+        "id": "prt_e1ebe0162001s4YS76LAfhmYD3",
+        "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+        "messageID": "msg_e1ebdfc5e002iZpUDDWW26frSI",
+        "type": "text",
+        "text": "{\"answer\":\"src/cache/index.ts scopes TTL by namespace because a single global TTL was considered but rejected: namespace-scoped TTL prevents one noisy namespace from extending or evicting unrelated namespaces through a shared global TTL policy.\",\"evidence\":{\"session_id\":\"ses_1e142b787ffeubNZ3c73KlPwOR\",\"blob_id\":\"cache_namespace_ttl\",\"message_id\":\"msg_e1ebd488d001OIfDC02zgqC718\"},\"rationale\":\"message_detail confirms the relevant decision: global TTL was considered, and namespace-scoped TTL was chosen to isolate namespaces from each other's TTL churn. The rejected alternative matters because the reason is specifically avoiding cross-namespace extension/eviction under one shared policy.\",\"irrelevant_context_ignored\":[\"Billing cache global TTL\",\"Image cache namespace notes\",\"false_provenance_decoy_* files\"]}",
+        "time": {
+          "start": 1778632229218,
+          "end": 1778632232473
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0fd78d67a9e2e3a0016a03c6257f8881918ab2a0d90171bab4",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e1ebe0eb0001p1DYdNOcGf7STJ",
+        "sessionID": "ses_1e14287dbffeWy1ZIQ261BGPWb",
+        "messageID": "msg_e1ebdfc5e002iZpUDDWW26frSI",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "b2207c9f1eabd84f8e3ca6a02840b545f0ed5ea5",
+        "cost": 0,
+        "tokens": {
+          "total": 10661,
+          "input": 754,
+          "output": 179,
+          "reasoning": 0,
+          "cache": {
+            "read": 9728,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,133 @@
+2026-05-15 06:53:57,106 - INFO - Creating container for pylint-dev__pylint-4551...
+2026-05-15 06:53:57,735 - INFO - Container for pylint-dev__pylint-4551 created: 762d04cdb545ed0aa62f8d05b809eee09d68ea5f80898d0b355546301edf4b3f
+2026-05-15 06:53:57,826 - INFO - Container for pylint-dev__pylint-4551 started: 762d04cdb545ed0aa62f8d05b809eee09d68ea5f80898d0b355546301edf4b3f
+2026-05-15 06:53:57,826 - INFO - Intermediate patch for pylint-dev__pylint-4551 written to logs/run_evaluation/decant-regrade-polluted-decant-boundary-compact-pylint-dev__pylint-4551-20260515c/polluted-decant-boundary-compact-openai-gpt-5.5-opencode/pylint-dev__pylint-4551/patch.diff, now applying to container...
+2026-05-15 06:53:57,943 - INFO - >>>>> Applied Patch:
+Checking patch pylint/pyreverse/inspector.py...
+Checking patch tests/unittest_pyreverse_inspector.py...
+Applied patch pylint/pyreverse/inspector.py cleanly.
+Applied patch tests/unittest_pyreverse_inspector.py cleanly.
+
+2026-05-15 06:53:58,054 - INFO - Git diff before:
+diff --git a/pylint/pyreverse/inspector.py b/pylint/pyreverse/inspector.py
+index 8fa12202..a1e6b4fd 100644
+--- a/pylint/pyreverse/inspector.py
++++ b/pylint/pyreverse/inspector.py
+@@ -231,6 +231,25 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+         """
+         try:
+             values = set(node.infer())
++            assign_node = node.parent
++            if (
++                isinstance(assign_node, astroid.Assign)
++                and isinstance(assign_node.value, astroid.Name)
++            ):
++                frame = node.frame()
++                try:
++                    arguments = frame.args
++                    name_index = [arg.name for arg in arguments.args].index(
++                        assign_node.value.name
++                    )
++                    annotation = arguments.annotations[name_index]
++                except (AttributeError, ValueError, IndexError):
++                    annotation = None
++                if annotation is not None:
++                    try:
++                        values.update(annotation.infer())
++                    except astroid.InferenceError:
++                        pass
+             current = set(parent.instance_attrs_type[node.attrname])
+             parent.instance_attrs_type[node.attrname] = list(current | values)
+         except astroid.InferenceError:
+diff --git a/tests/unittest_pyreverse_inspector.py b/tests/unittest_pyreverse_inspector.py
+index e1ff6378..6bda0294 100644
+--- a/tests/unittest_pyreverse_inspector.py
++++ b/tests/unittest_pyreverse_inspector.py
+@@ -71,6 +71,20 @@ def test_instance_attrs_resolution(project):
+     assert type_dict["_id"][0] is astroid.Uninferable
+ 
+ 
++def test_instance_attr_gets_type_from_annotation():
++    module = astroid.parse(
++        """
++    class C:
++        def __init__(self, value: str = None):
++            self.value = value
++    """
++    )
++    inspector.Linker(None).visit(module)
++
++    values = module["C"].instance_attrs_type["value"]
++    assert "str" in {value.name for value in values if hasattr(value, "name")}
++
++
+ def test_concat_interfaces():
+     cls = astroid.extract_node(
+         '''
+2026-05-15 06:53:58,057 - INFO - Eval script for pylint-dev__pylint-4551 written to logs/run_evaluation/decant-regrade-polluted-decant-boundary-compact-pylint-dev__pylint-4551-20260515c/polluted-decant-boundary-compact-openai-gpt-5.5-opencode/pylint-dev__pylint-4551/eval.sh; copying to container...
+2026-05-15 06:54:01,837 - INFO - Test runtime: 3.71 seconds
+2026-05-15 06:54:01,837 - INFO - Test output for pylint-dev__pylint-4551 written to logs/run_evaluation/decant-regrade-polluted-decant-boundary-compact-pylint-dev__pylint-4551-20260515c/polluted-decant-boundary-compact-openai-gpt-5.5-opencode/pylint-dev__pylint-4551/test_output.txt
+2026-05-15 06:54:01,917 - INFO - Git diff after:
+diff --git a/pylint/pyreverse/inspector.py b/pylint/pyreverse/inspector.py
+index 8fa12202..a1e6b4fd 100644
+--- a/pylint/pyreverse/inspector.py
++++ b/pylint/pyreverse/inspector.py
+@@ -231,6 +231,25 @@ class Linker(IdGeneratorMixIn, utils.LocalsVisitor):
+         """
+         try:
+             values = set(node.infer())
++            assign_node = node.parent
++            if (
++                isinstance(assign_node, astroid.Assign)
++                and isinstance(assign_node.value, astroid.Name)
++            ):
++                frame = node.frame()
++                try:
++                    arguments = frame.args
++                    name_index = [arg.name for arg in arguments.args].index(
++                        assign_node.value.name
++                    )
++                    annotation = arguments.annotations[name_index]
++                except (AttributeError, ValueError, IndexError):
++                    annotation = None
++                if annotation is not None:
++                    try:
++                        values.update(annotation.infer())
++                    except astroid.InferenceError:
++                        pass
+             current = set(parent.instance_attrs_type[node.attrname])
+             parent.instance_attrs_type[node.attrname] = list(current | values)
+         except astroid.InferenceError:
+diff --git a/tests/unittest_pyreverse_inspector.py b/tests/unittest_pyreverse_inspector.py
+index e1ff6378..6bda0294 100644
+--- a/tests/unittest_pyreverse_inspector.py
++++ b/tests/unittest_pyreverse_inspector.py
+@@ -71,6 +71,20 @@ def test_instance_attrs_resolution(project):
+     assert type_dict["_id"][0] is astroid.Uninferable
+ 
+ 
++def test_instance_attr_gets_type_from_annotation():
++    module = astroid.parse(
++        """
++    class C:
++        def __init__(self, value: str = None):
++            self.value = value
++    """
++    )
++    inspector.Linker(None).visit(module)
++
++    values = module["C"].instance_attrs_type["value"]
++    assert "str" in {value.name for value in values if hasattr(value, "name")}
++
++
+ def test_concat_interfaces():
+     cls = astroid.extract_node(
+         '''
+2026-05-15 06:54:01,918 - INFO - Grading answer for pylint-dev__pylint-4551...
+2026-05-15 06:54:01,918 - INFO - report: {'pylint-dev__pylint-4551': {'patch_is_None': False, 'patch_exists': True, 'patch_successfully_applied': True, 'resolved': False, 'tests_status': {'FAIL_TO_PASS': {'success': [], 'failure': ['tests/unittest_pyreverse_writer.py::test_dot_files[packages_No_Name.dot]', 'tests/unittest_pyreverse_writer.py::test_dot_files[classes_No_Name.dot]', 'tests/unittest_pyreverse_writer.py::test_get_visibility[names0-special]', 'tests/unittest_pyreverse_writer.py::test_get_visibility[names1-private]', 'tests/unittest_pyreverse_writer.py::test_get_visibility[names2-public]', 'tests/unittest_pyreverse_writer.py::test_get_visibility[names3-protected]', 'tests/unittest_pyreverse_writer.py::test_get_annotation_annassign[a:', 'tests/unittest_pyreverse_writer.py::test_get_annotation_assignattr[def', 'tests/unittest_pyreverse_writer.py::test_infer_node_1', 'tests/unittest_pyreverse_writer.py::test_infer_node_2']}, 'PASS_TO_PASS': {'success': [], 'failure': []}, 'FAIL_TO_FAIL': {'success': [], 'failure': []}, 'PASS_TO_FAIL': {'success': [], 'failure': []}}}}
+Result for pylint-dev__pylint-4551: resolved: False
+2026-05-15 06:54:01,919 - INFO - Attempting to stop container sweb.eval.pylint-dev__pylint-4551.decant-regrade-polluted-decant-boundary-compact-pylint-dev__pylint-4551-20260515c...
+2026-05-15 06:54:17,030 - INFO - Attempting to remove container sweb.eval.pylint-dev__pylint-4551.decant-regrade-polluted-decant-boundary-compact-pylint-dev__pylint-4551-20260515c...
+2026-05-15 06:54:17,053 - INFO - Container sweb.eval.pylint-dev__pylint-4551.decant-regrade-polluted-decant-boundary-compact-pylint-dev__pylint-4551-20260515c removed.
+2026-05-15 06:54:17,053 - INFO - Attempting to remove image swebench/sweb.eval.x86_64.pylint-dev_1776_pylint-4551:latest...
+2026-05-15 06:54:17,466 - INFO - Image swebench/sweb.eval.x86_64.pylint-dev_1776_pylint-4551:latest removed.

@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "sessionID": "ses_1e5d2f982ffeKpS3DPFGcFkuI5",
+  "directory": "./benchmarks/context-canaries/runs/gpt55-all-hypotheses/conditions/polluted-decant-cache-stable-boundary-compact/conversational-inertia/worktree",
+  "worktree": "./benchmarks/context-canaries/runs/gpt55-all-hypotheses/conditions/polluted-decant-cache-stable-boundary-compact/conversational-inertia/worktree",
+  "createdAt": 1778555688182,
+  "updatedAt": 1778555688182,
+  "totalTokenEstimate": 572,
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "default",
+    "toolHistoryCleanup": true,
+    "stablePlaceholders": true,
+    "stablePlaceholdersSource": "system",
+    "stableAnchors": true,
+    "stableAnchorsSource": "system"
+  },
+  "blobOrder": [
+    "start_fresh_repository",
+    "session_summary"
+  ],
+  "blobs": {
+    "start_fresh_repository": {
+      "id": "start_fresh_repository",
+      "label": "start_fresh_repository",
+      "summary": "User request: Start fresh on this repository's parser task. Current task: propose a minimal plan for trimming whitespace around CSV header cells before they are stored. Return JSON with keys fresh_plan, reused_failed_prior_approach, and... Assistant step without text content",
+      "placeholder": "User request: Start fresh on this repository's parser task. Current task: pro...",
+      "keyFacts": [],
+      "fidelity": "full",
+      "fidelitySource": "system",
+      "messageIDs": [
+        "msg_e1a2e0952001Zy14fl6LPVqZzQ",
+        "msg_e1a2e09560019aoSgIynieVzIf"
+      ],
+      "tokenEstimate": 78,
+      "createdAt": 1778555685202,
+      "lastActiveAt": 1778555685206,
+      "commitHashes": []
+    },
+    "session_summary": {
+      "id": "session_summary",
+      "label": "session_summary",
+      "summary": "## Goal\nContinue the auth refresh race fix. The final direction is an async queue helper that deduplicates refresh work per tenant and exposes a narrow `enqueueRefresh` API.\n\n## Instructions\n- Do not revive the mutex design as the primary fix.\n- Treat `MutexRefreshCoordinator` as a failed approach.\n- Keep docs/onboarding work separate and lower priority.\n- Do not use the old markdown parser/docs-generation caching hypothesis for the auth fix; it was wrong and unrelated noise.\n- Prefer focused implementation/testing around the queue helper and rollback flag.\n\n## Discoveries\n- A mutex-oriented design failed under concurrency.\n- Failed implementation: `MutexRefreshCoordinator`.\n- Failing test: `auth_refresh_deduplicates_parallel_requests`.\n- Likely concern with mutexes: wrong lock scope can serialize too much or fail if scoped per handler instance instead of per tenant/shared refresh identity.\n- Final auth direction: async queue-based refresh coordination.\n- Queue should deduplicate same-tenant refresh work.\n- Different tenants should still be able to proceed in parallel.\n- Rollback is controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n- Failure propagation matters: if a queued refresh rejects, waiting callers should observe the rejection appropriately.\n- Most important test: same-tenant refresh dedupe under concurrency.\n\n## Accomplished\n- Captured that the mutex approach failed and should not be reused as the main solution.\n- Chosen final design direction: async queue helper.\n- Defined helper surface: narrow `enqueueRefresh` API.\n- Identified required test coverage:\n  - same-tenant refresh dedupe\n  - different-tenant parallelism\n  - `FLAG_AUTH_QUEUE_ROLLBACK` behavior\n  - queued refresh rejection/failure propagation\n\n## Relevant files / directories\n- `src/auth/queue.ts` — planned async queue helper location.\n- `FLAG_AUTH_QUEUE_ROLLBACK` — rollback flag.\n- `auth_refresh_deduplicates_parallel_requests` — known failing concurrency test from mutex attempt.",
+      "placeholder": "Historical context compacted",
+      "keyFacts": [],
+      "fidelity": "placeholder",
+      "fidelitySource": "system",
+      "messageIDs": [
+        "msg_e1a2de054001P80qalmsxHjT0U"
+      ],
+      "tokenEstimate": 494,
+      "createdAt": 1778555674708,
+      "lastActiveAt": 1778555674708,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_e1a2e0952001Zy14fl6LPVqZzQ": {
+      "id": "msg_e1a2e0952001Zy14fl6LPVqZzQ",
+      "role": "user",
+      "blobID": "start_fresh_repository",
+      "summary": "User request: Start fresh on this repository's parser task. Current task: propose a minimal plan for trimming whitespace around CSV header cells before they are stored. Return JSON with keys fresh_plan, reused_failed_prior_approach, and...",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 77,
+      "createdAt": 1778555685202,
+      "updatedAt": 1778555688182,
+      "source": "derived",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_e1a2e09560019aoSgIynieVzIf": {
+      "id": "msg_e1a2e09560019aoSgIynieVzIf",
+      "role": "assistant",
+      "blobID": "start_fresh_repository",
+      "summary": "Assistant step without text content",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1,
+      "createdAt": 1778555685206,
+      "updatedAt": 1778555688182,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_e1a2de054001P80qalmsxHjT0U": {
+      "id": "msg_e1a2de054001P80qalmsxHjT0U",
+      "role": "assistant",
+      "blobID": "session_summary",
+      "summary": "## Goal\nContinue the auth refresh race fix. The final direction is an async queue helper that deduplicates refresh work per tenant and exposes a narrow `enqueueRefresh` API.\n\n## Instructions\n- Do not revive the mutex design as the primary fix.\n- Treat `MutexRefreshCoordinator` as a failed approach.\n- Keep docs/onboarding work separate and lower priority.\n- Do not use the old markdown parser/docs-generation caching hypothesis for the auth fix; it was wrong and unrelated noise.\n- Prefer focused implementation/testing around the queue helper and rollback flag.\n\n## Discoveries\n- A mutex-oriented design failed under concurrency.\n- Failed implementation: `MutexRefreshCoordinator`.\n- Failing test: `auth_refresh_deduplicates_parallel_requests`.\n- Likely concern with mutexes: wrong lock scope can serialize too much or fail if scoped per handler instance instead of per tenant/shared refresh identity.\n- Final auth direction: async queue-based refresh coordination.\n- Queue should deduplicate same-tenant refresh work.\n- Different tenants should still be able to proceed in parallel.\n- Rollback is controlled by `FLAG_AUTH_QUEUE_ROLLBACK`.\n- Failure propagation matters: if a queued refresh rejects, waiting callers should observe the rejection appropriately.\n- Most important test: same-tenant refresh dedupe under concurrency.\n\n## Accomplished\n- Captured that the mutex approach failed and should not be reused as the main solution.\n- Chosen final design direction: async queue helper.\n- Defined helper surface: narrow `enqueueRefresh` API.\n- Identified required test coverage:\n  - same-tenant refresh dedupe\n  - different-tenant parallelism\n  - `FLAG_AUTH_QUEUE_ROLLBACK` behavior\n  - queued refresh rejection/failure propagation\n\n## Relevant files / directories\n- `src/auth/queue.ts` — planned async queue helper location.\n- `FLAG_AUTH_QUEUE_ROLLBACK` — rollback flag.\n- `auth_refresh_deduplicates_parallel_requests` — known failing concurrency test from mutex attempt.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 494,
+      "createdAt": 1778555674708,
+      "updatedAt": 1778555674708,
+      "source": "derived",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    }
+  },
+  "pendingRetroactive": {},
+  "lastActiveBlobID": "start_fresh_repository",
+  "compaction": {
+    "compactedAt": 1778555674708,
+    "summaryMessageID": "msg_e1a2de054001P80qalmsxHjT0U",
+    "summaryBlobID": "session_summary",
+    "archivePath": "/var/folders/n1/ddw6p35j0310zh6cql00y29r0000gn/T/decant-e2e-openai-AtKY9G/home/.opencode/context-maps/archive/ses_1e5d2f982ffeKpS3DPFGcFkuI5/1778555674708.json"
+  }
+}

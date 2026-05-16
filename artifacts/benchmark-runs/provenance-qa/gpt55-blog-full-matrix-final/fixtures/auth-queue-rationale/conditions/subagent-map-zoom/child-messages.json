@@ -13,7 +13,7 @@
           "summary": {
             "diffs": []
           },
-          "agent": "memmould",
+          "agent": "decant",
           "model": {
             "providerID": "openai",
             "modelID": "gpt-5.5"
@@ -29,7 +29,7 @@
             "sessionID": "ses_1e1857270ffeVXHatRm7QyR521",
             "messageID": "msg_e1e7a8d92002yjVOOHDlV7Tes7",
             "type": "text",
-            "text": "Use only mem-mould provenance tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the prior session relevant to: \"Auth refresh queue rationale\" and answer why src/auth/queue.ts deduplicates refresh work per tenant instead of using one global mutex. Ignore distractors: \"Billing retry queue rationale\" and \"Markdown parser onboarding cleanup\". Return evidence with session_id, blob_id, and a single message_id that supports the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly in the rationale. Return only the concise evidence and answer needed for the parent JSON."
+            "text": "Use only decant provenance tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the prior session relevant to: \"Auth refresh queue rationale\" and answer why src/auth/queue.ts deduplicates refresh work per tenant instead of using one global mutex. Ignore distractors: \"Billing retry queue rationale\" and \"Markdown parser onboarding cleanup\". Return evidence with session_id, blob_id, and a single message_id that supports the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly in the rationale. Return only the concise evidence and answer needed for the parent JSON."
           }
         ]
       },
@@ -45,8 +45,8 @@
           "parentID": "msg_e1e7a8d92002yjVOOHDlV7Tes7",
           "modelID": "gpt-5.5",
           "providerID": "openai",
-          "mode": "memmould",
-          "agent": "memmould",
+          "mode": "decant",
+          "agent": "decant",
           "path": {
             "cwd": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-map-zoom/worktree",
             "root": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-map-zoom/worktree"
@@ -101,7 +101,7 @@
                 "query": "Auth refresh queue rationale tenant global mutex",
                 "limit": 5
               },
-              "output": "{\n  \"query\": \"Auth refresh queue rationale tenant global mutex\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e185861cffeLHx4WXMMbOyreX\",\n      \"title\": \"auth-queue-rationale subagent-map-zoom\",\n      \"updatedAt\": 1778627803679,\n      \"matchedBlobIDs\": [\n        \"auth_queue\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"auth_queue\",\n          \"label\": \"auth_queue\",\n          \"summary\": \"User request: Question: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex? Expected relevant prior session: Auth refresh queue rationale Task instruction: call subagent_type='memmould', not...\",\n          \"compressedSummary\": \"[Blob summary: auth_queue] User request: Question: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex? Expected relevant prior session: Auth refresh queue rationale Task instruction: call subagent_type='memmould', not...\",\n          \"placeholder\": \"User request: Question: Why does src/auth/queue.ts deduplicate refresh work p...\",\n          \"tokenEstimate\": 203,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e185a1ddffeHZ5oDK5AjSIJsA\",\n      \"title\": \"Billing retry queue rationale\",\n      \"updatedAt\": 1778627798927,\n      \"matchedBlobIDs\": [\n        \"billing_retry_queue\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"billing_retry_queue\",\n          \"label\": \"billing_retry_queue\",\n          \"summary\": \"User request: # Billing retry queue rationale session_id: billing_retry_session title: Billing retry queue rationale ## message billing_fact_1 Billing retry queues used a global mutex because provider limits serialize all tenants. ## mes... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: billing_retry_queue] User request: # Billing retry queue rationale session_id: billing_retry_session title: Billing retry queue rationale ## message billing_fact_1 Billing retry queues used a global mutex because provider limits serialize all tenants. ## mes... Assistant step without text content\",\n          \"placeholder\": \"User request: # Billing retry queue rationale session_id: billing_retry_sessi...\",\n          \"tokenEstimate\": 75,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e185b1cbffe4bIAlV0Pchebpp\",\n      \"title\": \"Auth refresh queue rationale\",\n      \"updatedAt\": 1778627795778,\n      \"matchedBlobIDs\": [\n        \"auth_refresh_queue\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"auth_refresh_queue\",\n          \"label\": \"auth_refresh_queue\",\n          \"summary\": \"User request: # Auth refresh queue rationale session_id: auth_refresh_session title: Auth refresh queue rationale ## message auth_fact_1 The rejected design was one global mutex around all auth refresh work. ## message auth_fact_2 The gl... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: auth_refresh_queue] User request: # Auth refresh queue rationale session_id: auth_refresh_session title: Auth refresh queue rationale ## message auth_fact_1 The rejected design was one global mutex around all auth refresh work. ## message auth_fact_2 The gl... Assistant step without text content\",\n          \"placeholder\": \"User request: # Auth refresh queue rationale session_id: auth_refresh_session...\",\n          \"tokenEstimate\": 125,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+              "output": "{\n  \"query\": \"Auth refresh queue rationale tenant global mutex\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1e185861cffeLHx4WXMMbOyreX\",\n      \"title\": \"auth-queue-rationale subagent-map-zoom\",\n      \"updatedAt\": 1778627803679,\n      \"matchedBlobIDs\": [\n        \"auth_queue\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"auth_queue\",\n          \"label\": \"auth_queue\",\n          \"summary\": \"User request: Question: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex? Expected relevant prior session: Auth refresh queue rationale Task instruction: call subagent_type='decant', not...\",\n          \"compressedSummary\": \"[Blob summary: auth_queue] User request: Question: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex? Expected relevant prior session: Auth refresh queue rationale Task instruction: call subagent_type='decant', not...\",\n          \"placeholder\": \"User request: Question: Why does src/auth/queue.ts deduplicate refresh work p...\",\n          \"tokenEstimate\": 203,\n          \"messageCount\": 1,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e185a1ddffeHZ5oDK5AjSIJsA\",\n      \"title\": \"Billing retry queue rationale\",\n      \"updatedAt\": 1778627798927,\n      \"matchedBlobIDs\": [\n        \"billing_retry_queue\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"billing_retry_queue\",\n          \"label\": \"billing_retry_queue\",\n          \"summary\": \"User request: # Billing retry queue rationale session_id: billing_retry_session title: Billing retry queue rationale ## message billing_fact_1 Billing retry queues used a global mutex because provider limits serialize all tenants. ## mes... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: billing_retry_queue] User request: # Billing retry queue rationale session_id: billing_retry_session title: Billing retry queue rationale ## message billing_fact_1 Billing retry queues used a global mutex because provider limits serialize all tenants. ## mes... Assistant step without text content\",\n          \"placeholder\": \"User request: # Billing retry queue rationale session_id: billing_retry_sessi...\",\n          \"tokenEstimate\": 75,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1e185b1cbffe4bIAlV0Pchebpp\",\n      \"title\": \"Auth refresh queue rationale\",\n      \"updatedAt\": 1778627795778,\n      \"matchedBlobIDs\": [\n        \"auth_refresh_queue\"\n      ],\n      \"blobs\": [\n        {\n          \"id\": \"auth_refresh_queue\",\n          \"label\": \"auth_refresh_queue\",\n          \"summary\": \"User request: # Auth refresh queue rationale session_id: auth_refresh_session title: Auth refresh queue rationale ## message auth_fact_1 The rejected design was one global mutex around all auth refresh work. ## message auth_fact_2 The gl... Assistant step without text content\",\n          \"compressedSummary\": \"[Blob summary: auth_refresh_queue] User request: # Auth refresh queue rationale session_id: auth_refresh_session title: Auth refresh queue rationale ## message auth_fact_1 The rejected design was one global mutex around all auth refresh work. ## message auth_fact_2 The gl... Assistant step without text content\",\n          \"placeholder\": \"User request: # Auth refresh queue rationale session_id: auth_refresh_session...\",\n          \"tokenEstimate\": 125,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
               "title": "",
               "metadata": {
                 "truncated": false
@@ -150,8 +150,8 @@
           "parentID": "msg_e1e7a8d92002yjVOOHDlV7Tes7",
           "modelID": "gpt-5.5",
           "providerID": "openai",
-          "mode": "memmould",
-          "agent": "memmould",
+          "mode": "decant",
+          "agent": "decant",
           "path": {
             "cwd": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-map-zoom/worktree",
             "root": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-map-zoom/worktree"
@@ -256,8 +256,8 @@
           "parentID": "msg_e1e7a8d92002yjVOOHDlV7Tes7",
           "modelID": "gpt-5.5",
           "providerID": "openai",
-          "mode": "memmould",
-          "agent": "memmould",
+          "mode": "decant",
+          "agent": "decant",
           "path": {
             "cwd": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-map-zoom/worktree",
             "root": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-map-zoom/worktree"
@@ -361,8 +361,8 @@
           "parentID": "msg_e1e7a8d92002yjVOOHDlV7Tes7",
           "modelID": "gpt-5.5",
           "providerID": "openai",
-          "mode": "memmould",
-          "agent": "memmould",
+          "mode": "decant",
+          "agent": "decant",
           "path": {
             "cwd": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-map-zoom/worktree",
             "root": "./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-map-zoom/worktree"

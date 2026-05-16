@@ -147,6 +147,34 @@ export type CommitMapFile = {
   entries: Record<string, CommitMapEntry>;
 };
 
+export type GitAiDecantState =
+  | "raw_only"
+  | "decanted"
+  | "stale"
+  | "unavailable";
+
+export type GitAiDecantIndexEntry = {
+  key: string;
+  promptID: string;
+  transcriptHash?: string;
+  state: GitAiDecantState;
+  updatedAt: number;
+  schemaVersion: 1;
+  mapSessionID?: string;
+  summaryVersion?: string;
+  sourceCommitHashes?: string[];
+  tool?: string;
+  model?: string;
+  conversationID?: string;
+  messagesURL?: string;
+};
+
+export type GitAiDecantIndexFile = {
+  version: 1;
+  updatedAt: number;
+  entries: Record<string, GitAiDecantIndexEntry>;
+};
+
 export type SessionLike = {
   id: string;
   title?: string;

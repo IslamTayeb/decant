@@ -304,7 +304,7 @@ async function main() {
           }
         } else {
           console.log(
-            "          payload snapshot disabled; launch with MEM_MOULD_TRACE_CONTEXT_PAYLOAD=1 to capture exact transformed text",
+            "          payload snapshot disabled; launch with DECANT_TRACE_CONTEXT_PAYLOAD=1 to capture exact transformed text",
           );
         }
       } else if (e.event === "text.complete") {

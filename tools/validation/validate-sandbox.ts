@@ -40,10 +40,10 @@ const validationModelSlug = requiredModelSlug();
 
 async function main() {
   const repoRoot = path.resolve(process.cwd());
-  const providedTempRoot = process.env.MEM_MOULD_E2E_TEMP_ROOT;
+  const providedTempRoot = process.env.DECANT_E2E_TEMP_ROOT;
   const tempRoot =
     providedTempRoot ??
-    (await fs.mkdtemp(path.join(os.tmpdir(), "mem-mould-context-map-")));
+    (await fs.mkdtemp(path.join(os.tmpdir(), "decant-context-map-")));
   if (providedTempRoot) await fs.mkdir(tempRoot, { recursive: true });
   const home = path.join(tempRoot, "home");
   const data = path.join(tempRoot, "data");
@@ -68,7 +68,7 @@ async function main() {
     XDG_CACHE_HOME: cache,
     OPENCODE_DB: path.join(tempRoot, "opencode.sqlite"),
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
-    MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
+    DECANT_DISABLE_GIT_HOOK_INSTALL: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",
       model: validationModelSlug,
@@ -315,7 +315,7 @@ async function main() {
     if (
       passed &&
       !providedTempRoot &&
-      process.env.MEM_MOULD_KEEP_E2E_TEMP !== "1"
+      process.env.DECANT_KEEP_E2E_TEMP !== "1"
     ) {
       await fs.rm(tempRoot, { recursive: true, force: true });
     } else {

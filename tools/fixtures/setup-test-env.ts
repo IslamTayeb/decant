@@ -41,7 +41,7 @@ async function main() {
 
   // ── Create temp directories ───────────────────────────────────────
   const tempRoot = await fs.mkdtemp(
-    path.join(os.tmpdir(), "mem-mould-context-map-manual-"),
+    path.join(os.tmpdir(), "decant-context-map-manual-"),
   );
   const repo = path.join(tempRoot, "demo-repo");
   const home = path.join(tempRoot, "home");
@@ -181,7 +181,7 @@ async function writeTestingGuide(
     "- Use j/k to navigate, tab to switch tabs",
     "",
     "### Sidebar preview",
-    "- Check the sidebar shows 'Mem Map' with a post-transform context bar",
+    "- Check the sidebar shows 'Context Map' with a post-transform context bar",
     "- Each blob shows: label, fidelity, effective representation",
     "- Bottom shows estimated in-context tokens vs model window",
     "",

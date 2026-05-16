@@ -15,7 +15,7 @@
         "providerID": "openai",
         "modelID": "gpt-5.5"
       },
-      "system": "Answer with compact JSON only. Use RLM-style transcript search with glob/grep/read and optional read-only bash before answering. If you use bash, do not modify files. Do not use mem-mould/session tools. Cite exact session_id and message_id.",
+      "system": "Answer with compact JSON only. Use RLM-style transcript search with glob/grep/read and optional read-only bash before answering. If you use bash, do not modify files. Do not use decant/session tools. Cite exact session_id and message_id.",
       "tools": {
         "glob": true,
         "grep": true,
@@ -29,7 +29,7 @@
         "sessionID": "ses_1e149ff52ffeDMocRHEYR0bfE5",
         "messageID": "msg_e1eb600c4001qLgz8YMi6wYt4i",
         "type": "text",
-        "text": "Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts\nQuestion: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex?\nDistractors include: Billing retry queue rationale, Markdown parser onboarding cleanup\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+        "text": "Transcript directory: ./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts\nQuestion: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex?\nDistractors include: Billing retry queue rationale, Markdown parser onboarding cleanup\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
       }
     ]
   },
@@ -99,10 +99,10 @@
           "status": "completed",
           "input": {
             "pattern": "tenant|global mutex|deduplicate|refresh",
-            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts",
+            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts",
             "include": "*"
           },
-          "output": "Found 8 matches\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md:\n  Line 6: Billing retry queues used a global mutex because provider limits serialize all tenants.\n\n  Line 9: This is not the auth refresh queue rationale.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md:\n  Line 1: # Auth refresh queue rationale\n\n  Line 2: session_id: auth_refresh_session\n\n  Line 3: title: Auth refresh queue rationale\n\n  Line 6: The rejected design was one global mutex around all auth refresh work.\n\n  Line 9: The global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n\n  Line 12: RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.\n",
+          "output": "Found 8 matches\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/billing_retry_session.md:\n  Line 6: Billing retry queues used a global mutex because provider limits serialize all tenants.\n\n  Line 9: This is not the auth refresh queue rationale.\n\n\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_refresh_session.md:\n  Line 1: # Auth refresh queue rationale\n\n  Line 2: session_id: auth_refresh_session\n\n  Line 3: title: Auth refresh queue rationale\n\n  Line 6: The rejected design was one global mutex around all auth refresh work.\n\n  Line 9: The global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n\n  Line 12: RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.\n",
           "title": "tenant|global mutex|deduplicate|refresh",
           "metadata": {
             "matches": 8,
@@ -189,12 +189,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_refresh_session.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md</path>\n<type>file</type>\n<content>\n1: # Auth refresh queue rationale\n2: session_id: auth_refresh_session\n3: title: Auth refresh queue rationale\n4: \n5: ## message auth_fact_1\n6: The rejected design was one global mutex around all auth refresh work.\n7: \n8: ## message auth_fact_2\n9: The global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n10: \n11: ## message auth_fact_3\n12: RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.\n\n(End of file - total 12 lines)\n</content>",
-          "title": "memory/transcripts/auth_refresh_session.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_refresh_session.md</path>\n<type>file</type>\n<content>\n1: # Auth refresh queue rationale\n2: session_id: auth_refresh_session\n3: title: Auth refresh queue rationale\n4: \n5: ## message auth_fact_1\n6: The rejected design was one global mutex around all auth refresh work.\n7: \n8: ## message auth_fact_2\n9: The global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n10: \n11: ## message auth_fact_3\n12: RefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.\n\n(End of file - total 12 lines)\n</content>",
+          "title": "recall/transcripts/auth_refresh_session.md",
           "metadata": {
             "preview": "# Auth refresh queue rationale\nsession_id: auth_refresh_session\ntitle: Auth refresh queue rationale\n\n## message auth_fact_1\nThe rejected design was one global mutex around all auth refresh work.\n\n## message auth_fact_2\nThe global mutex was rejected because auth_refresh_different_tenants_parallel showed unrelated tenants must not block each other.\n\n## message auth_fact_3\nRefreshQueue uses a per-tenant key: same-tenant duplicate refreshes coalesce, while different tenants continue in parallel.",
             "truncated": false,
@@ -298,10 +298,10 @@
           "status": "completed",
           "input": {
             "pattern": "blob_id|blob|auth_fact_3|message_id",
-            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts",
+            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts",
             "include": "*"
           },
-          "output": "Found 1 matches\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md:\n  Line 11: ## message auth_fact_3\n",
+          "output": "Found 1 matches\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_refresh_session.md:\n  Line 11: ## message auth_fact_3\n",
           "title": "blob_id|blob|auth_fact_3|message_id",
           "metadata": {
             "matches": 1,
@@ -405,10 +405,10 @@
           "status": "completed",
           "input": {
             "pattern": "**/*auth*",
-            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts"
+            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts"
           },
-          "output": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_7.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_6.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_8.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_3.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_2.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_1.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_5.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_4.md",
-          "title": "memory/transcripts",
+          "output": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_7.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_6.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_8.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_3.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_2.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_1.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_5.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_refresh_session.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_4.md",
+          "title": "recall/transcripts",
           "metadata": {
             "count": 9,
             "truncated": false
@@ -510,12 +510,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_1.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_1.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_1.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 1\n2: session_id: auth_queue_rationale_decoy_1\n3: title: Auth queue rationale decoy 1\n4: \n5: ## message decoy_fact_1\n6: Decoy 1: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_1\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
-          "title": "memory/transcripts/auth_queue_rationale_decoy_1.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_1.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 1\n2: session_id: auth_queue_rationale_decoy_1\n3: title: Auth queue rationale decoy 1\n4: \n5: ## message decoy_fact_1\n6: Decoy 1: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_1\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/auth_queue_rationale_decoy_1.md",
           "metadata": {
             "preview": "# Auth queue rationale decoy 1\nsession_id: auth_queue_rationale_decoy_1\ntitle: Auth queue rationale decoy 1\n\n## message decoy_fact_1\nDecoy 1: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_1\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
             "truncated": false,
@@ -542,12 +542,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_2.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_2.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_2.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 2\n2: session_id: auth_queue_rationale_decoy_2\n3: title: Auth queue rationale decoy 2\n4: \n5: ## message decoy_fact_2\n6: Decoy 2: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_2\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
-          "title": "memory/transcripts/auth_queue_rationale_decoy_2.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_2.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 2\n2: session_id: auth_queue_rationale_decoy_2\n3: title: Auth queue rationale decoy 2\n4: \n5: ## message decoy_fact_2\n6: Decoy 2: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_2\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/auth_queue_rationale_decoy_2.md",
           "metadata": {
             "preview": "# Auth queue rationale decoy 2\nsession_id: auth_queue_rationale_decoy_2\ntitle: Auth queue rationale decoy 2\n\n## message decoy_fact_2\nDecoy 2: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_2\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
             "truncated": false,
@@ -574,12 +574,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_3.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_3.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_3.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 3\n2: session_id: auth_queue_rationale_decoy_3\n3: title: Auth queue rationale decoy 3\n4: \n5: ## message decoy_fact_3\n6: Decoy 3: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_3\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
-          "title": "memory/transcripts/auth_queue_rationale_decoy_3.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_3.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 3\n2: session_id: auth_queue_rationale_decoy_3\n3: title: Auth queue rationale decoy 3\n4: \n5: ## message decoy_fact_3\n6: Decoy 3: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_3\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/auth_queue_rationale_decoy_3.md",
           "metadata": {
             "preview": "# Auth queue rationale decoy 3\nsession_id: auth_queue_rationale_decoy_3\ntitle: Auth queue rationale decoy 3\n\n## message decoy_fact_3\nDecoy 3: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_3\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
             "truncated": false,
@@ -606,12 +606,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_4.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_4.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_4.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 4\n2: session_id: auth_queue_rationale_decoy_4\n3: title: Auth queue rationale decoy 4\n4: \n5: ## message decoy_fact_4\n6: Decoy 4: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_4\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
-          "title": "memory/transcripts/auth_queue_rationale_decoy_4.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_4.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 4\n2: session_id: auth_queue_rationale_decoy_4\n3: title: Auth queue rationale decoy 4\n4: \n5: ## message decoy_fact_4\n6: Decoy 4: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_4\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/auth_queue_rationale_decoy_4.md",
           "metadata": {
             "preview": "# Auth queue rationale decoy 4\nsession_id: auth_queue_rationale_decoy_4\ntitle: Auth queue rationale decoy 4\n\n## message decoy_fact_4\nDecoy 4: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_4\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
             "truncated": false,
@@ -698,12 +698,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_5.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_5.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_5.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 5\n2: session_id: auth_queue_rationale_decoy_5\n3: title: Auth queue rationale decoy 5\n4: \n5: ## message decoy_fact_5\n6: Decoy 5: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_5\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
-          "title": "memory/transcripts/auth_queue_rationale_decoy_5.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_5.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 5\n2: session_id: auth_queue_rationale_decoy_5\n3: title: Auth queue rationale decoy 5\n4: \n5: ## message decoy_fact_5\n6: Decoy 5: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_5\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/auth_queue_rationale_decoy_5.md",
           "metadata": {
             "preview": "# Auth queue rationale decoy 5\nsession_id: auth_queue_rationale_decoy_5\ntitle: Auth queue rationale decoy 5\n\n## message decoy_fact_5\nDecoy 5: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_5\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
             "truncated": false,
@@ -730,12 +730,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_6.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_6.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_6.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 6\n2: session_id: auth_queue_rationale_decoy_6\n3: title: Auth queue rationale decoy 6\n4: \n5: ## message decoy_fact_6\n6: Decoy 6: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_6\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
-          "title": "memory/transcripts/auth_queue_rationale_decoy_6.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_6.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 6\n2: session_id: auth_queue_rationale_decoy_6\n3: title: Auth queue rationale decoy 6\n4: \n5: ## message decoy_fact_6\n6: Decoy 6: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_6\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/auth_queue_rationale_decoy_6.md",
           "metadata": {
             "preview": "# Auth queue rationale decoy 6\nsession_id: auth_queue_rationale_decoy_6\ntitle: Auth queue rationale decoy 6\n\n## message decoy_fact_6\nDecoy 6: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_6\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
             "truncated": false,
@@ -762,12 +762,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_7.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_7.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_7.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 7\n2: session_id: auth_queue_rationale_decoy_7\n3: title: Auth queue rationale decoy 7\n4: \n5: ## message decoy_fact_7\n6: Decoy 7: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_7\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
-          "title": "memory/transcripts/auth_queue_rationale_decoy_7.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_7.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 7\n2: session_id: auth_queue_rationale_decoy_7\n3: title: Auth queue rationale decoy 7\n4: \n5: ## message decoy_fact_7\n6: Decoy 7: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_7\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/auth_queue_rationale_decoy_7.md",
           "metadata": {
             "preview": "# Auth queue rationale decoy 7\nsession_id: auth_queue_rationale_decoy_7\ntitle: Auth queue rationale decoy 7\n\n## message decoy_fact_7\nDecoy 7: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_7\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
             "truncated": false,
@@ -794,12 +794,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_8.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_8.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_8.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 8\n2: session_id: auth_queue_rationale_decoy_8\n3: title: Auth queue rationale decoy 8\n4: \n5: ## message decoy_fact_8\n6: Decoy 8: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_8\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
-          "title": "memory/transcripts/auth_queue_rationale_decoy_8.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_8.md</path>\n<type>file</type>\n<content>\n1: # Auth queue rationale decoy 8\n2: session_id: auth_queue_rationale_decoy_8\n3: title: Auth queue rationale decoy 8\n4: \n5: ## message decoy_fact_8\n6: Decoy 8: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n7: \n8: ## message decoy_noise_8\n9: This note exists to make transcript search less trivial and force evidence citation rather than keyword matching.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/auth_queue_rationale_decoy_8.md",
           "metadata": {
             "preview": "# Auth queue rationale decoy 8\nsession_id: auth_queue_rationale_decoy_8\ntitle: Auth queue rationale decoy 8\n\n## message decoy_fact_8\nDecoy 8: mentions src/auth/queue.ts and similar terms, but it is not the final rationale and should not be cited.\n\n## message decoy_noise_8\nThis note exists to make transcript search less trivial and force evidence citation rather than keyword matching.",
             "truncated": false,
@@ -826,12 +826,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/billing_retry_session.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md</path>\n<type>file</type>\n<content>\n1: # Billing retry queue rationale\n2: session_id: billing_retry_session\n3: title: Billing retry queue rationale\n4: \n5: ## message billing_fact_1\n6: Billing retry queues used a global mutex because provider limits serialize all tenants.\n7: \n8: ## message billing_fact_2\n9: This is not the auth refresh queue rationale.\n\n(End of file - total 9 lines)\n</content>",
-          "title": "memory/transcripts/billing_retry_session.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/billing_retry_session.md</path>\n<type>file</type>\n<content>\n1: # Billing retry queue rationale\n2: session_id: billing_retry_session\n3: title: Billing retry queue rationale\n4: \n5: ## message billing_fact_1\n6: Billing retry queues used a global mutex because provider limits serialize all tenants.\n7: \n8: ## message billing_fact_2\n9: This is not the auth refresh queue rationale.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/billing_retry_session.md",
           "metadata": {
             "preview": "# Billing retry queue rationale\nsession_id: billing_retry_session\ntitle: Billing retry queue rationale\n\n## message billing_fact_1\nBilling retry queues used a global mutex because provider limits serialize all tenants.\n\n## message billing_fact_2\nThis is not the auth refresh queue rationale.",
             "truncated": false,
@@ -935,10 +935,10 @@
           "status": "completed",
           "input": {
             "pattern": "**/*",
-            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts"
+            "path": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts"
           },
-          "output": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_7.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_6.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_8.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/billing_retry_session.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_3.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_2.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_1.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_5.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/auth_queue_rationale_decoy_4.md",
-          "title": "memory/transcripts",
+          "output": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_7.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_6.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_8.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/billing_retry_session.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_3.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_2.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/markdown_parser_session.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_1.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_5.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_refresh_session.md\n./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/auth_queue_rationale_decoy_4.md",
+          "title": "recall/transcripts",
           "metadata": {
             "count": 11,
             "truncated": false
@@ -1024,12 +1024,12 @@
         "state": {
           "status": "completed",
           "input": {
-            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md",
+            "filePath": "./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/markdown_parser_session.md",
             "offset": 1,
             "limit": 80
           },
-          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/memory/transcripts/markdown_parser_session.md</path>\n<type>file</type>\n<content>\n1: # Markdown parser onboarding cleanup\n2: session_id: markdown_parser_session\n3: title: Markdown parser onboarding cleanup\n4: \n5: ## message docs_fact_1\n6: Markdown parser cache issues affected onboarding docs and quickstart text.\n\n(End of file - total 6 lines)\n</content>",
-          "title": "memory/transcripts/markdown_parser_session.md",
+          "output": "<path>./benchmarks/provenance-qa/runs/gpt55-rlm-hybrid/fixtures/auth-queue-rationale/conditions/rlm-transcript-search/worktree/recall/transcripts/markdown_parser_session.md</path>\n<type>file</type>\n<content>\n1: # Markdown parser onboarding cleanup\n2: session_id: markdown_parser_session\n3: title: Markdown parser onboarding cleanup\n4: \n5: ## message docs_fact_1\n6: Markdown parser cache issues affected onboarding docs and quickstart text.\n\n(End of file - total 6 lines)\n</content>",
+          "title": "recall/transcripts/markdown_parser_session.md",
           "metadata": {
             "preview": "# Markdown parser onboarding cleanup\nsession_id: markdown_parser_session\ntitle: Markdown parser onboarding cleanup\n\n## message docs_fact_1\nMarkdown parser cache issues affected onboarding docs and quickstart text.",
             "truncated": false,

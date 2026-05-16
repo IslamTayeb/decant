@@ -25,11 +25,11 @@ const repoRoot = path.resolve(process.cwd());
 type ConditionID =
   | "rlm-transcript-search"
   | "subagent-rlm-transcript-search"
-  | "memmould-map-zoom"
+  | "decant-map-zoom"
   | "subagent-map-zoom"
-  | "memmould-guided-rlm"
-  | "subagent-memmould-guided-rlm"
-  | "memmould-blame-lookup";
+  | "decant-guided-rlm"
+  | "subagent-decant-guided-rlm"
+  | "decant-blame-lookup";
 
 type Options = {
   conditions: ConditionID[];
@@ -185,11 +185,11 @@ const defaultOutDir = path.join(
 const defaultConditions: ConditionID[] = [
   "rlm-transcript-search",
   "subagent-rlm-transcript-search",
-  "memmould-map-zoom",
+  "decant-map-zoom",
   "subagent-map-zoom",
-  "memmould-guided-rlm",
-  "subagent-memmould-guided-rlm",
-  "memmould-blame-lookup",
+  "decant-guided-rlm",
+  "subagent-decant-guided-rlm",
+  "decant-blame-lookup",
 ];
 
 const fixtures: Fixture[] = [
@@ -669,7 +669,7 @@ async function main() {
   }> = [];
   for (const fixture of selectedFixtures) {
     for (const condition of options.conditions) {
-      if (condition === "memmould-blame-lookup" && !fixture.blame) continue;
+      if (condition === "decant-blame-lookup" && !fixture.blame) continue;
       const result = await runFixtureCondition(fixture, condition, options);
       results.push(result);
       await writeSummary(options.outDir, results, options);
@@ -709,7 +709,7 @@ async function runFixtureCondition(
       conditionDir,
       modelSlug: options.modelSlug,
       childModelSlug: options.childModelSlug,
-      plugin: usesMemMould(condition),
+      plugin: usesDecant(condition),
     });
     server = await startServer(env, worktree);
     const client = createOpencodeClient({ baseUrl: server.url });
@@ -717,7 +717,7 @@ async function runFixtureCondition(
     if (options.childModelSlug)
       await pickModel(client, worktree, options.childModelSlug);
 
-    const seeded = usesMemMould(condition)
+    const seeded = usesDecant(condition)
       ? await seedHistoricalSessions(
           client,
           worktree,
@@ -729,7 +729,7 @@ async function runFixtureCondition(
       await writeHybridTranscriptCorpus(client, worktree, fixture, seeded);
     }
     if (
-      condition === "memmould-blame-lookup" &&
+      condition === "decant-blame-lookup" &&
       fixture.blame &&
       seeded.relevantSessionID
     ) {
@@ -800,20 +800,20 @@ async function runFixtureCondition(
   }
 }
 
-function usesMemMould(condition: ConditionID) {
+function usesDecant(condition: ConditionID) {
   return (
-    condition === "memmould-map-zoom" ||
+    condition === "decant-map-zoom" ||
     condition === "subagent-map-zoom" ||
-    condition === "memmould-guided-rlm" ||
-    condition === "subagent-memmould-guided-rlm" ||
-    condition === "memmould-blame-lookup"
+    condition === "decant-guided-rlm" ||
+    condition === "subagent-decant-guided-rlm" ||
+    condition === "decant-blame-lookup"
   );
 }
 
 function usesHybrid(condition: ConditionID) {
   return (
-    condition === "memmould-guided-rlm" ||
-    condition === "subagent-memmould-guided-rlm"
+    condition === "decant-guided-rlm" ||
+    condition === "subagent-decant-guided-rlm"
   );
 }
 
@@ -894,7 +894,7 @@ async function prepareFixtureRepo(
 }
 
 async function writeTranscriptCorpus(worktree: string, fixture: Fixture) {
-  const dir = path.join(worktree, "memory", "transcripts");
+  const dir = path.join(worktree, "recall", "transcripts");
   await fs.mkdir(dir, { recursive: true });
   const sessions = [
     fixture.relevant,
@@ -902,11 +902,11 @@ async function writeTranscriptCorpus(worktree: string, fixture: Fixture) {
     ...generatedDistractors(fixture),
   ];
   await fs.writeFile(
-    path.join(worktree, "memory", "manifest.json"),
+    path.join(worktree, "recall", "manifest.json"),
     `${JSON.stringify(
       {
         fixture: fixture.id,
-        transcript_dir: "memory/transcripts",
+        transcript_dir: "recall/transcripts",
         sessions: sessions.map((session) => ({
           session_id: session.sessionID,
           title: session.title,
@@ -931,7 +931,7 @@ async function writeHybridTranscriptCorpus(
   fixture: Fixture,
   seeded: SeededSessions,
 ) {
-  const dir = path.join(worktree, "memory", "transcripts");
+  const dir = path.join(worktree, "recall", "transcripts");
   await fs.mkdir(dir, { recursive: true });
   const entries: Array<{
     session_id: string;
@@ -985,11 +985,11 @@ async function writeHybridTranscriptCorpus(
   }
 
   await fs.writeFile(
-    path.join(worktree, "memory", "manifest.json"),
+    path.join(worktree, "recall", "manifest.json"),
     `${JSON.stringify(
       {
         fixture: fixture.id,
-        transcript_dir: "memory/transcripts",
+        transcript_dir: "recall/transcripts",
         id_policy:
           "Hybrid transcript files use real OpenCode session_id and heading message_id values for seeded sessions. Cite those real ids, not embedded fixture fact labels.",
         sessions: entries,
@@ -1113,7 +1113,7 @@ async function buildOpenCodeEnv(input: {
   agentConfig.hybrid = {
     mode: "subagent",
     description:
-      "Hybrid provenance investigator. Use mem-mould session tools first, then RLM-style grep/read/bash over transcript files.",
+      "Hybrid provenance investigator. Use decant session tools first, then RLM-style grep/read/bash over transcript files.",
     ...(input.childModelSlug ? { model: input.childModelSlug } : {}),
     permission: {
       glob: "allow",
@@ -1130,10 +1130,10 @@ async function buildOpenCodeEnv(input: {
     },
   };
   if (input.plugin) {
-    agentConfig.memmould = {
+    agentConfig.decant = {
       mode: "subagent",
       description:
-        "Mem-mould provenance investigator. Use this agent when the parent asks for session_lookup, session_detail, and message_detail over prior session maps.",
+        "Decant provenance investigator. Use this agent when the parent asks for session_lookup, session_detail, and message_detail over prior session maps.",
       ...(input.childModelSlug ? { model: input.childModelSlug } : {}),
       permission: {
         glob: "deny",
@@ -1162,17 +1162,17 @@ async function buildOpenCodeEnv(input: {
     XDG_CACHE_HOME: input.opencodeRoot.cache,
     OPENCODE_DB: path.join(input.conditionDir, "opencode.sqlite"),
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
-    MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
-    MEM_MOULD_CACHE_STABLE: "1",
-    MEM_MOULD_STABLE_PLACEHOLDERS: "1",
-    MEM_MOULD_STABLE_ANCHORS: "1",
+    DECANT_DISABLE_GIT_HOOK_INSTALL: "1",
+    DECANT_CACHE_STABLE: "1",
+    DECANT_STABLE_PLACEHOLDERS: "1",
+    DECANT_STABLE_ANCHORS: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify(config),
     ...(authContent ? { OPENCODE_AUTH_CONTENT: authContent } : {}),
   } satisfies NodeJS.ProcessEnv;
 }
 
 async function seededAuthContent() {
-  const seeded = process.env.MEM_MOULD_E2E_TEMP_ROOT;
+  const seeded = process.env.DECANT_E2E_TEMP_ROOT;
   if (!seeded) return undefined;
   return await fs
     .readFile(path.join(seeded, "data", "opencode", "auth.json"), "utf8")
@@ -1368,14 +1368,14 @@ function buildPromptForCondition(
     "The cited message_id must support the full answer, not just a nearby subclaim.",
     "If a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale.",
   ].join("\n");
-  const transcriptDir = path.join(worktree, "memory", "transcripts");
+  const transcriptDir = path.join(worktree, "recall", "transcripts");
   const distractorTitles = fixture.distractors
     .map((item) => item.title)
     .join(", ");
   if (condition === "rlm-transcript-search") {
     return {
       system:
-        "Answer with compact JSON only. Use RLM-style transcript search with glob/grep/read and optional read-only bash before answering. If you use bash, do not modify files. Do not use mem-mould/session tools. Cite exact session_id and message_id.",
+        "Answer with compact JSON only. Use RLM-style transcript search with glob/grep/read and optional read-only bash before answering. If you use bash, do not modify files. Do not use decant/session tools. Cite exact session_id and message_id.",
       tools: { glob: true, grep: true, read: true, bash: true },
       text: [
         `Transcript directory: ${transcriptDir}`,
@@ -1388,7 +1388,7 @@ function buildPromptForCondition(
   if (condition === "subagent-rlm-transcript-search") {
     return {
       system:
-        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='transcript'. The child must use RLM-style transcript search with glob/grep/read and optional read-only bash before returning evidence. If using bash, the child must not modify files. Do not ask the child to use mem-mould/session tools.",
+        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='transcript'. The child must use RLM-style transcript search with glob/grep/read and optional read-only bash before returning evidence. If using bash, the child must not modify files. Do not ask the child to use decant/session tools.",
       tools: { task: true },
       text: [
         `Transcript directory: ${transcriptDir}`,
@@ -1399,10 +1399,10 @@ function buildPromptForCondition(
       ].join("\n"),
     };
   }
-  if (condition === "memmould-guided-rlm") {
+  if (condition === "decant-guided-rlm") {
     return {
       system:
-        "Answer with compact JSON only. Use mem-mould session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, do not modify files. Cite real OpenCode session_id and message_id values, not embedded fixture labels.",
+        "Answer with compact JSON only. Use decant session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, do not modify files. Cite real OpenCode session_id and message_id values, not embedded fixture labels.",
       tools: {
         session_lookup: true,
         session_detail: true,
@@ -1422,22 +1422,22 @@ function buildPromptForCondition(
       ].join("\n"),
     };
   }
-  if (condition === "subagent-memmould-guided-rlm") {
+  if (condition === "subagent-decant-guided-rlm") {
     return {
       system:
-        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='hybrid'. The child must use mem-mould session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, the child must not modify files.",
+        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='hybrid'. The child must use decant session tools first, then RLM-style transcript search with glob/grep/read and optional read-only bash, then message_detail for exact evidence. If using bash, the child must not modify files.",
       tools: { task: true, session_tree: true },
       text: [
         `Question: ${fixture.question}`,
         `Transcript directory: ${transcriptDir}`,
         "Task instruction: call subagent_type='hybrid', not general or explore.",
-        "The child must cite real OpenCode session_id and message_id values from mem-mould/message_detail, not embedded fixture labels in transcript text.",
+        "The child must cite real OpenCode session_id and message_id values from decant/message_detail, not embedded fixture labels in transcript text.",
         `Known distractor topics include: ${distractorTitles}`,
         answerContract,
       ].join("\n"),
     };
   }
-  if (condition === "memmould-blame-lookup") {
+  if (condition === "decant-blame-lookup") {
     assert.ok(fixture.blame, "blame condition requires fixture.blame");
     return {
       system:
@@ -1453,13 +1453,13 @@ function buildPromptForCondition(
   if (condition === "subagent-map-zoom") {
     return {
       system:
-        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
+        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='decant'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
       tools: { task: true, session_tree: true },
       text: [
         `Question: ${fixture.question}`,
         `Expected relevant prior session: ${fixture.relevant.title}`,
-        "Task instruction: call subagent_type='memmould', not general or explore.",
-        "No transcript corpus is available for this condition; provenance must come from mem-mould session tools.",
+        "Task instruction: call subagent_type='decant', not general or explore.",
+        "No transcript corpus is available for this condition; provenance must come from decant session tools.",
         `Ask the child to ignore distractors: ${distractorTitles}`,
         answerContract,
       ].join("\n"),
@@ -1772,7 +1772,7 @@ function evaluateToolPath(
     requireTools(["task"]);
     requireSearchEvidence();
     rejectTools(contextTools);
-  } else if (condition === "memmould-map-zoom") {
+  } else if (condition === "decant-map-zoom") {
     requireTools(["session_lookup", "session_detail", "message_detail"]);
     rejectTools(["task", ...searchTools, "blame_lookup"]);
   } else if (condition === "subagent-map-zoom") {
@@ -1783,11 +1783,11 @@ function evaluateToolPath(
       "message_detail",
     ]);
     rejectTools(searchTools.concat("blame_lookup"));
-  } else if (condition === "memmould-guided-rlm") {
+  } else if (condition === "decant-guided-rlm") {
     requireTools(["session_lookup", "session_detail", "message_detail"]);
     requireSearchEvidence();
     rejectTools(["task", "blame_lookup"]);
-  } else if (condition === "subagent-memmould-guided-rlm") {
+  } else if (condition === "subagent-decant-guided-rlm") {
     requireTools([
       "task",
       "session_lookup",
@@ -1796,13 +1796,13 @@ function evaluateToolPath(
     ]);
     requireSearchEvidence();
     rejectTools(["blame_lookup"]);
-  } else if (condition === "memmould-blame-lookup") {
+  } else if (condition === "decant-blame-lookup") {
     requireTools(["blame_lookup", "session_detail", "message_detail"]);
     rejectTools(["task", ...searchTools]);
   }
 
   if (
-    (condition.startsWith("memmould") && !usesHybrid(condition)) ||
+    (condition.startsWith("decant") && !usesHybrid(condition)) ||
     condition === "subagent-map-zoom"
   ) {
     if (transcriptFilesRead.length > 0) failures.push("transcript_read");
@@ -1888,14 +1888,14 @@ function transcriptReadFiles(
           : {};
       const command = typeof input.command === "string" ? input.command : "";
       for (const match of command.matchAll(
-        /[^\s"'`]+memory\/transcripts\/[^\s"'`]+/g,
+        /[^\s"'`]+recall\/transcripts\/[^\s"'`]+/g,
       )) {
         files.push(match[0]);
       }
     }
   }
   return [
-    ...new Set(files.filter((file) => file.includes("memory/transcripts"))),
+    ...new Set(files.filter((file) => file.includes("recall/transcripts"))),
   ];
 }
 

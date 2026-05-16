@@ -36,7 +36,7 @@ import {
 } from "./tui-helpers";
 import type { BlobEntry, BlobFidelity, ContextMapFile } from "./types";
 
-const PLUGIN_ID = "mem-mould.context-map-tui";
+const PLUGIN_ID = "decant.context-map-tui";
 
 type Tab = "blobs" | "messages";
 
@@ -218,7 +218,7 @@ function SidebarView(props: {
   );
 }
 
-function MemMapDialog(props: {
+function ContextMapDialog(props: {
   api: TuiPluginApi;
   sessionID: string;
   close: () => void;
@@ -960,7 +960,7 @@ const tui: TuiPlugin = async (api) => {
     dialog.setSize("xlarge");
     dialog.replace(
       () => (
-        <MemMapDialog api={api} sessionID={id} close={() => dialog.clear()} />
+        <ContextMapDialog api={api} sessionID={id} close={() => dialog.clear()} />
       ),
       () => {},
     );

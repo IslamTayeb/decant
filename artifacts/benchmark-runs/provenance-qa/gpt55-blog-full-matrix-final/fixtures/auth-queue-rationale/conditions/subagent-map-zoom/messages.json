@@ -15,7 +15,7 @@
         "providerID": "openai",
         "modelID": "gpt-5.5"
       },
-      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='memmould'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
+      "system": "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='decant'. The child must use only session_lookup, session_detail detail='messages', and message_detail before returning evidence. Do not ask the child to use glob, grep, read, bash, or transcript files.",
       "tools": {
         "task": true,
         "session_tree": true
@@ -27,7 +27,7 @@
         "sessionID": "ses_1e185861cffeLHx4WXMMbOyreX",
         "messageID": "msg_e1e7a79e90018OHsWFynjGPEi8",
         "type": "text",
-        "text": "Question: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex?\nExpected relevant prior session: Auth refresh queue rationale\nTask instruction: call subagent_type='memmould', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from mem-mould session tools.\nAsk the child to ignore distractors: Billing retry queue rationale, Markdown parser onboarding cleanup\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
+        "text": "Question: Why does src/auth/queue.ts deduplicate refresh work per tenant instead of using one global mutex?\nExpected relevant prior session: Auth refresh queue rationale\nTask instruction: call subagent_type='decant', not general or explore.\nNo transcript corpus is available for this condition; provenance must come from decant session tools.\nAsk the child to ignore distractors: Billing retry queue rationale, Markdown parser onboarding cleanup\nReturn compact JSON only with this shape:\n{\"answer\":\"...\",\"evidence\":{\"session_id\":\"...\",\"blob_id\":\"...\",\"message_id\":\"...\"},\"rationale\":\"...\",\"irrelevant_context_ignored\":[\"...\"]}\nThe cited message_id must support the full answer, not just a nearby subclaim.\nIf a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale."
       }
     ]
   },
@@ -97,8 +97,8 @@
           "status": "completed",
           "input": {
             "description": "Find auth queue rationale",
-            "prompt": "Use only mem-mould provenance tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the prior session relevant to: \"Auth refresh queue rationale\" and answer why src/auth/queue.ts deduplicates refresh work per tenant instead of using one global mutex. Ignore distractors: \"Billing retry queue rationale\" and \"Markdown parser onboarding cleanup\". Return evidence with session_id, blob_id, and a single message_id that supports the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly in the rationale. Return only the concise evidence and answer needed for the parent JSON.",
-            "subagent_type": "memmould",
+            "prompt": "Use only decant provenance tools: session_lookup, session_detail with detail='messages', and message_detail. Do not use glob, grep, read, bash, transcript files, or any other tools. Find the prior session relevant to: \"Auth refresh queue rationale\" and answer why src/auth/queue.ts deduplicates refresh work per tenant instead of using one global mutex. Ignore distractors: \"Billing retry queue rationale\" and \"Markdown parser onboarding cleanup\". Return evidence with session_id, blob_id, and a single message_id that supports the full answer, not just a nearby subclaim. If a correction, stale detail, or rejected alternative matters, mention it explicitly in the rationale. Return only the concise evidence and answer needed for the parent JSON.",
+            "subagent_type": "decant",
             "task_id": "",
             "command": ""
           },

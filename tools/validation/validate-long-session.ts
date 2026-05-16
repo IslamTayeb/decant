@@ -25,7 +25,7 @@ const validationModelSlug = requiredModelSlug();
 async function main() {
   const repoRoot = path.resolve(process.cwd());
   const tempRoot = await fs.mkdtemp(
-    path.join(os.tmpdir(), "mem-mould-context-map-long-"),
+    path.join(os.tmpdir(), "decant-context-map-long-"),
   );
   const home = path.join(tempRoot, "home");
   const data = path.join(tempRoot, "data");
@@ -50,7 +50,7 @@ async function main() {
     XDG_CACHE_HOME: cache,
     OPENCODE_DB: path.join(tempRoot, "opencode.sqlite"),
     OPENCODE_DISABLE_PROJECT_CONFIG: "1",
-    MEM_MOULD_DISABLE_GIT_HOOK_INSTALL: "1",
+    DECANT_DISABLE_GIT_HOOK_INSTALL: "1",
     OPENCODE_CONFIG_CONTENT: JSON.stringify({
       $schema: "https://opencode.ai/config.json",
       model: validationModelSlug,
@@ -211,7 +211,7 @@ async function main() {
     passed = true;
   } finally {
     await server.close();
-    if (passed && process.env.MEM_MOULD_KEEP_E2E_TEMP !== "1") {
+    if (passed && process.env.DECANT_KEEP_E2E_TEMP !== "1") {
       await fs.rm(tempRoot, { recursive: true, force: true });
     } else {
       console.error(`Preserved E2E temp root: ${tempRoot}`);

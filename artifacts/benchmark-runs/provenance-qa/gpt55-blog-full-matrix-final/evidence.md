@@ -1,6 +1,6 @@
 # Evidence Snippets
 
-## auth-queue-rationale / memmould-map-zoom
+## auth-queue-rationale / decant-map-zoom
 
 - Pass: true
 - Tool policy: true
@@ -38,9 +38,9 @@
 - Input tokens: 12,601
 - Cache hit: 79.1%
 
-{"answer":"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce while unrelated tenants can still refresh in parallel; one global mutex would unnecessarily block different tenants.","evidence":{"session_id":"auth_refresh_session","blob_id":"./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/memory/transcripts/auth_refresh_session.md","message_id":"auth_fact_3"},"rationale":"The cited message says RefreshQueue uses a per-tenant key so same-tenant duplicate refreshes coalesce while different tenants continue in parallel. The rejected alternative that matters is a global mutex, which would serialize unrelated tenants.","irrelevant_context_ignored":["Billing retry queue rationale","Markdown parser onboarding cleanup"]}
+{"answer":"src/auth/queue.ts deduplicates refresh work per tenant so duplicate refreshes for the same tenant coalesce while unrelated tenants can still refresh in parallel; one global mutex would unnecessarily block different tenants.","evidence":{"session_id":"auth_refresh_session","blob_id":"./benchmarks/provenance-qa/runs/gpt55-blog-full-matrix-final/fixtures/auth-queue-rationale/conditions/subagent-rlm-transcript-search/worktree/recall/transcripts/auth_refresh_session.md","message_id":"auth_fact_3"},"rationale":"The cited message says RefreshQueue uses a per-tenant key so same-tenant duplicate refreshes coalesce while different tenants continue in parallel. The rejected alternative that matters is a global mutex, which would serialize unrelated tenants.","irrelevant_context_ignored":["Billing retry queue rationale","Markdown parser onboarding cleanup"]}
 
-## blame-line-rationale / memmould-blame-lookup
+## blame-line-rationale / decant-blame-lookup
 
 - Pass: true
 - Tool policy: true
@@ -50,7 +50,7 @@
 
 {"answer":"Line 2 caps the requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.","evidence":{"session_id":"ses_1e17a4f6bffeiFkhXM8mu7BnLf","blob_id":"cache_ttl","message_id":"msg_e1e85b0a4001wdQNkicnbigUsl"},"rationale":"blame_lookup had no direct session mapping for commit ^a5cad14, so I used session provenance and the exact message ttl_fact_2, which directly states the reason. The Markdown preview TTL and billing TTL sessions were ignored as distractors because they concern docs preview freshness and provider billing policy, not src/cache/ttl.ts line 2.","irrelevant_context_ignored":["markdown_ttl_distractor","billing_ttl_distractor"]}
 
-## blame-line-rationale / memmould-map-zoom
+## blame-line-rationale / decant-map-zoom
 
 - Pass: true
 - Tool policy: true
@@ -90,7 +90,7 @@
 
 {"answer":"src/cache/ttl.ts caps requested TTL with namespaceMaxSeconds so a noisy namespace cannot extend stale cache retention beyond its namespace budget.","evidence":{"session_id":"ttl_blame_session","blob_id":"","message_id":"ttl_fact_2"},"rationale":"The cited provenance message directly explains line 2's cap as enforcing each namespace's retention budget and preventing noisy namespaces from prolonging stale cache entries. Billing TTL and Markdown TTL were distractors, not relevant sources.","irrelevant_context_ignored":["Billing TTL distractor","Markdown TTL distractor"]}
 
-## correction-chain / memmould-map-zoom
+## correction-chain / decant-map-zoom
 
 - Pass: true
 - Tool policy: true
@@ -130,7 +130,7 @@
 
 {"answer":"Because tokenizing/splitting first preserves raw delimiter and quoted-field behavior; trimming afterward cleans only the resulting field names.","evidence":{"session_id":"schema_parser_session","blob_id":"schema_parser_session.md","message_id":"schema_fact_2"},"rationale":"schema_fact_2 is the corrected final rationale. The earlier idea to trim before tokenization was explicitly superseded/rejected, so it should not be used.","irrelevant_context_ignored":["CSV trim cleanup","Network timeout parser","correction_chain_decoy_*"]}
 
-## false-provenance / memmould-map-zoom
+## false-provenance / decant-map-zoom
 
 - Pass: true
 - Tool policy: true
@@ -170,7 +170,7 @@
 
 {"answer":"src/cache/index.ts scopes TTL by namespace so one noisy namespace cannot extend or evict unrelated namespaces through a shared global TTL policy.","evidence":{"session_id":"cache_namespace_session","blob_id":"cache_namespace_session.md","message_id":"cache_fact_2"},"rationale":"A global TTL was considered and rejected because it would let activity in one namespace affect expiration behavior for unrelated namespaces.","irrelevant_context_ignored":["Billing cache global TTL","Image cache namespace notes"]}
 
-## multi-agent-synthesis / memmould-map-zoom
+## multi-agent-synthesis / decant-map-zoom
 
 - Pass: true
 - Tool policy: true
@@ -210,7 +210,7 @@
 
 {"answer":"Test investigator child","evidence":{"session_id":"test_investigator_child_session","blob_id":"test_investigator_child_session.md","message_id":"child_fact_2"},"rationale":"The cited finding says failed-test IDs must remain so a later agent can reproduce and triage exact failures, which explains why src/report/summary.ts keeps them in the final report. The docs writer's no-debugging-IDs request was rejected as a distractor.","irrelevant_context_ignored":["Docs writer child session","Style reviewer child session"]}
 
-## related-reuse / memmould-map-zoom
+## related-reuse / decant-map-zoom
 
 - Pass: true
 - Tool policy: true
