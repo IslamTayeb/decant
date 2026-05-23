@@ -70,6 +70,8 @@ async function main() {
     ["config", "user.email", "context-map-demo@example.com"],
     { cwd: repo },
   );
+  const opencodeRepo = await fs.realpath(repo);
+  const opencodeHome = await fs.realpath(home);
 
   // ── Set up plugin wiring ─────────────────────────────────────────
   await fs.mkdir(path.join(repo, ".opencode", "plugins"), { recursive: true });
@@ -98,29 +100,31 @@ async function main() {
     [fixtureSqlite, ".dump"],
     { maxBuffer: 50 * 1024 * 1024 },
   );
-  const patchedDump = dump.replaceAll(metadata.originalRepo, repo);
+  const pathReplacements = fixturePathReplacements(
+    metadata,
+    opencodeRepo,
+    opencodeHome,
+  );
+  const patchedDump = replaceFixturePaths(dump, pathReplacements);
   const tmpSql = path.join(tempRoot, "import.sql");
   await fs.writeFile(tmpSql, patchedDump);
   await execAsync(`sqlite3 ${shellQuote(dbDst)} < ${shellQuote(tmpSql)}`);
   await fs.rm(tmpSql);
 
   // ── Copy and patch context maps ──────────────────────────────────
-  const mapsDir = path.join(home, ".opencode", "context-maps");
+  const mapsDir = path.join(opencodeHome, ".opencode", "context-maps");
   await fs.mkdir(mapsDir, { recursive: true });
   const srcMaps = path.join(fixturesDir, "context-maps");
   const mapFiles = await fs.readdir(srcMaps).catch(() => [] as string[]);
   for (const file of mapFiles) {
     let content = await fs.readFile(path.join(srcMaps, file), "utf8");
-    content = content.replaceAll(metadata.originalRepo, repo);
-    if (metadata.originalHome) {
-      content = content.replaceAll(metadata.originalHome, home);
-    }
+    content = replaceFixturePaths(content, pathReplacements);
     await fs.writeFile(path.join(mapsDir, file), content);
   }
 
   // ── Write launch and cleanup scripts ─────────────────────────────
   const envVars = {
-    HOME: home,
+    HOME: opencodeHome,
     XDG_DATA_HOME: data,
     XDG_CONFIG_HOME: config,
     XDG_STATE_HOME: state,
@@ -130,7 +134,8 @@ async function main() {
   const launch = [
     "#!/bin/sh",
     ...Object.entries(envVars).map(([k, v]) => `export ${k}=${shellQuote(v)}`),
-    `cd ${shellQuote(repo)} || exit 1`,
+    `cd ${shellQuote(opencodeRepo)} || exit 1`,
+    `if [ "$#" -eq 0 ]; then exec opencode --session ${shellQuote(defaultSessionID(metadata.sessions))}; fi`,
     'exec opencode "$@"',
     "",
   ].join("\n");
@@ -142,21 +147,69 @@ async function main() {
   await fs.chmod(path.join(tempRoot, "cleanup-test-env.sh"), 0o755);
 
   // ── Write testing guide ──────────────────────────────────────────
-  await writeTestingGuide(repo, metadata.sessions, metadata.commits);
+  await writeTestingGuide(opencodeRepo, metadata.sessions, metadata.commits);
 
   // ── Done ─────────────────────────────────────────────────────────
   const elapsed = process.uptime().toFixed(1);
   console.log(`\nReady in ${elapsed}s\n`);
   console.log(`  Launch:  sh ${path.join(tempRoot, "open-test-env.sh")}`);
   console.log(`  Cleanup: sh ${path.join(tempRoot, "cleanup-test-env.sh")}`);
-  console.log(`  Guide:   ${path.join(repo, "TESTING.md")}`);
-  console.log(`  Repo:    ${repo}`);
+  console.log(`  Guide:   ${path.join(opencodeRepo, "TESTING.md")}`);
+  console.log(`  Repo:    ${opencodeRepo}`);
   console.log(`\n  Sessions: ${Object.keys(metadata.sessions).length}`);
   console.log(`  Commits:  ${Object.keys(metadata.commits).length}`);
 }
 
 function shellQuote(value: string) {
   return JSON.stringify(value);
+}
+
+function defaultSessionID(sessions: Record<string, string>) {
+  return sessions.auth_queue_investigation ?? Object.values(sessions)[0] ?? "";
+}
+
+function fixturePathReplacements(
+  metadata: { originalRepo: string; originalHome?: string },
+  repo: string,
+  home: string,
+): Array<[string, string]> {
+  return [
+    ...fixturePathVariants(metadata.originalRepo).map(
+      (from): [string, string] => [from, repo],
+    ),
+    ...(metadata.originalHome
+      ? fixturePathVariants(metadata.originalHome).map(
+          (from): [string, string] => [from, home],
+        )
+      : []),
+  ];
+}
+
+function fixturePathVariants(value: string) {
+  const variants = new Set<string>();
+  const addMacPathVariants = (pathValue: string) => {
+    variants.add(pathValue);
+    if (pathValue.startsWith("/var/")) {
+      variants.add(`/private${pathValue}`);
+    }
+    if (pathValue.startsWith("/private/var/")) {
+      variants.add(pathValue.slice("/private".length));
+    }
+  };
+
+  addMacPathVariants(value);
+  return Array.from(variants);
+}
+
+function replaceFixturePaths(
+  content: string,
+  replacements: Array<[string, string]>,
+) {
+  let result = content;
+  for (const [from, to] of replacements) {
+    if (from && from !== to) result = result.replaceAll(from, to);
+  }
+  return result;
 }
 
 async function writeTestingGuide(
