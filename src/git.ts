@@ -81,10 +81,10 @@ const path = require('path')
 const [, , sessionID, commitHash, root] = process.argv
 const commitFile = path.join(root, '_commits.json')
 const sessionFile = path.join(root, sessionID + '.json')
-let activeBlobID
-let activeBlobLabel
-let activeBlobIDs = []
-let activeBlobLabels = []
+let activeTopicID
+let activeTopicLabel
+let activeTopicIDs = []
+let activeTopicLabels = []
 
 function git(args) {
   try {
@@ -105,13 +105,21 @@ const changedFiles = unique(
 
 try {
   const session = JSON.parse(fs.readFileSync(sessionFile, 'utf8'))
-  activeBlobID = session.lastActiveBlobID
-  if (activeBlobID && session.blobs && session.blobs[activeBlobID]) {
-    activeBlobLabel = session.blobs[activeBlobID].label
-    activeBlobIDs = [activeBlobID]
-    activeBlobLabels = [activeBlobLabel]
-    const blob = session.blobs[activeBlobID]
-    blob.commitHashes = unique([...(blob.commitHashes || []), commitHash])
+  // Legacy blob->topic migration for hook-side writes. The plugin storage
+  // layer handles this too, but this helper reads the JSON file directly.
+  activeTopicID = session.lastActiveTopicID || session.lastActiveBlobID
+  const topics = session.topics || session.blobs
+  if (activeTopicID && topics && topics[activeTopicID]) {
+    activeTopicLabel = topics[activeTopicID].label
+    activeTopicIDs = [activeTopicID]
+    activeTopicLabels = [activeTopicLabel]
+    const topic = topics[activeTopicID]
+    topic.commitHashes = unique([...(topic.commitHashes || []), commitHash])
+    session.lastActiveTopicID = activeTopicID
+    session.topics = topics
+    delete session.lastActiveBlobID
+    delete session.blobOrder
+    delete session.blobs
     const tempSession = sessionFile + '.tmp-' + process.pid + '-' + Date.now()
     fs.writeFileSync(tempSession, JSON.stringify(session, null, 2))
     fs.renameSync(tempSession, sessionFile)
@@ -130,10 +138,10 @@ file.entries[commitHash] = {
   timestamp: Date.now(),
   directory: process.cwd(),
   worktree: process.cwd(),
-  activeBlobID,
-  activeBlobLabel,
-  activeBlobIDs,
-  activeBlobLabels,
+  activeTopicID,
+  activeTopicLabel,
+  activeTopicIDs,
+  activeTopicLabels,
   commitSubject,
   changedFiles,
 }

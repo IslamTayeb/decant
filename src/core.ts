@@ -3,16 +3,16 @@ import type { Part } from "@opencode-ai/sdk";
 import {
   annotationEnvelopeSchema,
   annotationSchema,
-  blobFidelitySchema,
+  topicFidelitySchema,
   type AnnotationEnvelope,
   type AnnotationPayload,
-  type BlobEntry,
-  type BlobFidelity,
+  type TopicEntry,
+  type TopicFidelity,
   type CommitMapEntry,
   type ContextMapFile,
   type ContextMapCompactionState,
   type ContextPreview,
-  type ContextPreviewBlob,
+  type ContextPreviewTopic,
   type ControlSource,
   type HistoricalSessionOverview,
   type MessageEntry,
@@ -22,7 +22,7 @@ import {
   type SessionLike,
 } from "./types";
 
-export const COMPACTION_SUMMARY_BLOB_ID = "session_summary";
+export const COMPACTION_SUMMARY_TOPIC_ID = "session_summary";
 
 const STOP_WORDS = new Set([
   "about",
@@ -82,7 +82,7 @@ const STOP_WORDS = new Set([
   "your",
 ]);
 
-export function slugifyBlobLabel(value: string) {
+export function slugifyTopicLabel(value: string) {
   const slug = value
     .trim()
     .toLowerCase()
@@ -180,16 +180,16 @@ export function resetMapAfterCompaction(input: {
   compactedAt?: number;
   includeMessageID?: string;
   archivePath?: string;
-  summaryFidelity?: BlobFidelity;
+  summaryFidelity?: TopicFidelity;
 }): ContextMapFile {
   const compactedAt = input.compactedAt ?? Date.now();
   const summaryText = input.summaryText.trim() || "Conversation compacted.";
-  const summaryBlobID = COMPACTION_SUMMARY_BLOB_ID;
+  const summaryTopicID = COMPACTION_SUMMARY_TOPIC_ID;
   const summaryFidelity =
     input.summaryFidelity ?? defaultCompactionSummaryFidelity(input.map);
-  const blob = createBlobEntry({
-    id: summaryBlobID,
-    label: summaryBlobID,
+  const topic = createTopicEntry({
+    id: summaryTopicID,
+    label: summaryTopicID,
     summary: summaryText,
     placeholder:
       summaryFidelity === "placeholder"
@@ -203,7 +203,7 @@ export function resetMapAfterCompaction(input: {
   const message = createMessageEntry({
     id: input.summaryMessageID,
     role: "assistant",
-    blobID: summaryBlobID,
+    topicID: summaryTopicID,
     summary: summaryText,
     tokenEstimate: estimateTokensFromText(summaryText),
     createdAt: compactedAt,
@@ -212,12 +212,12 @@ export function resetMapAfterCompaction(input: {
     partTypes: ["text"],
     toolNames: [],
   });
-  blob.messageIDs.push(message.id);
+  topic.messageIDs.push(message.id);
 
   const compaction: ContextMapCompactionState = {
     compactedAt,
     summaryMessageID: input.summaryMessageID,
-    summaryBlobID,
+    summaryTopicID,
     includeMessageID: input.includeMessageID,
     archivePath: input.archivePath,
   };
@@ -225,9 +225,9 @@ export function resetMapAfterCompaction(input: {
     ...input.map,
     updatedAt: compactedAt,
     lastAnnotatedMessageID: input.summaryMessageID,
-    lastActiveBlobID: summaryBlobID,
-    blobOrder: [summaryBlobID],
-    blobs: { [summaryBlobID]: blob },
+    lastActiveTopicID: summaryTopicID,
+    topicOrder: [summaryTopicID],
+    topics: { [summaryTopicID]: topic },
     messages: { [message.id]: message },
     pendingRetroactive: {},
     compaction,
@@ -236,13 +236,8 @@ export function resetMapAfterCompaction(input: {
   return next;
 }
 
-function defaultCompactionSummaryFidelity(map: ContextMapFile): BlobFidelity {
-  if (map.blobOrder.length === 0) return "summary";
-  const allHistorical = map.blobOrder.every((id) => {
-    const fidelity = map.blobs[id]?.fidelity;
-    return fidelity === "drop" || fidelity === "placeholder";
-  });
-  return allHistorical ? "placeholder" : "summary";
+function defaultCompactionSummaryFidelity(_map: ContextMapFile): TopicFidelity {
+  return "summary";
 }
 
 export function extractToolNames(parts: MessageLike["parts"]) {
@@ -289,7 +284,7 @@ export function deriveSummaryFromMessage(message: MessageLike) {
 export function createMessageEntry(input: {
   id: string;
   role: "user" | "assistant";
-  blobID?: string;
+  topicID?: string;
   summary: string;
   keyFacts?: string[];
   hidden?: boolean;
@@ -306,7 +301,7 @@ export function createMessageEntry(input: {
   return {
     id: input.id,
     role: input.role,
-    blobID: input.blobID,
+    topicID: input.topicID,
     summary: input.summary,
     keyFacts: mergeUniqueStrings(input.keyFacts ?? []),
     hidden: input.hidden ?? false,
@@ -322,17 +317,17 @@ export function createMessageEntry(input: {
   };
 }
 
-export function createBlobEntry(input: {
+export function createTopicEntry(input: {
   id: string;
   label: string;
   summary: string;
   placeholder: string;
   keyFacts?: string[];
-  fidelity?: BlobFidelity;
+  fidelity?: TopicFidelity;
   fidelitySource?: ControlSource;
   createdAt: number;
   lastActiveAt?: number;
-}): BlobEntry {
+}): TopicEntry {
   return {
     id: input.id,
     label: input.label,
@@ -354,33 +349,33 @@ export function rebuildTotals(map: ContextMapFile) {
     (sum, entry) => sum + entry.tokenEstimate,
     0,
   );
-  for (const blob of Object.values(map.blobs)) {
-    blob.tokenEstimate = blob.messageIDs.reduce(
+  for (const topic of Object.values(map.topics)) {
+    topic.tokenEstimate = topic.messageIDs.reduce(
       (sum, messageID) => sum + (map.messages[messageID]?.tokenEstimate ?? 0),
       0,
     );
   }
 }
 
-function assignMessageToBlob(
+function assignMessageToTopic(
   map: ContextMapFile,
-  blobID: string,
+  topicID: string,
   message: MessageEntry,
 ) {
   const previous = map.messages[message.id];
-  if (previous?.blobID && previous.blobID !== blobID) {
-    const previousBlob = map.blobs[previous.blobID];
-    if (previousBlob) {
-      previousBlob.messageIDs = previousBlob.messageIDs.filter(
+  if (previous?.topicID && previous.topicID !== topicID) {
+    const previousTopic = map.topics[previous.topicID];
+    if (previousTopic) {
+      previousTopic.messageIDs = previousTopic.messageIDs.filter(
         (messageID) => messageID !== message.id,
       );
     }
   }
   map.messages[message.id] = message;
-  const blob = map.blobs[blobID];
-  if (!blob.messageIDs.includes(message.id)) blob.messageIDs.push(message.id);
-  blob.lastActiveAt = Math.max(blob.lastActiveAt, message.createdAt);
-  map.lastActiveBlobID = blobID;
+  const topic = map.topics[topicID];
+  if (!topic.messageIDs.includes(message.id)) topic.messageIDs.push(message.id);
+  topic.lastActiveAt = Math.max(topic.lastActiveAt, message.createdAt);
+  map.lastActiveTopicID = topicID;
 }
 
 function pendingMessagesForAnnotation(
@@ -406,34 +401,34 @@ function pendingMessagesForAnnotation(
   );
 }
 
-function upsertBlobFromAnnotation(
+function upsertTopicFromAnnotation(
   map: ContextMapFile,
   annotation: AnnotationPayload,
   createdAt: number,
 ) {
-  const blobID = slugifyBlobLabel(annotation.blob);
-  const existing = map.blobs[blobID];
+  const topicID = slugifyTopicLabel(annotation.topic);
+  const existing = map.topics[topicID];
   if (!existing) {
-    map.blobs[blobID] = createBlobEntry({
-      id: blobID,
-      label: blobID,
-      summary: annotation.blob_summary,
+    map.topics[topicID] = createTopicEntry({
+      id: topicID,
+      label: topicID,
+      summary: annotation.topic_summary,
       placeholder: annotation.placeholder,
       keyFacts: annotation.key_facts,
       createdAt,
     });
-    map.blobOrder.push(blobID);
+    map.topicOrder.push(topicID);
   }
-  const blob = map.blobs[blobID];
-  blob.label = blobID;
-  blob.summary = annotation.blob_summary;
-  blob.placeholder = annotation.placeholder;
-  blob.keyFacts = mergeUniqueStrings([
-    ...blob.keyFacts,
+  const topic = map.topics[topicID];
+  topic.label = topicID;
+  topic.summary = annotation.topic_summary;
+  topic.placeholder = annotation.placeholder;
+  topic.keyFacts = mergeUniqueStrings([
+    ...topic.keyFacts,
     ...annotation.key_facts,
   ]);
-  blob.lastActiveAt = Math.max(blob.lastActiveAt, createdAt);
-  return blob;
+  topic.lastActiveAt = Math.max(topic.lastActiveAt, createdAt);
+  return topic;
 }
 
 export function applyAssistantAnnotation(input: {
@@ -454,7 +449,7 @@ export function applyAssistantAnnotation(input: {
   if (!assistant) return input.map;
 
   const assistantCreatedAt = getMessageCreatedAt(assistant);
-  const blob = upsertBlobFromAnnotation(
+  const topic = upsertTopicFromAnnotation(
     input.map,
     input.annotation,
     assistantCreatedAt,
@@ -475,7 +470,7 @@ export function applyAssistantAnnotation(input: {
     const entry = createMessageEntry({
       id: message.info.id,
       role: message.info.role,
-      blobID: blob.id,
+      topicID: topic.id,
       summary,
       keyFacts:
         message.info.id === input.assistantMessageID
@@ -495,7 +490,7 @@ export function applyAssistantAnnotation(input: {
       partTypes,
       toolNames,
     });
-    assignMessageToBlob(input.map, blob.id, entry);
+    assignMessageToTopic(input.map, topic.id, entry);
   }
 
   input.map.lastAnnotatedMessageID = input.assistantMessageID;
@@ -504,33 +499,33 @@ export function applyAssistantAnnotation(input: {
   return input.map;
 }
 
-function upsertBlobFromRetroactive(
+function upsertTopicFromRetroactive(
   map: ContextMapFile,
   item: RetroactiveAnnotationItem,
   createdAt: number,
 ) {
-  const blobID = slugifyBlobLabel(item.blob);
-  const existing = map.blobs[blobID];
+  const topicID = slugifyTopicLabel(item.topic);
+  const existing = map.topics[topicID];
   if (!existing) {
-    map.blobs[blobID] = createBlobEntry({
-      id: blobID,
-      label: blobID,
-      summary: item.blob_summary ?? item.message_summary,
+    map.topics[topicID] = createTopicEntry({
+      id: topicID,
+      label: topicID,
+      summary: item.topic_summary ?? item.message_summary,
       placeholder:
         item.placeholder ??
-        trimText(item.blob_summary ?? item.message_summary, 80),
+        trimText(item.topic_summary ?? item.message_summary, 80),
       keyFacts: item.key_facts,
       createdAt,
     });
-    map.blobOrder.push(blobID);
+    map.topicOrder.push(topicID);
   }
 
-  const blob = map.blobs[blobID];
-  if (item.blob_summary) blob.summary = item.blob_summary;
-  if (item.placeholder) blob.placeholder = item.placeholder;
-  blob.keyFacts = mergeUniqueStrings([...blob.keyFacts, ...item.key_facts]);
-  blob.lastActiveAt = Math.max(blob.lastActiveAt, createdAt);
-  return blob;
+  const topic = map.topics[topicID];
+  if (item.topic_summary) topic.summary = item.topic_summary;
+  if (item.placeholder) topic.placeholder = item.placeholder;
+  topic.keyFacts = mergeUniqueStrings([...topic.keyFacts, ...item.key_facts]);
+  topic.lastActiveAt = Math.max(topic.lastActiveAt, createdAt);
+  return topic;
 }
 
 function applyRetroactiveAnnotationItem(input: {
@@ -544,12 +539,12 @@ function applyRetroactiveAnnotationItem(input: {
   if (!message) return false;
 
   const createdAt = getMessageCreatedAt(message);
-  const blob = upsertBlobFromRetroactive(input.map, input.item, createdAt);
+  const topic = upsertTopicFromRetroactive(input.map, input.item, createdAt);
   const current = input.map.messages[message.info.id];
   const entry = createMessageEntry({
     id: message.info.id,
     role: message.info.role,
-    blobID: blob.id,
+    topicID: topic.id,
     summary: input.item.message_summary,
     keyFacts: input.item.key_facts,
     hidden: current?.hidden,
@@ -563,7 +558,7 @@ function applyRetroactiveAnnotationItem(input: {
     partTypes: message.parts.map((part) => part.type),
     toolNames: extractToolNames(message.parts),
   });
-  assignMessageToBlob(input.map, blob.id, entry);
+  assignMessageToTopic(input.map, topic.id, entry);
   delete input.map.pendingRetroactive[message.info.id];
   return true;
 }
@@ -611,7 +606,7 @@ export function capturePendingRetroactiveMessage(input: {
   map: ContextMapFile;
   messages: MessageLike[];
   messageID: string;
-  suggestedBlobID?: string;
+  suggestedTopicID?: string;
 }) {
   const message = input.messages.find(
     (candidate) => candidate.info.id === input.messageID,
@@ -636,9 +631,9 @@ export function capturePendingRetroactiveMessage(input: {
     toolNames,
     tokenEstimate: estimateTokensFromParts(message.parts),
     createdAt,
-    suggestedBlobID: input.suggestedBlobID,
-    suggestedBlobLabel: input.suggestedBlobID
-      ? input.map.blobs[input.suggestedBlobID]?.label
+    suggestedTopicID: input.suggestedTopicID,
+    suggestedTopicLabel: input.suggestedTopicID
+      ? input.map.topics[input.suggestedTopicID]?.label
       : undefined,
   };
 
@@ -673,26 +668,26 @@ export function applyFallbackAnnotation(input: {
   if (!assistant) return input.map;
 
   const summary = deriveSummaryFromMessage(assistant);
-  const blobID =
-    input.map.lastActiveBlobID ??
-    slugifyBlobLabel(input.fallbackLabel ?? "working_set");
-  if (!input.map.blobs[blobID]) {
-    input.map.blobs[blobID] = createBlobEntry({
-      id: blobID,
-      label: blobID,
+  const topicID =
+    input.map.lastActiveTopicID ??
+    slugifyTopicLabel(input.fallbackLabel ?? "working_set");
+  if (!input.map.topics[topicID]) {
+    input.map.topics[topicID] = createTopicEntry({
+      id: topicID,
+      label: topicID,
       summary,
       placeholder: trimText(summary, 80),
       createdAt: getMessageCreatedAt(assistant),
     });
-    input.map.blobOrder.push(blobID);
+    input.map.topicOrder.push(topicID);
   }
 
   const annotation: AnnotationPayload = {
-    blob: blobID,
-    is_new_blob: false,
+    topic: topicID,
+    is_new_topic: false,
     message_summary: summary,
-    blob_summary: input.map.blobs[blobID].summary || summary,
-    placeholder: input.map.blobs[blobID].placeholder || trimText(summary, 80),
+    topic_summary: input.map.topics[topicID].summary || summary,
+    placeholder: input.map.topics[topicID].placeholder || trimText(summary, 80),
     key_facts: [],
   };
   return applyAssistantAnnotation({
@@ -707,35 +702,35 @@ export function ensureMapCoverage(
   map: ContextMapFile,
   messages: MessageLike[],
 ) {
-  let activeBlobID = map.lastActiveBlobID;
+  let activeTopicID = map.lastActiveTopicID;
   for (const message of messages) {
     if (map.messages[message.info.id]) {
-      activeBlobID = map.messages[message.info.id]?.blobID ?? activeBlobID;
+      activeTopicID = map.messages[message.info.id]?.topicID ?? activeTopicID;
       continue;
     }
 
-    if (!activeBlobID) {
-      const seed = slugifyBlobLabel(
+    if (!activeTopicID) {
+      const seed = slugifyTopicLabel(
         labelFromSummary(
           deriveSummaryFromMessage(message),
-          map.blobOrder.length + 1,
+          map.topicOrder.length + 1,
         ),
       );
-      map.blobs[seed] = createBlobEntry({
+      map.topics[seed] = createTopicEntry({
         id: seed,
         label: seed,
         summary: deriveSummaryFromMessage(message),
         placeholder: trimText(deriveSummaryFromMessage(message), 80),
         createdAt: getMessageCreatedAt(message),
       });
-      map.blobOrder.push(seed);
-      activeBlobID = seed;
+      map.topicOrder.push(seed);
+      activeTopicID = seed;
     }
 
     const entry = createMessageEntry({
       id: message.info.id,
       role: message.info.role,
-      blobID: activeBlobID,
+      topicID: activeTopicID,
       summary: deriveSummaryFromMessage(message),
       tokenEstimate: estimateTokensFromParts(message.parts),
       createdAt: getMessageCreatedAt(message),
@@ -744,9 +739,9 @@ export function ensureMapCoverage(
       partTypes: message.parts.map((part) => part.type),
       toolNames: extractToolNames(message.parts),
     });
-    assignMessageToBlob(map, activeBlobID, entry);
-    map.blobs[activeBlobID].summary ||= entry.summary;
-    map.blobs[activeBlobID].placeholder ||= trimText(entry.summary, 80);
+    assignMessageToTopic(map, activeTopicID, entry);
+    map.topics[activeTopicID].summary ||= entry.summary;
+    map.topics[activeTopicID].placeholder ||= trimText(entry.summary, 80);
   }
 
   map.updatedAt = Date.now();
@@ -765,21 +760,21 @@ export function mergeContextMaps(
       ...fresh.settings,
       ...existing.settings,
     },
-    blobs: { ...fresh.blobs },
+    topics: { ...fresh.topics },
     messages: { ...fresh.messages },
     pendingRetroactive: { ...existing.pendingRetroactive },
   };
 
-  for (const blobID of existing.blobOrder) {
-    const prior = existing.blobs[blobID];
+  for (const topicID of existing.topicOrder) {
+    const prior = existing.topics[topicID];
     if (!prior) continue;
-    const next = merged.blobs[blobID];
+    const next = merged.topics[topicID];
     if (!next) {
-      merged.blobs[blobID] = structuredClone(prior);
-      if (!merged.blobOrder.includes(blobID)) merged.blobOrder.push(blobID);
+      merged.topics[topicID] = structuredClone(prior);
+      if (!merged.topicOrder.includes(topicID)) merged.topicOrder.push(topicID);
       continue;
     }
-    merged.blobs[blobID] = {
+    merged.topics[topicID] = {
       ...next,
       fidelity: prior.fidelity,
       fidelitySource: prior.fidelitySource,
@@ -808,10 +803,10 @@ export function mergeContextMaps(
     }
     merged.messages[messageID] = {
       ...next,
-      blobID:
-        prior.source === "annotation" && prior.blobID
-          ? prior.blobID
-          : next.blobID,
+      topicID:
+        prior.source === "annotation" && prior.topicID
+          ? prior.topicID
+          : next.topicID,
       hidden: prior.hidden,
       hiddenSource: prior.hiddenSource,
       fidelityOverride: prior.fidelityOverride,
@@ -834,32 +829,32 @@ export function mergeContextMaps(
   return merged;
 }
 
-export function updateBlobFidelity(input: {
+export function updateTopicFidelity(input: {
   map: ContextMapFile;
-  blobID: string;
-  fidelity: BlobFidelity;
+  topicID: string;
+  fidelity: TopicFidelity;
   source: ControlSource;
   force?: boolean;
 }) {
-  const blob = input.map.blobs[input.blobID];
-  if (!blob)
-    return { ok: false as const, message: `Unknown blob: ${input.blobID}` };
+  const topic = input.map.topics[input.topicID];
+  if (!topic)
+    return { ok: false as const, message: `Unknown topic: ${input.topicID}` };
   if (
-    blob.fidelitySource === "user" &&
+    topic.fidelitySource === "user" &&
     input.source === "agent" &&
     !input.force
   ) {
     return {
       ok: false as const,
-      message: `Blob ${input.blobID} is user-controlled; refusing to override without force.`,
+      message: `Topic ${input.topicID} is user-controlled; refusing to override without force.`,
     };
   }
-  blob.fidelity = blobFidelitySchema.parse(input.fidelity);
-  blob.fidelitySource = input.source;
+  topic.fidelity = topicFidelitySchema.parse(input.fidelity);
+  topic.fidelitySource = input.source;
   input.map.updatedAt = Date.now();
   return {
     ok: true as const,
-    message: `Set ${input.blobID} to ${input.fidelity}.`,
+    message: `Set ${input.topicID} to ${input.fidelity}.`,
   };
 }
 
@@ -869,6 +864,7 @@ export function updateMessageControls(input: {
   hidden?: boolean;
   fidelityOverride?: MessageFidelity;
   source: ControlSource;
+  force?: boolean;
 }) {
   const message = input.map.messages[input.messageID];
   if (!message)
@@ -876,23 +872,35 @@ export function updateMessageControls(input: {
       ok: false as const,
       message: `Unknown message: ${input.messageID}`,
     };
+  if (
+    typeof input.hidden === "boolean" &&
+    message.hiddenSource === "user" &&
+    input.source === "agent" &&
+    !input.force
+  ) {
+    return {
+      ok: false as const,
+      message: `Message ${input.messageID} hide control is user-controlled; refusing to override without force.`,
+    };
+  }
+  if (
+    input.fidelityOverride &&
+    message.fidelitySource === "user" &&
+    message.fidelityOverride !== "inherit" &&
+    input.source === "agent" &&
+    !input.force
+  ) {
+    return {
+      ok: false as const,
+      message: `Message ${input.messageID} fidelity is user-controlled; refusing to override without force.`,
+    };
+  }
   if (typeof input.hidden === "boolean") {
     message.hidden = input.hidden;
     message.hiddenSource = input.source;
   }
   if (input.fidelityOverride) {
-    let normalized = input.fidelityOverride;
-    if (normalized !== "inherit") {
-      const blob = message.blobID ? input.map.blobs[message.blobID] : undefined;
-      if (
-        blob &&
-        ((blob.fidelity === "summary" && normalized === "summary") ||
-          (blob.fidelity === "full" && normalized === "full"))
-      ) {
-        normalized = "inherit";
-      }
-    }
-    message.fidelityOverride = normalized;
+    message.fidelityOverride = input.fidelityOverride;
     message.fidelitySource = input.source;
   }
   message.updatedAt = Date.now();
@@ -900,18 +908,21 @@ export function updateMessageControls(input: {
   return { ok: true as const, message: `Updated message ${input.messageID}.` };
 }
 
-export function buildPlaceholderText(map: ContextMapFile, blob: BlobEntry) {
-  if (map.settings.stablePlaceholders) return `[Context hidden: ${blob.label}]`;
-  const head = `[${blob.label} - ~${blob.tokenEstimate.toLocaleString()} tok: ${blob.placeholder}]`;
-  if (!map.settings.placeholderIncludesKeyFacts || blob.keyFacts.length === 0)
+export function buildPlaceholderText(map: ContextMapFile, topic: TopicEntry) {
+  if (map.settings.stablePlaceholders)
+    return `[Context hidden: ${topic.label}]`;
+  const head = `[${topic.label} - ~${topic.tokenEstimate.toLocaleString()} tok: ${topic.placeholder}]`;
+  if (!map.settings.placeholderIncludesKeyFacts || topic.keyFacts.length === 0)
     return head;
-  return `${head}\nKey facts: ${blob.keyFacts.join("; ")}`;
+  return `${head}\nKey facts: ${topic.keyFacts.join("; ")}`;
 }
 
-export function buildBlobSummaryText(blob: BlobEntry) {
+export function buildTopicSummaryText(topic: TopicEntry) {
   const facts =
-    blob.keyFacts.length > 0 ? `\nKey facts: ${blob.keyFacts.join("; ")}` : "";
-  return `[Blob summary: ${blob.label}] ${blob.summary}${facts}`;
+    topic.keyFacts.length > 0
+      ? `\nKey facts: ${topic.keyFacts.join("; ")}`
+      : "";
+  return `[Topic summary: ${topic.label}] ${topic.summary}${facts}`;
 }
 
 export function buildMessageSummaryText(message: MessageEntry) {
@@ -972,7 +983,7 @@ function cleanupToolParts(map: ContextMapFile, parts: MessageLike["parts"]) {
   });
 }
 
-function chooseBlobAnchorIndex(
+function chooseTopicAnchorIndex(
   messages: MessageLike[],
   indexes: number[],
   stableAnchors: boolean,
@@ -994,24 +1005,24 @@ export function transformMessagesForContext(
   map: ContextMapFile,
 ) {
   const activeMessages = filterMessagesForActiveContext(map, messages);
-  const blobIndexes = new Map<string, number[]>();
+  const topicIndexes = new Map<string, number[]>();
   activeMessages.forEach((message, index) => {
     const entry = map.messages[message.info.id];
-    if (!entry?.blobID) return;
-    const blob = map.blobs[entry.blobID];
-    if (!blob) return;
-    if (blob.fidelity !== "compressed" && blob.fidelity !== "placeholder")
+    if (!entry?.topicID) return;
+    const topic = map.topics[entry.topicID];
+    if (!topic) return;
+    if (topic.fidelity !== "compressed" && topic.fidelity !== "placeholder")
       return;
-    const list = blobIndexes.get(blob.id) ?? [];
+    const list = topicIndexes.get(topic.id) ?? [];
     list.push(index);
-    blobIndexes.set(blob.id, list);
+    topicIndexes.set(topic.id, list);
   });
 
-  const anchorIndexByBlob = new Map<string, number>();
-  for (const [blobID, indexes] of blobIndexes) {
-    anchorIndexByBlob.set(
-      blobID,
-      chooseBlobAnchorIndex(
+  const anchorIndexByTopic = new Map<string, number>();
+  for (const [topicID, indexes] of topicIndexes) {
+    anchorIndexByTopic.set(
+      topicID,
+      chooseTopicAnchorIndex(
         activeMessages,
         indexes,
         map.settings.stableAnchors,
@@ -1029,32 +1040,44 @@ export function transformMessagesForContext(
     };
 
     const entry = map.messages[message.info.id];
-    const blob = entry?.blobID ? map.blobs[entry.blobID] : undefined;
+    const topic = entry?.topicID ? map.topics[entry.topicID] : undefined;
 
-    if (!entry || !blob) {
+    if (!entry || !topic) {
       output.push(base);
       continue;
     }
 
-    if (blob.fidelity === "drop") continue;
-
-    if (blob.fidelity === "compressed") {
-      if (anchorIndexByBlob.get(blob.id) !== index) continue;
-      output.push(replaceMessageWithText(base, buildBlobSummaryText(blob)));
+    if (topic.fidelity === "compressed") {
+      if (anchorIndexByTopic.get(topic.id) !== index) continue;
+      output.push(replaceMessageWithText(base, buildTopicSummaryText(topic)));
       continue;
     }
 
-    if (blob.fidelity === "placeholder") {
-      if (anchorIndexByBlob.get(blob.id) !== index) continue;
+    if (topic.fidelity === "placeholder") {
+      if (anchorIndexByTopic.get(topic.id) !== index) continue;
       output.push(
-        replaceMessageWithText(base, buildPlaceholderText(map, blob)),
+        replaceMessageWithText(base, buildPlaceholderText(map, topic)),
       );
       continue;
     }
 
     if (entry.hidden) continue;
 
-    if (blob.fidelity === "summary") {
+    if (topic.fidelity === "hidden") {
+      if (entry.fidelityOverride === "full") {
+        output.push(base);
+        continue;
+      }
+      if (entry.fidelityOverride === "summary") {
+        output.push(
+          replaceMessageWithText(base, buildMessageSummaryText(entry)),
+        );
+        continue;
+      }
+      continue;
+    }
+
+    if (topic.fidelity === "summary") {
       if (entry.fidelityOverride === "full") {
         output.push(base);
         continue;
@@ -1075,24 +1098,24 @@ export function transformMessagesForContext(
 }
 
 export function buildCurrentContextOverview(map: ContextMapFile, limit = 12) {
-  const ordered = map.blobOrder
-    .map((blobID) => map.blobs[blobID])
+  const ordered = map.topicOrder
+    .map((topicID) => map.topics[topicID])
     .filter(Boolean)
     .sort((a, b) => b.lastActiveAt - a.lastActiveAt)
     .slice(0, limit);
 
-  if (ordered.length === 0) return "No blobs have been identified yet.";
+  if (ordered.length === 0) return "No topics have been identified yet.";
 
   return ordered
-    .map((blob) => {
-      const fidelityLabel = blob.fidelity === "drop" ? "hidden" : blob.fidelity;
+    .map((topic) => {
+      const fidelityLabel = topic.fidelity;
       const source =
-        blob.fidelitySource === "user"
+        topic.fidelitySource === "user"
           ? "user-set"
-          : blob.fidelitySource === "default"
+          : topic.fidelitySource === "default"
             ? "auto"
-            : `${blob.fidelitySource}-set`;
-      return `- ${blob.label} [${fidelityLabel}, ${source}, ~${blob.tokenEstimate.toLocaleString()} tok, ${blob.messageIDs.length} messages]: ${blob.placeholder}`;
+            : `${topic.fidelitySource}-set`;
+      return `- ${topic.label} [${fidelityLabel}, ${source}, ~${topic.tokenEstimate.toLocaleString()} tok, ${topic.messageIDs.length} messages]: ${topic.placeholder}`;
     })
     .join("\n");
 }
@@ -1109,42 +1132,42 @@ function buildPendingRetroactivePrompt(map: ContextMapFile, limit = 6) {
   }
 
   return [
-    "Earlier assistant messages still need retroactive labeling. Include one retroactive item for each message_id listed below, even if it belongs to the same blob as the current response.",
+    "Earlier assistant messages still need retroactive labeling. Include one retroactive item for each message_id listed below, even if it belongs to the same topic as the current response.",
     ...pending.map((item) => {
       const guess =
-        item.suggestedBlobLabel ?? item.suggestedBlobID ?? "unknown";
+        item.suggestedTopicLabel ?? item.suggestedTopicID ?? "unknown";
       const tools =
         item.toolNames.length > 0 ? ` tools=${item.toolNames.join(",")}` : "";
-      return `- message_id=${item.messageID} suggested_blob=${guess}${tools} summary=${item.summary}`;
+      return `- message_id=${item.messageID} suggested_topic=${guess}${tools} summary=${item.summary}`;
     }),
   ];
 }
 
 export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
-  const totalTokens = map.blobOrder.reduce((s, id) => {
-    const blob = map.blobs[id];
-    return s + (blob ? blob.tokenEstimate : 0);
+  const totalTokens = map.topicOrder.reduce((s, id) => {
+    const topic = map.topics[id];
+    return s + (topic ? topic.tokenEstimate : 0);
   }, 0);
-  const blobCount = map.blobOrder.length;
+  const topicCount = map.topicOrder.length;
 
   const lines = [
     "Context map plugin is active.",
     "User controls are authoritative: do not override user-set fidelity or hidden-message choices unless the user explicitly asks.",
-    "Available tools: view_context (see blobs and fidelity), set_fidelity (change detail level for a blob), session_tree (inspect parent/sub-agent lineage), session_lookup + session_detail + message_detail (progressively inspect past sessions), blame_lookup (find which session produced code).",
-    "Historical investigation flow: use blame_lookup or session_lookup to find an OpenCode session; read the compressed summaries in overview.blobs; call session_detail with detail='messages' for per-message summaries in a chosen blob; call message_detail for one full message only when necessary.",
-    "Cache-aware context management: changing fidelity reshapes the next prompt and can reduce provider prompt-cache hits for unchanged later messages. Avoid small or frequent context edits. Use set_fidelity when an older blob is clearly stale or large enough that dropping/summarizing it is worth the one-time cache disruption.",
+    "Available tools: view_context (see topics and fidelity), set_fidelity (change detail level for a topic), session_tree (inspect parent/sub-agent lineage), session_lookup + session_detail + message_detail (progressively inspect past sessions), blame_lookup (find which session produced code).",
+    "Historical investigation flow: use blame_lookup or session_lookup to find an OpenCode session; read the compressed summaries in overview.topics; call session_detail with detail='messages' for per-message summaries in a chosen topic; call message_detail for one full message only when necessary.",
+    "Cache-aware context management: changing fidelity reshapes the next prompt and can reduce provider prompt-cache hits for unchanged later messages. Avoid small or frequent context edits. Use set_fidelity when an older topic is clearly stale or large enough that dropping/summarizing it is worth the one-time cache disruption.",
   ];
 
-  if (totalTokens > 50_000 && blobCount >= 3) {
+  if (totalTokens > 50_000 && topicCount >= 3) {
     lines.push(
       "",
       "CONTEXT MANAGEMENT: Total context is ~" +
         Math.round(totalTokens / 1000) +
         "k tokens across " +
-        blobCount +
-        " blobs. Use set_fidelity to reduce older blobs to 'summary' or 'placeholder'. Prioritize blobs not discussed in recent turns.",
+        topicCount +
+        " topics. Use set_fidelity to reduce older topics to 'summary' or 'hidden'. Prioritize topics not discussed in recent turns.",
     );
-  } else if (totalTokens > 20_000 && blobCount >= 2) {
+  } else if (totalTokens > 20_000 && topicCount >= 2) {
     lines.push(
       "",
       "Context is at ~" +
@@ -1159,12 +1182,12 @@ export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
 }
 
 export function buildAnnotationSystemPrompt(map: ContextMapFile) {
-  const existing = map.blobOrder
-    .map((blobID) => map.blobs[blobID])
+  const existing = map.topicOrder
+    .map((topicID) => map.topics[topicID])
     .filter(Boolean);
   const labels =
     existing.length > 0
-      ? existing.map((blob) => blob.label).join(", ")
+      ? existing.map((topic) => topic.label).join(", ")
       : "none yet";
   return [
     "Mandatory annotation requirement for this session:",
@@ -1172,38 +1195,38 @@ export function buildAnnotationSystemPrompt(map: ContextMapFile) {
     "2. Immediately append exactly one <annotation>...</annotation> block after the response.",
     "3. The annotation must contain valid JSON with top-level keys current and retroactive.",
     "4. Do not use markdown fences around the annotation. Do not explain the annotation. Do not skip it.",
-    "5. blob must be a stable snake_case label. Reuse an existing blob whenever the conversation returns to an earlier topic.",
-    "6. message_summary describes only this assistant message. blob_summary describes the running state of the whole blob so far.",
+    "5. topic must be a stable snake_case label. Reuse an existing topic whenever the conversation returns to an earlier topic.",
+    "6. message_summary describes only this assistant message. topic_summary describes the running state of the whole topic so far.",
     "7. placeholder is a short 5-10 word stub. key_facts contains only facts or decisions worth preserving through compression.",
     "8. current must contain the full annotation for this assistant response. retroactive must contain per-message annotations for any earlier pending assistant messages listed below.",
     "Required format:",
-    '<annotation>{"current":{"blob":"auth_debugging","is_new_blob":false,"message_summary":"Explained why the mutex failed and the queue replaced it.","blob_summary":"Investigated auth rate limiter race condition and switched from mutex to async queue after tests failed.","placeholder":"Debugging auth rate limiter race condition","key_facts":["mutex failed tests","async queue on line 42"]},"retroactive":[{"message_id":"msg_tool_1","blob":"auth_debugging","message_summary":"Ran auth concurrency tests and reproduced the mutex failure.","key_facts":["mutex failed tests"]}]}</annotation>',
-    `Existing blob labels: ${labels}`,
+    '<annotation>{"current":{"topic":"auth_debugging","is_new_topic":false,"message_summary":"Explained why the mutex failed and the queue replaced it.","topic_summary":"Investigated auth rate limiter race condition and switched from mutex to async queue after tests failed.","placeholder":"Debugging auth rate limiter race condition","key_facts":["mutex failed tests","async queue on line 42"]},"retroactive":[{"message_id":"msg_tool_1","topic":"auth_debugging","message_summary":"Ran auth concurrency tests and reproduced the mutex failure.","key_facts":["mutex failed tests"]}]}</annotation>',
+    `Existing topic labels: ${labels}`,
     ...buildPendingRetroactivePrompt(map),
   ].join("\n");
 }
 
 export function buildCompactionPrompt(map: ContextMapFile) {
-  const blobs = map.blobOrder
-    .map((blobID) => map.blobs[blobID])
+  const topics = map.topicOrder
+    .map((topicID) => map.topics[topicID])
     .filter(Boolean);
   const policy =
-    blobs.length === 0
-      ? "- No blob map exists yet; summarize the conversation normally."
-      : blobs
-          .map((blob) => {
-            const src = blob.fidelitySource === "user" ? " (USER-SET)" : "";
-            const prefix = `- ${blob.label} [${blob.fidelity}${src}]`;
-            switch (blob.fidelity) {
+    topics.length === 0
+      ? "- No topic map exists yet; summarize the conversation normally."
+      : topics
+          .map((topic) => {
+            const src = topic.fidelitySource === "user" ? " (USER-SET)" : "";
+            const prefix = `- ${topic.label} [${topic.fidelity}${src}]`;
+            switch (topic.fidelity) {
               case "full":
                 return `${prefix}: preserve detailed decisions, file-level specifics, and key code snippets.`;
               case "summary":
-                return `${prefix}: compress to a chronological list of decisions and key facts. Drop code details.`;
+                return `${prefix}: compress to a chronological list of decisions and key facts. Omit code details.`;
               case "compressed":
                 return `${prefix}: compress to one paragraph preserving only the most critical facts.`;
               case "placeholder":
                 return `${prefix}: already stubbed in context. Include only a one-line reminder if critical.`;
-              case "drop":
+              case "hidden":
                 return `${prefix}: already hidden from context. Omit entirely unless needed to avoid contradiction.`;
             }
           })
@@ -1212,7 +1235,7 @@ export function buildCompactionPrompt(map: ContextMapFile) {
   return [
     "Provide a detailed prompt for continuing this conversation.",
     "The messages you see have ALREADY been transformed by the context map:",
-    "- Dropped blobs are removed. Placeholder blobs are stubbed. Summary blobs show summaries.",
+    "- Hidden topics are removed. Placeholder topics are stubbed. Summary topics show summaries.",
     "- Your job is to produce a continuation prompt that preserves the RIGHT level of detail per topic.",
     "- User-set fidelity choices have the HIGHEST priority. Do not add detail to topics the user chose to compress.",
     "",
@@ -1229,40 +1252,35 @@ export function buildCompactionPrompt(map: ContextMapFile) {
 }
 
 export function buildContextMapToolView(map: ContextMapFile) {
-  const blobs = map.blobOrder
-    .map((blobID) => map.blobs[blobID])
+  const topics = map.topicOrder
+    .map((topicID) => map.topics[topicID])
     .filter(Boolean);
   return {
     session_id: map.sessionID,
     total_token_estimate: map.totalTokenEstimate,
     controls: {
       user_controls_are_authoritative: true,
-      fidelity_levels: [
-        "full",
-        "summary",
-        "placeholder",
-        "hide (internally: drop)",
-      ],
+      fidelity_levels: ["full", "summary", "hidden"],
     },
-    blobs: blobs.map((blob) => ({
-      id: blob.id,
-      label: blob.label,
-      summary: blob.summary,
-      placeholder: blob.placeholder,
-      key_facts: blob.keyFacts,
-      fidelity: blob.fidelity === "drop" ? "hidden" : blob.fidelity,
+    topics: topics.map((topic) => ({
+      id: topic.id,
+      label: topic.label,
+      summary: topic.summary,
+      placeholder: topic.placeholder,
+      key_facts: topic.keyFacts,
+      fidelity: topic.fidelity,
       fidelity_source:
-        blob.fidelitySource === "default" ? "auto" : blob.fidelitySource,
-      token_estimate: blob.tokenEstimate,
-      message_count: blob.messageIDs.length,
-      last_active_at: blob.lastActiveAt,
+        topic.fidelitySource === "default" ? "auto" : topic.fidelitySource,
+      token_estimate: topic.tokenEstimate,
+      message_count: topic.messageIDs.length,
+      last_active_at: topic.lastActiveAt,
     })),
     messages: Object.values(map.messages)
       .sort((a, b) => a.createdAt - b.createdAt)
       .map((message) => ({
         id: message.id,
         role: message.role,
-        blob_id: message.blobID,
+        topic_id: message.topicID,
         summary: message.summary,
         hidden: message.hidden,
         fidelity_override: message.fidelityOverride,
@@ -1274,8 +1292,8 @@ export function buildContextMapToolView(map: ContextMapFile) {
         message_id: item.messageID,
         summary: item.summary,
         tool_names: item.toolNames,
-        suggested_blob_id: item.suggestedBlobID,
-        suggested_blob_label: item.suggestedBlobLabel,
+        suggested_topic_id: item.suggestedTopicID,
+        suggested_topic_label: item.suggestedTopicLabel,
       })),
   };
 }
@@ -1284,55 +1302,55 @@ export function buildHistoricalOverview(input: {
   map: ContextMapFile;
   session: SessionLike;
   commitEntry?: CommitMapEntry;
-  matchedBlobIDs?: string[];
+  matchedTopicIDs?: string[];
 }): HistoricalSessionOverview {
-  const activeBlobIDs = new Set(
-    input.commitEntry?.activeBlobIDs?.length
-      ? input.commitEntry.activeBlobIDs
-      : input.commitEntry?.activeBlobID
-        ? [input.commitEntry.activeBlobID]
+  const activeTopicIDs = new Set(
+    input.commitEntry?.activeTopicIDs?.length
+      ? input.commitEntry.activeTopicIDs
+      : input.commitEntry?.activeTopicID
+        ? [input.commitEntry.activeTopicID]
         : [],
   );
   return {
     sessionID: input.session.id,
     title: input.session.title ?? input.session.id,
     updatedAt: input.session.time?.updated,
-    matchedBlobIDs: input.matchedBlobIDs ?? [],
-    blobs: input.map.blobOrder
-      .map((blobID) => input.map.blobs[blobID])
+    matchedTopicIDs: input.matchedTopicIDs ?? [],
+    topics: input.map.topicOrder
+      .map((topicID) => input.map.topics[topicID])
       .filter(Boolean)
-      .map((blob) => ({
-        id: blob.id,
-        label: blob.label,
-        summary: blob.summary,
-        compressedSummary: buildBlobSummaryText(blob),
-        placeholder: blob.placeholder,
-        tokenEstimate: blob.tokenEstimate,
-        messageCount: blob.messageIDs.length,
-        fidelity: blob.fidelity,
-        keyFacts: blob.keyFacts,
-        activeForCommit: activeBlobIDs.has(blob.id),
+      .map((topic) => ({
+        id: topic.id,
+        label: topic.label,
+        summary: topic.summary,
+        compressedSummary: buildTopicSummaryText(topic),
+        placeholder: topic.placeholder,
+        tokenEstimate: topic.tokenEstimate,
+        messageCount: topic.messageIDs.length,
+        fidelity: topic.fidelity,
+        keyFacts: topic.keyFacts,
+        activeForCommit: activeTopicIDs.has(topic.id),
       })),
   };
 }
 
-export function buildBlobMessageSummaries(input: {
+export function buildTopicMessageSummaries(input: {
   map: ContextMapFile;
-  blobID: string;
+  topicID: string;
 }) {
-  const blob = input.map.blobs[input.blobID];
-  if (!blob)
-    return { ok: false as const, error: `Unknown blob: ${input.blobID}` };
+  const topic = input.map.topics[input.topicID];
+  if (!topic)
+    return { ok: false as const, error: `Unknown topic: ${input.topicID}` };
   return {
     ok: true as const,
-    blob: {
-      id: blob.id,
-      label: blob.label,
-      compressedSummary: buildBlobSummaryText(blob),
-      tokenEstimate: blob.tokenEstimate,
-      messageCount: blob.messageIDs.length,
+    topic: {
+      id: topic.id,
+      label: topic.label,
+      compressedSummary: buildTopicSummaryText(topic),
+      tokenEstimate: topic.tokenEstimate,
+      messageCount: topic.messageIDs.length,
     },
-    messages: blob.messageIDs
+    messages: topic.messageIDs
       .map((messageID) => input.map.messages[messageID])
       .filter(Boolean)
       .sort((a, b) => a.createdAt - b.createdAt)
@@ -1364,14 +1382,14 @@ export function buildMessageDetail(input: {
       error: `Unknown message: ${input.messageID}`,
     };
   }
-  const blob = entry.blobID ? input.map.blobs[entry.blobID] : undefined;
+  const topic = entry.topicID ? input.map.topics[entry.topicID] : undefined;
   return {
     ok: true as const,
     message: {
       id: entry.id,
       role: entry.role,
-      blobID: entry.blobID,
-      blobLabel: blob?.label,
+      topicID: entry.topicID,
+      topicLabel: topic?.label,
       summary: entry.summary,
       keyFacts: entry.keyFacts,
       tokenEstimate: entry.tokenEstimate,
@@ -1411,18 +1429,18 @@ export function buildMessageDetail(input: {
 
 export function buildSessionZoomText(input: {
   map: ContextMapFile;
-  blobID: string;
+  topicID: string;
   fidelity: "compressed" | "full";
   messages?: MessageLike[];
 }) {
-  const blob = input.map.blobs[input.blobID];
-  if (!blob) return `Unknown blob: ${input.blobID}`;
-  if (input.fidelity === "compressed") return buildBlobSummaryText(blob);
+  const topic = input.map.topics[input.topicID];
+  if (!topic) return `Unknown topic: ${input.topicID}`;
+  if (input.fidelity === "compressed") return buildTopicSummaryText(topic);
   const relevant = (input.messages ?? []).filter((message) =>
-    blob.messageIDs.includes(message.info.id),
+    topic.messageIDs.includes(message.info.id),
   );
   if (relevant.length === 0)
-    return `No full messages found for blob ${input.blobID}.`;
+    return `No full messages found for topic ${input.topicID}.`;
   return relevant
     .map((message) => {
       const summary =
@@ -1467,41 +1485,41 @@ export function buildFallbackMapFromMessages(input: {
       stableAnchors: false,
       stableAnchorsSource: "default",
     },
-    blobOrder: [],
-    blobs: {},
+    topicOrder: [],
+    topics: {},
     messages: {},
     pendingRetroactive: {},
   };
 
-  let currentBlobID: string | undefined;
+  let currentTopicID: string | undefined;
   for (const message of input.messages) {
     const summary = deriveSummaryFromMessage(message);
-    if (!currentBlobID || message.info.role === "user") {
-      currentBlobID = shouldStartFreshFallbackBlob(summary)
+    if (!currentTopicID || message.info.role === "user") {
+      currentTopicID = shouldStartFreshFallbackTopic(summary)
         ? undefined
-        : findBestBlobForSummary(map, summary);
-      if (!currentBlobID) {
-        const baseBlobID = slugifyBlobLabel(
-          labelFromSummary(summary, map.blobOrder.length + 1),
+        : findBestTopicForSummary(map, summary);
+      if (!currentTopicID) {
+        const baseTopicID = slugifyTopicLabel(
+          labelFromSummary(summary, map.topicOrder.length + 1),
         );
-        currentBlobID = nextAvailableBlobID(map, baseBlobID);
-        map.blobs[currentBlobID] = createBlobEntry({
-          id: currentBlobID,
-          label: currentBlobID,
+        currentTopicID = nextAvailableTopicID(map, baseTopicID);
+        map.topics[currentTopicID] = createTopicEntry({
+          id: currentTopicID,
+          label: currentTopicID,
           summary,
           placeholder: trimText(summary, 80),
           createdAt: getMessageCreatedAt(message),
           fidelity: "full",
           fidelitySource: "system",
         });
-        map.blobOrder.push(currentBlobID);
+        map.topicOrder.push(currentTopicID);
       }
     }
 
     const entry = createMessageEntry({
       id: message.info.id,
       role: message.info.role,
-      blobID: currentBlobID,
+      topicID: currentTopicID,
       summary,
       tokenEstimate: estimateTokensFromParts(message.parts),
       createdAt: getMessageCreatedAt(message),
@@ -1510,17 +1528,17 @@ export function buildFallbackMapFromMessages(input: {
       partTypes: message.parts.map((part) => part.type),
       toolNames: extractToolNames(message.parts),
     });
-    assignMessageToBlob(map, currentBlobID, entry);
-    const blob = map.blobs[currentBlobID];
-    blob.summary = mergeBlobSummary(blob.summary, summary);
-    blob.placeholder = trimText(blob.summary, 80);
+    assignMessageToTopic(map, currentTopicID, entry);
+    const topic = map.topics[currentTopicID];
+    topic.summary = mergeTopicSummary(topic.summary, summary);
+    topic.placeholder = trimText(topic.summary, 80);
   }
 
   rebuildTotals(map);
   return map;
 }
 
-function shouldStartFreshFallbackBlob(summary: string) {
+function shouldStartFreshFallbackTopic(summary: string) {
   const lowered = summary.toLowerCase();
   if (/\b(return|back|resume|revisit)\b/.test(lowered)) return false;
   return (
@@ -1529,27 +1547,27 @@ function shouldStartFreshFallbackBlob(summary: string) {
   );
 }
 
-function nextAvailableBlobID(map: ContextMapFile, baseBlobID: string) {
-  if (!map.blobs[baseBlobID]) return baseBlobID;
+function nextAvailableTopicID(map: ContextMapFile, baseTopicID: string) {
+  if (!map.topics[baseTopicID]) return baseTopicID;
   let index = 2;
-  while (map.blobs[`${baseBlobID}_${index}`]) index += 1;
-  return `${baseBlobID}_${index}`;
+  while (map.topics[`${baseTopicID}_${index}`]) index += 1;
+  return `${baseTopicID}_${index}`;
 }
 
-export function matchBlobIDsForQuery(map: ContextMapFile, query: string) {
+export function matchTopicIDsForQuery(map: ContextMapFile, query: string) {
   const words = keywordSet(query);
-  const matches = map.blobOrder
-    .map((blobID) => map.blobs[blobID])
+  const matches = map.topicOrder
+    .map((topicID) => map.topics[topicID])
     .filter(Boolean)
-    .map((blob) => ({ blobID: blob.id, score: scoreBlob(blob, words) }))
+    .map((topic) => ({ topicID: topic.id, score: scoreTopic(topic, words) }))
     .filter((item) => item.score > 0)
     .sort((a, b) => b.score - a.score);
-  return matches.map((item) => item.blobID);
+  return matches.map((item) => item.topicID);
 }
 
-function scoreBlob(blob: BlobEntry, words: Set<string>) {
+function scoreTopic(topic: TopicEntry, words: Set<string>) {
   const haystack = keywordSet(
-    `${blob.label} ${blob.summary} ${blob.placeholder} ${blob.keyFacts.join(" ")}`,
+    `${topic.label} ${topic.summary} ${topic.placeholder} ${topic.keyFacts.join(" ")}`,
   );
   let score = 0;
   for (const word of words) {
@@ -1558,17 +1576,17 @@ function scoreBlob(blob: BlobEntry, words: Set<string>) {
   return score;
 }
 
-function findBestBlobForSummary(map: ContextMapFile, summary: string) {
+function findBestTopicForSummary(map: ContextMapFile, summary: string) {
   const words = keywordSet(summary);
-  let best: { blobID: string; score: number } | undefined;
-  for (const blobID of map.blobOrder) {
-    const blob = map.blobs[blobID];
-    if (!blob) continue;
-    const score = scoreBlob(blob, words);
+  let best: { topicID: string; score: number } | undefined;
+  for (const topicID of map.topicOrder) {
+    const topic = map.topics[topicID];
+    if (!topic) continue;
+    const score = scoreTopic(topic, words);
     if (score < 2) continue;
-    if (!best || score > best.score) best = { blobID, score };
+    if (!best || score > best.score) best = { topicID, score };
   }
-  return best?.blobID;
+  return best?.topicID;
 }
 
 function labelFromSummary(summary: string, index: number) {
@@ -1596,7 +1614,7 @@ function labelFromSummary(summary: string, index: number) {
   return words.join("_").slice(0, 30);
 }
 
-function mergeBlobSummary(current: string, next: string) {
+function mergeTopicSummary(current: string, next: string) {
   if (!current) return next;
   if (current.includes(next)) return current;
   return trimText(`${current} ${next}`, 600);
@@ -1658,43 +1676,54 @@ export function summarizeToolState(part: Extract<Part, { type: "tool" }>) {
 
 export function formatTokens(n: number): string {
   if (n < 1000) return `${n}`;
-  return `${(n / 1000).toFixed(1)}k`;
+  if (n < 1_000_000) return `${(n / 1000).toFixed(1)}K`;
+  const millions = n / 1_000_000;
+  return `${Number.isInteger(millions) ? millions.toFixed(0) : millions.toFixed(1)}M`;
 }
 
 export function computeContextPreview(map: ContextMapFile): ContextPreview {
-  const blobs: ContextPreviewBlob[] = [];
+  const topics: ContextPreviewTopic[] = [];
   let totalRaw = 0;
   let totalEffective = 0;
+  const summaryTokenEstimate = (message?: MessageEntry) =>
+    Math.min(message?.tokenEstimate ?? 0, 60);
 
-  for (const blobID of map.blobOrder) {
-    const blob = map.blobs[blobID];
-    if (!blob || blob.messageIDs.length === 0) continue;
+  for (const topicID of map.topicOrder) {
+    const topic = map.topics[topicID];
+    if (!topic || topic.messageIDs.length === 0) continue;
 
-    const msgCount = blob.messageIDs.length;
-    const raw = blob.tokenEstimate;
+    const msgCount = topic.messageIDs.length;
+    const raw = topic.tokenEstimate;
     totalRaw += raw;
 
     let effective: number;
     let effectiveLabel: string;
 
-    switch (blob.fidelity) {
+    switch (topic.fidelity) {
       case "full": {
-        const visibleCount = blob.messageIDs.filter((id) => {
-          const m = map.messages[id];
-          return m && !m.hidden;
-        }).length;
-        const visibleTokens = blob.messageIDs.reduce((sum, id) => {
-          const m = map.messages[id];
-          return sum + (m && !m.hidden ? m.tokenEstimate : 0);
+        const visibleMessages = topic.messageIDs
+          .map((id) => map.messages[id])
+          .filter((message) => message && !message.hidden);
+        effective = visibleMessages.reduce((sum, m) => {
+          if (m.fidelityOverride === "summary") {
+            return sum + summaryTokenEstimate(m);
+          }
+          return sum + m.tokenEstimate;
         }, 0);
-        effective = visibleTokens;
-        effectiveLabel = `${visibleCount} msgs ${formatTokens(effective)}`;
+        effectiveLabel = `${visibleMessages.length} msgs ${formatTokens(effective)}`;
         break;
       }
-      case "summary":
-        effective = Math.min(raw, msgCount * 60);
-        effectiveLabel = `${msgCount} summaries`;
+      case "summary": {
+        const visibleMessages = topic.messageIDs
+          .map((id) => map.messages[id])
+          .filter((message) => message && !message.hidden);
+        effective = visibleMessages.reduce((sum, m) => {
+          if (m.fidelityOverride === "full") return sum + m.tokenEstimate;
+          return sum + summaryTokenEstimate(m);
+        }, 0);
+        effectiveLabel = `${visibleMessages.length} summaries`;
         break;
+      }
       case "compressed":
         effective = Math.min(raw, 150);
         effectiveLabel = "1 paragraph";
@@ -1703,17 +1732,32 @@ export function computeContextPreview(map: ContextMapFile): ContextPreview {
         effective = Math.min(raw, 30);
         effectiveLabel = "stub";
         break;
-      case "drop":
-        effective = 0;
-        effectiveLabel = "dropped";
+      case "hidden": {
+        const visibleMessages = topic.messageIDs
+          .map((id) => map.messages[id])
+          .filter(
+            (message) =>
+              message &&
+              !message.hidden &&
+              message.fidelityOverride !== "inherit",
+          );
+        effective = visibleMessages.reduce((sum, m) => {
+          if (m.fidelityOverride === "full") return sum + m.tokenEstimate;
+          return sum + summaryTokenEstimate(m);
+        }, 0);
+        effectiveLabel =
+          visibleMessages.length > 0
+            ? `${visibleMessages.length} overrides`
+            : "hidden";
         break;
+      }
     }
 
     totalEffective += effective;
-    blobs.push({
-      id: blobID,
-      label: blob.label,
-      fidelity: blob.fidelity,
+    topics.push({
+      id: topicID,
+      label: topic.label,
+      fidelity: topic.fidelity,
       rawTokens: raw,
       effectiveTokens: effective,
       messageCount: msgCount,
@@ -1721,19 +1765,23 @@ export function computeContextPreview(map: ContextMapFile): ContextPreview {
     });
   }
 
-  return { blobs, totalRaw, totalEffective };
+  return { topics, totalRaw, totalEffective };
 }
 
 export function computeEffectiveTreatment(
   msg: MessageEntry,
-  blob?: BlobEntry,
+  topic?: TopicEntry,
 ): string {
-  if (!blob) return "unassigned";
-  if (blob.fidelity === "drop") return "dropped";
-  if (blob.fidelity === "placeholder") return "placeholder-stub";
-  if (blob.fidelity === "compressed") return "compressed-paragraph";
-  if (msg.hidden) return "hidden";
-  if (blob.fidelity === "summary") {
+  if (!topic) return "unassigned";
+  if (topic.fidelity === "placeholder") return "placeholder-stub";
+  if (topic.fidelity === "compressed") return "compressed-paragraph";
+  if (msg.hidden) return "hidden-message";
+  if (topic.fidelity === "hidden") {
+    if (msg.fidelityOverride === "full") return "kept-full";
+    if (msg.fidelityOverride === "summary") return "summarized";
+    return "hidden-by-topic";
+  }
+  if (topic.fidelity === "summary") {
     return msg.fidelityOverride === "full" ? "kept-full" : "summarized";
   }
   if (msg.fidelityOverride === "summary") return "summarized";

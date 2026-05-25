@@ -140,31 +140,31 @@ async function main() {
     const mapRoot = path.join(home, ".opencode", "context-maps");
     const mapPath = path.join(mapRoot, `${firstSession}.json`);
     const map = JSON.parse(await fs.readFile(mapPath, "utf8")) as {
-      blobOrder: string[];
-      blobs: Record<string, { id: string; fidelity: string; summary: string }>;
+      topicOrder: string[];
+      topics: Record<string, { id: string; fidelity: string; summary: string }>;
       messages: Record<
         string,
-        { source?: string; blobID?: string; toolNames?: string[] }
+        { source?: string; topicID?: string; toolNames?: string[] }
       >;
       pendingRetroactive: Record<string, unknown>;
     };
     assert.ok(
-      map.blobOrder.length >= 2,
-      "expected at least two blobs in the map",
+      map.topicOrder.length >= 2,
+      "expected at least two topics in the map",
     );
     assert.ok(
       Object.keys(map.messages).length >= 3,
       "expected multiple mapped messages",
     );
 
-    const authBlobID =
-      map.blobOrder.find((blobID) => blobID.includes("auth")) ??
-      map.blobOrder[0];
-    const docsBlobID =
-      map.blobOrder.find((blobID) => blobID.includes("doc")) ??
-      map.blobOrder[1];
-    assert.ok(authBlobID, "missing auth-like blob");
-    assert.ok(docsBlobID, "missing docs-like blob");
+    const authTopicID =
+      map.topicOrder.find((topicID) => topicID.includes("auth")) ??
+      map.topicOrder[0];
+    const docsTopicID =
+      map.topicOrder.find((topicID) => topicID.includes("doc")) ??
+      map.topicOrder[1];
+    assert.ok(authTopicID, "missing auth-like topic");
+    assert.ok(docsTopicID, "missing docs-like topic");
 
     await prompt(
       client,
@@ -193,7 +193,7 @@ async function main() {
       client,
       repoRoot,
       firstSession,
-      `Call set_fidelity exactly once with blob_id ${docsBlobID} and fidelity placeholder, then answer with only ok.`,
+      `Call set_fidelity exactly once with topic_id ${docsTopicID} and fidelity summary, then answer with only ok.`,
       "You must call the set_fidelity tool exactly once before answering. If you skip the tool call, your answer is wrong. Avoid unrelated tools.",
       { set_fidelity: true },
     );
@@ -207,9 +207,9 @@ async function main() {
       await fs.readFile(mapPath, "utf8"),
     ) as typeof map;
     assert.equal(
-      updatedMap.blobs[docsBlobID!]?.fidelity,
-      "placeholder",
-      "set_fidelity did not persist blob fidelity",
+      updatedMap.topics[docsTopicID!]?.fidelity,
+      "summary",
+      "set_fidelity did not persist topic fidelity",
     );
 
     const secondSession = await createSession(
@@ -221,7 +221,7 @@ async function main() {
       client,
       repoRoot,
       secondSession,
-      `Call session_lookup exactly once to find the earlier auth investigation session for ${authBlobID}, then call session_detail exactly once on the matching blob with detail summary, then answer with one fact.`,
+      `Call session_lookup exactly once to find the earlier auth investigation session for ${authTopicID}, then call session_detail exactly once on the matching topic with detail summary, then answer with one fact.`,
       "You must call session_lookup exactly once and session_detail exactly once before answering. If you skip either tool call, your answer is wrong. Avoid unrelated tools.",
       { session_lookup: true, session_detail: true },
     );
@@ -250,9 +250,9 @@ async function main() {
               timestamp: Date.now(),
               directory: repoRoot,
               worktree: repoRoot,
-              activeBlobID: authBlobID,
-              activeBlobLabel: authBlobID,
-              activeBlobIDs: authBlobID ? [authBlobID] : [],
+              activeTopicID: authTopicID,
+              activeTopicLabel: authTopicID,
+              activeTopicIDs: authTopicID ? [authTopicID] : [],
             },
           },
         },
@@ -270,7 +270,7 @@ async function main() {
       client,
       repoRoot,
       thirdSession,
-      "Call blame_lookup exactly once on README.md line 1. From the returned overview.blobs compressed summaries, choose the matching blob. Then call session_detail exactly once on that blob with detail messages. From those per-message summaries, choose one relevant message_id and call message_detail exactly once. Then answer with only the mapped session id.",
+      "Call blame_lookup exactly once on README.md line 1. From the returned overview.topics compressed summaries, choose the matching topic. Then call session_detail exactly once on that topic with detail messages. From those per-message summaries, choose one relevant message_id and call message_detail exactly once. Then answer with only the mapped session id.",
       "You must call blame_lookup, then session_detail with detail='messages', then message_detail before answering. If you skip any step, your answer is wrong. Avoid unrelated tools.",
       { blame_lookup: true, session_detail: true, message_detail: true },
     );

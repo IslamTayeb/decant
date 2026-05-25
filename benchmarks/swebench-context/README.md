@@ -9,8 +9,8 @@ This is not a SWE-bench leaderboard run. It is a blog-oriented stress test for l
 - `clean-no-plugin`: the selected model solves the SWE-bench task in a fresh OpenCode session with no decant plugin.
 - `polluted-default-compact`: the selected model first receives a noisy unrelated coding-history prelude, then OpenCode default compaction is forced, then the SWE-bench task is solved without decant.
 - `polluted-decant-compact`: the selected model receives the same noisy prelude with decant enabled, gets a chance to use `view_context` and `set_fidelity`, then compaction is forced and the SWE-bench task is solved.
-- `polluted-decant-boundary-compact`: same as decant compact, but the cleanup turn declares a hard task boundary and asks old auth/docs/test blobs to be dropped.
-- `polluted-decant-cache-stable-boundary-compact`: boundary mode plus cache-stable decant settings. Dynamic annotation/guidance prompts are suppressed, placeholder text/anchors are stable, compaction summaries are hidden as placeholders, and fallback-created current-task blobs stay full.
+- `polluted-decant-boundary-compact`: same as decant compact, but the cleanup turn declares a hard task boundary and asks old auth/docs/test topics to be hidden.
+- `polluted-decant-cache-stable-boundary-compact`: boundary mode plus cache-stable decant settings. Dynamic annotation/guidance prompts are suppressed, placeholder text/anchors are stable, compaction summaries are hidden as placeholders, and fallback-created current-task topics stay full.
 
 The initial comparison is `polluted-default-compact` vs `polluted-decant-compact`. The useful follow-up comparison is now `polluted-default-compact` vs `polluted-decant-cache-stable-boundary-compact`.
 

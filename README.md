@@ -2,13 +2,13 @@
 
 decant is an OpenCode plugin prototype for making an agent's context easier to see, shrink, and revisit.
 
-The simple idea: turn a long chat into a small **context map** of topics. Active work can stay full. Old useful work can become a summary. Noise can be dropped. If the agent needs detail later, it can zoom back into the right topic instead of rereading the whole session.
+The simple idea: turn a long chat into a small **context map** of topics. Active work can stay full. Old useful work can become a summary. Noise can be hidden. If the agent needs detail later, it can zoom back into the right topic instead of rereading the whole session.
 
 ## What Exists
 
 - A server plugin that builds sideband context maps from normal OpenCode conversations.
 - A TUI plugin with a sidebar, `/context`, and `/blame`.
-- Topic fidelity controls: `Full`, `Summary`, `Compressed`, `Placeholder`, and `Drop`.
+- Topic fidelity controls: `Full`, `Summary`, `Compressed`, `Placeholder`, and `Hidden`.
 - Message-level controls: hide a message, force it full, or force it summarized.
 - Agent tools for context inspection and historical lookup: `view_context`, `set_fidelity`, `session_lookup`, `session_detail`, `message_detail`, and `blame_lookup`.
 - Sandboxed validation scripts and benchmark harnesses for testing the idea without touching normal OpenCode state.
@@ -22,7 +22,7 @@ decant treats context like a map:
 - keep the current task in detail.
 - compress finished work.
 - keep only placeholders for distant topics.
-- drop dead ends.
+- hide dead ends.
 - recover old rationale through map-guided zoom or git blame.
 
 ## What We Have Tested

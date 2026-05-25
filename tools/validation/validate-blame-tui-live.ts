@@ -138,7 +138,7 @@ async function main() {
           tmuxSession: tmuxName,
           sessionID,
           commitToken,
-          saw: "Blame dialog with mapped auth_queue blob",
+          saw: "Blame dialog with mapped auth_queue topic",
           paneExcerpt: normalizePane(pane).slice(0, 1200),
         },
         null,
@@ -259,7 +259,7 @@ async function writeHistoricalMap(input: {
     createdAt: now,
     updatedAt: now,
     totalTokenEstimate: 220,
-    lastActiveBlobID: "auth_queue",
+    lastActiveTopicID: "auth_queue",
     settings: {
       placeholderIncludesKeyFacts: true,
       placeholderIncludesKeyFactsSource: "default",
@@ -269,8 +269,8 @@ async function writeHistoricalMap(input: {
       stableAnchors: false,
       stableAnchorsSource: "default",
     },
-    blobOrder: ["auth_queue"],
-    blobs: {
+    topicOrder: ["auth_queue"],
+    topics: {
       auth_queue: {
         id: "auth_queue",
         label: "auth queue",
@@ -294,7 +294,7 @@ async function writeHistoricalMap(input: {
       msg_auth_user: {
         id: "msg_auth_user",
         role: "user",
-        blobID: "auth_queue",
+        topicID: "auth_queue",
         summary: "Asked for the auth refresh race on line 42 to be fixed.",
         keyFacts: ["target file is src/auth/rate_limiter.ts"],
         hidden: false,
@@ -311,7 +311,7 @@ async function writeHistoricalMap(input: {
       msg_auth_assistant: {
         id: "msg_auth_assistant",
         role: "assistant",
-        blobID: "auth_queue",
+        topicID: "auth_queue",
         summary:
           "Added enqueueRefresh at line 42 so duplicate tenant refreshes share one in-flight promise.",
         keyFacts: [
@@ -349,9 +349,9 @@ async function writeHistoricalMap(input: {
             timestamp: now,
             directory: input.worktree,
             worktree: input.worktree,
-            activeBlobID: "auth_queue",
-            activeBlobLabel: "auth queue",
-            activeBlobIDs: ["auth_queue"],
+            activeTopicID: "auth_queue",
+            activeTopicLabel: "auth queue",
+            activeTopicIDs: ["auth_queue"],
           },
         },
       },

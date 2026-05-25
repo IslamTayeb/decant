@@ -1003,8 +1003,8 @@ async function requestContextCleanup(
 ) {
   const text =
     mode === "boundary"
-      ? "We are ending the old auth/docs/test planning work and switching to a wholly unrelated open-source repository issue. Call view_context exactly once. Then call set_fidelity with fidelity='drop' for every blob about auth, docs, onboarding, tests, stale hypotheses, queue helpers, mutexes, rollback flags, or prior planning. No prior blob is current for the next task. If a blob cannot be dropped safely, set it to placeholder and explain why in one short phrase. Then answer with only ok."
-      : "Before we switch to a new software issue, call view_context exactly once. Then call set_fidelity for any completed or unrelated prior blobs so low-value docs, stale hypotheses, and old test-planning chatter are compressed, placeholder, or dropped. Keep only genuinely important current-task context high fidelity. Then answer with only ok.";
+      ? "We are ending the old auth/docs/test planning work and switching to a wholly unrelated open-source repository issue. Call view_context exactly once. Then call set_fidelity with fidelity='hidden' for every topic about auth, docs, onboarding, tests, stale hypotheses, queue helpers, mutexes, rollback flags, or prior planning. No prior topic is current for the next task. If a topic cannot be hidden safely, set it to summary and explain why in one short phrase. Then answer with only ok."
+      : "Before we switch to a new software issue, call view_context exactly once. Then call set_fidelity for any completed or unrelated prior topics so low-value docs, stale hypotheses, and old test-planning chatter are summarized or hidden. Keep only genuinely important current-task context high fidelity. Then answer with only ok.";
   await prompt(
     client,
     directory,
@@ -1550,6 +1550,7 @@ async function analyzeRun(outDir: string): Promise<RunAnalysis> {
         compactionSummaries(messages).join("\n"),
       );
       const visibleStaleSummaryTerms =
+        sessionSummaryFidelity === "hidden" ||
         sessionSummaryFidelity === "drop" ||
         sessionSummaryFidelity === "placeholder"
           ? []
@@ -1604,9 +1605,9 @@ async function readSessionSummaryFidelity(instanceDir: string) {
   if (!raw) return undefined;
   try {
     const parsed = JSON.parse(raw) as {
-      blobs?: Record<string, { fidelity?: string }>;
+      topics?: Record<string, { fidelity?: string }>;
     };
-    return parsed.blobs?.session_summary?.fidelity;
+    return parsed.topics?.session_summary?.fidelity;
   } catch {
     return undefined;
   }
@@ -1836,13 +1837,11 @@ function runAnalysisMarkdown(analysis: RunAnalysis) {
     "",
     "| Condition | Instance | Resolved | F2P | P2P Regr. | Input Tok | Setup Input Tok | Solve Input Tok | Solve Cache Hit | Cache Hit | Ctx Tools | Summary Fidelity | Eff. Tok Last | Removed Last | Visible Stale Summary Terms | Stale After Issue |",
     "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---:|---:|---|---|",
-    ...analysis.rows.map(
-      (row) => {
-        const setupTokens = setupPhaseTokens(row);
-        const solveTokens = row.phases.solve ?? emptyTokenBucket();
-        return `| ${row.condition} | ${row.instance} | ${String(row.resolved)} | ${row.failToPass} | ${row.passToPassRegressions} | ${row.tokens.input.toLocaleString()} | ${setupTokens.input.toLocaleString()} | ${solveTokens.input.toLocaleString()} | ${formatPercent(cacheHitShare(solveTokens))} | ${formatPercent(row.cacheHitShare)} | ${row.contextToolCalls} | ${row.sessionSummaryFidelity ?? ""} | ${row.trace?.lastEffectiveTokens ?? ""} | ${row.trace?.lastMessagesRemoved ?? ""} | ${row.staleTermsInVisibleCompactionSummary.join(", ").replaceAll("|", "\\|")} | ${row.staleTermsAfterIssue.join(", ").replaceAll("|", "\\|")} |`;
-      },
-    ),
+    ...analysis.rows.map((row) => {
+      const setupTokens = setupPhaseTokens(row);
+      const solveTokens = row.phases.solve ?? emptyTokenBucket();
+      return `| ${row.condition} | ${row.instance} | ${String(row.resolved)} | ${row.failToPass} | ${row.passToPassRegressions} | ${row.tokens.input.toLocaleString()} | ${setupTokens.input.toLocaleString()} | ${solveTokens.input.toLocaleString()} | ${formatPercent(cacheHitShare(solveTokens))} | ${formatPercent(row.cacheHitShare)} | ${row.contextToolCalls} | ${row.sessionSummaryFidelity ?? ""} | ${row.trace?.lastEffectiveTokens ?? ""} | ${row.trace?.lastMessagesRemoved ?? ""} | ${row.staleTermsInVisibleCompactionSummary.join(", ").replaceAll("|", "\\|")} | ${row.staleTermsAfterIssue.join(", ").replaceAll("|", "\\|")} |`;
+    }),
     "",
   ].join("\n");
 }

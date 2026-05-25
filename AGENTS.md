@@ -4,7 +4,7 @@
 
 decant is an OpenCode plugin prototype for LLM context visualization, context control, and multi-agent context coordination.
 
-Core thesis: long-running agent sessions should expose a compact topic map. Current work can stay full, finished work can become summaries, distant topics can become placeholders, and dead ends can be dropped. When detail is needed later, the agent or user should zoom into the relevant topic instead of rereading the full transcript.
+Core thesis: long-running agent sessions should expose a compact topic map. Current work can stay full, finished work can become summaries, distant topics can become placeholders, and dead ends can be hidden. When detail is needed later, the agent or user should zoom into the relevant topic instead of rereading the full transcript.
 
 Current implementation track is TypeScript/Bun for OpenCode. Broader future system ideas may still reference Python 3.11+ research, but active product code is TypeScript.
 
@@ -12,7 +12,7 @@ Current implementation track is TypeScript/Bun for OpenCode. Broader future syst
 
 - Server plugin builds sideband context maps from normal OpenCode conversations.
 - TUI plugin provides sidebar state, `/context`, and `/blame` flows.
-- Topic fidelity levels: `Full`, `Summary`, `Compressed`, `Placeholder`, `Drop`.
+- Topic fidelity levels: `Full`, `Summary`, `Compressed`, `Placeholder`, `Hidden`.
 - Message-level controls: inherit topic setting, force full, force summary, hide.
 - Agent tools: `view_context`, `set_fidelity`, `session_lookup`, `session_detail`, `message_detail`, `blame_lookup`.
 - Git/blame path links source lines to prior sessions through commit-to-session mappings.
@@ -123,8 +123,8 @@ If provider auth is needed inside the sandbox, copy only required credentials in
 
 Three manual/scripted tests should broadly pass before plugin code is placed under `.opencode/plugins/`:
 
-- Annotation reliability: multi-turn conversation with annotation instructions; check format, blob assignment, summary quality.
-- Map navigation: fake context map at placeholder level; check blob selection and zoom requests.
+- Annotation reliability: multi-turn conversation with annotation instructions; check format, topic assignment, summary quality.
+- Map navigation: fake context map at placeholder level; check topic selection and zoom requests.
 - Sub-agent investigation: past session map at placeholder level in a task prompt; check navigation and focused summarization.
 
 ## Editing Rules

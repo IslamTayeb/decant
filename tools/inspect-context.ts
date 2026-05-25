@@ -6,17 +6,18 @@
  *   node --import tsx tools/inspect-context.ts <temp-root|home-dir|maps-dir> [session-id]
  *
  * If session-id is omitted, lists all sessions.
- * Shows: blob fidelity, effective tokens, message treatments, overrides.
+ * Shows: topic fidelity, effective tokens, message treatments, overrides.
  */
 import fs from "node:fs/promises";
 import path from "node:path";
 
+import { computeContextPreview, computeEffectiveTreatment } from "../src/core";
 import type { ContextMapFile } from "../src/types";
 
 type DebugLog = {
   timestamp?: string;
   totals?: { raw_tokens?: number; effective_tokens?: number };
-  blobs?: Array<{
+  topics?: Array<{
     label: string;
     fidelity: string;
     raw_tokens: number;
@@ -27,7 +28,7 @@ type DebugLog = {
 type TraceEvent = {
   ts?: string;
   event?: string;
-  blob_count?: number;
+  topic_count?: number;
   total_tokens?: number;
   before_count?: number;
   after_count?: number;
@@ -36,7 +37,7 @@ type TraceEvent = {
   preview?: {
     total_raw_tokens?: number;
     total_effective_tokens?: number;
-    blobs?: Array<{
+    topics?: Array<{
       id?: string;
       label?: string;
       fidelity?: string;
@@ -44,12 +45,12 @@ type TraceEvent = {
       effective_label?: string;
     }>;
   };
-  blob_fidelities?: Record<string, string>;
+  topic_fidelities?: Record<string, string>;
   payload_messages?: Array<{
     id?: string;
     role?: string;
-    blob_id?: string;
-    blob_label?: string;
+    topic_id?: string;
+    topic_label?: string;
     effective_treatment?: string;
     parts?: Array<{
       type: string;
@@ -60,9 +61,9 @@ type TraceEvent = {
     }>;
   }>;
   had_annotation?: boolean;
-  annotation_blob?: string;
+  annotation_topic?: string;
   effective_tokens?: number;
-  blob_policies?: Array<{
+  topic_policies?: Array<{
     id?: string;
     label?: string;
     fidelity?: string;
@@ -109,9 +110,9 @@ async function main() {
       const map = JSON.parse(
         await fs.readFile(path.join(mapsDir, file), "utf8"),
       ) as ContextMapFile;
-      const blobCount = map.blobOrder?.length ?? 0;
+      const topicCount = map.topicOrder?.length ?? 0;
       const msgCount = Object.keys(map.messages ?? {}).length;
-      console.log(`  ${map.sessionID}  ${blobCount} blobs  ${msgCount} msgs`);
+      console.log(`  ${map.sessionID}  ${topicCount} topics  ${msgCount} msgs`);
     }
 
     // Check for debug logs
@@ -141,45 +142,24 @@ async function main() {
   console.log(`\nSession: ${map.sessionID}`);
   console.log(`Directory: ${map.directory}`);
   console.log(
-    `Blobs: ${map.blobOrder.length}  Messages: ${Object.keys(map.messages).length}  Total tokens: ${map.totalTokenEstimate}`,
+    `Topics: ${map.topicOrder.length}  Messages: ${Object.keys(map.messages).length}  Total tokens: ${map.totalTokenEstimate}`,
   );
 
-  // Per-blob breakdown
-  console.log("\n── Blobs ──");
-  for (const blobID of map.blobOrder) {
-    const blob = map.blobs[blobID];
-    if (!blob) continue;
+  // Per-topic breakdown
+  console.log("\n── Topics ──");
+  const previewByTopic = new Map(
+    computeContextPreview(map).topics.map((topic) => [topic.id, topic]),
+  );
+  for (const topicID of map.topicOrder) {
+    const topic = map.topics[topicID];
+    if (!topic) continue;
 
-    // Compute effective tokens
-    let effective: number;
-    const msgCount = blob.messageIDs.length;
-    switch (blob.fidelity) {
-      case "full": {
-        effective = blob.messageIDs.reduce((s: number, id: string) => {
-          const m = map.messages[id];
-          return s + (m && !m.hidden ? m.tokenEstimate : 0);
-        }, 0);
-        break;
-      }
-      case "summary":
-        effective = Math.min(blob.tokenEstimate, msgCount * 60);
-        break;
-      case "compressed":
-        effective = Math.min(blob.tokenEstimate, 150);
-        break;
-      case "placeholder":
-        effective = Math.min(blob.tokenEstimate, 30);
-        break;
-      case "drop":
-        effective = 0;
-        break;
-      default:
-        effective = blob.tokenEstimate;
-    }
+    const effective = previewByTopic.get(topicID)?.effectiveTokens ?? 0;
+    const msgCount = topic.messageIDs.length;
 
     // Count overrides
     const overrides: Record<string, number> = {};
-    for (const msgID of blob.messageIDs) {
+    for (const msgID of topic.messageIDs) {
       const msg = map.messages[msgID];
       if (!msg) continue;
       if (msg.hidden) overrides.hidden = (overrides.hidden ?? 0) + 1;
@@ -192,33 +172,18 @@ async function main() {
       .join(" ");
 
     console.log(
-      `\n  ${blob.label}  [${blob.fidelity}${overrideStr ? " " + overrideStr : ""}]  set-by:${blob.fidelitySource}`,
+      `\n  ${topic.label}  [${topic.fidelity}${overrideStr ? " " + overrideStr : ""}]  set-by:${topic.fidelitySource}`,
     );
     console.log(
-      `    raw: ${blob.tokenEstimate} tok  effective: ${effective} tok  msgs: ${msgCount}`,
+      `    raw: ${topic.tokenEstimate} tok  effective: ${effective} tok  msgs: ${msgCount}`,
     );
-    console.log(`    placeholder: ${blob.placeholder}`);
+    console.log(`    placeholder: ${topic.placeholder}`);
 
     // Per-message detail
-    for (const msgID of blob.messageIDs) {
+    for (const msgID of topic.messageIDs) {
       const msg = map.messages[msgID];
       if (!msg) continue;
-      let treatment: string;
-      if (blob.fidelity === "drop") treatment = "DROPPED";
-      else if (blob.fidelity === "placeholder") treatment = "PLACEHOLDER-STUB";
-      else if (blob.fidelity === "compressed") treatment = "COMPRESSED";
-      else if (msg.hidden) treatment = "HIDDEN";
-      else if (blob.fidelity === "summary") {
-        treatment =
-          msg.fidelityOverride === "full"
-            ? "KEPT-FULL (override)"
-            : "SUMMARIZED";
-      } else {
-        treatment =
-          msg.fidelityOverride === "summary"
-            ? "SUMMARIZED (override)"
-            : "KEPT-FULL";
-      }
+      const treatment = computeEffectiveTreatment(msg, topic).toUpperCase();
       const flag =
         msg.fidelityOverride !== "inherit"
           ? ` [override:${msg.fidelityOverride}]`
@@ -238,7 +203,7 @@ async function main() {
     console.log(
       `  Raw: ${debug.totals?.raw_tokens ?? 0} tok  Effective: ${debug.totals?.effective_tokens ?? 0} tok`,
     );
-    for (const b of debug.blobs ?? []) {
+    for (const b of debug.topics ?? []) {
       console.log(
         `  ${b.label.padEnd(30)} ${b.fidelity.padEnd(12)} raw:${b.raw_tokens} eff:${b.effective_tokens}`,
       );
@@ -260,7 +225,7 @@ async function main() {
       const ts = e.ts?.slice(11, 19) ?? "??";
       if (e.event === "system.transform") {
         console.log(
-          `  [${ts}] system.transform  blobs=${e.blob_count} total_tok=${e.total_tokens}`,
+          `  [${ts}] system.transform  topics=${e.topic_count} total_tok=${e.total_tokens}`,
         );
       } else if (e.event === "messages.transform") {
         console.log(
@@ -270,14 +235,14 @@ async function main() {
           console.log(
             `          preview: raw=${e.preview.total_raw_tokens} eff=${e.preview.total_effective_tokens}`,
           );
-          for (const b of e.preview.blobs ?? []) {
+          for (const b of e.preview.topics ?? []) {
             console.log(
               `          ${(b.label ?? b.id ?? "unknown").padEnd(25)} ${String(b.fidelity).padEnd(12)} eff=${String(b.effective_tokens).padStart(5)} ${b.effective_label}`,
             );
           }
         }
-        if (e.blob_fidelities) {
-          const fids = Object.entries(e.blob_fidelities)
+        if (e.topic_fidelities) {
+          const fids = Object.entries(e.topic_fidelities)
             .map(([k, v]) => `${k}=${v}`)
             .join(" ");
           console.log(`          fidelities: ${fids}`);
@@ -288,7 +253,7 @@ async function main() {
           );
           for (const m of e.payload_messages) {
             console.log(
-              `          - ${m.role} ${m.id} blob=${m.blob_label ?? m.blob_id ?? "none"} treatment=${m.effective_treatment}`,
+              `          - ${m.role} ${m.id} topic=${m.topic_label ?? m.topic_id ?? "none"} treatment=${m.effective_treatment}`,
             );
             for (const part of m.parts ?? []) {
               if (part.type === "text") {
@@ -309,14 +274,14 @@ async function main() {
         }
       } else if (e.event === "text.complete") {
         console.log(
-          `  [${ts}] text.complete  annotation=${e.had_annotation} blob=${e.annotation_blob ?? "fallback"} blobs=${e.blob_count} eff=${e.effective_tokens}`,
+          `  [${ts}] text.complete  annotation=${e.had_annotation} topic=${e.annotation_topic ?? "fallback"} topics=${e.topic_count} eff=${e.effective_tokens}`,
         );
       } else if (e.event === "session.compacting") {
         console.log(
-          `  [${ts}] session.compacting  blobs=${e.blob_count} prompt_len=${e.prompt_length}`,
+          `  [${ts}] session.compacting  topics=${e.topic_count} prompt_len=${e.prompt_length}`,
         );
-        if (e.blob_policies) {
-          for (const p of e.blob_policies) {
+        if (e.topic_policies) {
+          for (const p of e.topic_policies) {
             console.log(
               `          ${(p.label ?? p.id ?? "unknown").padEnd(25)} ${p.fidelity?.padEnd(12)} src=${p.source} ~${p.tokens} tok`,
             );

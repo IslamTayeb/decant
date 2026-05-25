@@ -25,6 +25,7 @@ bun run benchmark:context-canaries -- --out benchmarks/context-canaries/runs/man
 ## Conditions
 
 - `polluted-default-compact`: noisy unrelated coding-history prelude, forced OpenCode compaction, then the canary prompt without decant.
+- `polluted-rgb-edit-boundary`: same noisy prelude, exported to `recall/log.txt`; the agent uses read/grep/bash to write `recall/rgb-context.md`, then a fresh prompt receives only that rewritten context plus the current canary task.
 - `polluted-decant-cache-stable-boundary-compact`: same prelude with decant enabled, explicit boundary cleanup via `view_context`/`set_fidelity`, cache-stable settings, forced compaction, then the canary prompt.
 
 ## Canaries
@@ -42,6 +43,7 @@ The analyzer records:
 
 - stale terms in the final assistant answer.
 - stale terms in visible compaction summaries.
+- stale terms in `rgb-context.md` for RGB-agent editable-context runs.
 - current-task term hits for `csv`, `header`, and `trim`.
 - context tool usage for decant conditions.
 - provider input, cache-read, output, reasoning, and cache-hit share.

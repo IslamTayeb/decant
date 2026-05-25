@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-export const blobFidelitySchema = z.enum([
+export const topicFidelitySchema = z.enum([
   "full",
   "summary",
   "compressed",
   "placeholder",
-  "drop",
+  "hidden",
 ]);
-export type BlobFidelity = z.infer<typeof blobFidelitySchema>;
+export type TopicFidelity = z.infer<typeof topicFidelitySchema>;
 
 export const messageFidelitySchema = z.enum(["inherit", "full", "summary"]);
 export type MessageFidelity = z.infer<typeof messageFidelitySchema>;
@@ -21,10 +21,10 @@ export const controlSourceSchema = z.enum([
 export type ControlSource = z.infer<typeof controlSourceSchema>;
 
 export const annotationSchema = z.object({
-  blob: z.string().min(1),
-  is_new_blob: z.boolean().optional().default(false),
+  topic: z.string().min(1),
+  is_new_topic: z.boolean().optional().default(false),
   message_summary: z.string().min(1),
-  blob_summary: z.string().min(1),
+  topic_summary: z.string().min(1),
   placeholder: z.string().min(1),
   key_facts: z.array(z.string().min(1)).optional().default([]),
 });
@@ -32,10 +32,10 @@ export type AnnotationPayload = z.infer<typeof annotationSchema>;
 
 export const retroactiveAnnotationItemSchema = z.object({
   message_id: z.string().min(1),
-  blob: z.string().min(1),
+  topic: z.string().min(1),
   message_summary: z.string().min(1),
   key_facts: z.array(z.string().min(1)).optional().default([]),
-  blob_summary: z.string().min(1).optional(),
+  topic_summary: z.string().min(1).optional(),
   placeholder: z.string().min(1).optional(),
 });
 export type RetroactiveAnnotationItem = z.infer<
@@ -48,13 +48,13 @@ export const annotationEnvelopeSchema = z.object({
 });
 export type AnnotationEnvelope = z.infer<typeof annotationEnvelopeSchema>;
 
-export type BlobEntry = {
+export type TopicEntry = {
   id: string;
   label: string;
   summary: string;
   placeholder: string;
   keyFacts: string[];
-  fidelity: BlobFidelity;
+  fidelity: TopicFidelity;
   fidelitySource: ControlSource;
   messageIDs: string[];
   tokenEstimate: number;
@@ -66,7 +66,7 @@ export type BlobEntry = {
 export type MessageEntry = {
   id: string;
   role: "user" | "assistant";
-  blobID?: string;
+  topicID?: string;
   summary: string;
   keyFacts: string[];
   hidden: boolean;
@@ -97,14 +97,14 @@ export type PendingRetroactiveMessage = {
   toolNames: string[];
   tokenEstimate: number;
   createdAt: number;
-  suggestedBlobID?: string;
-  suggestedBlobLabel?: string;
+  suggestedTopicID?: string;
+  suggestedTopicLabel?: string;
 };
 
 export type ContextMapCompactionState = {
   compactedAt: number;
   summaryMessageID: string;
-  summaryBlobID: string;
+  summaryTopicID: string;
   includeMessageID?: string;
   archivePath?: string;
 };
@@ -118,10 +118,10 @@ export type ContextMapFile = {
   updatedAt: number;
   totalTokenEstimate: number;
   lastAnnotatedMessageID?: string;
-  lastActiveBlobID?: string;
+  lastActiveTopicID?: string;
   settings: ContextMapSettings;
-  blobOrder: string[];
-  blobs: Record<string, BlobEntry>;
+  topicOrder: string[];
+  topics: Record<string, TopicEntry>;
   messages: Record<string, MessageEntry>;
   pendingRetroactive: Record<string, PendingRetroactiveMessage>;
   compaction?: ContextMapCompactionState;
@@ -133,10 +133,10 @@ export type CommitMapEntry = {
   timestamp: number;
   directory?: string;
   worktree?: string;
-  activeBlobID?: string;
-  activeBlobLabel?: string;
-  activeBlobIDs?: string[];
-  activeBlobLabels?: string[];
+  activeTopicID?: string;
+  activeTopicLabel?: string;
+  activeTopicIDs?: string[];
+  activeTopicLabels?: string[];
   commitSubject?: string;
   changedFiles?: string[];
 };
@@ -226,8 +226,8 @@ export type HistoricalSessionOverview = {
   sessionID: string;
   title: string;
   updatedAt?: number;
-  matchedBlobIDs: string[];
-  blobs: Array<{
+  matchedTopicIDs: string[];
+  topics: Array<{
     id: string;
     label: string;
     summary: string;
@@ -235,16 +235,16 @@ export type HistoricalSessionOverview = {
     placeholder: string;
     tokenEstimate: number;
     messageCount: number;
-    fidelity: BlobFidelity;
+    fidelity: TopicFidelity;
     keyFacts: string[];
     activeForCommit: boolean;
   }>;
 };
 
-export type ContextPreviewBlob = {
+export type ContextPreviewTopic = {
   id: string;
   label: string;
-  fidelity: BlobFidelity;
+  fidelity: TopicFidelity;
   rawTokens: number;
   effectiveTokens: number;
   messageCount: number;
@@ -252,7 +252,7 @@ export type ContextPreviewBlob = {
 };
 
 export type ContextPreview = {
-  blobs: ContextPreviewBlob[];
+  topics: ContextPreviewTopic[];
   totalRaw: number;
   totalEffective: number;
 };

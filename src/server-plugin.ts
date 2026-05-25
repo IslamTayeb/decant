@@ -6,7 +6,7 @@ import { tool } from "@opencode-ai/plugin/tool";
 import {
   applyAnnotationEnvelope,
   buildAnnotationSystemPrompt,
-  buildBlobMessageSummaries,
+  buildTopicMessageSummaries,
   buildCompactionPrompt,
   buildContextMapToolView,
   buildHistoricalOverview,
@@ -19,12 +19,12 @@ import {
   filterMessagesForActiveContext,
   getMessageCreatedAt,
   mergeContextMaps,
-  matchBlobIDsForQuery,
+  matchTopicIDsForQuery,
   parseAnnotationBlock,
   resetMapAfterCompaction,
   sortMessagesChronologically,
   transformMessagesForContext,
-  updateBlobFidelity,
+  updateTopicFidelity,
 } from "./core";
 import { ensureContextMapGitHook } from "./git";
 import {
@@ -110,16 +110,16 @@ function partPayloadSnapshot(part: MessageLike["parts"][number]) {
 function messagePayloadSnapshot(messages: MessageLike[], map: ContextMapFile) {
   return messages.map((message) => {
     const entry = map.messages[message.info.id];
-    const blob = entry?.blobID ? map.blobs[entry.blobID] : undefined;
+    const topic = entry?.topicID ? map.topics[entry.topicID] : undefined;
     return {
       id: message.info.id,
       role: message.info.role,
-      blob_id: entry?.blobID,
-      blob_label: blob?.label,
-      blob_fidelity: blob?.fidelity,
+      topic_id: entry?.topicID,
+      topic_label: topic?.label,
+      topic_fidelity: topic?.fidelity,
       fidelity_override: entry?.fidelityOverride,
       effective_treatment: entry
-        ? computeEffectiveTreatment(entry, blob)
+        ? computeEffectiveTreatment(entry, topic)
         : "unassigned",
       parts: message.parts.map(partPayloadSnapshot),
     };
@@ -212,7 +212,8 @@ function gitAiDecantStatus(
       key,
       transcriptHash,
       mapSessionID: staleEntry.mapSessionID,
-      staleReason: "Stored Decant summary was generated for a different Git AI transcript hash.",
+      staleReason:
+        "Stored Decant summary was generated for a different Git AI transcript hash.",
     };
   }
 
@@ -367,9 +368,7 @@ const server: Plugin = async (ctx) => {
       compactedAt,
       includeMessageID: input.includeMessageID,
       archivePath,
-      summaryFidelity: envFlag("DECANT_TASK_BOUNDARY")
-        ? "placeholder"
-        : undefined,
+      summaryFidelity: envFlag("DECANT_TASK_BOUNDARY") ? "summary" : undefined,
     });
     await writeContextMap(reset);
     const preview = computeContextPreview(reset);
@@ -412,7 +411,7 @@ const server: Plugin = async (ctx) => {
   async function ensureHistoricalMap(sessionID: string) {
     const session = await getSession(sessionID);
     let map = await getMap(sessionID, session.directory);
-    if (map.blobOrder.length > 0 || Object.keys(map.messages).length > 0)
+    if (map.topicOrder.length > 0 || Object.keys(map.messages).length > 0)
       return { session, map };
     const messages = await getMessages(sessionID);
     if (messages.length === 0) return { session, map };
@@ -478,9 +477,11 @@ const server: Plugin = async (ctx) => {
       if (!titleMatch && !hasMapFile) continue;
 
       const { map } = await ensureHistoricalMap(session.id);
-      const matchedBlobIDs = titleMatch ? [] : matchBlobIDsForQuery(map, query);
-      if (!titleMatch && matchedBlobIDs.length === 0) continue;
-      results.push(buildHistoricalOverview({ map, session, matchedBlobIDs }));
+      const matchedTopicIDs = titleMatch
+        ? []
+        : matchTopicIDsForQuery(map, query);
+      if (!titleMatch && matchedTopicIDs.length === 0) continue;
+      results.push(buildHistoricalOverview({ map, session, matchedTopicIDs }));
     }
 
     return results;
@@ -504,13 +505,13 @@ const server: Plugin = async (ctx) => {
       title: session.title ?? session.id,
       parent_id: session.parentID,
       updated_at: session.time?.updated,
-      blob_count: map.blobOrder.length,
-      blobs: buildHistoricalOverview({ map, session }).blobs.map((blob) => ({
-        id: blob.id,
-        label: blob.label,
-        compressed_summary: blob.compressedSummary,
-        message_count: blob.messageCount,
-        key_facts: blob.keyFacts,
+      topic_count: map.topicOrder.length,
+      topics: buildHistoricalOverview({ map, session }).topics.map((topic) => ({
+        id: topic.id,
+        label: topic.label,
+        compressed_summary: topic.compressedSummary,
+        message_count: topic.messageCount,
+        key_facts: topic.keyFacts,
       })),
       task_links: extractTaskLinks(messages),
       children: childNodes,
@@ -598,7 +599,7 @@ const server: Plugin = async (ctx) => {
           attributions.length > 0
             ? [
                 "Use Git AI attribution to identify the external agent/tool/model that produced this line.",
-                "Use messages_preview and summary first; Git AI messages are raw transcripts, not Decant-compressed blobs.",
+                "Use messages_preview and summary first; Git AI messages are raw transcripts, not Decant-compressed topics.",
                 "Only fetch messages_url or full external transcript content when the preview is insufficient.",
               ]
             : [
@@ -673,12 +674,11 @@ const server: Plugin = async (ctx) => {
       };
     }
 
-    const activeBlobIDs =
-      entry.activeBlobIDs?.length
-        ? entry.activeBlobIDs
-        : entry.activeBlobID
-          ? [entry.activeBlobID]
-          : [];
+    const activeTopicIDs = entry.activeTopicIDs?.length
+      ? entry.activeTopicIDs
+      : entry.activeTopicID
+        ? [entry.activeTopicID]
+        : [];
     const commitSubject =
       entry.commitSubject ||
       (
@@ -716,21 +716,21 @@ const server: Plugin = async (ctx) => {
       commit_subject: commitSubject,
       changed_files: changedFiles,
       session_id: entry.sessionID,
-      active_blob_id: entry.activeBlobID,
-      active_blob_label: entry.activeBlobLabel,
-      active_blob_ids: activeBlobIDs,
-      active_blob_labels: entry.activeBlobLabels ?? [],
+      active_topic_id: entry.activeTopicID,
+      active_topic_label: entry.activeTopicLabel,
+      active_topic_ids: activeTopicIDs,
+      active_topic_labels: entry.activeTopicLabels ?? [],
       overview: buildHistoricalOverview({
         map,
         session,
         commitEntry: entry,
-        matchedBlobIDs: activeBlobIDs,
+        matchedTopicIDs: activeTopicIDs,
       }),
       git_ai: gitAi,
       next_steps: [
-        "Use active_blob_ids first; they are the blobs active when the blamed commit was made.",
-        "Inspect overview.blobs[].compressedSummary to choose relevant blobs.",
-        "Call session_detail with detail='messages' to see message summaries for a blob.",
+        "Use active_topic_ids first; they are the topics active when the blamed commit was made.",
+        "Inspect overview.topics[].compressedSummary to choose relevant topics.",
+        "Call session_detail with detail='messages' to see message summaries for a topic.",
         "Call message_detail with a message_id to fetch the full historical message only when needed.",
         "If git_ai.mapped is true, use it as cross-agent attribution; prefer Decant summaries before raw Git AI transcript detail.",
       ],
@@ -739,15 +739,15 @@ const server: Plugin = async (ctx) => {
 
   async function applyMapFidelity(input: {
     sessionID: string;
-    blobID: string;
-    fidelity: Parameters<typeof updateBlobFidelity>[0]["fidelity"];
-    source: Parameters<typeof updateBlobFidelity>[0]["source"];
+    topicID: string;
+    fidelity: Parameters<typeof updateTopicFidelity>[0]["fidelity"];
+    source: Parameters<typeof updateTopicFidelity>[0]["source"];
     force?: boolean;
   }) {
     const map = await getMap(input.sessionID);
-    const result = updateBlobFidelity({
+    const result = updateTopicFidelity({
       map,
-      blobID: input.blobID,
+      topicID: input.topicID,
       fidelity: input.fidelity,
       source: input.source,
       force: input.force,
@@ -793,7 +793,7 @@ const server: Plugin = async (ctx) => {
     tool: {
       view_context: tool({
         description:
-          "View the current context blobs, fidelity settings, and token usage",
+          "View the current context topics, fidelity settings, and token usage",
         args: {},
         async execute(_args, toolCtx) {
           toolCtx.metadata({ title: "View context" });
@@ -806,13 +806,15 @@ const server: Plugin = async (ctx) => {
       }),
       set_fidelity: tool({
         description:
-          "Set how much detail to keep for a blob (full, summary, placeholder, drop). Use for stale or large blobs; avoid frequent small edits because prompt reshaping can reduce provider prompt-cache hits.",
+          "Set how much detail to keep for a topic (full, summary, hidden). Use for stale or large topics; avoid frequent small edits because prompt reshaping can reduce provider prompt-cache hits.",
         args: {
-          blob_id: tool.schema.string().describe("Blob ID (snake_case label)"),
+          topic_id: tool.schema
+            .string()
+            .describe("Topic ID (snake_case label)"),
           fidelity: tool.schema
-            .enum(["full", "summary", "placeholder", "drop"])
+            .enum(["full", "summary", "hidden"])
             .describe(
-              "Detail level: full (keep everything), summary (one-line per message), placeholder (short stub), drop (remove from context)",
+              "Detail level: full (keep everything), summary (one-line per message), hidden (remove from context)",
             ),
           force_user_override: tool.schema
             .boolean()
@@ -821,11 +823,11 @@ const server: Plugin = async (ctx) => {
         },
         async execute(args, toolCtx) {
           toolCtx.metadata({
-            title: `Set fidelity: ${args.blob_id} → ${args.fidelity === "drop" ? "hide" : args.fidelity}`,
+            title: `Set fidelity: ${args.topic_id} → ${args.fidelity}`,
           });
           const { result, map } = await applyMapFidelity({
             sessionID: toolCtx.sessionID,
-            blobID: args.blob_id,
+            topicID: args.topic_id,
             fidelity: args.fidelity,
             source: "agent",
             force: args.force_user_override,
@@ -835,7 +837,7 @@ const server: Plugin = async (ctx) => {
               ok: result.ok,
               message: result.message,
               user_controls_are_authoritative: true,
-              blob: map.blobs[args.blob_id],
+              topic: map.topics[args.topic_id],
             },
             null,
             2,
@@ -847,7 +849,7 @@ const server: Plugin = async (ctx) => {
         args: {
           query: tool.schema
             .string()
-            .describe("Search text to match against session titles and blobs"),
+            .describe("Search text to match against session titles and topics"),
           limit: tool.schema
             .number()
             .int()
@@ -875,7 +877,7 @@ const server: Plugin = async (ctx) => {
       }),
       session_tree: tool({
         description:
-          "Inspect parent/sub-agent session lineage as a low-fidelity tree with child task links and blob summaries",
+          "Inspect parent/sub-agent session lineage as a low-fidelity tree with child task links and topic summaries",
         args: {
           session_id: tool.schema
             .string()
@@ -898,7 +900,7 @@ const server: Plugin = async (ctx) => {
               depth: args.depth ?? 1,
               tree: await sessionTree(rootSessionID, args.depth ?? 1),
               next_steps: [
-                "Use session_detail on a promising blob for message summaries.",
+                "Use session_detail on a promising topic for message summaries.",
                 "Use message_detail for one exact message or tool call only when needed.",
               ],
             },
@@ -909,30 +911,32 @@ const server: Plugin = async (ctx) => {
       }),
       session_detail: tool({
         description:
-          "Get progressive detail from a past session blob: compressed summary, message summaries, or full blob transcript",
+          "Get progressive detail from a past session topic: compressed summary, message summaries, or full topic transcript",
         args: {
           session_id: tool.schema.string().describe("Session ID to look up"),
-          blob_id: tool.schema.string().describe("Blob ID within that session"),
+          topic_id: tool.schema
+            .string()
+            .describe("Topic ID within that session"),
           detail: tool.schema
             .enum(["summary", "messages", "full"])
             .describe(
-              "Detail level: summary (compressed blob overview), messages (per-message summaries), or full (complete blob transcript)",
+              "Detail level: summary (compressed topic overview), messages (per-message summaries), or full (complete topic transcript)",
             ),
         },
         async execute(args, toolCtx) {
           toolCtx.metadata({
-            title: `Session detail: ${args.blob_id}`,
+            title: `Session detail: ${args.topic_id}`,
           });
           const { map } = await ensureHistoricalMap(args.session_id);
           if (args.detail === "messages") {
             return JSON.stringify(
               {
                 session_id: args.session_id,
-                blob_id: args.blob_id,
+                topic_id: args.topic_id,
                 detail: args.detail,
-                ...buildBlobMessageSummaries({
+                ...buildTopicMessageSummaries({
                   map,
-                  blobID: args.blob_id,
+                  topicID: args.topic_id,
                 }),
                 next_step:
                   "Call message_detail with one message_id to fetch a full message only if needed.",
@@ -948,11 +952,11 @@ const server: Plugin = async (ctx) => {
           return JSON.stringify(
             {
               session_id: args.session_id,
-              blob_id: args.blob_id,
+              topic_id: args.topic_id,
               detail: args.detail,
               content: buildSessionZoomText({
                 map,
-                blobID: args.blob_id,
+                topicID: args.topic_id,
                 fidelity: args.detail === "full" ? "full" : "compressed",
                 messages,
               }),
@@ -1037,12 +1041,12 @@ const server: Plugin = async (ctx) => {
         worktree: ctx.worktree,
         messages: activeMessages,
       });
-      const suggestedBlobID = fallback.messages[toolMessage.info.id]?.blobID;
+      const suggestedTopicID = fallback.messages[toolMessage.info.id]?.topicID;
       const map = capturePendingRetroactiveMessage({
         map: mergeContextMaps(currentMap, fallback),
         messages: activeMessages,
         messageID: toolMessage.info.id,
-        suggestedBlobID,
+        suggestedTopicID,
       });
       await writeContextMap(map);
     },
@@ -1075,7 +1079,7 @@ const server: Plugin = async (ctx) => {
 
       await appendTrace(input.sessionID, "system.transform", {
         cache_stable: cacheStable,
-        blob_count: map.blobOrder.length,
+        topic_count: map.topicOrder.length,
         total_tokens: map.totalTokenEstimate,
         guidance_length: (cacheStable
           ? staticPluginGuidanceSystemPrompt()
@@ -1110,8 +1114,8 @@ const server: Plugin = async (ctx) => {
         : ((await persistCoverage(sessionID, currentMessages)) ??
           (await getMap(sessionID)));
 
-      const blobFidelities = Object.fromEntries(
-        map.blobOrder.map((id) => [id, map.blobs[id]?.fidelity]),
+      const topicFidelities = Object.fromEntries(
+        map.topicOrder.map((id) => [id, map.topics[id]?.fidelity]),
       );
 
       const preview = computeContextPreview(map);
@@ -1130,7 +1134,7 @@ const server: Plugin = async (ctx) => {
         preview: {
           total_raw_tokens: preview.totalRaw,
           total_effective_tokens: preview.totalEffective,
-          blobs: preview.blobs.map((b) => ({
+          topics: preview.topics.map((b) => ({
             id: b.id,
             label: b.label,
             fidelity: b.fidelity,
@@ -1140,7 +1144,7 @@ const server: Plugin = async (ctx) => {
             message_count: b.messageCount,
           })),
         },
-        blob_fidelities: blobFidelities,
+        topic_fidelities: topicFidelities,
         surviving_messages: (output.messages as MessageLike[]).map((m) => ({
           id: m.info.id,
           role: m.info.role,
@@ -1196,15 +1200,15 @@ const server: Plugin = async (ctx) => {
 
       await appendTrace(input.sessionID, "text.complete", {
         had_annotation: !!parsed.annotation,
-        annotation_blob: parsed.annotation?.current?.blob,
-        annotation_is_new_blob: parsed.annotation?.current?.is_new_blob,
+        annotation_topic: parsed.annotation?.current?.topic,
+        annotation_is_new_topic: parsed.annotation?.current?.is_new_topic,
         annotation_summary: parsed.annotation?.current?.message_summary?.slice(
           0,
           100,
         ),
         retroactive_count: parsed.annotation?.retroactive?.length ?? 0,
         fallback_used: !parsed.annotation,
-        blob_count: map.blobOrder.length,
+        topic_count: map.topicOrder.length,
         total_tokens: map.totalTokenEstimate,
         effective_tokens: preview.totalEffective,
       });
@@ -1216,13 +1220,13 @@ const server: Plugin = async (ctx) => {
       output.prompt = prompt;
 
       await appendTrace(input.sessionID, "session.compacting", {
-        blob_count: map.blobOrder.length,
-        blob_policies: map.blobOrder.map((id) => ({
+        topic_count: map.topicOrder.length,
+        topic_policies: map.topicOrder.map((id) => ({
           id,
-          label: map.blobs[id]?.label,
-          fidelity: map.blobs[id]?.fidelity,
-          source: map.blobs[id]?.fidelitySource,
-          tokens: map.blobs[id]?.tokenEstimate,
+          label: map.topics[id]?.label,
+          fidelity: map.topics[id]?.fidelity,
+          source: map.topics[id]?.fidelitySource,
+          tokens: map.topics[id]?.tokenEstimate,
         })),
         prompt_length: prompt.length,
         prompt_preview: prompt.slice(0, 500),

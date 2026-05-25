@@ -90,7 +90,7 @@ async function main() {
         text: "Topic gamma: propose where a shared async queue helper should live.",
       },
       {
-        text: "Call view_context exactly once, then answer with only the blob label that seems most relevant to the auth debugging topic.",
+        text: "Call view_context exactly once, then answer with only the topic label that seems most relevant to the auth debugging topic.",
         system:
           "You must call the view_context tool exactly once before answering. If you skip the tool call, your answer is wrong.",
         tools: { view_context: true },
@@ -102,7 +102,7 @@ async function main() {
         text: "Topic delta: suggest concurrency test cases for the auth queue behavior.",
       },
       {
-        text: "Call view_context exactly once, then answer with only ok after checking whether the session still has multiple blobs.",
+        text: "Call view_context exactly once, then answer with only ok after checking whether the session still has multiple topics.",
         system:
           "You must call the view_context tool exactly once before answering. If you skip the tool call, your answer is wrong.",
         tools: { view_context: true },
@@ -148,18 +148,18 @@ async function main() {
       `${sessionID}.json`,
     );
     const map = JSON.parse(await fs.readFile(mapPath, "utf8")) as {
-      blobOrder: string[];
-      blobs: Record<string, { messageIDs: string[]; fidelity: string }>;
+      topicOrder: string[];
+      topics: Record<string, { messageIDs: string[]; fidelity: string }>;
       messages: Record<
         string,
-        { source?: string; toolNames?: string[]; blobID?: string }
+        { source?: string; toolNames?: string[]; topicID?: string }
       >;
       pendingRetroactive: Record<string, unknown>;
     };
 
     assert.ok(
-      map.blobOrder.length >= 3 && map.blobOrder.length <= 8,
-      `expected 3-8 blobs after long session, got ${map.blobOrder.length}`,
+      map.topicOrder.length >= 3 && map.topicOrder.length <= 8,
+      `expected 3-8 topics after long session, got ${map.topicOrder.length}`,
     );
     assert.equal(
       Object.keys(map.pendingRetroactive).length,
@@ -167,16 +167,16 @@ async function main() {
       "pending retroactive messages should be empty at the end of the long session",
     );
 
-    const blobSizes = map.blobOrder
-      .map((blobID) => map.blobs[blobID]?.messageIDs.length ?? 0)
+    const topicSizes = map.topicOrder
+      .map((topicID) => map.topics[topicID]?.messageIDs.length ?? 0)
       .sort((a, b) => b - a);
     assert.ok(
-      blobSizes[0] >= 5,
-      `expected at least one reused blob with >=5 messages, got ${blobSizes[0]}`,
+      topicSizes[0] >= 5,
+      `expected at least one reused topic with >=5 messages, got ${topicSizes[0]}`,
     );
     assert.ok(
-      blobSizes.filter((size) => size >= 3).length >= 2,
-      `expected at least two blobs with >=3 messages, got ${blobSizes.join(",")}`,
+      topicSizes.filter((size) => size >= 3).length >= 2,
+      `expected at least two topics with >=3 messages, got ${topicSizes.join(",")}`,
     );
 
     const annotatedCount = Object.values(map.messages).filter(
@@ -197,8 +197,8 @@ async function main() {
       JSON.stringify(
         {
           sessionID,
-          blobCount: map.blobOrder.length,
-          largestBlobSize: blobSizes[0],
+          topicCount: map.topicOrder.length,
+          largestTopicSize: topicSizes[0],
           annotatedCount,
           viewContextCalls: sessionTools.filter(
             (tool) => tool === "view_context",

@@ -37,14 +37,16 @@ Blog fixtures cover basic rationale lookup, correction chains, false provenance,
 - `full-transcript`: the answer prompt receives the whole synthetic prior transcript bundle. This is the expensive upper-bound baseline.
 - `keyword-snippets`: the answer prompt receives naive keyword snippets with distractors. This is the cheap retrieval baseline.
 - `rlm-transcript-search`: prior transcripts are stored on disk under `recall/transcripts/`; the answering agent uses RLM-style transcript search with `grep`/`read` and optional read-only `bash`.
+- `rgb-editable-context`: prior transcripts are stored on disk first. The agent uses read/grep/bash over that raw context, writes `recall/rgb-context.md`, then a fresh answer turn receives only that rewritten evidence file.
 - `subagent-rlm-transcript-search`: the parent delegates to a sub-agent, and the child uses RLM-style transcript search over transcript files.
+- `subagent-rgb-editable-context`: the parent delegates to an RGB sub-agent. The child uses read/grep/bash over transcript files, writes `recall/rgb-context.md`, and returns focused evidence to the parent.
 - `decant-map-zoom`: prior sessions are real OpenCode sessions with decant enabled. The answering agent must use `session_lookup`, `session_detail`, and `message_detail`.
 - `subagent-map-zoom`: the parent agent must delegate the provenance lookup to a sub-agent, then answer from the child result.
 - `decant-guided-rlm`: the answer uses decant session tools first, then RLM-style transcript search in the per-run transcript corpus, then `message_detail` for final evidence.
 - `subagent-decant-guided-rlm`: the parent delegates to a hybrid child that uses decant session tools plus RLM-style transcript search.
 - `decant-blame-lookup`: the answer starts from `blame_lookup`, then zooms through the mapped session and message evidence. This is a prototype demo path, not a product-proven claim.
 
-Note: the `rlm-*` names here mean transcript-file search inspired by RLM-style externalized context. They are not paper-faithful Recursive Language Models: the harness does not place the full prompt in a persistent REPL variable, return answers from REPL state, or expose programmatic recursive LM/RLM calls from inside that REPL. Treat these conditions as offloaded transcript-search baselines.
+Note: the `rlm-*` names here mean transcript-file search inspired by RLM-style externalized context. The `rgb-editable-context` conditions are closer to the RGB-agent pattern: file-based memory, read/grep/bash over raw logs, and a rewritten context file fed to the next answer turn. They still do not implement recursive LM calls.
 
 ## Scoring
 
@@ -66,6 +68,7 @@ The analyzer also records:
 - forbidden distractor terms in the final answer.
 - context-tool, task-tool, and `message_detail` call counts.
 - `glob`/`grep` search calls, `read` calls, transcript files read, and irrelevant transcript reads.
+- RGB context presence and whether exact session/message IDs survived the rewrite.
 - provider input, cache-read, output, reasoning, and cache-hit share.
 
 ## Current Blog Artifacts

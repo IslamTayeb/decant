@@ -161,7 +161,7 @@ function buildSyntheticMap(): ContextMapFile {
     createdAt: now,
     updatedAt: now,
     totalTokenEstimate: 4000,
-    lastActiveBlobID: "refactor_queue_helper",
+    lastActiveTopicID: "refactor_queue_helper",
     settings: {
       placeholderIncludesKeyFacts: true,
       placeholderIncludesKeyFactsSource: "user",
@@ -171,8 +171,8 @@ function buildSyntheticMap(): ContextMapFile {
       stableAnchors: false,
       stableAnchorsSource: "default",
     },
-    blobOrder: ["auth_debugging", "docs_chatter", "refactor_queue_helper"],
-    blobs: {
+    topicOrder: ["auth_debugging", "docs_chatter", "refactor_queue_helper"],
+    topics: {
       auth_debugging: {
         id: "auth_debugging",
         label: "auth_debugging",
@@ -199,7 +199,7 @@ function buildSyntheticMap(): ContextMapFile {
         summary: "Repeated onboarding docs heading cleanup and wording tweaks.",
         placeholder: "Docs heading cleanup chatter",
         keyFacts: ["docs cleanup low priority"],
-        fidelity: "drop",
+        fidelity: "hidden",
         fidelitySource: "user",
         messageIDs: ["m4"],
         tokenEstimate: 1600,

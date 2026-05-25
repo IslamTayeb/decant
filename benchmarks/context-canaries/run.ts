@@ -46,6 +46,7 @@ type SessionMessage = {
 
 type ConditionID =
   | "polluted-default-compact"
+  | "polluted-rgb-edit-boundary"
   | "polluted-decant-cache-stable-boundary-compact";
 
 type CanaryID =
@@ -60,6 +61,7 @@ type ConditionConfig = {
   contextCleanup: boolean;
   cacheStable: boolean;
   taskBoundary: boolean;
+  rgbEdit: boolean;
 };
 
 type CanaryConfig = {
@@ -172,6 +174,15 @@ const conditions: Record<ConditionID, ConditionConfig> = {
     contextCleanup: false,
     cacheStable: false,
     taskBoundary: false,
+    rgbEdit: false,
+  },
+  "polluted-rgb-edit-boundary": {
+    id: "polluted-rgb-edit-boundary",
+    plugin: false,
+    contextCleanup: false,
+    cacheStable: false,
+    taskBoundary: false,
+    rgbEdit: true,
   },
   "polluted-decant-cache-stable-boundary-compact": {
     id: "polluted-decant-cache-stable-boundary-compact",
@@ -179,6 +190,7 @@ const conditions: Record<ConditionID, ConditionConfig> = {
     contextCleanup: true,
     cacheStable: true,
     taskBoundary: true,
+    rgbEdit: false,
   },
 };
 
@@ -348,6 +360,98 @@ async function runConditionCanary(
       );
     }
 
+    if (condition.rgbEdit) {
+      const preludeMessages = await listSessionMessages(
+        client,
+        worktree,
+        sessionID,
+      );
+      await writeRgbRawLog(worktree, preludeMessages);
+      const editorSessionID = await createSession(
+        client,
+        worktree,
+        `${condition.id} ${canary.id} rgb editor`,
+      );
+      await prompt(
+        client,
+        worktree,
+        editorSessionID,
+        buildRgbContextEditPrompt(canary, worktree),
+        buildRgbContextEditSystemPrompt(),
+        { read: true, grep: true, bash: true },
+        options.promptTimeoutMs,
+      );
+      const editorMessages = await listSessionMessages(
+        client,
+        worktree,
+        editorSessionID,
+      );
+      await fs.writeFile(
+        path.join(conditionDir, "editor-messages.json"),
+        `${JSON.stringify(editorMessages, null, 2)}\n`,
+      );
+      const rgbContext = await readRgbContext(worktree);
+      assert.ok(
+        rgbContext.trim().length > 0,
+        "RGB editor did not write recall/rgb-context.md",
+      );
+      await fs.writeFile(path.join(conditionDir, "rgb-context.md"), rgbContext);
+      await archiveRgbRawLog(worktree, conditionDir);
+
+      const finalSessionID = await createSession(
+        client,
+        worktree,
+        `${condition.id} ${canary.id} final`,
+      );
+      await prompt(
+        client,
+        worktree,
+        finalSessionID,
+        buildRgbFinalPrompt(canary, rgbContext),
+        canary.systemPrompt,
+        {},
+        options.promptTimeoutMs,
+      );
+      const finalMessages = await listSessionMessages(
+        client,
+        worktree,
+        finalSessionID,
+      );
+      const messages = [
+        ...preludeMessages,
+        ...editorMessages,
+        ...finalMessages,
+      ];
+      await fs.writeFile(
+        resultBase.messagesPath,
+        `${JSON.stringify(messages, null, 2)}\n`,
+      );
+      const stats = await buildStats({
+        condition,
+        canary,
+        sessionID: finalSessionID,
+        messages,
+        conditionDir,
+        startedAt,
+        rgbContext,
+      });
+      await fs.writeFile(
+        resultBase.statsPath,
+        `${JSON.stringify(stats, null, 2)}\n`,
+      );
+
+      if (!options.keepWorktrees) {
+        await fs.rm(worktree, { recursive: true, force: true });
+      }
+
+      return {
+        ...resultBase,
+        sessionID: finalSessionID,
+        contextHygienePassed: stats.context_hygiene_passed,
+        canaryPassed: stats.canary_passed,
+      };
+    }
+
     if (condition.contextCleanup) {
       await requestContextCleanup(
         client,
@@ -419,6 +523,7 @@ function parseOptions(): Options {
       ? splitList(conditionArg)
       : [
           "polluted-default-compact",
+          "polluted-rgb-edit-boundary",
           "polluted-decant-cache-stable-boundary-compact",
         ]
   ) as ConditionID[];
@@ -577,6 +682,7 @@ async function buildOpenCodeEnv(input: {
     );
   }
   if (plugins.length > 0) config.plugin = plugins;
+  const authContent = await seededAuthContent();
   return {
     ...process.env,
     HOME: input.opencodeRoot.home,
@@ -596,7 +702,16 @@ async function buildOpenCodeEnv(input: {
       : {}),
     ...(input.taskBoundary ? { DECANT_TASK_BOUNDARY: "1" } : {}),
     OPENCODE_CONFIG_CONTENT: JSON.stringify(config),
+    ...(authContent ? { OPENCODE_AUTH_CONTENT: authContent } : {}),
   } satisfies NodeJS.ProcessEnv;
+}
+
+async function seededAuthContent() {
+  const seeded = process.env.DECANT_E2E_TEMP_ROOT;
+  if (!seeded) return undefined;
+  return await fs
+    .readFile(path.join(seeded, "data", "opencode", "auth.json"), "utf8")
+    .catch(() => undefined);
 }
 
 async function startServer(env: NodeJS.ProcessEnv, cwd: string) {
@@ -694,7 +809,7 @@ async function requestContextCleanup(
     client,
     directory,
     sessionID,
-    "We are ending the old auth/docs/test planning work and switching to a wholly unrelated parser issue. Call view_context exactly once. Then call set_fidelity with fidelity='drop' for every blob about auth, docs, onboarding, tests, stale hypotheses, queue helpers, mutexes, rollback flags, or prior planning. No prior blob is current for the next task. If a blob cannot be dropped safely, set it to placeholder and explain why in one short phrase. Then answer with only ok.",
+    "We are ending the old auth/docs/test planning work and switching to a wholly unrelated parser issue. Call view_context exactly once. Then call set_fidelity with fidelity='hidden' for every topic about auth, docs, onboarding, tests, stale hypotheses, queue helpers, mutexes, rollback flags, or prior planning. No prior topic is current for the next task. Do not keep any old unrelated topic at summary fidelity. Then answer with only ok.",
     "You must call view_context and at least one set_fidelity call before answering. Do not edit repository files. Avoid unrelated tools.",
     { view_context: true, set_fidelity: true },
     timeoutMs,
@@ -714,6 +829,86 @@ async function forceCompaction(
     modelID: model.modelID,
     auto: false,
   });
+}
+
+async function writeRgbRawLog(worktree: string, messages: SessionMessage[]) {
+  const recallDir = path.join(worktree, "recall");
+  await fs.mkdir(recallDir, { recursive: true });
+  const log = messages
+    .map((message, index) => {
+      const role = message.info?.role ?? message.role ?? "unknown";
+      return [
+        `## message ${index + 1}`,
+        `role: ${role}`,
+        messageText(message),
+        "",
+      ].join("\n");
+    })
+    .join("\n");
+  await fs.writeFile(path.join(recallDir, "log.txt"), log);
+}
+
+function buildRgbContextEditSystemPrompt() {
+  return [
+    "You are an RGB-agent context editor for a task-switch hygiene benchmark.",
+    "Use only READ, GREP, and BASH with python3-style scripting over recall/log.txt.",
+    "Treat recall/log.txt as the external context variable.",
+    "Write the rewritten current-context view to recall/rgb-context.md using bash/python3.",
+    "Do not edit source files or any file outside recall/rgb-context.md.",
+    "The rewritten file is prompt-visible, so do not copy exact stale terms into it even to say they were hidden.",
+  ].join(" ");
+}
+
+function buildRgbContextEditPrompt(canary: CanaryConfig, worktree: string) {
+  return [
+    `Raw log: ${path.join(worktree, "recall", "log.txt")}`,
+    "",
+    "The old log contains unrelated auth/docs/test planning. The next task is unrelated CSV parser work.",
+    "Rewrite the context so the next prompt sees only the current task boundary and any instructions needed for the CSV task.",
+    "Hide all old auth, docs, test, queue, lock, rollback, onboarding, and parser-hypothesis details.",
+    "Do not write exact stale identifiers or old topic names into recall/rgb-context.md.",
+    "",
+    "Next prompt:",
+    canary.finalPrompt,
+    "",
+    "Write recall/rgb-context.md with this shape:",
+    "# RGB Context",
+    "decision: hidden_stale_history",
+    "current_task: <CSV parser task in one sentence>",
+    "keep: <only facts needed for the current task>",
+    "policy: prior unrelated work was removed; no old identifiers preserved",
+  ].join("\n");
+}
+
+async function readRgbContext(worktree: string) {
+  return await fs
+    .readFile(path.join(worktree, "recall", "rgb-context.md"), "utf8")
+    .catch(() => "");
+}
+
+async function archiveRgbRawLog(worktree: string, conditionDir: string) {
+  const source = path.join(worktree, "recall", "log.txt");
+  const dest = path.join(conditionDir, "raw-log.txt");
+  await fs.rename(source, dest).catch(async (error: unknown) => {
+    const code =
+      error && typeof error === "object"
+        ? (error as { code?: string }).code
+        : undefined;
+    if (code !== "ENOENT") throw error;
+  });
+}
+
+function buildRgbFinalPrompt(canary: CanaryConfig, rgbContext: string) {
+  return [
+    "RGB-agent rewritten context:",
+    "```md",
+    rgbContext.trim(),
+    "```",
+    "",
+    "Use only the rewritten context above as prior conversation history. Do not use or mention hidden stale topics.",
+    "",
+    canary.finalPrompt,
+  ].join("\n");
 }
 
 async function prompt(
@@ -833,6 +1028,7 @@ async function buildStats(input: {
   messages: SessionMessage[];
   conditionDir: string;
   startedAt: number;
+  rgbContext?: string;
 }) {
   const outputText = messageText(latestAssistantMessage(input.messages));
   const staleOutputTerms = termsInText(staleTerms, outputText);
@@ -843,9 +1039,11 @@ async function buildStats(input: {
   const sessionSummaryFidelity = await readSessionSummaryFidelity(
     input.conditionDir,
   );
-  const visibleStaleSummaryTerms = isHiddenFidelity(sessionSummaryFidelity)
-    ? []
-    : staleSummaryTerms;
+  const staleRgbContextTerms = termsInText(staleTerms, input.rgbContext ?? "");
+  const visibleStaleSummaryTerms = [
+    ...(isHiddenFidelity(sessionSummaryFidelity) ? [] : staleSummaryTerms),
+    ...staleRgbContextTerms,
+  ];
   const currentTaskTermHits = termsInText(
     input.canary.currentTerms,
     outputText,
@@ -878,7 +1076,11 @@ async function buildStats(input: {
     stale_terms_in_output: staleOutputTerms,
     stale_terms_in_compaction_summary: staleSummaryTerms,
     stale_terms_in_visible_compaction_summary: visibleStaleSummaryTerms,
+    stale_terms_in_rgb_context: staleRgbContextTerms,
     session_summary_fidelity: sessionSummaryFidelity,
+    rgb_context_present:
+      input.condition.rgbEdit === false || Boolean(input.rgbContext?.trim()),
+    rgb_context_preview: input.rgbContext?.slice(0, 800) ?? "",
     tokens: summarizeTokens(input.messages),
     context_hygiene_passed: contextHygienePassed,
     canary_passed: canaryPassed,
@@ -926,16 +1128,18 @@ async function readSessionSummaryFidelity(conditionDir: string) {
   if (!raw) return undefined;
   try {
     const parsed = JSON.parse(raw) as {
-      blobs?: Record<string, { fidelity?: string }>;
+      topics?: Record<string, { fidelity?: string }>;
     };
-    return parsed.blobs?.session_summary?.fidelity;
+    return parsed.topics?.session_summary?.fidelity;
   } catch {
     return undefined;
   }
 }
 
 function isHiddenFidelity(fidelity: string | undefined) {
-  return fidelity === "drop" || fidelity === "placeholder";
+  return (
+    fidelity === "hidden" || fidelity === "drop" || fidelity === "placeholder"
+  );
 }
 
 function emptyTokenBucket(): TokenBucket {

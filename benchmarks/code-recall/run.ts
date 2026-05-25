@@ -28,8 +28,10 @@ const defaultOutDir = path.join(
 type ConditionID =
   | "code-only"
   | "rlm-transcript-search"
+  | "rgb-editable-context"
   | "decant-only"
-  | "decant-guided-rlm";
+  | "decant-guided-rlm"
+  | "decant-guided-rgb-editable";
 
 type RecallRole =
   | "unnecessary"
@@ -168,7 +170,12 @@ type RunStats = {
   output_preview: string;
   tool_names: string[];
   transcript_files_read: string[];
+  solve_transcript_files_read: string[];
   irrelevant_transcript_reads: string[];
+  rgb_context_present: boolean;
+  rgb_context_preserves_ids: boolean;
+  rgb_context_policy_passed: boolean;
+  rgb_context_preview: string;
   context_tool_call_count: number;
   search_tool_call_count: number;
   read_tool_call_count: number;
@@ -196,8 +203,10 @@ type Analysis = {
 const defaultConditions: ConditionID[] = [
   "code-only",
   "rlm-transcript-search",
+  "rgb-editable-context",
   "decant-only",
   "decant-guided-rlm",
+  "decant-guided-rgb-editable",
 ];
 
 const fixtures: CodeFixture[] = [
@@ -889,7 +898,9 @@ async function runFixtureCondition(
   const startedAt = Date.now();
   try {
     await prepareFixtureRepo(worktree, fixture, {
-      includeTranscripts: condition === "rlm-transcript-search",
+      includeTranscripts:
+        condition === "rlm-transcript-search" ||
+        condition === "rgb-editable-context",
     });
     const opencodeRoot = resolveOpenCodeRoot(conditionDir);
     const env = await buildOpenCodeEnv({
@@ -910,8 +921,57 @@ async function runFixtureCondition(
           options.promptTimeoutMs,
         )
       : staticSeededSessions(fixture);
-    if (condition === "decant-guided-rlm") {
+    if (
+      condition === "decant-guided-rlm" ||
+      condition === "decant-guided-rgb-editable"
+    ) {
       await writeHybridTranscriptCorpus(client, worktree, fixture, seeded);
+    }
+
+    let editorMessages: SessionMessage[] = [];
+    let rgbContext = "";
+    if (isRgbEditableCondition(condition)) {
+      const decantGuided = condition === "decant-guided-rgb-editable";
+      const editorSessionID = await createSession(
+        client,
+        worktree,
+        `${fixture.id} ${condition} editor`,
+      );
+      await prompt(
+        client,
+        worktree,
+        editorSessionID,
+        buildRgbContextEditPrompt(fixture, worktree, decantGuided),
+        buildRgbContextEditSystemPrompt(decantGuided),
+        decantGuided
+          ? {
+              read: true,
+              grep: true,
+              bash: true,
+              apply_patch: false,
+              session_lookup: true,
+              session_detail: true,
+              message_detail: true,
+            }
+          : { read: true, grep: true, bash: true, apply_patch: false },
+        options.promptTimeoutMs,
+      );
+      editorMessages = await listSessionMessages(
+        client,
+        worktree,
+        editorSessionID,
+      );
+      await fs.writeFile(
+        path.join(conditionDir, "editor-messages.json"),
+        `${JSON.stringify(editorMessages, null, 2)}\n`,
+      );
+      rgbContext = await readRgbContext(worktree);
+      assert.ok(
+        rgbContext.trim().length > 0,
+        "RGB editor did not write recall/rgb-context.md",
+      );
+      await fs.writeFile(path.join(conditionDir, "rgb-context.md"), rgbContext);
+      await archiveRawTranscripts(worktree, conditionDir);
     }
 
     const sessionID = await createSession(
@@ -924,13 +984,16 @@ async function runFixtureCondition(
       client,
       worktree,
       sessionID,
-      buildSolvePrompt(fixture, condition, worktree),
+      buildSolvePrompt(fixture, condition, worktree, rgbContext),
       buildSystemPrompt(condition),
-      undefined,
+      solveToolsForCondition(condition),
       options.promptTimeoutMs,
       llmLogDir,
     );
     const messages = await listSessionMessages(client, worktree, sessionID);
+    if (isRgbEditableCondition(condition)) {
+      await restoreRawTranscripts(worktree, conditionDir);
+    }
     await fs.writeFile(
       path.join(conditionDir, "messages.json"),
       `${JSON.stringify(messages, null, 2)}\n`,
@@ -967,6 +1030,8 @@ async function runFixtureCondition(
       hiddenTest,
       startedAt,
       repeat,
+      editorMessages,
+      rgbContext,
     });
     await fs.writeFile(statsPath, `${JSON.stringify(stats, null, 2)}\n`);
     return {
@@ -996,7 +1061,18 @@ async function runFixtureCondition(
 }
 
 function usesDecant(condition: ConditionID) {
-  return condition === "decant-only" || condition === "decant-guided-rlm";
+  return (
+    condition === "decant-only" ||
+    condition === "decant-guided-rlm" ||
+    condition === "decant-guided-rgb-editable"
+  );
+}
+
+function isRgbEditableCondition(condition: ConditionID) {
+  return (
+    condition === "rgb-editable-context" ||
+    condition === "decant-guided-rgb-editable"
+  );
 }
 
 function parseOptions(): Options {
@@ -1476,16 +1552,34 @@ function buildSystemPrompt(condition: ConditionID) {
   if (condition === "rlm-transcript-search") {
     return `${base} Prior transcript files may be useful, irrelevant, or stale. Use RLM-style transcript search with glob/grep/read and optional read-only bash only when it helps the coding task. Do not use decant session tools.`;
   }
+  if (condition === "rgb-editable-context") {
+    return `${base} Prior memory has already been rewritten into an RGB-agent context file. Use only the provided rewritten context as prior memory; do not use decant session tools or raw transcript files.`;
+  }
+  if (condition === "decant-guided-rgb-editable") {
+    return `${base} Prior memory has already been routed through Decant and rewritten into an RGB-agent context file. Use only the provided rewritten context as prior memory in this solve turn; do not use decant session tools or raw transcript files.`;
+  }
   if (condition === "decant-only") {
     return `${base} Prior session maps may be useful, irrelevant, or stale. Use decant session tools when prior context may affect the fix. No transcript corpus is available; do not use transcript-file search as memory.`;
   }
   return `${base} Prior session maps and transcript files may be useful, irrelevant, or stale. Use decant tools as a routing layer when memory may matter; current tests/spec override stale prior context. If you corroborate with bash, use it read-only except for running tests.`;
 }
 
+function solveToolsForCondition(condition: ConditionID) {
+  if (condition !== "decant-guided-rgb-editable") return undefined;
+  return {
+    glob: true,
+    grep: true,
+    read: true,
+    bash: true,
+    apply_patch: true,
+  };
+}
+
 function buildSolvePrompt(
   fixture: CodeFixture,
   condition: ConditionID,
   worktree: string,
+  rgbContext = "",
 ) {
   const transcriptDir = path.join(worktree, "recall", "transcripts");
   const memoryInstruction =
@@ -1493,17 +1587,31 @@ function buildSolvePrompt(
       ? "No prior context corpus is available. Solve from the repository and tests only."
       : condition === "rlm-transcript-search"
         ? `Optional transcript corpus: ${transcriptDir}. Prior context may be useful, irrelevant, or stale. Search only if it helps; if it is irrelevant or stale, ignore it.`
-        : condition === "decant-only"
+        : isRgbEditableCondition(condition)
           ? [
-              "No transcript corpus is available in this condition.",
-              "Use session_lookup/session_detail/message_detail when a prior session may affect the fix.",
-              "If memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.",
+              condition === "decant-guided-rgb-editable"
+                ? "Decant-guided RGB-agent rewritten context is provided below. This is the only prior-memory view available in this solve turn."
+                : "RGB-agent rewritten context is provided below. This is the only prior-memory view available in this condition.",
+              "Do not search recall/transcripts; those raw files are intentionally unavailable after the RGB edit phase.",
+              "Do not call Decant session tools in this solve turn; any needed Decant routing has already happened.",
+              "If the rewritten context says memory is irrelevant, stale, or unsupported, solve from the current repository and tests.",
+              "If the rewritten context preserves useful prior memory, cite the exact session_id and message_id from it.",
+              "",
+              "```md",
+              rgbContext.trim(),
+              "```",
             ].join("\n")
-          : [
-              `Optional transcript corpus: ${transcriptDir}.`,
-              "Use session_lookup/session_detail/message_detail when a prior session may affect the fix.",
-              "If memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.",
-            ].join("\n");
+          : condition === "decant-only"
+            ? [
+                "No transcript corpus is available in this condition.",
+                "Use session_lookup/session_detail/message_detail when a prior session may affect the fix.",
+                "If memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.",
+              ].join("\n")
+            : [
+                `Optional transcript corpus: ${transcriptDir}.`,
+                "Use session_lookup/session_detail/message_detail when a prior session may affect the fix.",
+                "If memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.",
+              ].join("\n");
   return [
     `Task: ${fixture.title}`,
     "",
@@ -1515,6 +1623,91 @@ function buildSolvePrompt(
     '{"summary":"...","tests":"...","recall_decision":"used|ignored|rejected|abstained|unavailable","evidence":{"session_id":"","message_id":""}}',
     "If you used a prior session, cite the exact session_id and message_id. If memory was irrelevant, stale, or unavailable, leave evidence fields empty and explain the decision briefly.",
   ].join("\n");
+}
+
+function buildRgbContextEditSystemPrompt(decantGuided = false) {
+  return [
+    decantGuided
+      ? "You are a Decant-guided RGB-agent memory editor for a code-recall benchmark."
+      : "You are an RGB-agent memory editor for a code-recall benchmark.",
+    decantGuided
+      ? "Use Decant session tools first to identify relevant prior memory, then use READ, GREP, and BASH over transcript files only as fallback or corroboration."
+      : "Use only READ, GREP, and BASH with python3-style scripting over the raw transcript files.",
+    "Treat the transcript corpus as the external context variable that may be rewritten.",
+    "Write the rewritten context to recall/rgb-context.md using bash/python3.",
+    "Do not use apply_patch; write the context file with bash/python3.",
+    "Do not edit source files, tests, package files, or any file outside recall/rgb-context.md.",
+    "Keep exact session_id and message_id values for any memory that should affect the next solve turn.",
+  ].join(" ");
+}
+
+function buildRgbContextEditPrompt(
+  fixture: CodeFixture,
+  worktree: string,
+  decantGuided = false,
+) {
+  const transcriptDir = path.join(worktree, "recall", "transcripts");
+  return [
+    `Task: ${fixture.title}`,
+    "",
+    fixture.task,
+    "",
+    `Transcript directory: ${transcriptDir}`,
+    "Manifest: recall/manifest.json",
+    "",
+    ...(decantGuided
+      ? [
+          "First use session_lookup/session_detail/message_detail to identify the relevant Decant session/message or determine that memory is irrelevant.",
+          "Then use transcript search/read only to rewrite or corroborate the selected evidence into recall/rgb-context.md.",
+          "The next solve turn will not have Decant tools or raw transcript files.",
+          "",
+        ]
+      : []),
+    "Rewrite the raw context into recall/rgb-context.md.",
+    "The file must be concise and must use this shape:",
+    "",
+    "# RGB Context",
+    "decision: used|ignored|rejected|abstained",
+    "session_id: <exact id or empty>",
+    "message_id: <exact id or empty>",
+    "summary: <facts the next solver should use, or why memory should be ignored>",
+    "stale_or_irrelevant: <distractors or stale details to avoid>",
+    "",
+    "Rules:",
+    "- If current repo/tests are sufficient and memory is unnecessary, write decision: ignored and leave ids empty.",
+    "- If no transcript supports the task, write decision: abstained and leave ids empty.",
+    "- If transcript memory is stale, write decision: rejected and say what stale detail to avoid.",
+    "- If transcript memory is useful, write decision: used and preserve exact session_id/message_id from the transcript heading.",
+    "- Prefer raw evidence over broad summaries. Do not invent facts.",
+  ].join("\n");
+}
+
+async function readRgbContext(worktree: string) {
+  return await fs
+    .readFile(path.join(worktree, "recall", "rgb-context.md"), "utf8")
+    .catch(() => "");
+}
+
+async function archiveRawTranscripts(worktree: string, conditionDir: string) {
+  const source = path.join(worktree, "recall", "transcripts");
+  const dest = path.join(conditionDir, "raw-transcripts");
+  await fs.rm(dest, { recursive: true, force: true });
+  await fs.rename(source, dest).catch(async (error: unknown) => {
+    const code =
+      error && typeof error === "object"
+        ? (error as { code?: string }).code
+        : undefined;
+    if (code !== "ENOENT") throw error;
+  });
+}
+
+async function restoreRawTranscripts(worktree: string, conditionDir: string) {
+  const source = path.join(conditionDir, "raw-transcripts");
+  const dest = path.join(worktree, "recall", "transcripts");
+  const stat = await fs.stat(source).catch(() => undefined);
+  if (!stat?.isDirectory()) return;
+  await fs.rm(dest, { recursive: true, force: true });
+  await fs.cp(source, dest, { recursive: true });
 }
 
 async function createSession(
@@ -1819,11 +2012,17 @@ function buildStats(input: {
   hiddenTest: TestResult;
   startedAt: number;
   repeat?: number;
+  editorMessages?: SessionMessage[];
+  rgbContext?: string;
 }): RunStats {
   const outputText = messageText(latestAssistantMessage(input.messages));
-  const tools = toolParts(input.messages);
+  const editorMessages = input.editorMessages ?? [];
+  const allMessages = [...editorMessages, ...input.messages];
+  const tools = toolParts(allMessages);
+  const solveTools = toolParts(input.messages);
   const toolNames = tools.map((part) => part.tool).filter(Boolean) as string[];
   const transcriptFilesRead = transcriptReadFiles(tools);
+  const solveTranscriptFilesRead = transcriptReadFiles(solveTools);
   const contextToolCount = toolNames.filter((tool) =>
     contextTools.has(tool),
   ).length;
@@ -1853,15 +2052,37 @@ function buildStats(input: {
     (filePath) => !input.fixture.expectedTouchedFiles.includes(filePath),
   );
   const citationHits = citationMatches(outputText, input.seeded, input.fixture);
+  const rgbContext = input.rgbContext ?? "";
+  const rgbCondition = isRgbEditableCondition(input.condition);
+  const rgbContextPresent = !rgbCondition || rgbContext.trim().length > 0;
+  const rgbContextPreservesIDs =
+    !rgbCondition ||
+    input.fixture.recallRole === "missing" ||
+    input.fixture.recallRole === "unnecessary" ||
+    input.fixture.recallRole === "harmful" ||
+    !input.fixture.relevant ||
+    Boolean(
+      input.seeded.relevantSessionID &&
+      rgbContext.includes(input.seeded.relevantSessionID) &&
+      input.seeded.relevantMessageIDs.some((id) => rgbContext.includes(id)),
+    );
+  const rgbContextPolicyPassed =
+    !rgbCondition || (rgbContextPresent && rgbContextPreservesIDs);
   const recallPolicy = evaluateMemoryPolicy({
     fixture: input.fixture,
     condition: input.condition,
     outputText,
     toolNames,
-    transcriptFilesRead,
+    transcriptFilesRead: rgbCondition
+      ? solveTranscriptFilesRead
+      : transcriptFilesRead,
     citationHits,
   });
-  const toolPath = evaluateToolPath(input.condition, toolNames);
+  const toolPath = evaluateToolPath(
+    input.condition,
+    toolNames,
+    solveTranscriptFilesRead,
+  );
   const testsPassed = input.publicTest.passed && input.hiddenTest.passed;
   const benchmarkPassed =
     testsPassed &&
@@ -1869,6 +2090,7 @@ function buildStats(input: {
     unexpectedTouchedFiles.length === 0 &&
     forbiddenPatchHits.length === 0 &&
     forbiddenOutputHits.length === 0 &&
+    rgbContextPolicyPassed &&
     recallPolicy.passed &&
     toolPath.passed;
   return {
@@ -1885,7 +2107,11 @@ function buildStats(input: {
     touched_files_allowed: unexpectedTouchedFiles.length === 0,
     recall_policy_passed: recallPolicy.passed,
     tool_path_passed: toolPath.passed,
-    tool_path_failures: [...toolPath.failures, ...recallPolicy.failures],
+    tool_path_failures: [
+      ...toolPath.failures,
+      ...(rgbContextPolicyPassed ? [] : ["rgb_context_policy_failed"]),
+      ...recallPolicy.failures,
+    ],
     forbidden_patch_hits: forbiddenPatchHits,
     forbidden_output_hits: forbiddenOutputHits,
     touched_files: input.touched,
@@ -1894,7 +2120,12 @@ function buildStats(input: {
     output_preview: outputText.slice(0, 1200),
     tool_names: toolNames,
     transcript_files_read: transcriptFilesRead,
+    solve_transcript_files_read: solveTranscriptFilesRead,
     irrelevant_transcript_reads: irrelevantTranscriptReads,
+    rgb_context_present: rgbContextPresent,
+    rgb_context_preserves_ids: rgbContextPreservesIDs,
+    rgb_context_policy_passed: rgbContextPolicyPassed,
+    rgb_context_preview: rgbContext.slice(0, 1200),
     context_tool_call_count: contextToolCount,
     search_tool_call_count: searchToolCount,
     read_tool_call_count: readToolCount,
@@ -1909,8 +2140,8 @@ function buildStats(input: {
     relevant_message_ids: input.seeded.relevantMessageIDs,
     public_test: previewTestResult(input.publicTest),
     hidden_test: previewTestResult(input.hiddenTest),
-    tokens: summarizeTokens(input.messages),
-    models: modelIDs(input.messages),
+    tokens: summarizeTokens(allMessages),
+    models: modelIDs(allMessages),
     duration_ms: Date.now() - input.startedAt,
   };
 }
@@ -1952,7 +2183,12 @@ function failedStats(
     output_preview: error.slice(0, 1200),
     tool_names: [],
     transcript_files_read: [],
+    solve_transcript_files_read: [],
     irrelevant_transcript_reads: [],
+    rgb_context_present: false,
+    rgb_context_preserves_ids: false,
+    rgb_context_policy_passed: false,
+    rgb_context_preview: "",
     context_tool_call_count: 0,
     search_tool_call_count: 0,
     read_tool_call_count: 0,
@@ -1974,13 +2210,31 @@ function failedStats(
   };
 }
 
-function evaluateToolPath(condition: ConditionID, toolNames: string[]) {
+function evaluateToolPath(
+  condition: ConditionID,
+  toolNames: string[],
+  solveTranscriptFilesRead: string[],
+) {
   const failures: string[] = [];
   const hasContext = toolNames.some((tool) => contextTools.has(tool));
   if (condition === "code-only" && hasContext)
     failures.push("context_tool_used");
   if (condition === "rlm-transcript-search" && hasContext)
     failures.push("context_tool_used");
+  if (condition === "rgb-editable-context") {
+    if (hasContext) failures.push("context_tool_used");
+    if (solveTranscriptFilesRead.length > 0)
+      failures.push("raw_transcript_read_after_rgb_edit");
+  }
+  if (condition === "decant-guided-rgb-editable") {
+    for (const tool of ["session_lookup", "session_detail"])
+      if (!toolNames.includes(tool)) failures.push(`missing:${tool}`);
+    if (!toolNames.includes("grep") && !toolNames.includes("bash"))
+      failures.push("missing:grep-or-bash");
+    if (toolNames.includes("task")) failures.push("task_tool_used");
+    if (solveTranscriptFilesRead.length > 0)
+      failures.push("raw_transcript_read_after_rgb_edit");
+  }
   if (condition === "decant-only" && toolNames.includes("task"))
     failures.push("task_tool_used");
   return { passed: failures.length === 0, failures };

@@ -4,8 +4,8 @@ import type { Message, Part } from "@opencode-ai/sdk/v2";
 import { buildFallbackMapFromMessages } from "./core";
 import { readContextMap, writeContextMap } from "./storage";
 import type {
-  BlobEntry,
-  BlobFidelity,
+  TopicEntry,
+  TopicFidelity,
   ContextMapFile,
   MessageEntry,
   MessageLike,
@@ -22,44 +22,43 @@ const COLORS = [
 ] as const;
 
 export type Section = {
-  blobID?: string;
+  topicID?: string;
   label: string;
-  fidelity?: BlobFidelity;
+  fidelity?: TopicFidelity;
   count: number;
   tokens: number;
   messages: MessageEntry[];
 };
 
-export const USER_SELECTABLE_BLOB_FIDELITIES: BlobFidelity[] = [
+export const USER_SELECTABLE_TOPIC_FIDELITIES: TopicFidelity[] = [
   "full",
   "summary",
-  "placeholder",
-  "drop",
+  "hidden",
 ];
 
-export const BLOB_FIDELITY_LABEL: Record<BlobFidelity, string> = {
+export const TOPIC_FIDELITY_LABEL: Record<TopicFidelity, string> = {
   full: "Full",
   summary: "Summary",
   compressed: "Compressed",
   placeholder: "Placeholder",
-  drop: "Hidden",
+  hidden: "Hidden",
 };
 
-export const FIDELITY_SHORT: Record<BlobFidelity, string> = {
+export const FIDELITY_SHORT: Record<TopicFidelity, string> = {
   full: "Full",
   summary: "Summ",
   compressed: "Comp",
   placeholder: "Plch",
-  drop: "Hide",
+  hidden: "Hide",
 };
 
 export function color(api: TuiPluginApi, i: number) {
   return api.theme.current[COLORS[i % COLORS.length]];
 }
 
-export function orderedBlobs(map?: ContextMapFile): BlobEntry[] {
+export function orderedTopics(map?: ContextMapFile): TopicEntry[] {
   if (!map) return [];
-  return map.blobOrder.map((id) => map.blobs[id]).filter(Boolean);
+  return map.topicOrder.map((id) => map.topics[id]).filter(Boolean);
 }
 
 export function orderedMessages(map?: ContextMapFile): MessageEntry[] {
@@ -69,28 +68,28 @@ export function orderedMessages(map?: ContextMapFile): MessageEntry[] {
 
 export function groupedSections(map?: ContextMapFile): Section[] {
   if (!map) return [];
-  const byBlob = new Map<string, MessageEntry[]>();
+  const byTopic = new Map<string, MessageEntry[]>();
   const loose: MessageEntry[] = [];
   for (const msg of orderedMessages(map)) {
-    if (msg.blobID && map.blobs[msg.blobID]) {
-      const list = byBlob.get(msg.blobID) ?? [];
+    if (msg.topicID && map.topics[msg.topicID]) {
+      const list = byTopic.get(msg.topicID) ?? [];
       list.push(msg);
-      byBlob.set(msg.blobID, list);
+      byTopic.set(msg.topicID, list);
     } else {
       loose.push(msg);
     }
   }
 
-  const sections: Section[] = map.blobOrder
+  const sections: Section[] = map.topicOrder
     .map((id) => {
-      const blob = map.blobs[id];
-      if (!blob) return undefined;
-      const messages = byBlob.get(id) ?? [];
+      const topic = map.topics[id];
+      if (!topic) return undefined;
+      const messages = byTopic.get(id) ?? [];
       if (messages.length === 0) return undefined;
       return {
-        blobID: id,
-        label: blob.label,
-        fidelity: blob.fidelity,
+        topicID: id,
+        label: topic.label,
+        fidelity: topic.fidelity,
         count: messages.length,
         tokens: messages.reduce(
           (sum, message) => sum + message.tokenEstimate,
@@ -121,9 +120,9 @@ export function sectionColor(
   map: ContextMapFile | undefined,
   section: Section,
 ) {
-  if (!map || !section.blobID) return 0;
-  const index = map.blobOrder.indexOf(section.blobID);
-  return index === -1 ? map.blobOrder.length : index;
+  if (!map || !section.topicID) return 0;
+  const index = map.topicOrder.indexOf(section.topicID);
+  return index === -1 ? map.topicOrder.length : index;
 }
 
 export function relTime(timestamp?: number) {
@@ -171,7 +170,7 @@ export async function loadMap(api: TuiPluginApi, sessionID: string) {
 
 export async function ensureHistorical(api: TuiPluginApi, sessionID: string) {
   let map = await loadMap(api, sessionID);
-  if (map.blobOrder.length > 0 || Object.keys(map.messages).length > 0) {
+  if (map.topicOrder.length > 0 || Object.keys(map.messages).length > 0) {
     return map;
   }
 

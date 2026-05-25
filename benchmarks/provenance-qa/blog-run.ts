@@ -24,11 +24,15 @@ const repoRoot = path.resolve(process.cwd());
 
 type ConditionID =
   | "rlm-transcript-search"
+  | "rgb-editable-context"
   | "subagent-rlm-transcript-search"
+  | "subagent-rgb-editable-context"
   | "decant-map-zoom"
   | "subagent-map-zoom"
   | "decant-guided-rlm"
   | "subagent-decant-guided-rlm"
+  | "decant-guided-rgb-editable"
+  | "subagent-decant-guided-rgb-editable"
   | "decant-blame-lookup";
 
 type Options = {
@@ -156,6 +160,9 @@ type RunStats = {
   blame_lookup_call_count: number;
   transcript_files_read: string[];
   irrelevant_transcript_reads: string[];
+  rgb_context_present: boolean;
+  rgb_context_preserves_ids: boolean;
+  rgb_context_preview: string;
   child_session_count: number;
   parent_tokens: TokenBucket;
   child_tokens: TokenBucket;
@@ -184,11 +191,15 @@ const defaultOutDir = path.join(
 
 const defaultConditions: ConditionID[] = [
   "rlm-transcript-search",
+  "rgb-editable-context",
   "subagent-rlm-transcript-search",
+  "subagent-rgb-editable-context",
   "decant-map-zoom",
   "subagent-map-zoom",
   "decant-guided-rlm",
   "subagent-decant-guided-rlm",
+  "decant-guided-rgb-editable",
+  "subagent-decant-guided-rgb-editable",
   "decant-blame-lookup",
 ];
 
@@ -736,12 +747,66 @@ async function runFixtureCondition(
       await writeBlameCommitMap(opencodeRoot.home, worktree, fixture, seeded);
     }
 
+    let editorMessages: SessionMessage[] = [];
+    let rgbContext = "";
+    if (
+      condition === "rgb-editable-context" ||
+      condition === "decant-guided-rgb-editable"
+    ) {
+      const decantGuided = condition === "decant-guided-rgb-editable";
+      const editorSessionID = await createSession(
+        client,
+        worktree,
+        `${fixture.id} ${condition} editor`,
+      );
+      await prompt(
+        client,
+        worktree,
+        editorSessionID,
+        buildRgbContextEditPrompt(fixture, worktree, decantGuided),
+        buildRgbContextEditSystemPrompt(decantGuided),
+        decantGuided
+          ? {
+              read: true,
+              grep: true,
+              bash: true,
+              apply_patch: false,
+              session_lookup: true,
+              session_detail: true,
+              message_detail: true,
+            }
+          : { read: true, grep: true, bash: true, apply_patch: false },
+        options.promptTimeoutMs,
+      );
+      editorMessages = await listSessionMessages(
+        client,
+        worktree,
+        editorSessionID,
+      );
+      await fs.writeFile(
+        path.join(conditionDir, "editor-messages.json"),
+        `${JSON.stringify(editorMessages, null, 2)}\n`,
+      );
+      rgbContext = await readRgbContext(worktree);
+      assert.ok(
+        rgbContext.trim().length > 0,
+        "RGB editor did not write recall/rgb-context.md",
+      );
+      await fs.writeFile(path.join(conditionDir, "rgb-context.md"), rgbContext);
+      await archiveRawTranscripts(worktree, conditionDir);
+    }
+
     const sessionID = await createSession(
       client,
       worktree,
       `${fixture.id} ${condition}`,
     );
-    const promptInput = buildPromptForCondition(fixture, condition, worktree);
+    const promptInput = buildPromptForCondition(
+      fixture,
+      condition,
+      worktree,
+      rgbContext,
+    );
     await prompt(
       client,
       worktree,
@@ -757,6 +822,18 @@ async function runFixtureCondition(
       worktree,
       messages,
     );
+    if (
+      condition === "subagent-rgb-editable-context" ||
+      condition === "subagent-decant-guided-rgb-editable"
+    ) {
+      rgbContext = await readRgbContext(worktree);
+      if (rgbContext.trim().length > 0) {
+        await fs.writeFile(
+          path.join(conditionDir, "rgb-context.md"),
+          rgbContext,
+        );
+      }
+    }
     await fs.writeFile(
       path.join(conditionDir, "messages.json"),
       `${JSON.stringify(messages, null, 2)}\n`,
@@ -775,9 +852,10 @@ async function runFixtureCondition(
       fixture,
       condition,
       seeded,
-      messages,
+      messages: [...editorMessages, ...messages],
       childMessages,
       startedAt,
+      rgbContext,
     });
     await fs.writeFile(statsPath, `${JSON.stringify(stats, null, 2)}\n`);
     await fs.rm(worktree, { recursive: true, force: true });
@@ -806,6 +884,8 @@ function usesDecant(condition: ConditionID) {
     condition === "subagent-map-zoom" ||
     condition === "decant-guided-rlm" ||
     condition === "subagent-decant-guided-rlm" ||
+    condition === "decant-guided-rgb-editable" ||
+    condition === "subagent-decant-guided-rgb-editable" ||
     condition === "decant-blame-lookup"
   );
 }
@@ -813,14 +893,27 @@ function usesDecant(condition: ConditionID) {
 function usesHybrid(condition: ConditionID) {
   return (
     condition === "decant-guided-rlm" ||
-    condition === "subagent-decant-guided-rlm"
+    condition === "subagent-decant-guided-rlm" ||
+    condition === "decant-guided-rgb-editable" ||
+    condition === "subagent-decant-guided-rgb-editable"
+  );
+}
+
+function isRgbEditableCondition(condition: ConditionID) {
+  return (
+    condition === "rgb-editable-context" ||
+    condition === "subagent-rgb-editable-context" ||
+    condition === "decant-guided-rgb-editable" ||
+    condition === "subagent-decant-guided-rgb-editable"
   );
 }
 
 function usesStaticTranscripts(condition: ConditionID) {
   return (
     condition === "rlm-transcript-search" ||
-    condition === "subagent-rlm-transcript-search"
+    condition === "rgb-editable-context" ||
+    condition === "subagent-rlm-transcript-search" ||
+    condition === "subagent-rgb-editable-context"
   );
 }
 
@@ -1000,6 +1093,79 @@ async function writeHybridTranscriptCorpus(
   );
 }
 
+function buildRgbContextEditSystemPrompt(decantGuided = false) {
+  return [
+    decantGuided
+      ? "You are a Decant-guided RGB-agent provenance editor."
+      : "You are an RGB-agent provenance editor.",
+    decantGuided
+      ? "Use Decant session tools first to identify the relevant prior session/message, then use READ, GREP, and BASH over transcript files only as fallback or corroboration."
+      : "Use only READ, GREP, and BASH with python3-style scripting over the raw transcript files.",
+    "Treat the transcript corpus as the external context variable that may be rewritten.",
+    "Write the rewritten evidence context to recall/rgb-context.md using bash/python3.",
+    "Do not use apply_patch; write the context file with bash/python3.",
+    "Do not edit repository source files or any file outside recall/rgb-context.md.",
+    "Keep exact session_id and message_id values for the evidence that supports the answer.",
+  ].join(" ");
+}
+
+function buildRgbContextEditPrompt(
+  fixture: Fixture,
+  worktree: string,
+  decantGuided = false,
+) {
+  const transcriptDir = path.join(worktree, "recall", "transcripts");
+  return [
+    `Question: ${fixture.question}`,
+    `Transcript directory: ${transcriptDir}`,
+    "Manifest: recall/manifest.json",
+    "",
+    ...(decantGuided
+      ? [
+          "First use session_lookup/session_detail/message_detail to identify the relevant Decant session/message.",
+          "Then use transcript search/read only to rewrite or corroborate the selected evidence into recall/rgb-context.md.",
+          "The next answer turn will not have Decant tools or raw transcript files.",
+          "",
+        ]
+      : []),
+    "Rewrite the raw transcript context into recall/rgb-context.md.",
+    "The rewritten context must be enough for a fresh answer turn to answer without reading raw transcripts.",
+    "Use this shape:",
+    "",
+    "# RGB Context",
+    "decision: used|abstained",
+    "session_id: <exact supporting session id>",
+    "message_id: <exact supporting message id>",
+    "answer_facts: <facts needed to answer the question>",
+    "ignored_distractors: <sessions/topics rejected as irrelevant>",
+    "",
+    "Rules:",
+    "- Use read/grep/bash over raw transcript files; do not use Decant tools.",
+    "- Preserve exact session_id and message_id from transcript headings.",
+    "- Do not cite distractor sessions as evidence.",
+    "- Do not invent provenance. If no transcript supports the answer, write decision: abstained.",
+  ].join("\n");
+}
+
+async function readRgbContext(worktree: string) {
+  return await fs
+    .readFile(path.join(worktree, "recall", "rgb-context.md"), "utf8")
+    .catch(() => "");
+}
+
+async function archiveRawTranscripts(worktree: string, conditionDir: string) {
+  const source = path.join(worktree, "recall", "transcripts");
+  const dest = path.join(conditionDir, "raw-transcripts");
+  await fs.rm(dest, { recursive: true, force: true });
+  await fs.rename(source, dest).catch(async (error: unknown) => {
+    const code =
+      error && typeof error === "object"
+        ? (error as { code?: string }).code
+        : undefined;
+    if (code !== "ENOENT") throw error;
+  });
+}
+
 function hybridTranscriptMarkdown(input: {
   sessionID: string;
   title: string;
@@ -1101,6 +1267,27 @@ async function buildOpenCodeEnv(input: {
       grep: "allow",
       read: "allow",
       bash: "allow",
+      apply_patch: "deny",
+      task: "deny",
+      todowrite: "deny",
+      session_lookup: "deny",
+      session_detail: "deny",
+      message_detail: "deny",
+      session_tree: "deny",
+      blame_lookup: "deny",
+    },
+  };
+  agentConfig.rgb = {
+    mode: "subagent",
+    description:
+      "RGB-agent provenance editor. Use read/grep/bash over raw transcript files, write recall/rgb-context.md, and return focused evidence.",
+    ...(input.childModelSlug ? { model: input.childModelSlug } : {}),
+    permission: {
+      glob: "deny",
+      grep: "allow",
+      read: "allow",
+      bash: "allow",
+      apply_patch: "deny",
       task: "deny",
       todowrite: "deny",
       session_lookup: "deny",
@@ -1120,6 +1307,27 @@ async function buildOpenCodeEnv(input: {
       grep: "allow",
       read: "allow",
       bash: "allow",
+      apply_patch: "deny",
+      task: "deny",
+      todowrite: "deny",
+      session_lookup: "allow",
+      session_detail: "allow",
+      message_detail: "allow",
+      session_tree: "allow",
+      blame_lookup: "deny",
+    },
+  };
+  agentConfig.hybridrgb = {
+    mode: "subagent",
+    description:
+      "Decant-guided RGB provenance editor. Use decant session tools first, then read/grep/bash over transcript files to write recall/rgb-context.md and return focused evidence.",
+    ...(input.childModelSlug ? { model: input.childModelSlug } : {}),
+    permission: {
+      glob: "deny",
+      grep: "allow",
+      read: "allow",
+      bash: "allow",
+      apply_patch: "deny",
       task: "deny",
       todowrite: "deny",
       session_lookup: "allow",
@@ -1346,7 +1554,7 @@ async function writeBlameCommitMap(
             timestamp: Date.now(),
             directory: worktree,
             worktree,
-            activeBlobIDs: [],
+            activeTopicIDs: [],
           },
         },
       },
@@ -1361,10 +1569,11 @@ function buildPromptForCondition(
   fixture: Fixture,
   condition: ConditionID,
   worktree: string,
+  rgbContext = "",
 ): PromptInput {
   const answerContract = [
     "Return compact JSON only with this shape:",
-    '{"answer":"...","evidence":{"session_id":"...","blob_id":"...","message_id":"..."},"rationale":"...","irrelevant_context_ignored":["..."]}',
+    '{"answer":"...","evidence":{"session_id":"...","topic_id":"...","message_id":"..."},"rationale":"...","irrelevant_context_ignored":["..."]}',
     "The cited message_id must support the full answer, not just a nearby subclaim.",
     "If a correction, stale detail, or rejected alternative matters, mention it explicitly in rationale.",
   ].join("\n");
@@ -1385,6 +1594,36 @@ function buildPromptForCondition(
       ].join("\n"),
     };
   }
+  if (condition === "rgb-editable-context") {
+    return {
+      system:
+        "Answer with compact JSON only. Use only the provided RGB-agent rewritten context as prior memory. Do not use decant/session tools, transcript files, grep, read, or bash.",
+      tools: {},
+      text: [
+        `Question: ${fixture.question}`,
+        "RGB-agent rewritten context:",
+        "```md",
+        rgbContext.trim(),
+        "```",
+        answerContract,
+      ].join("\n"),
+    };
+  }
+  if (condition === "decant-guided-rgb-editable") {
+    return {
+      system:
+        "Answer with compact JSON only. Use only the provided Decant-guided RGB-agent rewritten context as prior memory. Do not use decant/session tools, transcript files, grep, read, or bash in this answer turn.",
+      tools: {},
+      text: [
+        `Question: ${fixture.question}`,
+        "Decant-guided RGB-agent rewritten context:",
+        "```md",
+        rgbContext.trim(),
+        "```",
+        answerContract,
+      ].join("\n"),
+    };
+  }
   if (condition === "subagent-rlm-transcript-search") {
     return {
       system:
@@ -1395,6 +1634,37 @@ function buildPromptForCondition(
         `Question: ${fixture.question}`,
         "Task instruction: call subagent_type='transcript', not general or explore.",
         `Ask the child to ignore distractors: ${distractorTitles}`,
+        answerContract,
+      ].join("\n"),
+    };
+  }
+  if (condition === "subagent-rgb-editable-context") {
+    return {
+      system:
+        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='rgb'. The child must use only read/grep/bash over transcript files, write recall/rgb-context.md, and return focused evidence. Do not ask the child to use decant/session tools.",
+      tools: { task: true },
+      text: [
+        `Transcript directory: ${transcriptDir}`,
+        `Question: ${fixture.question}`,
+        "Task instruction: call subagent_type='rgb', not transcript, general, or explore.",
+        `Ask the child to ignore distractors: ${distractorTitles}`,
+        "The child should write recall/rgb-context.md with exact session_id/message_id evidence, then return compact evidence for the answer.",
+        answerContract,
+      ].join("\n"),
+    };
+  }
+  if (condition === "subagent-decant-guided-rgb-editable") {
+    return {
+      system:
+        "Answer with compact JSON only. Use the Task tool exactly once with subagent_type='hybridrgb'. The child must use decant session tools first, then read/grep/bash over transcript files only as fallback or corroboration, write recall/rgb-context.md, and return focused evidence.",
+      tools: { task: true, session_tree: true },
+      text: [
+        `Question: ${fixture.question}`,
+        `Transcript directory: ${transcriptDir}`,
+        "Task instruction: call subagent_type='hybridrgb', not hybrid, rgb, transcript, general, or explore.",
+        "The child must cite real OpenCode session_id and message_id values from Decant/message_detail or the Decant-guided hybrid transcript heading, not embedded fixture labels.",
+        `Known distractor topics include: ${distractorTitles}`,
+        "The child should write recall/rgb-context.md with exact session_id/message_id evidence, then return compact evidence for the answer.",
         answerContract,
       ].join("\n"),
     };
@@ -1612,6 +1882,7 @@ function buildStats(input: {
   messages: SessionMessage[];
   childMessages: Array<{ sessionID: string; messages: SessionMessage[] }>;
   startedAt: number;
+  rgbContext?: string;
 }): RunStats {
   const outputText = messageText(latestAssistantMessage(input.messages));
   const correctnessText = answerCorrectnessText(outputText);
@@ -1647,14 +1918,31 @@ function buildStats(input: {
     missingRequired.length === 0 && forbiddenHits.length === 0;
   const provenancePassed =
     citationHits.includes("session") && citationHits.includes("message");
+  const rgbContext = input.rgbContext ?? "";
+  const rgbCondition = isRgbEditableCondition(input.condition);
+  const rgbContextPresent = !rgbCondition || rgbContext.trim().length > 0;
+  const rgbContextPreservesIDs =
+    !rgbCondition ||
+    Boolean(
+      (input.seeded.relevantSessionID ?? input.fixture.relevant.sessionID) &&
+      rgbContext.includes(
+        input.seeded.relevantSessionID ?? input.fixture.relevant.sessionID,
+      ) &&
+      input.seeded.relevantMessageIDs.some((id) => rgbContext.includes(id)),
+    );
+  const rgbContextPassed = rgbContextPresent && rgbContextPreservesIDs;
   return {
     fixture: input.fixture.id,
     condition: input.condition,
-    benchmark_passed: answerPassed && provenancePassed && toolPath.passed,
+    benchmark_passed:
+      answerPassed && provenancePassed && toolPath.passed && rgbContextPassed,
     answer_passed: answerPassed,
     provenance_passed: provenancePassed,
     tool_path_passed: toolPath.passed,
-    tool_path_failures: toolPath.failures,
+    tool_path_failures: [
+      ...toolPath.failures,
+      ...(rgbContextPassed ? [] : ["rgb_context_policy_failed"]),
+    ],
     required_hits: requiredHits,
     missing_required: missingRequired,
     forbidden_hits: forbiddenHits,
@@ -1684,6 +1972,9 @@ function buildStats(input: {
       .length,
     transcript_files_read: transcriptFilesRead,
     irrelevant_transcript_reads: irrelevantTranscriptReads,
+    rgb_context_present: rgbContextPresent,
+    rgb_context_preserves_ids: rgbContextPreservesIDs,
+    rgb_context_preview: rgbContext.slice(0, 1200),
     child_session_count: input.childMessages.length,
     parent_tokens: summarizeTokens(input.messages),
     child_tokens: summarizeTokens(childFlatMessages),
@@ -1727,6 +2018,9 @@ function failedStats(
     blame_lookup_call_count: 0,
     transcript_files_read: [],
     irrelevant_transcript_reads: [],
+    rgb_context_present: false,
+    rgb_context_preserves_ids: false,
+    rgb_context_preview: "",
     child_session_count: 0,
     parent_tokens: emptyTokenBucket(),
     child_tokens: emptyTokenBucket(),
@@ -1768,10 +2062,30 @@ function evaluateToolPath(
   if (condition === "rlm-transcript-search") {
     requireSearchEvidence();
     rejectTools(["task", ...contextTools]);
+  } else if (condition === "rgb-editable-context") {
+    requireSearchEvidence();
+    rejectTools(["task", ...contextTools]);
   } else if (condition === "subagent-rlm-transcript-search") {
     requireTools(["task"]);
     requireSearchEvidence();
     rejectTools(contextTools);
+  } else if (condition === "subagent-rgb-editable-context") {
+    requireTools(["task"]);
+    requireSearchEvidence();
+    rejectTools(contextTools);
+  } else if (condition === "decant-guided-rgb-editable") {
+    requireTools(["session_lookup", "session_detail", "message_detail"]);
+    requireSearchEvidence();
+    rejectTools(["task", "blame_lookup"]);
+  } else if (condition === "subagent-decant-guided-rgb-editable") {
+    requireTools([
+      "task",
+      "session_lookup",
+      "session_detail",
+      "message_detail",
+    ]);
+    requireSearchEvidence();
+    rejectTools(["blame_lookup"]);
   } else if (condition === "decant-map-zoom") {
     requireTools(["session_lookup", "session_detail", "message_detail"]);
     rejectTools(["task", ...searchTools, "blame_lookup"]);
@@ -1863,8 +2177,11 @@ function citationMatches(
     hits.push("session");
   if (seeded.relevantMessageIDs.some((id) => outputText.includes(id)))
     hits.push("message");
-  if (/blob[_-]?id/i.test(outputText) && !/"blob_id"\s*:\s*""/.test(outputText))
-    hits.push("blob");
+  if (
+    /topic[_-]?id/i.test(outputText) &&
+    !/"topic_id"\s*:\s*""/.test(outputText)
+  )
+    hits.push("topic");
   return hits;
 }
 
@@ -2028,6 +2345,9 @@ function normalizeRunStats(input: Partial<RunStats>): RunStats {
     blame_lookup_call_count: input.blame_lookup_call_count ?? 0,
     transcript_files_read: input.transcript_files_read ?? [],
     irrelevant_transcript_reads: input.irrelevant_transcript_reads ?? [],
+    rgb_context_present: input.rgb_context_present ?? false,
+    rgb_context_preserves_ids: input.rgb_context_preserves_ids ?? false,
+    rgb_context_preview: input.rgb_context_preview ?? "",
     child_session_count: input.child_session_count ?? 0,
     parent_tokens: input.parent_tokens ?? emptyTokenBucket(),
     child_tokens: input.child_tokens ?? emptyTokenBucket(),

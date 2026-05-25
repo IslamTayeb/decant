@@ -29,10 +29,11 @@ bun run benchmark:code-recall -- --out benchmarks/code-recall/runs/manual
 
 - `code-only`: no prior context corpus and no decant plugin; solve from the repository and tests.
 - `rlm-transcript-search`: prior sessions are transcript files under `recall/transcripts/`; the agent may use grep/read/bash as an RLM-style recall baseline.
+- `rgb-editable-context`: prior sessions are transcript files first. The agent uses read/grep/bash over that raw context, writes `recall/rgb-context.md`, then a fresh solve turn receives only that rewritten file as prior memory.
 - `decant-only`: prior sessions are seeded as real OpenCode sessions with decant enabled; no transcript corpus is available.
 - `decant-guided-rlm`: prior sessions are seeded as real OpenCode sessions with decant enabled, and a transcript corpus with real session/message IDs is also available.
 
-Note: the `rlm-*` names here mean transcript-file search inspired by RLM-style externalized context. They are not paper-faithful Recursive Language Models: the harness does not place the full prompt in a persistent REPL variable, return answers from REPL state, or expose programmatic recursive LM/RLM calls from inside that REPL. Treat these conditions as offloaded transcript-search baselines.
+Note: the `rlm-*` names here mean transcript-file search inspired by RLM-style externalized context. The `rgb-editable-context` condition is closer to the RGB-agent pattern: file-based memory, read/grep/bash over raw logs, and a rewritten context file fed to the next turn. Neither condition implements recursive LM calls.
 
 ## Fixtures
 
@@ -51,6 +52,7 @@ Each run records:
 - patch bytes, expected touched files, and unexpected file edits.
 - forbidden stale terms in patch/output.
 - transcript reads, irrelevant reads, context-tool calls, and token/cache metrics.
+- RGB context presence, preserved session/message IDs, and whether the solve turn avoided raw transcript reads.
 - recall policy: unnecessary prior context should be avoided, helpful context should cite the relevant session/message, and harmful context should not be cited or copied.
 
 Fair claim if this benchmark separates conditions:

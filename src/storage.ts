@@ -5,10 +5,14 @@ import path from "node:path";
 import type {
   CommitMapEntry,
   CommitMapFile,
+  ContextMapCompactionState,
   ContextMapFile,
   ContextPreview,
   GitAiDecantIndexEntry,
   GitAiDecantIndexFile,
+  MessageEntry,
+  PendingRetroactiveMessage,
+  TopicEntry,
 } from "./types";
 import { computeEffectiveTreatment } from "./core";
 
@@ -71,11 +75,103 @@ export function createEmptyContextMap(input: {
       stableAnchors: false,
       stableAnchorsSource: "default",
     },
-    blobOrder: [],
-    blobs: {},
+    topicOrder: [],
+    topics: {},
     messages: {},
     pendingRetroactive: {},
   };
+}
+
+function recordValue(value: unknown): Record<string, unknown> | undefined {
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : undefined;
+}
+
+function stringValue(value: unknown) {
+  return typeof value === "string" ? value : undefined;
+}
+
+function stringArrayValue(value: unknown) {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : undefined;
+}
+
+// Legacy blob->topic migration for local context maps written before the
+// rename. New writes only use topic* fields; these fallbacks are read-only.
+function normalizeLegacyMessageEntry(value: unknown): MessageEntry {
+  const record = recordValue(value) ?? {};
+  const normalized: Record<string, unknown> = {
+    ...record,
+    topicID: stringValue(record.topicID) ?? stringValue(record.blobID),
+  };
+  delete normalized.blobID;
+  return normalized as MessageEntry;
+}
+
+function normalizeLegacyTopicEntry(value: unknown): TopicEntry {
+  const record = recordValue(value) ?? {};
+  const normalized: Record<string, unknown> = {
+    ...record,
+    fidelity: record.fidelity === "drop" ? "hidden" : record.fidelity,
+  };
+  return normalized as TopicEntry;
+}
+
+function normalizeLegacyPendingRetroactiveMessage(
+  value: unknown,
+): PendingRetroactiveMessage {
+  const record = recordValue(value) ?? {};
+  const normalized: Record<string, unknown> = {
+    ...record,
+    suggestedTopicID:
+      stringValue(record.suggestedTopicID) ??
+      stringValue(record.suggestedBlobID),
+    suggestedTopicLabel:
+      stringValue(record.suggestedTopicLabel) ??
+      stringValue(record.suggestedBlobLabel),
+  };
+  delete normalized.suggestedBlobID;
+  delete normalized.suggestedBlobLabel;
+  return normalized as PendingRetroactiveMessage;
+}
+
+function normalizeLegacyCompactionState(
+  value: unknown,
+): ContextMapCompactionState | undefined {
+  const record = recordValue(value);
+  if (!record) return undefined;
+  const normalized: Record<string, unknown> = {
+    ...record,
+    summaryTopicID:
+      stringValue(record.summaryTopicID) ?? stringValue(record.summaryBlobID),
+  };
+  delete normalized.summaryBlobID;
+  return normalized as ContextMapCompactionState;
+}
+
+function normalizeLegacyCommitMapEntry(value: unknown): CommitMapEntry {
+  const record = recordValue(value) ?? {};
+  const normalized: Record<string, unknown> = {
+    ...record,
+    activeTopicID:
+      stringValue(record.activeTopicID) ?? stringValue(record.activeBlobID),
+    activeTopicLabel:
+      stringValue(record.activeTopicLabel) ??
+      stringValue(record.activeBlobLabel),
+    activeTopicIDs:
+      stringArrayValue(record.activeTopicIDs) ??
+      stringArrayValue(record.activeBlobIDs),
+    activeTopicLabels:
+      stringArrayValue(record.activeTopicLabels) ??
+      stringArrayValue(record.activeBlobLabels),
+  };
+  delete normalized.activeBlobID;
+  delete normalized.activeBlobLabel;
+  delete normalized.activeBlobIDs;
+  delete normalized.activeBlobLabels;
+  return normalized as CommitMapEntry;
 }
 
 export async function readContextMap(input: {
@@ -86,27 +182,52 @@ export async function readContextMap(input: {
   try {
     const raw = await fs.readFile(sessionMapPath(input.sessionID), "utf8");
     const parsed = JSON.parse(raw) as Partial<ContextMapFile>;
+    const parsedRecord = parsed as Record<string, unknown>;
     const fallback = createEmptyContextMap(input);
-    return {
+    const topicOrder = Array.isArray(parsed.topicOrder)
+      ? parsed.topicOrder
+      : (stringArrayValue(parsedRecord.blobOrder) ?? []);
+    const rawTopics =
+      recordValue(parsed.topics) ?? recordValue(parsedRecord.blobs) ?? {};
+    const topics = Object.fromEntries(
+      Object.entries(rawTopics).map(([id, topic]) => [
+        id,
+        normalizeLegacyTopicEntry(topic),
+      ]),
+    ) as Record<string, TopicEntry>;
+    const rawMessages = recordValue(parsed.messages) ?? {};
+    const messages = Object.fromEntries(
+      Object.entries(rawMessages).map(([id, message]) => [
+        id,
+        normalizeLegacyMessageEntry(message),
+      ]),
+    ) as Record<string, MessageEntry>;
+    const rawPending = recordValue(parsed.pendingRetroactive) ?? {};
+    const pendingRetroactive = Object.fromEntries(
+      Object.entries(rawPending).map(([id, message]) => [
+        id,
+        normalizeLegacyPendingRetroactiveMessage(message),
+      ]),
+    ) as Record<string, PendingRetroactiveMessage>;
+    const normalized: ContextMapFile = {
       ...fallback,
       ...parsed,
       settings: {
         ...fallback.settings,
         ...(parsed.settings ?? {}),
       },
-      blobOrder: Array.isArray(parsed.blobOrder) ? parsed.blobOrder : [],
-      blobs:
-        parsed.blobs && typeof parsed.blobs === "object" ? parsed.blobs : {},
-      messages:
-        parsed.messages && typeof parsed.messages === "object"
-          ? parsed.messages
-          : {},
-      pendingRetroactive:
-        parsed.pendingRetroactive &&
-        typeof parsed.pendingRetroactive === "object"
-          ? parsed.pendingRetroactive
-          : {},
+      lastActiveTopicID:
+        parsed.lastActiveTopicID ?? stringValue(parsedRecord.lastActiveBlobID),
+      topicOrder,
+      topics,
+      messages,
+      pendingRetroactive,
+      compaction: normalizeLegacyCompactionState(parsed.compaction),
     };
+    delete (normalized as unknown as Record<string, unknown>).blobOrder;
+    delete (normalized as unknown as Record<string, unknown>).blobs;
+    delete (normalized as unknown as Record<string, unknown>).lastActiveBlobID;
+    return normalized;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
     return createEmptyContextMap(input);
@@ -155,10 +276,11 @@ export async function readCommitMap(): Promise<CommitMapFile> {
       version: MAP_VERSION,
       updatedAt:
         typeof parsed.updatedAt === "number" ? parsed.updatedAt : Date.now(),
-      entries:
-        parsed.entries && typeof parsed.entries === "object"
-          ? parsed.entries
-          : {},
+      entries: Object.fromEntries(
+        Object.entries(recordValue(parsed.entries) ?? {}).map(
+          ([hash, entry]) => [hash, normalizeLegacyCommitMapEntry(entry)],
+        ),
+      ),
     };
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
@@ -243,13 +365,13 @@ export async function writeDebugLog(
   const messages = Object.values(map.messages)
     .sort((a, b) => a.createdAt - b.createdAt)
     .map((m) => {
-      const blob = m.blobID ? map.blobs[m.blobID] : undefined;
+      const topic = m.topicID ? map.topics[m.topicID] : undefined;
       return {
         id: m.id,
         role: m.role,
-        blob_id: m.blobID,
-        blob_label: blob?.label,
-        blob_fidelity: blob?.fidelity,
+        topic_id: m.topicID,
+        topic_label: topic?.label,
+        topic_fidelity: topic?.fidelity,
         summary: m.summary,
         hidden: m.hidden,
         hidden_source: m.hiddenSource,
@@ -257,14 +379,14 @@ export async function writeDebugLog(
         fidelity_source: m.fidelitySource,
         token_estimate: m.tokenEstimate,
         source: m.source,
-        effective_treatment: computeEffectiveTreatment(m, blob),
+        effective_treatment: computeEffectiveTreatment(m, topic),
       };
     });
 
   const log = {
     timestamp: new Date().toISOString(),
     session_id: map.sessionID,
-    blobs: preview.blobs.map((b) => ({
+    topics: preview.topics.map((b) => ({
       id: b.id,
       label: b.label,
       fidelity: b.fidelity,

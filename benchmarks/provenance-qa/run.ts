@@ -802,7 +802,7 @@ function buildPromptForCondition(
 ): PromptInput {
   const answerContract = [
     "Return compact JSON only with this shape:",
-    '{"answer":"...","evidence":{"session_id":"...","blob_id":"...","message_id":"..."},"why_not_global_mutex":"...","irrelevant_context_ignored":["..."]}',
+    '{"answer":"...","evidence":{"session_id":"...","topic_id":"...","message_id":"..."},"why_not_global_mutex":"...","irrelevant_context_ignored":["..."]}',
     "The answer must cite the exact source identifiers you used. If a field is unavailable, use an empty string.",
   ].join("\n");
 
@@ -902,7 +902,7 @@ function buildPromptForCondition(
     system: [
       "Answer with compact JSON only.",
       "Use session_lookup first, then session_detail with detail='messages', then message_detail for one exact message before answering.",
-      "Do not use full transcript replay. Cite exact session_id, blob_id, and message_id from the tools.",
+      "Do not use full transcript replay. Cite exact session_id, topic_id, and message_id from the tools.",
     ].join("\n"),
     tools: {
       session_lookup: true,
@@ -1205,10 +1205,10 @@ function citationMatches(outputText: string, seeded: SeededSessions) {
     hits.push("message");
   }
   if (
-    /blob[_-]?id/i.test(outputText) &&
-    !/"blob_id"\s*:\s*""/.test(outputText)
+    /topic[_-]?id/i.test(outputText) &&
+    !/"topic_id"\s*:\s*""/.test(outputText)
   ) {
-    hits.push("blob");
+    hits.push("topic");
   }
   return hits;
 }

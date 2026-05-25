@@ -1037,11 +1037,11 @@ async function writeBlameCommitMap(
   const sessionMap = objectValue(
     await readJson(path.join(root, `${sessionID}.json`)),
   );
-  const activeBlobID =
-    stringValue(sessionMap?.lastActiveBlobID) ??
-    arrayValue(sessionMap?.blobOrder)?.[0];
-  const activeBlobLabel = activeBlobID
-    ? stringValue(recordValue(sessionMap?.blobs)?.[activeBlobID]?.label)
+  const activeTopicID =
+    stringValue(sessionMap?.lastActiveTopicID) ??
+    arrayValue(sessionMap?.topicOrder)?.[0];
+  const activeTopicLabel = activeTopicID
+    ? stringValue(recordValue(sessionMap?.topics)?.[activeTopicID]?.label)
     : undefined;
   const changedFiles = (
     await execFileAsync("git", ["show", "--pretty=format:", "--name-only", commitHash], {
@@ -1064,10 +1064,10 @@ async function writeBlameCommitMap(
             timestamp: Date.now(),
             directory: worktree,
             worktree,
-            activeBlobID,
-            activeBlobLabel,
-            activeBlobIDs: activeBlobID ? [activeBlobID] : [],
-            activeBlobLabels: activeBlobLabel ? [activeBlobLabel] : [],
+            activeTopicID,
+            activeTopicLabel,
+            activeTopicIDs: activeTopicID ? [activeTopicID] : [],
+            activeTopicLabels: activeTopicLabel ? [activeTopicLabel] : [],
             commitSubject: `seed ${fixture.id}`,
             changedFiles,
           },

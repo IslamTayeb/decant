@@ -2,6 +2,9 @@ import { fileURLToPath } from "node:url";
 
 const solidStub = `
 export function useKeyboard() {}
+export function useTerminalDimensions() {
+  return () => ({ width: 140, height: 44 });
+}
 `;
 
 const jsxRuntimeStub = `

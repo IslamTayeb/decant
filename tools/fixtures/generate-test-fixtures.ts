@@ -124,7 +124,7 @@ async function main() {
       "shared_queue_design",
     ],
   ];
-  for (const [hash, sessionID, blobID] of commitLinks) {
+  for (const [hash, sessionID, topicID] of commitLinks) {
     const map = maps.find((m) => m.sessionID === sessionID);
     commitEntries[hash] = {
       commitHash: hash,
@@ -132,9 +132,9 @@ async function main() {
       timestamp: Date.now(),
       directory: repo,
       worktree: repo,
-      activeBlobID: blobID,
-      activeBlobLabel: blobLabel(map?.blobs[blobID], blobID),
-      activeBlobIDs: [blobID],
+      activeTopicID: topicID,
+      activeTopicLabel: topicLabel(map?.topics[topicID], topicID),
+      activeTopicIDs: [topicID],
     };
   }
   await fs.writeFile(
@@ -194,9 +194,9 @@ async function main() {
   function expandAssistantText(
     summary: string,
     keyFacts: string[],
-    blobKeyFacts: string[],
+    topicKeyFacts: string[],
   ): string {
-    const facts = keyFacts.length > 0 ? keyFacts : blobKeyFacts;
+    const facts = keyFacts.length > 0 ? keyFacts : topicKeyFacts;
 
     // Build a realistic multi-section assistant response
     const sections: string[] = [];
@@ -493,7 +493,7 @@ async function main() {
     return "OK";
   }
 
-  // Heuristic: map tool names to likely files based on blob context
+  // Heuristic: map tool names to likely files based on topic context
   const toolFileHints: Record<string, string[]> = {
     auth_queue_migration: ["src/auth/rate_limiter.ts", "src/auth/queue.ts"],
     session_store_leak: ["src/auth/session_store.ts"],
@@ -541,7 +541,7 @@ async function main() {
     const msgEntries = Object.values(map.messages) as Array<{
       id: string;
       role: string;
-      blobID: string;
+      topicID: string;
       summary: string;
       keyFacts: string[];
       tokenEstimate: number;
@@ -555,7 +555,7 @@ async function main() {
       const ts = msg.createdAt;
       const msgID = msg.id;
       const sessionID = map.sessionID;
-      const files = toolFileHints[msg.blobID] ?? ["src/auth/rate_limiter.ts"];
+      const files = toolFileHints[msg.topicID] ?? ["src/auth/rate_limiter.ts"];
 
       const msgData: Record<string, unknown> = {
         role: msg.role,
@@ -587,7 +587,7 @@ async function main() {
       if (msg.role === "user") lastUserMsgID = msgID;
 
       // Text content: user messages use summary (strip prefix), assistants get expanded
-      const blobEntry = map.blobs[msg.blobID] as
+      const topicEntry = map.topics[msg.topicID] as
         | { keyFacts?: string[] }
         | undefined;
       const textContent =
@@ -596,7 +596,7 @@ async function main() {
           : expandAssistantText(
               msg.summary,
               msg.keyFacts,
-              blobEntry?.keyFacts ?? [],
+              topicEntry?.keyFacts ?? [],
             );
 
       const partID = msgID.replace("msg_", "prt_");
@@ -686,12 +686,12 @@ async function main() {
 
 // ── Synthetic context maps ────────────────────────────────────────────
 
-type MapBlob = {
+type MapTopic = {
   label: string;
   summary: string;
   placeholder: string;
   keyFacts: string[];
-  fidelity: "full" | "summary" | "compressed" | "placeholder" | "drop";
+  fidelity: "full" | "summary" | "compressed" | "placeholder" | "hidden";
   messages: Array<{
     role: "user" | "assistant";
     summary: string;
@@ -704,7 +704,7 @@ type MapBlob = {
 type MapSpec = {
   sessionID: string;
   directory: string;
-  blobs: MapBlob[];
+  topics: MapTopic[];
 };
 
 function composeContextMaps(
@@ -720,7 +720,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
     {
       sessionID: s.auth_queue_investigation!,
       directory: dir,
-      blobs: [
+      topics: [
         {
           label: "auth_queue_migration",
           summary:
@@ -847,7 +847,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
     {
       sessionID: s.api_rate_limiting_implementation!,
       directory: dir,
-      blobs: [
+      topics: [
         {
           label: "rate_limit_design",
           summary:
@@ -971,7 +971,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
     {
       sessionID: s.documentation_overhaul!,
       directory: dir,
-      blobs: [
+      topics: [
         {
           label: "docs_audit",
           summary:
@@ -1075,7 +1075,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
             "No rate limiting tests existed before this work",
             "src/utils/queue.ts used by auth but undocumented",
           ],
-          fidelity: "placeholder",
+          fidelity: "summary",
           messages: [
             {
               role: "user",
@@ -1097,7 +1097,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
     {
       sessionID: s.token_expiry_clock_skew_bug!,
       directory: dir,
-      blobs: [
+      topics: [
         {
           label: "clock_skew_investigation",
           summary:
@@ -1252,7 +1252,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
     {
       sessionID: s.shared_queue_utility_refactor!,
       directory: dir,
-      blobs: [
+      topics: [
         {
           label: "shared_queue_design",
           summary:
@@ -1366,7 +1366,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
     {
       sessionID: s.cross_cutting_review_and_cleanup!,
       directory: dir,
-      blobs: [
+      topics: [
         {
           label: "project_overview",
           summary:
@@ -1495,7 +1495,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
             {
               role: "assistant",
               summary:
-                "Context map shows 4 topics. Compressed project_overview to placeholder (already captured in summary). Security review and test coverage kept at full — still actively relevant.",
+                "Context map shows 4 topics. Summarized project_overview (already captured in summary). Security review and test coverage kept at full — still actively relevant.",
               tokens: 800,
               toolNames: ["view_context", "set_fidelity"],
             },
@@ -1518,7 +1518,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
     {
       sessionID: s.historical_investigation!,
       directory: dir,
-      blobs: [
+      topics: [
         {
           label: "session_discovery",
           summary:
@@ -1540,7 +1540,7 @@ function composeMapSpecs(s: Record<string, string>, dir: string): MapSpec[] {
             {
               role: "assistant",
               summary:
-                "Found 6 sessions via session_lookup. Auth queue investigation (13 msgs, 3 blobs), API rate limiting (6 blobs), Documentation overhaul, Token expiry bugfix (4 blobs), Queue refactor, Cross-cutting review.",
+                "Found 6 sessions via session_lookup. Auth queue investigation (13 msgs, 3 topics), API rate limiting (6 topics), Documentation overhaul, Token expiry bugfix (4 topics), Queue refactor, Cross-cutting review.",
               tokens: 1600,
               toolNames: ["session_lookup"],
             },
@@ -1656,35 +1656,35 @@ function buildContextMapFromSpec(spec: MapSpec, specIndex: number) {
     updatedAt: now,
     totalTokenEstimate: 0,
     lastAnnotatedMessageID: undefined as string | undefined,
-    lastActiveBlobID: undefined as string | undefined,
+    lastActiveTopicID: undefined as string | undefined,
     settings: {
       placeholderIncludesKeyFacts: true,
       placeholderIncludesKeyFactsSource: "system" as const,
       toolHistoryCleanup: true,
     },
-    blobOrder: [] as string[],
-    blobs: {} as Record<string, unknown>,
+    topicOrder: [] as string[],
+    topics: {} as Record<string, unknown>,
     messages: {} as Record<string, unknown>,
     pendingRetroactive: {},
   };
 
-  for (const blobSpec of spec.blobs) {
-    const blobID = blobSpec.label;
+  for (const topicSpec of spec.topics) {
+    const topicID = topicSpec.label;
     const messageIDs: string[] = [];
-    let blobTokens = 0;
-    const blobCreatedAt = now - 3_600_000 + msgCounter * 60_000;
+    let topicTokens = 0;
+    const topicCreatedAt = now - 3_600_000 + msgCounter * 60_000;
 
-    for (const msg of blobSpec.messages) {
+    for (const msg of topicSpec.messages) {
       msgCounter++;
       const msgID = `msg_s${specIndex}_${msgCounter}`;
       const createdAt = now - 3_600_000 + msgCounter * 60_000;
       messageIDs.push(msgID);
-      blobTokens += msg.tokens;
+      topicTokens += msg.tokens;
 
       map.messages[msgID] = {
         id: msgID,
         role: msg.role,
-        blobID,
+        topicID,
         summary: msg.summary,
         keyFacts: msg.keyFacts ?? [],
         hidden: false,
@@ -1704,36 +1704,36 @@ function buildContextMapFromSpec(spec: MapSpec, specIndex: number) {
       map.lastAnnotatedMessageID = msgID;
     }
 
-    map.blobs[blobID] = {
-      id: blobID,
-      label: blobID,
-      summary: blobSpec.summary,
-      placeholder: blobSpec.placeholder,
-      keyFacts: blobSpec.keyFacts,
-      fidelity: blobSpec.fidelity,
+    map.topics[topicID] = {
+      id: topicID,
+      label: topicID,
+      summary: topicSpec.summary,
+      placeholder: topicSpec.placeholder,
+      keyFacts: topicSpec.keyFacts,
+      fidelity: topicSpec.fidelity,
       fidelitySource: "default",
       messageIDs,
-      tokenEstimate: blobTokens,
-      createdAt: blobCreatedAt,
+      tokenEstimate: topicTokens,
+      createdAt: topicCreatedAt,
       lastActiveAt: now - 3_600_000 + msgCounter * 60_000,
       commitHashes: [],
     };
-    map.blobOrder.push(blobID);
-    map.totalTokenEstimate += blobTokens;
-    map.lastActiveBlobID = blobID;
+    map.topicOrder.push(topicID);
+    map.totalTokenEstimate += topicTokens;
+    map.lastActiveTopicID = topicID;
   }
 
   return map;
 }
 
-function blobLabel(blob: unknown, fallback: string) {
+function topicLabel(topic: unknown, fallback: string) {
   if (
-    blob &&
-    typeof blob === "object" &&
-    "label" in blob &&
-    typeof blob.label === "string"
+    topic &&
+    typeof topic === "object" &&
+    "label" in topic &&
+    typeof topic.label === "string"
   ) {
-    return blob.label;
+    return topic.label;
   }
   return fallback;
 }
