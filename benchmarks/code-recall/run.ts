@@ -27,6 +27,7 @@ const defaultOutDir = path.join(
 
 type ConditionID =
   | "code-only"
+  | "default-compaction"
   | "rlm-transcript-search"
   | "rgb-editable-context"
   | "decant-only"
@@ -100,6 +101,7 @@ type SessionMessage = {
     id?: string;
     role?: string;
     finish?: string;
+    summary?: boolean;
     providerID?: string;
     modelID?: string;
     tokens?: {
@@ -187,7 +189,12 @@ type RunStats = {
   relevant_message_ids: string[];
   public_test: TestResult;
   hidden_test: TestResult;
+  memory_prep_tokens?: TokenBucket;
+  solve_tokens?: TokenBucket;
   tokens: TokenBucket;
+  memory_prep_estimated_cost_usd?: number;
+  solve_estimated_cost_usd?: number;
+  estimated_cost_usd?: number;
   models: string[];
   duration_ms: number;
   error?: unknown;
@@ -202,6 +209,7 @@ type Analysis = {
 
 const defaultConditions: ConditionID[] = [
   "code-only",
+  "default-compaction",
   "rlm-transcript-search",
   "rgb-editable-context",
   "decant-only",
@@ -913,14 +921,26 @@ async function runFixtureCondition(
     const client = createOpencodeClient({ baseUrl: server.url });
     await pickModel(client, worktree, options.modelSlug);
 
-    const seeded = usesDecant(condition)
-      ? await seedHistoricalSessions(
-          client,
-          worktree,
-          fixture,
-          options.promptTimeoutMs,
-        )
-      : staticSeededSessions(fixture);
+    const defaultCompaction =
+      condition === "default-compaction"
+        ? await seedDefaultCompactionSession(
+            client,
+            worktree,
+            fixture,
+            options.modelSlug,
+            options.promptTimeoutMs,
+          )
+        : undefined;
+    const seeded = defaultCompaction
+      ? defaultCompaction.seeded
+      : usesDecant(condition)
+        ? await seedHistoricalSessions(
+            client,
+            worktree,
+            fixture,
+            options.promptTimeoutMs,
+          )
+        : staticSeededSessions(fixture);
     if (
       condition === "decant-guided-rlm" ||
       condition === "decant-guided-rgb-editable"
@@ -974,11 +994,9 @@ async function runFixtureCondition(
       await archiveRawTranscripts(worktree, conditionDir);
     }
 
-    const sessionID = await createSession(
-      client,
-      worktree,
-      `${fixture.id} ${condition}`,
-    );
+    const sessionID =
+      defaultCompaction?.sessionID ??
+      (await createSession(client, worktree, `${fixture.id} ${condition}`));
     const llmLogDir = path.join(opencodeRoot.data, "opencode", "log");
     await prompt(
       client,
@@ -991,6 +1009,16 @@ async function runFixtureCondition(
       llmLogDir,
     );
     const messages = await listSessionMessages(client, worktree, sessionID);
+    if (defaultCompaction) {
+      await fs.writeFile(
+        path.join(conditionDir, "compacted-memory-messages.json"),
+        `${JSON.stringify(defaultCompaction.compactedMessages, null, 2)}\n`,
+      );
+      await fs.writeFile(
+        path.join(conditionDir, "compacted-session-messages.json"),
+        `${JSON.stringify(messages, null, 2)}\n`,
+      );
+    }
     if (isRgbEditableCondition(condition)) {
       await restoreRawTranscripts(worktree, conditionDir);
     }
@@ -1032,6 +1060,12 @@ async function runFixtureCondition(
       repeat,
       editorMessages,
       rgbContext,
+      memoryPrepMessages: defaultCompaction
+        ? compactionSummaryMessages(defaultCompaction.compactedMessages)
+        : undefined,
+      accountingSolveMessages: defaultCompaction
+        ? messagesAfter(defaultCompaction.compactedMessages, messages)
+        : undefined,
     });
     await fs.writeFile(statsPath, `${JSON.stringify(stats, null, 2)}\n`);
     return {
@@ -1539,6 +1573,109 @@ function staticSeededSessions(fixture: CodeFixture): SeededSessions {
   };
 }
 
+async function seedDefaultCompactionSession(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  fixture: CodeFixture,
+  modelSlug: string,
+  timeoutMs: number,
+): Promise<{
+  sessionID: string;
+  seeded: SeededSessions;
+  compactedMessages: SessionMessage[];
+}> {
+  const sessionID = await createSession(
+    client,
+    directory,
+    `${fixture.id} default-compaction`,
+  );
+  await prompt(
+    client,
+    directory,
+    sessionID,
+    defaultCompactionMemoryPrompt(fixture),
+    defaultCompactionSeedSystemPrompt(),
+    {},
+    timeoutMs,
+  );
+  for (const text of defaultCompactionTailPrompts(fixture)) {
+    await prompt(
+      client,
+      directory,
+      sessionID,
+      text,
+      defaultCompactionSeedSystemPrompt(),
+      {},
+      timeoutMs,
+    );
+  }
+  await summarizeSession(client, directory, sessionID, modelSlug, timeoutMs);
+  const compactedMessages = await listSessionMessages(
+    client,
+    directory,
+    sessionID,
+  );
+  const summary = compactionSummaryMessages(compactedMessages).find((message) =>
+    messageText(message).trim(),
+  );
+  assert.ok(summary, "default-compaction did not create a compaction summary");
+  return {
+    sessionID,
+    seeded: staticSeededSessions(fixture),
+    compactedMessages,
+  };
+}
+
+function defaultCompactionSeedSystemPrompt() {
+  return "You are in a normal OpenCode coding session. Do not call tools or edit files. Reply concisely.";
+}
+
+function defaultCompactionMemoryPrompt(fixture: CodeFixture) {
+  return [
+    "I am pasting old synthetic coding-session logs into this normal session.",
+    "Later I may ask for a code patch. If this session is compacted, preserve implementation decisions, corrections, rejected stale details, and exact session_id/message IDs that could affect later code changes.",
+    "Some logs are decoys. Current repository files and tests should still override stale prior context.",
+    "",
+    allStaticSessions(fixture)
+      .map((session) => transcriptMarkdown(session))
+      .join("\n---\n"),
+  ].join("\n");
+}
+
+function defaultCompactionTailPrompts(fixture: CodeFixture) {
+  return [
+    `Unrelated later thread for ${fixture.id}: note that docs copy can be reviewed later. Acknowledge only.`,
+    `Another unrelated later thread for ${fixture.id}: no code changes, just remember that demo prose should stay short. Acknowledge only.`,
+  ];
+}
+
+async function summarizeSession(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  sessionID: string,
+  modelSlug: string,
+  timeoutMs: number,
+) {
+  const model = parseModelSlug(modelSlug);
+  const raw = (await withTimeout(
+    client.session.summarize({
+      sessionID,
+      directory,
+      providerID: model.providerID,
+      modelID: model.modelID,
+      auto: false,
+    }),
+    timeoutMs,
+    `compaction timed out in ${sessionID}`,
+  )) as { data?: unknown; error?: unknown };
+  const dataError =
+    raw.data && typeof raw.data === "object"
+      ? (raw.data as { error?: unknown }).error
+      : undefined;
+  if (raw.error || dataError)
+    throw new Error(JSON.stringify(raw.error ?? dataError));
+}
+
 function seedSystemPrompt() {
   return "Preserve this prior coding-session record for a code-recall benchmark. Do not edit files or call tools. Acknowledge concisely while retaining important implementation decisions.";
 }
@@ -1548,6 +1685,9 @@ function buildSystemPrompt(condition: ConditionID) {
     "You are solving a code-recall benchmark. Edit source files as needed, run focused tests if useful, and do not commit changes. Do not edit files under test/. Current repository files and tests are authoritative.";
   if (condition === "code-only") {
     return `${base} No prior session context is available in this condition.`;
+  }
+  if (condition === "default-compaction") {
+    return `${base} Prior session logs were passed through normal OpenCode compaction in this same session. Use only whatever survived in compacted conversation context; do not use decant session tools or transcript-file search as memory.`;
   }
   if (condition === "rlm-transcript-search") {
     return `${base} Prior transcript files may be useful, irrelevant, or stale. Use RLM-style transcript search with glob/grep/read and optional read-only bash only when it helps the coding task. Do not use decant session tools.`;
@@ -1585,33 +1725,39 @@ function buildSolvePrompt(
   const memoryInstruction =
     condition === "code-only"
       ? "No prior context corpus is available. Solve from the repository and tests only."
-      : condition === "rlm-transcript-search"
-        ? `Optional transcript corpus: ${transcriptDir}. Prior context may be useful, irrelevant, or stale. Search only if it helps; if it is irrelevant or stale, ignore it.`
-        : isRgbEditableCondition(condition)
-          ? [
-              condition === "decant-guided-rgb-editable"
-                ? "Decant-guided RGB-agent rewritten context is provided below. This is the only prior-memory view available in this solve turn."
-                : "RGB-agent rewritten context is provided below. This is the only prior-memory view available in this condition.",
-              "Do not search recall/transcripts; those raw files are intentionally unavailable after the RGB edit phase.",
-              "Do not call Decant session tools in this solve turn; any needed Decant routing has already happened.",
-              "If the rewritten context says memory is irrelevant, stale, or unsupported, solve from the current repository and tests.",
-              "If the rewritten context preserves useful prior memory, cite the exact session_id and message_id from it.",
-              "",
-              "```md",
-              rgbContext.trim(),
-              "```",
-            ].join("\n")
-          : condition === "decant-only"
+      : condition === "default-compaction"
+        ? [
+            "Old session logs were pasted earlier in this same session and then passed through normal OpenCode compaction.",
+            "Use only whatever prior-session details survived in the compacted conversation context.",
+            "Do not use transcript files or Decant session tools as memory. If supporting details did not survive compaction, do not invent prior-session evidence.",
+          ].join("\n")
+        : condition === "rlm-transcript-search"
+          ? `Optional transcript corpus: ${transcriptDir}. Prior context may be useful, irrelevant, or stale. Search only if it helps; if it is irrelevant or stale, ignore it.`
+          : isRgbEditableCondition(condition)
             ? [
-                "No transcript corpus is available in this condition.",
-                "Use session_lookup/session_detail/message_detail when a prior session may affect the fix.",
-                "If memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.",
+                condition === "decant-guided-rgb-editable"
+                  ? "Decant-guided RGB-agent rewritten context is provided below. This is the only prior-memory view available in this solve turn."
+                  : "RGB-agent rewritten context is provided below. This is the only prior-memory view available in this condition.",
+                "Do not search recall/transcripts; those raw files are intentionally unavailable after the RGB edit phase.",
+                "Do not call Decant session tools in this solve turn; any needed Decant routing has already happened.",
+                "If the rewritten context says memory is irrelevant, stale, or unsupported, solve from the current repository and tests.",
+                "If the rewritten context preserves useful prior memory, cite the exact session_id and message_id from it.",
+                "",
+                "```md",
+                rgbContext.trim(),
+                "```",
               ].join("\n")
-            : [
-                `Optional transcript corpus: ${transcriptDir}.`,
-                "Use session_lookup/session_detail/message_detail when a prior session may affect the fix.",
-                "If memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.",
-              ].join("\n");
+            : condition === "decant-only"
+              ? [
+                  "No transcript corpus is available in this condition.",
+                  "Use session_lookup/session_detail/message_detail when a prior session may affect the fix.",
+                  "If memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.",
+                ].join("\n")
+              : [
+                  `Optional transcript corpus: ${transcriptDir}.`,
+                  "Use session_lookup/session_detail/message_detail when a prior session may affect the fix.",
+                  "If memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.",
+                ].join("\n");
   return [
     `Task: ${fixture.title}`,
     "",
@@ -2014,11 +2160,20 @@ function buildStats(input: {
   repeat?: number;
   editorMessages?: SessionMessage[];
   rgbContext?: string;
+  memoryPrepMessages?: SessionMessage[];
+  accountingSolveMessages?: SessionMessage[];
 }): RunStats {
   const outputText = messageText(latestAssistantMessage(input.messages));
   const editorMessages = input.editorMessages ?? [];
-  const allMessages = [...editorMessages, ...input.messages];
-  const tools = toolParts(allMessages);
+  const analysisMessages = [...editorMessages, ...input.messages];
+  const memoryPrepMessages = input.memoryPrepMessages ?? editorMessages;
+  const accountingSolveMessages =
+    input.accountingSolveMessages ?? input.messages;
+  const accountingMessages = [
+    ...memoryPrepMessages,
+    ...accountingSolveMessages,
+  ];
+  const tools = toolParts(analysisMessages);
   const solveTools = toolParts(input.messages);
   const toolNames = tools.map((part) => part.tool).filter(Boolean) as string[];
   const transcriptFilesRead = transcriptReadFiles(tools);
@@ -2083,6 +2238,9 @@ function buildStats(input: {
     toolNames,
     solveTranscriptFilesRead,
   );
+  const memoryPrepTokens = summarizeTokens(memoryPrepMessages);
+  const solveTokenBucket = summarizeTokens(accountingSolveMessages);
+  const tokens = summarizeTokens(accountingMessages);
   const testsPassed = input.publicTest.passed && input.hiddenTest.passed;
   const benchmarkPassed =
     testsPassed &&
@@ -2140,8 +2298,13 @@ function buildStats(input: {
     relevant_message_ids: input.seeded.relevantMessageIDs,
     public_test: previewTestResult(input.publicTest),
     hidden_test: previewTestResult(input.hiddenTest),
-    tokens: summarizeTokens(allMessages),
-    models: modelIDs(allMessages),
+    memory_prep_tokens: memoryPrepTokens,
+    solve_tokens: solveTokenBucket,
+    tokens,
+    memory_prep_estimated_cost_usd: estimatedCostUSD(memoryPrepTokens),
+    solve_estimated_cost_usd: estimatedCostUSD(solveTokenBucket),
+    estimated_cost_usd: estimatedCostUSD(tokens),
+    models: modelIDs(analysisMessages),
     duration_ms: Date.now() - input.startedAt,
   };
 }
@@ -2203,7 +2366,12 @@ function failedStats(
         .map((message) => message.id) ?? [],
     public_test: emptyTest,
     hidden_test: emptyTest,
+    memory_prep_tokens: emptyTokenBucket(),
+    solve_tokens: emptyTokenBucket(),
     tokens: emptyTokenBucket(),
+    memory_prep_estimated_cost_usd: 0,
+    solve_estimated_cost_usd: 0,
+    estimated_cost_usd: 0,
     models: [],
     duration_ms: Date.now() - startedAt,
     error,
@@ -2219,6 +2387,11 @@ function evaluateToolPath(
   const hasContext = toolNames.some((tool) => contextTools.has(tool));
   if (condition === "code-only" && hasContext)
     failures.push("context_tool_used");
+  if (condition === "default-compaction") {
+    if (hasContext) failures.push("context_tool_used");
+    if (solveTranscriptFilesRead.length > 0)
+      failures.push("raw_transcript_read_after_compaction");
+  }
   if (condition === "rlm-transcript-search" && hasContext)
     failures.push("context_tool_used");
   if (condition === "rgb-editable-context") {
@@ -2363,6 +2536,28 @@ function transcriptReadFiles(
       files.filter((filePath) => filePath.includes("recall/transcripts")),
     ),
   ];
+}
+
+function compactionSummaryMessages(messages: SessionMessage[]) {
+  return messages.filter(
+    (message) =>
+      (message.info?.role ?? message.role) === "assistant" &&
+      message.info?.summary === true,
+  );
+}
+
+function messagesAfter(before: SessionMessage[], after: SessionMessage[]) {
+  const beforeIDs = new Set(
+    before.map(sessionMessageID).filter((id): id is string => Boolean(id)),
+  );
+  return after.filter((message) => {
+    const id = sessionMessageID(message);
+    return !id || !beforeIDs.has(id);
+  });
+}
+
+function sessionMessageID(message: SessionMessage) {
+  return message.info?.id ?? message.id;
 }
 
 function latestAssistantMessage(messages: SessionMessage[]) {
@@ -2545,10 +2740,11 @@ async function writeAnalysisFiles(outDir: string, analysis: Analysis) {
 }
 
 function renderAnalysisMarkdown(analysis: Analysis) {
-  const rows = analysis.rows.map(
-    (row) =>
-      `| ${row.fixture} | ${row.recall_role} | ${row.condition} | ${row.repeat ?? ""} | ${String(row.benchmark_passed)} | ${String(row.tests_passed)} | ${String(row.recall_policy_passed)} | ${String(row.expected_files_touched)} | ${String(row.touched_files_allowed)} | ${row.tool_path_failures.join("; ")} | ${row.touched_files.join(", ")} | ${row.unexpected_touched_files.join(", ")} | ${row.tokens.input.toLocaleString()} | ${row.tokens.cacheRead.toLocaleString()} | ${formatPercent(cacheHitShare(row.tokens))} | ${row.irrelevant_transcript_reads.length} |`,
-  );
+  const rows = analysis.rows.map((row) => {
+    const prep = memoryPrepTokens(row);
+    const solve = solveTokens(row);
+    return `| ${row.fixture} | ${row.recall_role} | ${row.condition} | ${row.repeat ?? ""} | ${String(row.benchmark_passed)} | ${String(row.tests_passed)} | ${String(row.recall_policy_passed)} | ${String(row.expected_files_touched)} | ${String(row.touched_files_allowed)} | ${row.tool_path_failures.join("; ")} | ${row.touched_files.join(", ")} | ${row.unexpected_touched_files.join(", ")} | ${row.tokens.input.toLocaleString()} | ${prep.input.toLocaleString()} | ${solve.input.toLocaleString()} | ${row.tokens.cacheRead.toLocaleString()} | ${(row.tokens.output + row.tokens.reasoning).toLocaleString()} | ${formatPercent(cacheHitShare(row.tokens))} | ${formatUSD(estimatedCostForRow(row))} | ${row.irrelevant_transcript_reads.length} |`;
+  });
   const conditionRows = defaultConditions
     .map((condition) => {
       const matching = analysis.rows.filter(
@@ -2559,8 +2755,20 @@ function renderAnalysisMarkdown(analysis: Analysis) {
         (bucket, row) => addTokenBuckets(bucket, row.tokens),
         emptyTokenBucket(),
       );
+      const prepTokens = matching.reduce(
+        (bucket, row) => addTokenBuckets(bucket, memoryPrepTokens(row)),
+        emptyTokenBucket(),
+      );
+      const solveTokenBucket = matching.reduce(
+        (bucket, row) => addTokenBuckets(bucket, solveTokens(row)),
+        emptyTokenBucket(),
+      );
       const passed = matching.filter((row) => row.benchmark_passed).length;
-      return `| ${condition} | ${passed}/${matching.length} | ${tokens.input.toLocaleString()} | ${Math.round(tokens.input / matching.length).toLocaleString()} | ${tokens.cacheRead.toLocaleString()} | ${formatPercent(cacheHitShare(tokens))} |`;
+      const estimatedCost = matching.reduce(
+        (sum, row) => sum + estimatedCostForRow(row),
+        0,
+      );
+      return `| ${condition} | ${passed}/${matching.length} | ${tokens.input.toLocaleString()} | ${Math.round(tokens.input / matching.length).toLocaleString()} | ${prepTokens.input.toLocaleString()} | ${solveTokenBucket.input.toLocaleString()} | ${tokens.cacheRead.toLocaleString()} | ${(tokens.output + tokens.reasoning).toLocaleString()} | ${formatPercent(cacheHitShare(tokens))} | ${formatUSD(estimatedCost)} |`;
     })
     .filter((row): row is string => Boolean(row));
   return [
@@ -2573,14 +2781,14 @@ function renderAnalysisMarkdown(analysis: Analysis) {
       : []),
     `- Passed: ${analysis.rows.filter((row) => row.benchmark_passed).length}/${analysis.rows.length}`,
     "",
-    "| Fixture | Role | Condition | Repeat | Pass | Tests | Recall Policy | Expected Files | Allowed Files | Failures | Touched | Unexpected | Input Tok | Cache Read Tok | Cache Hit | Irrelevant Reads |",
-    "|---|---|---|---:|---:|---:|---:|---:|---:|---|---|---|---:|---:|---:|---:|",
+    "| Fixture | Role | Condition | Repeat | Pass | Tests | Recall Policy | Expected Files | Allowed Files | Failures | Touched | Unexpected | Input Tok | Prep Input Tok | Solve Input Tok | Cache Read Tok | Output + Reasoning Tok | Cache Hit | Est. Cost | Irrelevant Reads |",
+    "|---|---|---|---:|---:|---:|---:|---:|---:|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ...rows,
     "",
     "## By Condition",
     "",
-    "| Condition | Pass | Total Input | Avg Input | Cache Read | Cache Hit |",
-    "|---|---:|---:|---:|---:|---:|",
+    "| Condition | Pass | Total Input | Avg Input | Prep Input | Solve Input | Cache Read | Output + Reasoning | Cache Hit | Est. Cost |",
+    "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ...conditionRows,
     "",
   ].join("\n");
@@ -2601,6 +2809,18 @@ function addTokenBuckets(left: TokenBucket, right: TokenBucket): TokenBucket {
   };
 }
 
+function memoryPrepTokens(row: RunStats) {
+  return row.memory_prep_tokens ?? emptyTokenBucket();
+}
+
+function solveTokens(row: RunStats) {
+  return row.solve_tokens ?? row.tokens;
+}
+
+function estimatedCostForRow(row: RunStats) {
+  return row.estimated_cost_usd ?? estimatedCostUSD(row.tokens);
+}
+
 function renderAnalysisCsv(analysis: Analysis) {
   const header = [
     "fixture",
@@ -2616,12 +2836,20 @@ function renderAnalysisCsv(analysis: Analysis) {
     "touched_files",
     "unexpected_touched_files",
     "input_tokens",
+    "memory_prep_input_tokens",
+    "solve_input_tokens",
     "cache_read_tokens",
+    "output_reasoning_tokens",
     "cache_hit_share",
+    "estimated_cost_usd",
+    "memory_prep_estimated_cost_usd",
+    "solve_estimated_cost_usd",
     "irrelevant_reads",
   ].join(",");
-  const rows = analysis.rows.map((row) =>
-    [
+  const rows = analysis.rows.map((row) => {
+    const prep = memoryPrepTokens(row);
+    const solve = solveTokens(row);
+    return [
       row.fixture,
       row.repeat ?? "",
       row.recall_role,
@@ -2635,11 +2863,17 @@ function renderAnalysisCsv(analysis: Analysis) {
       csvCell(row.touched_files.join(";")),
       csvCell(row.unexpected_touched_files.join(";")),
       row.tokens.input,
+      prep.input,
+      solve.input,
       row.tokens.cacheRead,
+      row.tokens.output + row.tokens.reasoning,
       cacheHitShare(row.tokens) ?? "",
+      estimatedCostForRow(row),
+      row.memory_prep_estimated_cost_usd ?? estimatedCostUSD(prep),
+      row.solve_estimated_cost_usd ?? estimatedCostUSD(solve),
       row.irrelevant_transcript_reads.length,
-    ].join(","),
-  );
+    ].join(",");
+  });
   return [header, ...rows, ""].join("\n");
 }
 
@@ -2680,8 +2914,20 @@ function cacheHitShare(bucket: TokenBucket) {
   return bucket.cacheRead / denom;
 }
 
+function estimatedCostUSD(bucket: TokenBucket) {
+  return (
+    (bucket.input * 5) / 1_000_000 +
+    (bucket.cacheRead * 0.5) / 1_000_000 +
+    ((bucket.output + bucket.reasoning) * 30) / 1_000_000
+  );
+}
+
 function formatPercent(value: number | undefined) {
   return value === undefined ? "" : `${(value * 100).toFixed(1)}%`;
+}
+
+function formatUSD(value: number) {
+  return `$${value.toFixed(2)}`;
 }
 
 function csvCell(value: string) {

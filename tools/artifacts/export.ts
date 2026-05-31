@@ -28,7 +28,11 @@ const benchmarkRuns = [
 const publishedRuns = new Map([
   [
     "code-recall",
-    new Set(["gpt55-ablation-combined", "gpt55-secondary-missing-20260515"]),
+    new Set([
+      "gpt55-ablation-combined",
+      "gpt55-default-compaction-blog-20260530",
+      "gpt55-secondary-missing-20260515",
+    ]),
   ],
   [
     "context-canaries",

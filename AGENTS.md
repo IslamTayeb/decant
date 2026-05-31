@@ -96,6 +96,8 @@ Live validation and benchmarks require an OpenCode-accessible model slug:
 export DECANT_E2E_MODEL="<provider>/<model>"
 ```
 
+Use GPT-family models only for live validation, benchmarks, and blog/public evidence runs. Do not run Anthropic models for these measurements unless the user explicitly overrides this rule.
+
 ## OpenCode Plugin Development Rules
 
 ### Isolation

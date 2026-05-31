@@ -1,0 +1,111 @@
+{
+  "fixture": "recall-synthesis-report",
+  "title": "Memory synthesis report fields",
+  "recall_role": "synthesis",
+  "condition": "default-compaction",
+  "benchmark_passed": false,
+  "tests_passed": false,
+  "public_tests_passed": true,
+  "hidden_tests_passed": false,
+  "expected_files_touched": true,
+  "touched_files_allowed": true,
+  "recall_policy_passed": true,
+  "tool_path_passed": true,
+  "tool_path_failures": [],
+  "forbidden_patch_hits": [],
+  "forbidden_output_hits": [],
+  "touched_files": [
+    "src/report.mjs"
+  ],
+  "unexpected_touched_files": [],
+  "patch_bytes": 470,
+  "output_preview": "{\"summary\":\"Updated buildReport to preserve summary plus accepted synthesized fields failed_test_ids and retry_owner when present.\",\"tests\":\"npm test passed.\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"report_parent_synthesis_session\",\"message_id\":\"report_synthesis_fact_1, report_synthesis_fact_2\"}}",
+  "tool_names": [
+    "glob",
+    "glob",
+    "glob",
+    "read",
+    "read",
+    "read",
+    "apply_patch",
+    "bash"
+  ],
+  "transcript_files_read": [],
+  "solve_transcript_files_read": [],
+  "irrelevant_transcript_reads": [],
+  "rgb_context_present": true,
+  "rgb_context_preserves_ids": true,
+  "rgb_context_policy_passed": true,
+  "rgb_context_preview": "",
+  "context_tool_call_count": 0,
+  "search_tool_call_count": 3,
+  "read_tool_call_count": 3,
+  "bash_tool_call_count": 1,
+  "message_detail_call_count": 0,
+  "recall_decision": "used",
+  "citation_hits": [
+    "session",
+    "message"
+  ],
+  "relevant_session_id": "report_parent_synthesis_session",
+  "relevant_message_ids": [
+    "report_synthesis_fact_1",
+    "report_synthesis_fact_2"
+  ],
+  "public_test": {
+    "passed": true,
+    "exitCode": 0,
+    "stdout": "✔ keeps report summary (1.193042ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.42575\n",
+    "stderr": ""
+  },
+  "hidden_test": {
+    "passed": false,
+    "exitCode": 1,
+    "stdout": "✖ keeps synthesized child-agent fields (2.524042ms)\n✔ keeps report summary (1.321834ms)\nℹ tests 2\nℹ suites 0\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 86.235416\n\n✖ failing tests:\n\ntest at test/hidden-report.test.mjs:5:1\n✖ keeps synthesized child-agent fields (2.524042ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n    {\n  -   failed_test_ids: [\n  -     'auth-smoke',\n  -     'retry-smoke'\n  -   ],\n  -   retry_owner: 'infra-oncall',\n      summary: 'failed smoke run'\n    }\n  \n      at TestContext.<anonymous> (file://./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/default-compaction/worktree/test/hidden-report.test.mjs:6:10)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1201:25)\n      at Test.start (node:internal/test_runner/test:1096:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: { summary: 'failed smoke run' },\n    expected: { summary: 'failed smoke run', failed_test_ids: [ 'auth-smoke', 'retry-smoke' ], retry_owner: 'infra-oncall' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+    "stderr": "",
+    "error": "Error: Command failed: node --test\n\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+  },
+  "memory_prep_tokens": {
+    "messages": 1,
+    "assistant": 1,
+    "input": 1016,
+    "output": 568,
+    "total": 1584,
+    "reasoning": 0,
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 1016
+  },
+  "solve_tokens": {
+    "messages": 6,
+    "assistant": 5,
+    "input": 4956,
+    "output": 899,
+    "total": 43969,
+    "reasoning": 226,
+    "cacheRead": 37888,
+    "cacheWrite": 0,
+    "toolCalls": 8,
+    "maxInput": 1449
+  },
+  "tokens": {
+    "messages": 7,
+    "assistant": 6,
+    "input": 5972,
+    "output": 1467,
+    "total": 45553,
+    "reasoning": 226,
+    "cacheRead": 37888,
+    "cacheWrite": 0,
+    "toolCalls": 8,
+    "maxInput": 1449
+  },
+  "memory_prep_estimated_cost_usd": 0.02212,
+  "solve_estimated_cost_usd": 0.077474,
+  "estimated_cost_usd": 0.099594,
+  "models": [
+    "openai/gpt-5.5"
+  ],
+  "duration_ms": 55674
+}

@@ -1,0 +1,897 @@
+{
+  "generatedAt": "2026-05-30T23:38:32.042Z",
+  "judgeModel": "openai/gpt-5.5",
+  "sourceRuns": {
+    "provenance": "benchmarks/provenance-qa/runs/default-compaction-gpt55-matrix",
+    "codeRecall": "artifacts/benchmark-runs/code-recall/gpt55-secondary-missing-20260515"
+  },
+  "summaries": {
+    "provenance": [
+      {
+        "label": "Default Compaction",
+        "condition": "default-compaction",
+        "cases": 5,
+        "judge_score_0_100": 93.4,
+        "judge_score_0_1": 0.934
+      },
+      {
+        "label": "RGB-agent",
+        "condition": "rlm-transcript-search",
+        "cases": 5,
+        "judge_score_0_100": 94.8,
+        "judge_score_0_1": 0.948
+      },
+      {
+        "label": "Decant",
+        "condition": "decant-map-zoom",
+        "cases": 5,
+        "judge_score_0_100": 92.8,
+        "judge_score_0_1": 0.928
+      }
+    ],
+    "code_recall": [
+      {
+        "label": "Default",
+        "condition": "code-only",
+        "cases": 3,
+        "judge_score_0_100": 55,
+        "judge_score_0_1": 0.55
+      },
+      {
+        "label": "RGB-agent",
+        "condition": "rlm-transcript-search",
+        "cases": 3,
+        "judge_score_0_100": 76.67,
+        "judge_score_0_1": 0.7667
+      },
+      {
+        "label": "Decant",
+        "condition": "decant-only",
+        "cases": 3,
+        "judge_score_0_100": 78.33,
+        "judge_score_0_1": 0.7833
+      }
+    ]
+  },
+  "records": [
+    {
+      "section": "provenance",
+      "fixture": "auth-queue-rationale",
+      "condition": "default-compaction",
+      "blog_label": "Default Compaction",
+      "judge": {
+        "score_0_100": 98,
+        "score_0_1": 0.98,
+        "raw_score_0_100": 98,
+        "cap_0_100": 100,
+        "reason": "The answer fully captures the required rationale: refresh work is keyed per tenant, same-tenant duplicate refreshes coalesce, different tenants proceed in parallel, and a global mutex was rejected because it would block unrelated tenants. It also cites the expected session and supporting message ID. The only minor issue is that it mentions distractor contexts in an ignored-context field, though it clearly does not use them as rationale.",
+        "missing": [],
+        "issues": [
+          "Includes forbidden/distractor topic names in an ignored-context list, but not as supporting rationale."
+        ],
+        "raw_text": "{\"score_0_100\":98,\"score_0_1\":0.98,\"reason\":\"The answer fully captures the required rationale: refresh work is keyed per tenant, same-tenant duplicate refreshes coalesce, different tenants proceed in parallel, and a global mutex was rejected because it would block unrelated tenants. It also cites the expected session and supporting message ID. The only minor issue is that it mentions distractor contexts in an ignored-context field, though it clearly does not use them as rationale.\",\"missing\":[],\"issues\":[\"Includes forbidden/distractor topic names in an ignored-context list, but not as supporting rationale.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "per_tenant",
+          "same_tenant_coalesce",
+          "different_tenants_parallel",
+          "global_mutex_rejected"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "auth-queue-rationale",
+      "condition": "rlm-transcript-search",
+      "blog_label": "RGB-agent",
+      "judge": {
+        "score_0_100": 100,
+        "score_0_1": 1,
+        "raw_score_0_100": 100,
+        "cap_0_100": 100,
+        "reason": "The answer fully captures all expected rationale facts: refresh work is keyed per tenant, same-tenant refreshes coalesce, different tenants can run in parallel, and a global mutex was rejected because it would block unrelated tenants. It cites the expected session and supporting message ID and avoids forbidden distractor rationales.",
+        "missing": [],
+        "issues": [],
+        "raw_text": "{\"score_0_100\":100,\"score_0_1\":1,\"reason\":\"The answer fully captures all expected rationale facts: refresh work is keyed per tenant, same-tenant refreshes coalesce, different tenants can run in parallel, and a global mutex was rejected because it would block unrelated tenants. It cites the expected session and supporting message ID and avoids forbidden distractor rationales.\",\"missing\":[],\"issues\":[]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "per_tenant",
+          "same_tenant_coalesce",
+          "different_tenants_parallel",
+          "global_mutex_rejected"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "auth-queue-rationale",
+      "condition": "decant-map-zoom",
+      "blog_label": "Decant",
+      "judge": {
+        "score_0_100": 92,
+        "score_0_1": 0.92,
+        "raw_score_0_100": 92,
+        "cap_0_100": 100,
+        "reason": "The answer correctly states all required rationale facts and cites the expected session plus a valid supporting message ID. It explains per-tenant keying, same-tenant coalescing, different-tenant parallelism, and why a global mutex was rejected. The only notable issue is that it mentions forbidden distractor contexts in an ignored-context field, which is unnecessary and should be avoided even if not used as rationale.",
+        "missing": [],
+        "issues": [
+          "Mentions forbidden distractor terms: billing retry and markdown parser, even though framed as ignored context."
+        ],
+        "raw_text": "{\"score_0_100\":92,\"score_0_1\":0.92,\"reason\":\"The answer correctly states all required rationale facts and cites the expected session plus a valid supporting message ID. It explains per-tenant keying, same-tenant coalescing, different-tenant parallelism, and why a global mutex was rejected. The only notable issue is that it mentions forbidden distractor contexts in an ignored-context field, which is unnecessary and should be avoided even if not used as rationale.\",\"missing\":[],\"issues\":[\"Mentions forbidden distractor terms: billing retry and markdown parser, even though framed as ignored context.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "per_tenant",
+          "same_tenant_coalesce",
+          "different_tenants_parallel",
+          "global_mutex_rejected"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "correction-chain",
+      "condition": "default-compaction",
+      "blog_label": "Default Compaction",
+      "judge": {
+        "score_0_100": 95,
+        "score_0_1": 0.95,
+        "raw_score_0_100": 95,
+        "cap_0_100": 100,
+        "reason": "The answer correctly states the accepted behavior, explains that split/tokenize first preserves delimiter and quoted-field behavior while trimming field names, notes the earlier before-tokenization rationale was superseded or wrong, and cites the expected session and message ID. The only minor issue is that it names a forbidden distractor in the ignored-context list, though it does not use it as rationale.",
+        "missing": [],
+        "issues": [
+          "Mentions a forbidden distractor term in irrelevant_context_ignored, even though it is explicitly ignored."
+        ],
+        "raw_text": "{\"score_0_100\":95,\"score_0_1\":0.95,\"reason\":\"The answer correctly states the accepted behavior, explains that split/tokenize first preserves delimiter and quoted-field behavior while trimming field names, notes the earlier before-tokenization rationale was superseded or wrong, and cites the expected session and message ID. The only minor issue is that it names a forbidden distractor in the ignored-context list, though it does not use it as rationale.\",\"missing\":[],\"issues\":[\"Mentions a forbidden distractor term in irrelevant_context_ignored, even though it is explicitly ignored.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "after_split",
+          "preserve_raw",
+          "earlier_wrong"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "correction-chain",
+      "condition": "rlm-transcript-search",
+      "blog_label": "RGB-agent",
+      "judge": {
+        "score_0_100": 96,
+        "score_0_1": 0.96,
+        "raw_score_0_100": 96,
+        "cap_0_100": 100,
+        "reason": "The answer correctly states the final behavior, explains that split/tokenize happens before trimming to preserve delimiter and quoted-field behavior while cleaning field names, and identifies the earlier before-tokenization rationale as superseded. It cites the expected session and message ID. The only minor issue is that it unnecessarily mentions a forbidden distractor phrase in an ignored-context list, though not as a rationale.",
+        "missing": [],
+        "issues": [
+          "Includes the distractor phrase \"Network timeout\" in irrelevant_context_ignored, even though it is explicitly ignored rather than used as support."
+        ],
+        "raw_text": "{\"score_0_100\":96,\"score_0_1\":0.96,\"reason\":\"The answer correctly states the final behavior, explains that split/tokenize happens before trimming to preserve delimiter and quoted-field behavior while cleaning field names, and identifies the earlier before-tokenization rationale as superseded. It cites the expected session and message ID. The only minor issue is that it unnecessarily mentions a forbidden distractor phrase in an ignored-context list, though not as a rationale.\",\"missing\":[],\"issues\":[\"Includes the distractor phrase \\\"Network timeout\\\" in irrelevant_context_ignored, even though it is explicitly ignored rather than used as support.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "after_split",
+          "preserve_raw",
+          "earlier_wrong"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "correction-chain",
+      "condition": "decant-map-zoom",
+      "blog_label": "Decant",
+      "judge": {
+        "score_0_100": 92,
+        "score_0_1": 0.92,
+        "raw_score_0_100": 92,
+        "cap_0_100": 100,
+        "reason": "The answer correctly states the final behavior: tokenize/split first, then trim each field, and explains that this preserves delimiter/quoted-field behavior while cleaning field names. It also correctly notes the earlier before-tokenization rationale was superseded and cites the expected correction-chain session with a valid supporting message ID. Minor issues: it cites only one of the two expected supporting message IDs, and it unnecessarily mentions a forbidden distractor phrase in the ignored context list, even though it does not use it as rationale.",
+        "missing": [],
+        "issues": [
+          "Includes the forbidden distractor term 'Network timeout' in irrelevant_context_ignored.",
+          "Only one of the two expected supporting message IDs is cited."
+        ],
+        "raw_text": "{\"score_0_100\":92,\"score_0_1\":0.92,\"reason\":\"The answer correctly states the final behavior: tokenize/split first, then trim each field, and explains that this preserves delimiter/quoted-field behavior while cleaning field names. It also correctly notes the earlier before-tokenization rationale was superseded and cites the expected correction-chain session with a valid supporting message ID. Minor issues: it cites only one of the two expected supporting message IDs, and it unnecessarily mentions a forbidden distractor phrase in the ignored context list, even though it does not use it as rationale.\",\"missing\":[],\"issues\":[\"Includes the forbidden distractor term 'Network timeout' in irrelevant_context_ignored.\",\"Only one of the two expected supporting message IDs is cited.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "after_split",
+          "preserve_raw",
+          "earlier_wrong"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "false-provenance",
+      "condition": "default-compaction",
+      "blog_label": "Default Compaction",
+      "judge": {
+        "score_0_100": 90,
+        "score_0_1": 0.9,
+        "raw_score_0_100": 90,
+        "cap_0_100": 100,
+        "reason": "The answer correctly states namespace-scoped TTL, explains isolation from noisy/unrelated namespaces, says a global TTL was considered and rejected, and cites the expected session and message. It does not rely on the distractor rationales, but it explicitly mentions forbidden distractor terms while dismissing them, which should receive some penalty under the fixture instructions.",
+        "missing": [],
+        "issues": [
+          "Explicitly mentions forbidden distractor terms: billing cache and image cache, even though only to reject them.",
+          "Includes extra irrelevant-context discussion that is not needed for the answer."
+        ],
+        "raw_text": "{\"score_0_100\":90,\"score_0_1\":0.9,\"reason\":\"The answer correctly states namespace-scoped TTL, explains isolation from noisy/unrelated namespaces, says a global TTL was considered and rejected, and cites the expected session and message. It does not rely on the distractor rationales, but it explicitly mentions forbidden distractor terms while dismissing them, which should receive some penalty under the fixture instructions.\",\"missing\":[],\"issues\":[\"Explicitly mentions forbidden distractor terms: billing cache and image cache, even though only to reject them.\",\"Includes extra irrelevant-context discussion that is not needed for the answer.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "namespace_ttl",
+          "avoid_noisy_namespace",
+          "global_ttl_rejected"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "false-provenance",
+      "condition": "rlm-transcript-search",
+      "blog_label": "RGB-agent",
+      "judge": {
+        "score_0_100": 98,
+        "score_0_1": 0.98,
+        "raw_score_0_100": 98,
+        "cap_0_100": 100,
+        "reason": "The answer correctly states that TTL is namespace-scoped, explains that this prevents a noisy namespace from affecting unrelated namespaces, and notes that a shared global TTL policy was rejected. It cites the expected session and supporting message. The only minor issue is unnecessary mention of distractor contexts in the ignored-context list, though they are clearly identified as irrelevant rather than used as rationale.",
+        "missing": [],
+        "issues": [
+          "Includes unnecessary distractor-context references in irrelevant_context_ignored, but does not rely on them."
+        ],
+        "raw_text": "{\"score_0_100\":98,\"score_0_1\":0.98,\"reason\":\"The answer correctly states that TTL is namespace-scoped, explains that this prevents a noisy namespace from affecting unrelated namespaces, and notes that a shared global TTL policy was rejected. It cites the expected session and supporting message. The only minor issue is unnecessary mention of distractor contexts in the ignored-context list, though they are clearly identified as irrelevant rather than used as rationale.\",\"missing\":[],\"issues\":[\"Includes unnecessary distractor-context references in irrelevant_context_ignored, but does not rely on them.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "namespace_ttl",
+          "avoid_noisy_namespace",
+          "global_ttl_rejected"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "false-provenance",
+      "condition": "decant-map-zoom",
+      "blog_label": "Decant",
+      "judge": {
+        "score_0_100": 92,
+        "score_0_1": 0.92,
+        "raw_score_0_100": 92,
+        "cap_0_100": 100,
+        "reason": "The answer correctly states that TTL is namespace-scoped, explains that this prevents a noisy namespace from affecting unrelated namespaces, notes that a global TTL was considered and rejected, and cites the expected session and a valid supporting message. The only notable issue is that it unnecessarily mentions forbidden distractor terms in an ignored-context field, even though they are not used as rationale.",
+        "missing": [],
+        "issues": [
+          "Includes forbidden distractor terms in irrelevant_context_ignored despite not relying on them as rationale.",
+          "Only cites one of the supporting message IDs, though one valid expected message is sufficient for provenance."
+        ],
+        "raw_text": "{\"score_0_100\":92,\"score_0_1\":0.92,\"reason\":\"The answer correctly states that TTL is namespace-scoped, explains that this prevents a noisy namespace from affecting unrelated namespaces, notes that a global TTL was considered and rejected, and cites the expected session and a valid supporting message. The only notable issue is that it unnecessarily mentions forbidden distractor terms in an ignored-context field, even though they are not used as rationale.\",\"missing\":[],\"issues\":[\"Includes forbidden distractor terms in irrelevant_context_ignored despite not relying on them as rationale.\",\"Only cites one of the supporting message IDs, though one valid expected message is sufficient for provenance.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "namespace_ttl",
+          "avoid_noisy_namespace",
+          "global_ttl_rejected"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "related-reuse",
+      "condition": "default-compaction",
+      "blog_label": "Default Compaction",
+      "judge": {
+        "score_0_100": 92,
+        "score_0_1": 0.92,
+        "raw_score_0_100": 92,
+        "cap_0_100": 100,
+        "reason": "The answer correctly captures all required rationale facts: reuse trim-after-splitting, avoid comma-specific CSV splitting, and apply TSV/tab-delimited behavior. It cites the expected session and includes a supporting message ID, with no forbidden distractor rationale. The main weakness is incomplete provenance: it only cites reuse_fact_2 and omits the expected reuse_fact_1 supporting message ID.",
+        "missing": [
+          "Supporting message ID reuse_fact_1"
+        ],
+        "issues": [
+          "Provenance is partially complete rather than fully citing both expected supporting messages"
+        ],
+        "raw_text": "{\"score_0_100\":92,\"score_0_1\":0.92,\"reason\":\"The answer correctly captures all required rationale facts: reuse trim-after-splitting, avoid comma-specific CSV splitting, and apply TSV/tab-delimited behavior. It cites the expected session and includes a supporting message ID, with no forbidden distractor rationale. The main weakness is incomplete provenance: it only cites reuse_fact_2 and omits the expected reuse_fact_1 supporting message ID.\",\"missing\":[\"Supporting message ID reuse_fact_1\"],\"issues\":[\"Provenance is partially complete rather than fully citing both expected supporting messages\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "reuse_principle",
+          "do_not_copy_comma",
+          "tsv_specific"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "related-reuse",
+      "condition": "rlm-transcript-search",
+      "blog_label": "RGB-agent",
+      "judge": {
+        "score_0_100": 98,
+        "score_0_1": 0.98,
+        "raw_score_0_100": 98,
+        "cap_0_100": 100,
+        "reason": "The answer fully captures the required reusable lesson: trim fields after delimiter splitting, avoid comma-specific CSV splitting, and use tab delimiters for TSV. It cites the expected session ID and both supporting message IDs. It avoids the specified forbidden distractors; the extra mention of auth queue/Markdown alternatives is unnecessary but not materially harmful.",
+        "missing": [],
+        "issues": [
+          "Includes a small amount of irrelevant ignored-context detail, but it does not conflict with the expected rationale."
+        ],
+        "raw_text": "{\"score_0_100\":98,\"score_0_1\":0.98,\"reason\":\"The answer fully captures the required reusable lesson: trim fields after delimiter splitting, avoid comma-specific CSV splitting, and use tab delimiters for TSV. It cites the expected session ID and both supporting message IDs. It avoids the specified forbidden distractors; the extra mention of auth queue/Markdown alternatives is unnecessary but not materially harmful.\",\"missing\":[],\"issues\":[\"Includes a small amount of irrelevant ignored-context detail, but it does not conflict with the expected rationale.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "reuse_principle",
+          "do_not_copy_comma",
+          "tsv_specific"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "related-reuse",
+      "condition": "decant-map-zoom",
+      "blog_label": "Decant",
+      "judge": {
+        "score_0_100": 92,
+        "score_0_1": 0.92,
+        "raw_score_0_100": 92,
+        "cap_0_100": 100,
+        "reason": "The answer correctly identifies the reusable CSV parser lesson, the stale comma-specific detail to avoid, and the TSV-specific tab delimiter behavior. It cites the expected session and one expected supporting message ID. Minor issue: it omits the second expected supporting message ID, and includes a small amount of extra distractor context, though not in a misleading way.",
+        "missing": [
+          "Second supporting message ID msg_e7b32f432001hbPH32CwoYg53Q"
+        ],
+        "issues": [
+          "Includes extra irrelevant-context discussion, but correctly marks it unrelated"
+        ],
+        "raw_text": "{\"score_0_100\":92,\"score_0_1\":0.92,\"reason\":\"The answer correctly identifies the reusable CSV parser lesson, the stale comma-specific detail to avoid, and the TSV-specific tab delimiter behavior. It cites the expected session and one expected supporting message ID. Minor issue: it omits the second expected supporting message ID, and includes a small amount of extra distractor context, though not in a misleading way.\",\"missing\":[\"Second supporting message ID msg_e7b32f432001hbPH32CwoYg53Q\"],\"issues\":[\"Includes extra irrelevant-context discussion, but correctly marks it unrelated\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "reuse_principle",
+          "do_not_copy_comma",
+          "tsv_specific"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "multi-agent-synthesis",
+      "condition": "default-compaction",
+      "blog_label": "Default Compaction",
+      "judge": {
+        "score_0_100": 92,
+        "score_0_1": 0.92,
+        "raw_score_0_100": 92,
+        "cap_0_100": 100,
+        "reason": "The answer correctly identifies the test investigator child agent, cites the expected session and supporting message, and includes the key rationale that failed-test IDs remain in final reports so later agents can reproduce and triage exact failures. It avoids using docs/style as the explanation, though it unnecessarily mentions those distractor contexts in an ignored-context list and adds an extra child_fact_2 detail not required by the expected provenance.",
+        "missing": [],
+        "issues": [
+          "Includes forbidden distractor labels in irrelevant_context_ignored, even though they are explicitly marked as ignored.",
+          "Adds an extra supporting detail about child_fact_2 that is not part of the expected provenance."
+        ],
+        "raw_text": "{\"score_0_100\":92,\"score_0_1\":0.92,\"reason\":\"The answer correctly identifies the test investigator child agent, cites the expected session and supporting message, and includes the key rationale that failed-test IDs remain in final reports so later agents can reproduce and triage exact failures. It avoids using docs/style as the explanation, though it unnecessarily mentions those distractor contexts in an ignored-context list and adds an extra child_fact_2 detail not required by the expected provenance.\",\"missing\":[],\"issues\":[\"Includes forbidden distractor labels in irrelevant_context_ignored, even though they are explicitly marked as ignored.\",\"Adds an extra supporting detail about child_fact_2 that is not part of the expected provenance.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "child_agent",
+          "failed_test_ids",
+          "triage"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "multi-agent-synthesis",
+      "condition": "rlm-transcript-search",
+      "blog_label": "RGB-agent",
+      "judge": {
+        "score_0_100": 82,
+        "score_0_1": 0.82,
+        "raw_score_0_100": 82,
+        "cap_0_100": 100,
+        "reason": "The answer correctly identifies the test investigator child session, cites the expected session and message IDs, and includes the key rationale that failed-test IDs remain so later agents can reproduce and triage exact failures. However, it explicitly mentions forbidden distractor terms including docs writer and style reviewer, and adds a rejected-alternative rationale involving the docs writer, which the rubric says to avoid.",
+        "missing": [],
+        "issues": [
+          "Includes forbidden distractor term: docs writer",
+          "Includes forbidden distractor term: style reviewer",
+          "Adds unnecessary distractor rationale about a docs writer request"
+        ],
+        "raw_text": "{\"score_0_100\":82,\"score_0_1\":0.82,\"reason\":\"The answer correctly identifies the test investigator child session, cites the expected session and message IDs, and includes the key rationale that failed-test IDs remain so later agents can reproduce and triage exact failures. However, it explicitly mentions forbidden distractor terms including docs writer and style reviewer, and adds a rejected-alternative rationale involving the docs writer, which the rubric says to avoid.\",\"missing\":[],\"issues\":[\"Includes forbidden distractor term: docs writer\",\"Includes forbidden distractor term: style reviewer\",\"Adds unnecessary distractor rationale about a docs writer request\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "child_agent",
+          "failed_test_ids",
+          "triage"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "provenance",
+      "fixture": "multi-agent-synthesis",
+      "condition": "decant-map-zoom",
+      "blog_label": "Decant",
+      "judge": {
+        "score_0_100": 96,
+        "score_0_1": 0.96,
+        "raw_score_0_100": 96,
+        "cap_0_100": 100,
+        "reason": "The answer correctly identifies the test investigator child session, cites the expected session and a valid supporting message, and states the core rationale: failed-test IDs remain in final reports so later agents can reproduce and triage exact failures. It also ties this to src/report/summary.ts. The only minor issue is that it names docs/style distractor sessions in an ignored-context field, though not as rationale.",
+        "missing": [],
+        "issues": [
+          "Mentions forbidden distractor labels in irrelevant_context_ignored, even though they are explicitly ignored rather than used as rationale."
+        ],
+        "raw_text": "{\"score_0_100\":96,\"score_0_1\":0.96,\"reason\":\"The answer correctly identifies the test investigator child session, cites the expected session and a valid supporting message, and states the core rationale: failed-test IDs remain in final reports so later agents can reproduce and triage exact failures. It also ties this to src/report/summary.ts. The only minor issue is that it names docs/style distractor sessions in an ignored-context field, though not as rationale.\",\"missing\":[],\"issues\":[\"Mentions forbidden distractor labels in irrelevant_context_ignored, even though they are explicitly ignored rather than used as rationale.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "answer_passed": true,
+        "provenance_passed": true,
+        "required_hits": [
+          "child_agent",
+          "failed_test_ids",
+          "triage"
+        ],
+        "missing_required": [],
+        "forbidden_hits": [],
+        "citation_hits": [
+          "session",
+          "message",
+          "topic"
+        ]
+      }
+    },
+    {
+      "section": "code_recall",
+      "fixture": "recall-missing-pagination",
+      "condition": "code-only",
+      "blog_label": "Default",
+      "judge": {
+        "score_0_100": 100,
+        "score_0_1": 1,
+        "raw_score_0_100": 100,
+        "cap_0_100": 100,
+        "reason": "Patch exactly fixes totalPages by switching from Math.floor to Math.ceil, preserves the pageSize <= 0 guard, touches only the expected file, and both public and hidden tests pass. Final answer does not include forbidden stale/distractor terms or invented prior-session evidence and marks recall unavailable.",
+        "missing": [],
+        "issues": [],
+        "raw_text": "{\"score_0_100\":100,\"score_0_1\":1,\"reason\":\"Patch exactly fixes totalPages by switching from Math.floor to Math.ceil, preserves the pageSize <= 0 guard, touches only the expected file, and both public and hidden tests pass. Final answer does not include forbidden stale/distractor terms or invented prior-session evidence and marks recall unavailable.\",\"missing\":[],\"issues\":[]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "tests_passed": true,
+        "public_tests_passed": true,
+        "hidden_tests_passed": true,
+        "expected_files_touched": true,
+        "touched_files_allowed": true,
+        "recall_policy_passed": true,
+        "forbidden_patch_hits": [],
+        "forbidden_output_hits": [],
+        "recall_decision": "unavailable",
+        "citation_hits": []
+      }
+    },
+    {
+      "section": "code_recall",
+      "fixture": "recall-missing-pagination",
+      "condition": "rlm-transcript-search",
+      "blog_label": "RGB-agent",
+      "judge": {
+        "score_0_100": 100,
+        "score_0_1": 1,
+        "raw_score_0_100": 100,
+        "cap_0_100": 100,
+        "reason": "Patch exactly fixes totalPages by switching Math.floor to Math.ceil, preserves the pageSize <= 0 guard, touches only the expected file, and both public and hidden tests pass. Final answer does not cite stale prior-session evidence and explicitly marks recall ignored.",
+        "missing": [],
+        "issues": [],
+        "raw_text": "{\"score_0_100\":100,\"score_0_1\":1,\"reason\":\"Patch exactly fixes totalPages by switching Math.floor to Math.ceil, preserves the pageSize <= 0 guard, touches only the expected file, and both public and hidden tests pass. Final answer does not cite stale prior-session evidence and explicitly marks recall ignored.\",\"missing\":[],\"issues\":[]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "tests_passed": true,
+        "public_tests_passed": true,
+        "hidden_tests_passed": true,
+        "expected_files_touched": true,
+        "touched_files_allowed": true,
+        "recall_policy_passed": true,
+        "forbidden_patch_hits": [],
+        "forbidden_output_hits": [],
+        "recall_decision": "ignored",
+        "citation_hits": []
+      }
+    },
+    {
+      "section": "code_recall",
+      "fixture": "recall-missing-pagination",
+      "condition": "decant-only",
+      "blog_label": "Decant",
+      "judge": {
+        "score_0_100": 100,
+        "score_0_1": 1,
+        "raw_score_0_100": 100,
+        "cap_0_100": 100,
+        "reason": "Patch exactly fixes totalPages by replacing Math.floor with Math.ceil, preserving the invalid pageSize guard and avoiding extra-page behavior. Public and hidden tests pass, only the expected file was touched, and the final answer does not include forbidden stale memory terms or invented prior-session citations.",
+        "missing": [],
+        "issues": [],
+        "raw_text": "{\"score_0_100\":100,\"score_0_1\":1,\"reason\":\"Patch exactly fixes totalPages by replacing Math.floor with Math.ceil, preserving the invalid pageSize guard and avoiding extra-page behavior. Public and hidden tests pass, only the expected file was touched, and the final answer does not include forbidden stale memory terms or invented prior-session citations.\",\"missing\":[],\"issues\":[]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "tests_passed": true,
+        "public_tests_passed": true,
+        "hidden_tests_passed": true,
+        "expected_files_touched": true,
+        "touched_files_allowed": true,
+        "recall_policy_passed": true,
+        "forbidden_patch_hits": [],
+        "forbidden_output_hits": [],
+        "recall_decision": "ignored",
+        "citation_hits": []
+      }
+    },
+    {
+      "section": "code_recall",
+      "fixture": "recall-correction-retry-cap",
+      "condition": "code-only",
+      "blog_label": "Default",
+      "judge": {
+        "score_0_100": 30,
+        "score_0_1": 0.3,
+        "raw_score_0_100": 30,
+        "cap_0_100": 65,
+        "reason": "The patch touches only the expected file and preserves the 100ms exponential base schedule, and it avoids the forbidden stale wording. However, it sets the retry cap to 1000ms instead of the latest accepted 2000ms value, causing the hidden test for the required behavior to fail. The final answer also reinforces the incorrect 1000ms decision.",
+        "missing": [
+          "Set retryDelayMs cap to 2000ms",
+          "Pass hidden test for latest accepted cap"
+        ],
+        "issues": [
+          "Hidden tests failed",
+          "Incorrectly used distractor cap value 1000ms",
+          "Final answer reports the wrong cap as the intended change"
+        ],
+        "raw_text": "{\"score_0_100\":30,\"score_0_1\":0.3,\"reason\":\"The patch touches only the expected file and preserves the 100ms exponential base schedule, and it avoids the forbidden stale wording. However, it sets the retry cap to 1000ms instead of the latest accepted 2000ms value, causing the hidden test for the required behavior to fail. The final answer also reinforces the incorrect 1000ms decision.\",\"missing\":[\"Set retryDelayMs cap to 2000ms\",\"Pass hidden test for latest accepted cap\"],\"issues\":[\"Hidden tests failed\",\"Incorrectly used distractor cap value 1000ms\",\"Final answer reports the wrong cap as the intended change\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": false,
+        "tests_passed": false,
+        "public_tests_passed": true,
+        "hidden_tests_passed": false,
+        "expected_files_touched": true,
+        "touched_files_allowed": true,
+        "recall_policy_passed": true,
+        "forbidden_patch_hits": [],
+        "forbidden_output_hits": [],
+        "recall_decision": "unavailable",
+        "citation_hits": []
+      }
+    },
+    {
+      "section": "code_recall",
+      "fixture": "recall-correction-retry-cap",
+      "condition": "rlm-transcript-search",
+      "blog_label": "RGB-agent",
+      "judge": {
+        "score_0_100": 100,
+        "score_0_1": 1,
+        "raw_score_0_100": 100,
+        "cap_0_100": 100,
+        "reason": "Patch exactly matches expected behavior: preserves the 100ms exponential base and changes the cap to the latest accepted 2000ms value. Public and hidden tests passed, only the expected file was touched, recall policy passed with session/message evidence, and no forbidden stale terms appeared.",
+        "missing": [],
+        "issues": [],
+        "raw_text": "{\"score_0_100\":100,\"score_0_1\":1,\"reason\":\"Patch exactly matches expected behavior: preserves the 100ms exponential base and changes the cap to the latest accepted 2000ms value. Public and hidden tests passed, only the expected file was touched, recall policy passed with session/message evidence, and no forbidden stale terms appeared.\",\"missing\":[],\"issues\":[]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "tests_passed": true,
+        "public_tests_passed": true,
+        "hidden_tests_passed": true,
+        "expected_files_touched": true,
+        "touched_files_allowed": true,
+        "recall_policy_passed": true,
+        "forbidden_patch_hits": [],
+        "forbidden_output_hits": [],
+        "recall_decision": "used",
+        "citation_hits": [
+          "session",
+          "message"
+        ]
+      }
+    },
+    {
+      "section": "code_recall",
+      "fixture": "recall-correction-retry-cap",
+      "condition": "decant-only",
+      "blog_label": "Decant",
+      "judge": {
+        "score_0_100": 100,
+        "score_0_1": 1,
+        "raw_score_0_100": 100,
+        "cap_0_100": 100,
+        "reason": "Patch exactly updates retryDelayMs from a 5000ms cap to the latest accepted 2000ms cap while preserving the 100ms exponential base schedule. Public and hidden tests pass, only the expected file was touched, recall policy passed with session/message evidence, and forbidden stale/distractor terms were not used.",
+        "missing": [],
+        "issues": [],
+        "raw_text": "{\"score_0_100\":100,\"score_0_1\":1,\"reason\":\"Patch exactly updates retryDelayMs from a 5000ms cap to the latest accepted 2000ms cap while preserving the 100ms exponential base schedule. Public and hidden tests pass, only the expected file was touched, recall policy passed with session/message evidence, and forbidden stale/distractor terms were not used.\",\"missing\":[],\"issues\":[]}"
+      },
+      "deterministic": {
+        "benchmark_passed": true,
+        "tests_passed": true,
+        "public_tests_passed": true,
+        "hidden_tests_passed": true,
+        "expected_files_touched": true,
+        "touched_files_allowed": true,
+        "recall_policy_passed": true,
+        "forbidden_patch_hits": [],
+        "forbidden_output_hits": [],
+        "recall_decision": "used",
+        "citation_hits": [
+          "session",
+          "message"
+        ]
+      }
+    },
+    {
+      "section": "code_recall",
+      "fixture": "recall-synthesis-report",
+      "condition": "code-only",
+      "blog_label": "Default",
+      "judge": {
+        "score_0_100": 35,
+        "score_0_1": 0.35,
+        "raw_score_0_100": 35,
+        "cap_0_100": 65,
+        "reason": "The patch is minimal and preserves summary, and it avoids forbidden distractor terms. However, hidden tests fail on the central required behavior: buildReport must output the accepted synthesized field names failed_test_ids and retry_owner, but the implementation blindly returns the input and therefore preserves camelCase failedTestIDs and retryOwner instead. Public tests only covered summary, so they are weak evidence here.",
+        "missing": [
+          "Mapping or synthesizing child-agent fields to failed_test_ids and retry_owner as expected by the accepted parent synthesis.",
+          "Hidden test correctness for synthesized child-agent fields."
+        ],
+        "issues": [
+          "Hidden tests failed.",
+          "Implementation returns all input fields unchanged rather than following the accepted synthesis contract.",
+          "Does not produce failed_test_ids exactly in the tested synthesis case.",
+          "Does not produce retry_owner exactly in the tested synthesis case."
+        ],
+        "raw_text": "{\"score_0_100\":35,\"score_0_1\":0.35,\"reason\":\"The patch is minimal and preserves summary, and it avoids forbidden distractor terms. However, hidden tests fail on the central required behavior: buildReport must output the accepted synthesized field names failed_test_ids and retry_owner, but the implementation blindly returns the input and therefore preserves camelCase failedTestIDs and retryOwner instead. Public tests only covered summary, so they are weak evidence here.\",\"missing\":[\"Mapping or synthesizing child-agent fields to failed_test_ids and retry_owner as expected by the accepted parent synthesis.\",\"Hidden test correctness for synthesized child-agent fields.\"],\"issues\":[\"Hidden tests failed.\",\"Implementation returns all input fields unchanged rather than following the accepted synthesis contract.\",\"Does not produce failed_test_ids exactly in the tested synthesis case.\",\"Does not produce retry_owner exactly in the tested synthesis case.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": false,
+        "tests_passed": false,
+        "public_tests_passed": true,
+        "hidden_tests_passed": false,
+        "expected_files_touched": true,
+        "touched_files_allowed": true,
+        "recall_policy_passed": true,
+        "forbidden_patch_hits": [],
+        "forbidden_output_hits": [],
+        "recall_decision": "unavailable",
+        "citation_hits": []
+      }
+    },
+    {
+      "section": "code_recall",
+      "fixture": "recall-synthesis-report",
+      "condition": "rlm-transcript-search",
+      "blog_label": "RGB-agent",
+      "judge": {
+        "score_0_100": 30,
+        "score_0_1": 0.3,
+        "raw_score_0_100": 30,
+        "cap_0_100": 65,
+        "reason": "The patch handles preserving summary and conditionally preserving failed_test_ids and retry_owner when already present on input, and it avoids forbidden distractor terms while citing recall evidence. However, hidden tests fail the core benchmark requirement: buildReport did not apply the accepted parent synthesis of child-agent findings when those synthesized fields were expected, producing only the summary instead of including failed_test_ids and retry_owner. Public tests passing are weak evidence here because they only cover summary preservation.",
+        "missing": [
+          "Accepted parent synthesis behavior that adds the synthesized failed_test_ids and retry_owner expected by hidden tests",
+          "Correct hidden-test behavior for synthesized child-agent fields"
+        ],
+        "issues": [
+          "Hidden tests failed, so the main benchmark objective was not satisfied",
+          "Final answer says npm test passed despite the deterministic analyzer reporting tests_passed=false and hidden_tests_passed=false",
+          "Implementation only copies fields from input and does not encode/use the accepted synthesis required by the fixture"
+        ],
+        "raw_text": "{\"score_0_100\":30,\"score_0_1\":0.3,\"reason\":\"The patch handles preserving summary and conditionally preserving failed_test_ids and retry_owner when already present on input, and it avoids forbidden distractor terms while citing recall evidence. However, hidden tests fail the core benchmark requirement: buildReport did not apply the accepted parent synthesis of child-agent findings when those synthesized fields were expected, producing only the summary instead of including failed_test_ids and retry_owner. Public tests passing are weak evidence here because they only cover summary preservation.\",\"missing\":[\"Accepted parent synthesis behavior that adds the synthesized failed_test_ids and retry_owner expected by hidden tests\",\"Correct hidden-test behavior for synthesized child-agent fields\"],\"issues\":[\"Hidden tests failed, so the main benchmark objective was not satisfied\",\"Final answer says npm test passed despite the deterministic analyzer reporting tests_passed=false and hidden_tests_passed=false\",\"Implementation only copies fields from input and does not encode/use the accepted synthesis required by the fixture\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": false,
+        "tests_passed": false,
+        "public_tests_passed": true,
+        "hidden_tests_passed": false,
+        "expected_files_touched": true,
+        "touched_files_allowed": true,
+        "recall_policy_passed": true,
+        "forbidden_patch_hits": [],
+        "forbidden_output_hits": [],
+        "recall_decision": "used",
+        "citation_hits": [
+          "session",
+          "message"
+        ]
+      }
+    },
+    {
+      "section": "code_recall",
+      "fixture": "recall-synthesis-report",
+      "condition": "decant-only",
+      "blog_label": "Decant",
+      "judge": {
+        "score_0_100": 35,
+        "score_0_1": 0.35,
+        "raw_score_0_100": 35,
+        "cap_0_100": 65,
+        "reason": "The patch preserves summary and conditionally preserves failed_test_ids and retry_owner when provided, and it avoids forbidden distractor terms while citing prior context. However, hidden tests fail because buildReport does not apply the accepted parent synthesis of prior child-agent findings when those fields are absent from input; the expected synthesized failed_test_ids and retry_owner are missing. Since the main required behavior is not satisfied and hidden tests fail, this is not benchmark-correct.",
+        "missing": [
+          "Does not populate synthesized failed_test_ids from the accepted parent synthesis when absent from input.",
+          "Does not populate synthesized retry_owner from the accepted parent synthesis when absent from input.",
+          "Fails hidden test keeps synthesized child-agent fields."
+        ],
+        "issues": [
+          "Hidden tests failed despite public test passing.",
+          "Implementation only copies optional input fields rather than following the accepted synthesis.",
+          "Final answer claims synthesized report fields were preserved, but the hidden failure shows they were omitted in the required scenario."
+        ],
+        "raw_text": "{\"score_0_100\":35,\"score_0_1\":0.35,\"reason\":\"The patch preserves summary and conditionally preserves failed_test_ids and retry_owner when provided, and it avoids forbidden distractor terms while citing prior context. However, hidden tests fail because buildReport does not apply the accepted parent synthesis of prior child-agent findings when those fields are absent from input; the expected synthesized failed_test_ids and retry_owner are missing. Since the main required behavior is not satisfied and hidden tests fail, this is not benchmark-correct.\",\"missing\":[\"Does not populate synthesized failed_test_ids from the accepted parent synthesis when absent from input.\",\"Does not populate synthesized retry_owner from the accepted parent synthesis when absent from input.\",\"Fails hidden test keeps synthesized child-agent fields.\"],\"issues\":[\"Hidden tests failed despite public test passing.\",\"Implementation only copies optional input fields rather than following the accepted synthesis.\",\"Final answer claims synthesized report fields were preserved, but the hidden failure shows they were omitted in the required scenario.\"]}"
+      },
+      "deterministic": {
+        "benchmark_passed": false,
+        "tests_passed": false,
+        "public_tests_passed": true,
+        "hidden_tests_passed": false,
+        "expected_files_touched": true,
+        "touched_files_allowed": true,
+        "recall_policy_passed": true,
+        "forbidden_patch_hits": [],
+        "forbidden_output_hits": [],
+        "recall_decision": "used",
+        "citation_hits": [
+          "session",
+          "message"
+        ]
+      }
+    }
+  ]
+}

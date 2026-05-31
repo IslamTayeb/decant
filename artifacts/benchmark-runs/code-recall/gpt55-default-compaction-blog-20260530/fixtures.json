@@ -1,0 +1,38 @@
+[
+  {
+    "id": "recall-unnecessary-slug",
+    "title": "Memory unnecessary slug fix",
+    "recallRole": "unnecessary",
+    "task": "Fix slugify so the local tests pass.\nThe repository and tests are sufficient for this task.\nPrior session context, if available, is expected to be irrelevant and should not override current tests."
+  },
+  {
+    "id": "recall-helpful-schema",
+    "title": "Memory helpful schema parser",
+    "recallRole": "helpful",
+    "task": "Fix parseSchemaHeader so it matches the prior accepted schema parsing decision.\nVisible tests cover the common case, but the important edge case comes from prior work.\nIf prior session context is available, use it as evidence for the intended behavior."
+  },
+  {
+    "id": "recall-harmful-refresh",
+    "title": "Memory harmful refresh queue",
+    "recallRole": "harmful",
+    "task": "Fix enqueueRefresh so same-tenant refresh calls coalesce while different tenants can refresh independently.\nCurrent repo tests and this issue statement are authoritative.\nPrior session context, if available, may include stale guidance from other queue designs and must not override the current task."
+  },
+  {
+    "id": "recall-missing-pagination",
+    "title": "Memory missing pagination fix",
+    "recallRole": "missing",
+    "task": "Fix totalPages so the local pagination tests pass.\nPrior session context, if available, may mention nearby pagination systems but does not contain the answer for this helper.\nDo not invent prior-session evidence when the current repository and tests are sufficient."
+  },
+  {
+    "id": "recall-correction-retry-cap",
+    "title": "Memory temporal correction retry cap",
+    "recallRole": "correction",
+    "task": "Fix retryDelayMs so it matches the latest accepted retry-delay decision.\nVisible tests cover the basic exponential schedule, but the cap comes from prior work.\nIf prior context is available, use the latest correction rather than stale earlier notes."
+  },
+  {
+    "id": "recall-synthesis-report",
+    "title": "Memory synthesis report fields",
+    "recallRole": "synthesis",
+    "task": "Fix buildReport so it matches the accepted parent synthesis of prior child-agent findings.\nVisible tests only cover the summary field; hidden tests require preserving the prior synthesized fields.\nIf prior context is available, cite the accepted synthesis rather than distractor style or docs requests."
+  }
+]

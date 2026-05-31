@@ -15,7 +15,7 @@ Useful options:
 
 ```sh
 bun run benchmark:code-recall -- --fixtures recall-helpful-schema
-bun run benchmark:code-recall -- --conditions code-only,rlm-transcript-search,decant-only,decant-guided-rlm
+bun run benchmark:code-recall -- --conditions default-compaction,rlm-transcript-search,decant-only,decant-guided-rlm
 bun run benchmark:code-recall -- --combine-runs benchmarks/code-recall/runs/run-a,benchmarks/code-recall/runs/run-b --out benchmarks/code-recall/runs/combined
 bun run benchmark:code-recall -- --model "<provider>/<model>" --fixtures recall-helpful-schema --conditions code-only --repeats 1
 bun run benchmark:code-recall -- --repeats 3 --out benchmarks/code-recall/runs/repeats
@@ -28,6 +28,7 @@ bun run benchmark:code-recall -- --out benchmarks/code-recall/runs/manual
 ## Conditions
 
 - `code-only`: no prior context corpus and no decant plugin; solve from the repository and tests.
+- `default-compaction`: old session logs are pasted into a normal OpenCode session, unrelated later turns push them out of the recent tail, normal OpenCode compaction is forced, then the solve turn relies only on the compacted session context.
 - `rlm-transcript-search`: prior sessions are transcript files under `recall/transcripts/`; the agent may use grep/read/bash as an RLM-style recall baseline.
 - `rgb-editable-context`: prior sessions are transcript files first. The agent uses read/grep/bash over that raw context, writes `recall/rgb-context.md`, then a fresh solve turn receives only that rewritten file as prior memory.
 - `decant-only`: prior sessions are seeded as real OpenCode sessions with decant enabled; no transcript corpus is available.
@@ -51,7 +52,8 @@ Each run records:
 - public and hidden `node --test` results.
 - patch bytes, expected touched files, and unexpected file edits.
 - forbidden stale terms in patch/output.
-- transcript reads, irrelevant reads, context-tool calls, and token/cache metrics.
+- transcript reads, irrelevant reads, context-tool calls, token/cache metrics, and estimated normalized cost.
+- memory-prep token/cost split from solve token/cost. For `default-compaction`, memory prep is the compaction summary call; for RGB conditions, memory prep is the context rewrite turn.
 - RGB context presence, preserved session/message IDs, and whether the solve turn avoided raw transcript reads.
 - recall policy: unnecessary prior context should be avoided, helpful context should cite the relevant session/message, and harmful context should not be cited or copied.
 

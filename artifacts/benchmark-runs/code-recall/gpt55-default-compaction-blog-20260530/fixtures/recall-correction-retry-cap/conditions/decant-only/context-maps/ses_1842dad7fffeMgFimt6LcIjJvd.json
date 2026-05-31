@@ -1,0 +1,268 @@
+{
+  "version": 1,
+  "sessionID": "ses_1842dad7fffeMgFimt6LcIjJvd",
+  "directory": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/decant-only/worktree",
+  "worktree": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/decant-only/worktree",
+  "createdAt": 1780193877023,
+  "updatedAt": 1780193877024,
+  "totalTokenEstimate": 2892,
+  "settings": {
+    "placeholderIncludesKeyFacts": true,
+    "placeholderIncludesKeyFactsSource": "default",
+    "toolHistoryCleanup": true,
+    "stablePlaceholders": true,
+    "stablePlaceholdersSource": "system",
+    "stableAnchors": true,
+    "stableAnchorsSource": "system"
+  },
+  "topicOrder": [
+    "task_memory_temporal"
+  ],
+  "topics": {
+    "task_memory_temporal": {
+      "id": "task_memory_temporal",
+      "label": "task_memory_temporal",
+      "summary": "User request: Task: Memory temporal correction retry cap Fix retryDelayMs so it matches the latest accepted retry-delay decision. Visible tests cover the basic exponential schedule, but the cap comes from prior work. If prior context is... Assistant response: I’ll check the implementation and look up prior session context for the retry-delay cap before editing, then verify with focused tests. Tool activity: session_detail, src/retry-delay.mjs, read Assistant response: Prior lookup found both a stale 5000ms retry-delay note and a newer correction, so I’m rejecting the stale note and fetching...",
+      "placeholder": "User request: Task: Memory temporal correction retry cap Fix retryDelayMs so...",
+      "keyFacts": [],
+      "fidelity": "full",
+      "fidelitySource": "system",
+      "messageIDs": [
+        "msg_e7bd252a6001hK5s911gnghKSV",
+        "msg_e7bd252b00019vfcylcwyqNDF8",
+        "msg_e7bd26bfd001d2DiX7W6RxL7jW",
+        "msg_e7bd285d900194Cmgey1721hXw",
+        "msg_e7bd2950a001wbnUCpItEm11k7",
+        "msg_e7bd2a6cd001W4o25aTPqe2o44",
+        "msg_e7bd2b0e70012CmMKvun5mTAm0",
+        "msg_e7bd2ba990016z6jUDMe3agi7m",
+        "msg_e7bd2c77d0014VPkmmSzlnsRzY"
+      ],
+      "tokenEstimate": 2892,
+      "createdAt": 1780193841830,
+      "lastActiveAt": 1780193871741,
+      "commitHashes": []
+    }
+  },
+  "messages": {
+    "msg_e7bd252a6001hK5s911gnghKSV": {
+      "id": "msg_e7bd252a6001hK5s911gnghKSV",
+      "role": "user",
+      "topicID": "task_memory_temporal",
+      "summary": "User request: Task: Memory temporal correction retry cap Fix retryDelayMs so it matches the latest accepted retry-delay decision. Visible tests cover the basic exponential schedule, but the cap comes from prior work. If prior context is...",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 227,
+      "createdAt": 1780193841830,
+      "updatedAt": 1780193877023,
+      "source": "derived",
+      "partTypes": [
+        "text"
+      ],
+      "toolNames": []
+    },
+    "msg_e7bd252b00019vfcylcwyqNDF8": {
+      "id": "msg_e7bd252b00019vfcylcwyqNDF8",
+      "role": "assistant",
+      "topicID": "task_memory_temporal",
+      "summary": "Assistant response: I’ll check the implementation and look up prior session context for the retry-delay cap before editing, then verify with focused tests.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1563,
+      "createdAt": 1780193841840,
+      "updatedAt": 1780193877023,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "text",
+        "tool",
+        "tool",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "session_lookup",
+        "glob",
+        "grep"
+      ]
+    },
+    "msg_e7bd26bfd001d2DiX7W6RxL7jW": {
+      "id": "msg_e7bd26bfd001d2DiX7W6RxL7jW",
+      "role": "assistant",
+      "topicID": "task_memory_temporal",
+      "summary": "Tool activity: session_detail, src/retry-delay.mjs, read",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 486,
+      "createdAt": 1780193848317,
+      "updatedAt": 1780193877023,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "tool",
+        "tool",
+        "tool",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "session_detail",
+        "read"
+      ]
+    },
+    "msg_e7bd285d900194Cmgey1721hXw": {
+      "id": "msg_e7bd285d900194Cmgey1721hXw",
+      "role": "assistant",
+      "topicID": "task_memory_temporal",
+      "summary": "Assistant response: Prior lookup found both a stale 5000ms retry-delay note and a newer correction, so I’m rejecting the stale note and fetching the exact newer decision before changing the cap.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 338,
+      "createdAt": 1780193854937,
+      "updatedAt": 1780193877023,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "text",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "message_detail"
+      ]
+    },
+    "msg_e7bd2950a001wbnUCpItEm11k7": {
+      "id": "msg_e7bd2950a001wbnUCpItEm11k7",
+      "role": "assistant",
+      "topicID": "task_memory_temporal",
+      "summary": "Assistant response: I’ll update `retryDelayMs` to keep the 100ms exponential base while applying the latest accepted 2000ms cap.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 61,
+      "createdAt": 1780193858826,
+      "updatedAt": 1780193877023,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "reasoning",
+        "text",
+        "tool",
+        "step-finish",
+        "patch"
+      ],
+      "toolNames": [
+        "apply_patch"
+      ]
+    },
+    "msg_e7bd2a6cd001W4o25aTPqe2o44": {
+      "id": "msg_e7bd2a6cd001W4o25aTPqe2o44",
+      "role": "assistant",
+      "topicID": "task_memory_temporal",
+      "summary": "Assistant step without text content",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 50,
+      "createdAt": 1780193863373,
+      "updatedAt": 1780193877023,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "glob"
+      ]
+    },
+    "msg_e7bd2b0e70012CmMKvun5mTAm0": {
+      "id": "msg_e7bd2b0e70012CmMKvun5mTAm0",
+      "role": "assistant",
+      "topicID": "task_memory_temporal",
+      "summary": "Tool activity: package.json",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 91,
+      "createdAt": 1780193865959,
+      "updatedAt": 1780193877023,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "read"
+      ]
+    },
+    "msg_e7bd2ba990016z6jUDMe3agi7m": {
+      "id": "msg_e7bd2ba990016z6jUDMe3agi7m",
+      "role": "assistant",
+      "topicID": "task_memory_temporal",
+      "summary": "Assistant response: I’m running the repository test script to confirm the visible schedule still passes after the cap correction.",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 75,
+      "createdAt": 1780193868441,
+      "updatedAt": 1780193877023,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "text",
+        "tool",
+        "step-finish"
+      ],
+      "toolNames": [
+        "bash"
+      ]
+    },
+    "msg_e7bd2c77d0014VPkmmSzlnsRzY": {
+      "id": "msg_e7bd2c77d0014VPkmmSzlnsRzY",
+      "role": "assistant",
+      "topicID": "task_memory_temporal",
+      "summary": "Assistant step without text content",
+      "keyFacts": [],
+      "hidden": false,
+      "hiddenSource": "default",
+      "fidelityOverride": "inherit",
+      "fidelitySource": "default",
+      "tokenEstimate": 1,
+      "createdAt": 1780193871741,
+      "updatedAt": 1780193877023,
+      "source": "derived",
+      "partTypes": [
+        "step-start",
+        "text"
+      ],
+      "toolNames": []
+    }
+  },
+  "pendingRetroactive": {},
+  "lastActiveTopicID": "task_memory_temporal"
+}

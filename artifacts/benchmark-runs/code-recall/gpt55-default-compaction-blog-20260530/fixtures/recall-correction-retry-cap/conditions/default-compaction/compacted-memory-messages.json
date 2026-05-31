@@ -1,0 +1,439 @@
+[
+  {
+    "info": {
+      "id": "msg_e7bd12cb4001XrvEzASYUiDheG",
+      "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+      "role": "user",
+      "time": {
+        "created": 1780193766580
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "You are in a normal OpenCode coding session. Do not call tools or edit files. Reply concisely.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd12cb70010u1WKEQiogVNMs",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd12cb4001XrvEzASYUiDheG",
+        "type": "text",
+        "text": "I am pasting old synthetic coding-session logs into this normal session.\nLater I may ask for a code patch. If this session is compacted, preserve implementation decisions, corrections, rejected stale details, and exact session_id/message IDs that could affect later code changes.\nSome logs are decoys. Current repository files and tests should still override stale prior context.\n\n# Retry delay latest correction\nsession_id: retry_delay_latest_correction_session\ntitle: Retry delay latest correction\n\n## message retry_correction_fact_1\nEarlier retry-delay notes used a 5000ms cap, but that was superseded after mobile clients hit long backoff stalls.\n\n## message retry_correction_fact_2\nLatest accepted decision: cap retryDelayMs at 2000ms while keeping the 100ms exponential base.\n\n---\n# Stale retry delay note\nsession_id: retry_delay_stale_session\ntitle: Stale retry delay note\n\n## message retry_stale_fact_1\nStale earlier note: cap retry delays at 5000ms for batch workers.\n\n---\n# Cache TTL cap distractor\nsession_id: cache_ttl_distractor_session\ntitle: Cache TTL cap distractor\n\n## message ttl_distractor_fact_1\nCache TTLs use namespace-specific caps. This is unrelated to retryDelayMs.\n\n---\n# Memory temporal correction retry cap decoy 1\nsession_id: recall_correction_retry_cap_decoy_1\ntitle: Memory temporal correction retry cap decoy 1\n\n## message decoy_fact_1\nDecoy 1: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n---\n# Memory temporal correction retry cap decoy 2\nsession_id: recall_correction_retry_cap_decoy_2\ntitle: Memory temporal correction retry cap decoy 2\n\n## message decoy_fact_2\nDecoy 2: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n---\n# Memory temporal correction retry cap decoy 3\nsession_id: recall_correction_retry_cap_decoy_3\ntitle: Memory temporal correction retry cap decoy 3\n\n## message decoy_fact_3\nDecoy 3: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n---\n# Memory temporal correction retry cap decoy 4\nsession_id: recall_correction_retry_cap_decoy_4\ntitle: Memory temporal correction retry cap decoy 4\n\n## message decoy_fact_4\nDecoy 4: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n"
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd12cbe001Gjg2SHT08LNnIF",
+      "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+      "role": "assistant",
+      "time": {
+        "created": 1780193766590,
+        "completed": 1780193770214
+      },
+      "parentID": "msg_e7bd12cb4001XrvEzASYUiDheG",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/default-compaction/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/default-compaction/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7295,
+        "input": 7211,
+        "output": 84,
+        "reasoning": 0,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd130ba001Qx4GBSrHQlaizo",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd12cbe001Gjg2SHT08LNnIF",
+        "type": "step-start",
+        "snapshot": "196127c974331c1e79a40fa02e0c953950fe0901"
+      },
+      {
+        "id": "prt_e7bd133f20014tDjBuwst85KhJ",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd12cbe001Gjg2SHT08LNnIF",
+        "type": "text",
+        "text": "Noted. If this becomes relevant later, I’ll treat `retry_delay_latest_correction_session` / `retry_correction_fact_2` as the latest accepted decision: cap `retryDelayMs` at `2000ms` with the `100ms` exponential base, and treat the `5000ms` note plus decoys as stale/unrelated unless current repo files/tests prove otherwise.",
+        "time": {
+          "start": 1780193768434,
+          "end": 1780193769969
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_00341e33b5cad753016a1b99e871c8819b878b065f6798ed03",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd13a6e0011MGhRA0GAwu3Zx",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd12cbe001Gjg2SHT08LNnIF",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "196127c974331c1e79a40fa02e0c953950fe0901",
+        "cost": 0,
+        "tokens": {
+          "total": 7295,
+          "input": 7211,
+          "output": 84,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd13cca001DN40xU1Bguz5Vz",
+      "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+      "role": "user",
+      "time": {
+        "created": 1780193770698
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "You are in a normal OpenCode coding session. Do not call tools or edit files. Reply concisely.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd13cca002skh6rwnAzdrpJv",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd13cca001DN40xU1Bguz5Vz",
+        "type": "text",
+        "text": "Unrelated later thread for recall-correction-retry-cap: note that docs copy can be reviewed later. Acknowledge only."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd13cde00106V442Y95X8Tev",
+      "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+      "role": "assistant",
+      "time": {
+        "created": 1780193770718,
+        "completed": 1780193772260
+      },
+      "parentID": "msg_e7bd13cca001DN40xU1Bguz5Vz",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/default-compaction/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/default-compaction/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7334,
+        "input": 671,
+        "output": 7,
+        "reasoning": 0,
+        "cache": {
+          "read": 6656,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd13f79001KKnrJy80nCD52y",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd13cde00106V442Y95X8Tev",
+        "type": "step-start",
+        "snapshot": "196127c974331c1e79a40fa02e0c953950fe0901"
+      },
+      {
+        "id": "prt_e7bd1419e001IHXw7pAGRsxg8u",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd13cde00106V442Y95X8Tev",
+        "type": "text",
+        "text": "Acknowledged.",
+        "time": {
+          "start": 1780193771934,
+          "end": 1780193772127
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_01dab14752e6ec07016a1b99ebf20c819b97e4491b06ec35a7",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd142be001YFq5lcLMEsnpdK",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd13cde00106V442Y95X8Tev",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "196127c974331c1e79a40fa02e0c953950fe0901",
+        "cost": 0,
+        "tokens": {
+          "total": 7334,
+          "input": 671,
+          "output": 7,
+          "reasoning": 0,
+          "cache": {
+            "read": 6656,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd144ca0015hAP6cejBK42NR",
+      "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+      "role": "user",
+      "time": {
+        "created": 1780193772746
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "You are in a normal OpenCode coding session. Do not call tools or edit files. Reply concisely.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd144ca002E08rv6WxmintVb",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd144ca0015hAP6cejBK42NR",
+        "type": "text",
+        "text": "Another unrelated later thread for recall-correction-retry-cap: no code changes, just remember that demo prose should stay short. Acknowledge only."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd144cf0011mOdf10NH834qt",
+      "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+      "role": "assistant",
+      "time": {
+        "created": 1780193772751,
+        "completed": 1780193774341
+      },
+      "parentID": "msg_e7bd144ca0015hAP6cejBK42NR",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/default-compaction/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/default-compaction/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7377,
+        "input": 202,
+        "output": 7,
+        "reasoning": 0,
+        "cache": {
+          "read": 7168,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd147770016Zji0unKO4ARoK",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd144cf0011mOdf10NH834qt",
+        "type": "step-start",
+        "snapshot": "196127c974331c1e79a40fa02e0c953950fe0901"
+      },
+      {
+        "id": "prt_e7bd14a31001y9tmrveCsFK7IB",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd144cf0011mOdf10NH834qt",
+        "type": "text",
+        "text": "Acknowledged.",
+        "time": {
+          "start": 1780193774129,
+          "end": 1780193774194
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_086bb257eca40e52016a1b99edef1081988775adb3ec066dfc",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd14ada001C8c8fffd76x73b",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd144cf0011mOdf10NH834qt",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "196127c974331c1e79a40fa02e0c953950fe0901",
+        "cost": 0,
+        "tokens": {
+          "total": 7377,
+          "input": 202,
+          "output": 7,
+          "reasoning": 0,
+          "cache": {
+            "read": 7168,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd14cbf001XH5uueBv7U5wF7",
+      "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+      "role": "user",
+      "time": {
+        "created": 1780193774783
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd14cc0001fqrdLJOmUutpDv",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd14cbf001XH5uueBv7U5wF7",
+        "type": "compaction",
+        "auto": false,
+        "tail_start_id": "msg_e7bd13cca001DN40xU1Bguz5Vz"
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd14cc70014zexdfQ8dpd3Qq",
+      "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+      "role": "assistant",
+      "time": {
+        "created": 1780193774791,
+        "completed": 1780193782641
+      },
+      "parentID": "msg_e7bd14cbf001XH5uueBv7U5wF7",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "compaction",
+      "agent": "compaction",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/default-compaction/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/default-compaction/worktree"
+      },
+      "summary": true,
+      "cost": 0,
+      "tokens": {
+        "total": 1406,
+        "input": 1027,
+        "output": 370,
+        "reasoning": 9,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd14eac001IOxBv2uj0Te3sV",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd14cc70014zexdfQ8dpd3Qq",
+        "type": "step-start",
+        "snapshot": "196127c974331c1e79a40fa02e0c953950fe0901"
+      },
+      {
+        "id": "prt_e7bd15037001XeewE844naVUe5",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd14cc70014zexdfQ8dpd3Qq",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0d6ee05ce275a8da016a1b99efaac8819ba74e77504ff9747e"
+          }
+        },
+        "time": {
+          "start": 1780193775671,
+          "end": 1780193776059
+        }
+      },
+      {
+        "id": "prt_e7bd151bd001Lc5t12IjWsNlpc",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd14cc70014zexdfQ8dpd3Qq",
+        "type": "text",
+        "text": "## Goal\n- Preserve relevant prior synthetic coding-session context for possible later code patch work.\n\n## Constraints & Preferences\n- Current repository files and tests override stale prior context.\n- Preserve implementation decisions, corrections, rejected stale details, and exact `session_id`/message IDs that could affect later code changes.\n\n## Progress\n### Done\n- Identified latest accepted retry-delay decision from pasted logs.\n\n### In Progress\n- (none)\n\n### Blocked\n- (none)\n\n## Key Decisions\n- `retry_delay_latest_correction_session` / `retry_correction_fact_2`: cap `retryDelayMs` at `2000ms` while keeping the `100ms` exponential base.\n- `retry_delay_stale_session` / `retry_stale_fact_1`: `5000ms` retry delay cap is stale and superseded.\n- `cache_ttl_distractor_session` / `ttl_distractor_fact_1`: cache TTL namespace caps are unrelated to `retryDelayMs`.\n- `recall_correction_retry_cap_decoy_1` through `recall_correction_retry_cap_decoy_4`: decoys mention `src/retry-delay.mjs` but do not contain the accepted fix.\n\n## Next Steps\n- If asked for a patch, inspect current repo files/tests before applying the `2000ms` `retryDelayMs` cap.\n\n## Critical Context\n- Latest accepted retry-delay behavior: `retryDelayMs` cap is `2000ms`, exponential base remains `100ms`.\n- Earlier `5000ms` cap caused long mobile-client backoff stalls and should not be used unless current repo/tests require otherwise.\n\n## Relevant Files\n- `src/retry-delay.mjs`: mentioned by decoys and likely relevant to retry delay cap if patch is requested.",
+        "time": {
+          "start": 1780193776061,
+          "end": 1780193782542
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0d6ee05ce275a8da016a1b99f010fc819b8baa51548e8b0e3c",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd16b47001no85Cicmon5Mc6",
+        "sessionID": "ses_1842ed364ffeFirazXm7bcFske",
+        "messageID": "msg_e7bd14cc70014zexdfQ8dpd3Qq",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "196127c974331c1e79a40fa02e0c953950fe0901",
+        "cost": 0,
+        "tokens": {
+          "total": 1406,
+          "input": 1027,
+          "output": 370,
+          "reasoning": 9,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

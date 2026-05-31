@@ -1,0 +1,844 @@
+[
+  {
+    "info": {
+      "id": "msg_e7bd45d6a001p38xmL9ugH0KNP",
+      "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+      "role": "user",
+      "time": {
+        "created": 1780193975658
+      },
+      "summary": {
+        "diffs": [
+          {
+            "file": "src/report.mjs",
+            "patch": "Index: src/report.mjs\n===================================================================\n--- src/report.mjs\t\n+++ src/report.mjs\t\n@@ -1,5 +1,15 @@\n export function buildReport(input) {\n-  return {\n+  const report = {\n     summary: input.summary,\n   };\n+\n+  if (Object.hasOwn(input, \"failed_test_ids\")) {\n+    report.failed_test_ids = input.failed_test_ids;\n+  }\n+\n+  if (Object.hasOwn(input, \"retry_owner\")) {\n+    report.retry_owner = input.retry_owner;\n+  }\n+\n+  return report;\n }\n",
+            "additions": 11,
+            "deletions": 1,
+            "status": "modified"
+          }
+        ]
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "You are solving a code-recall benchmark. Edit source files as needed, run focused tests if useful, and do not commit changes. Do not edit files under test/. Current repository files and tests are authoritative. Prior session maps may be useful, irrelevant, or stale. Use decant session tools when prior context may affect the fix. No transcript corpus is available; do not use transcript-file search as memory."
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd45d6b002Ikbo2d6fn1TnZc",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd45d6a001p38xmL9ugH0KNP",
+        "type": "text",
+        "text": "Task: Memory synthesis report fields\n\nFix buildReport so it matches the accepted parent synthesis of prior child-agent findings.\nVisible tests only cover the summary field; hidden tests require preserving the prior synthesized fields.\nIf prior context is available, cite the accepted synthesis rather than distractor style or docs requests.\n\nNo transcript corpus is available in this condition.\nUse session_lookup/session_detail/message_detail when a prior session may affect the fix.\nIf memory is irrelevant, avoid pulling it into the patch. If memory is stale, explicitly reject it.\n\nAfter editing, respond with compact JSON only:\n{\"summary\":\"...\",\"tests\":\"...\",\"recall_decision\":\"used|ignored|rejected|abstained|unavailable\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}\nIf you used a prior session, cite the exact session_id and message_id. If memory was irrelevant, stale, or unavailable, leave evidence fields empty and explain the decision briefly."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd45d6f001yCI6g2PzEvIF7P",
+      "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+      "role": "assistant",
+      "time": {
+        "created": 1780193975663,
+        "completed": 1780193979952
+      },
+      "parentID": "msg_e7bd45d6a001p38xmL9ugH0KNP",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7599,
+        "input": 7431,
+        "output": 152,
+        "reasoning": 16,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd45fd4001MyENWJQp8eutnc",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd45d6f001yCI6g2PzEvIF7P",
+        "type": "step-start",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886"
+      },
+      {
+        "id": "prt_e7bd4618b001Tacv0nLPrUfWHA",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd45d6f001yCI6g2PzEvIF7P",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_02bd997d8b5d62c6016a1b9ab8b71881989e03c35e8bd9f2ea"
+          }
+        },
+        "time": {
+          "start": 1780193976715,
+          "end": 1780193977370
+        }
+      },
+      {
+        "id": "prt_e7bd4641e001KqCfp6V2MCzkuq",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd45d6f001yCI6g2PzEvIF7P",
+        "type": "text",
+        "text": "I’ll inspect the report builder and look up prior synthesis context before editing, since the task explicitly says hidden tests depend on previously accepted synthesized fields.",
+        "time": {
+          "start": 1780193977374,
+          "end": 1780193979758
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_02bd997d8b5d62c6016a1b9ab95e84819898e6fb680ac43a0f",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd46d70001Tt5WXaoQ9PPz0y",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd45d6f001yCI6g2PzEvIF7P",
+        "type": "tool",
+        "callID": "call_mjiFSBqIKTIYQF1BZuCPtzAw",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "**/*",
+            "path": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+          },
+          "output": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/opencode\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/refs/heads/main\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/logs/HEAD\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/logs/refs/heads/main\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/COMMIT_EDITMSG\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/index\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/aa/1713e0a62cb9093faefd432f5bb757d9fcc886\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/d5/e8846680e066f77fce9a86608548477dbba73b\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/4a/ff927b63ac874fe09c9bc2f9f29551cd65c15f\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/8a/e8686291919c5f2171f37e75961d8296857441\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/74/79a884b42ff97fccf09dba314d094bd4343a17\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/39/d6c807ca57e9dddded0ccf02a9ffa8cb802613\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/objects/57/d551e8ee61243950fb0fe8265de3d5e51fa266\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/config\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/HEAD\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/push-to-checkout.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/description\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/update.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-push.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-applypatch.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-merge-commit.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/post-update.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/prepare-commit-msg.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-receive.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/fsmonitor-watchman.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/applypatch-msg.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-commit.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/sendemail-validate.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/pre-rebase.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/hooks/commit-msg.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/.git/info/exclude\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/test/report.test.mjs\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/package.json\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs",
+          "title": "",
+          "metadata": {
+            "count": 34,
+            "truncated": false
+          },
+          "time": {
+            "start": 1780193979823,
+            "end": 1780193979862
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_02bd997d8b5d62c6016a1b9abbbe888198b84df492e7b5ee3b"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd46db10010D796kMbjH8ATA",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd45d6f001yCI6g2PzEvIF7P",
+        "type": "tool",
+        "callID": "call_zCSMKMPK2Ydi7COQaxnT4dKw",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "Memory synthesis report fields buildReport accepted parent synthesis child-agent findings",
+            "limit": 5
+          },
+          "output": "{\n  \"query\": \"Memory synthesis report fields buildReport accepted parent synthesis child-agent findings\",\n  \"hint\": \"Use session_detail in a sub-agent (Task tool) for deeper investigation.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_1842ba29effedVUGz0sA42LFvT\",\n      \"title\": \"recall-synthesis-report decant-only\",\n      \"updatedAt\": 1780193975713,\n      \"matchedTopicIDs\": [\n        \"task_memory_synthesis\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"task_memory_synthesis\",\n          \"label\": \"task_memory_synthesis\",\n          \"summary\": \"User request: Task: Memory synthesis report fields Fix buildReport so it matches the accepted parent synthesis of prior child-agent findings. Visible tests only cover the summary field; hidden tests require preserving the prior synthesiz... Assistant step without text content\",\n          \"compressedSummary\": \"[Topic summary: task_memory_synthesis] User request: Task: Memory synthesis report fields Fix buildReport so it matches the accepted parent synthesis of prior child-agent findings. Visible tests only cover the summary field; hidden tests require preserving the prior synthesiz... Assistant step without text content\",\n          \"placeholder\": \"User request: Task: Memory synthesis report fields Fix buildReport so it matc...\",\n          \"tokenEstimate\": 241,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1842baa9affeePl5gy2XPy1Mh7\",\n      \"title\": \"Style reviewer child report request\",\n      \"updatedAt\": 1780193975338,\n      \"matchedTopicIDs\": [\n        \"style_reviewer_child\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"style_reviewer_child\",\n          \"label\": \"style_reviewer_child\",\n          \"summary\": \"User request: # Style reviewer child report request session_id: report_style_reviewer_session title: Style reviewer child report request ## message style_reviewer_fact_1 The style reviewer child wanted output fields alphabetized. This wa... Assistant step without text content\",\n          \"compressedSummary\": \"[Topic summary: style_reviewer_child] User request: # Style reviewer child report request session_id: report_style_reviewer_session title: Style reviewer child report request ## message style_reviewer_fact_1 The style reviewer child wanted output fields alphabetized. This wa... Assistant step without text content\",\n          \"placeholder\": \"User request: # Style reviewer child report request session_id: report_style_...\",\n          \"tokenEstimate\": 68,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1842bb291ffevhNmbdZab5PgAs\",\n      \"title\": \"Docs writer child report request\",\n      \"updatedAt\": 1780193973232,\n      \"matchedTopicIDs\": [\n        \"docs_writer_child\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"docs_writer_child\",\n          \"label\": \"docs_writer_child\",\n          \"summary\": \"User request: # Docs writer child report request session_id: report_docs_writer_session title: Docs writer child report request ## message docs_writer_fact_1 The docs writer child requested shorter prose and no debugging identifiers in p... Assistant step without text content\",\n          \"compressedSummary\": \"[Topic summary: docs_writer_child] User request: # Docs writer child report request session_id: report_docs_writer_session title: Docs writer child report request ## message docs_writer_fact_1 The docs writer child requested shorter prose and no debugging identifiers in p... Assistant step without text content\",\n          \"placeholder\": \"User request: # Docs writer child report request session_id: report_docs_writ...\",\n          \"tokenEstimate\": 62,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    },\n    {\n      \"sessionID\": \"ses_1842bbe80ffea4Wu3Z6eGXSBTt\",\n      \"title\": \"Parent synthesis of child report findings\",\n      \"updatedAt\": 1780193971021,\n      \"matchedTopicIDs\": [\n        \"parent_synthesis_child\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"parent_synthesis_child\",\n          \"label\": \"parent_synthesis_child\",\n          \"summary\": \"User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin... Assistant step without text content\",\n          \"compressedSummary\": \"[Topic summary: parent_synthesis_child] User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin... Assistant step without text content\",\n          \"placeholder\": \"User request: # Parent synthesis of child report findings session_id: report_...\",\n          \"tokenEstimate\": 120,\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": [],\n          \"activeForCommit\": false\n        }\n      ]\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780193979831,
+            "end": 1780193979849
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_02bd997d8b5d62c6016a1b9abbbe988198a2865eadb3c119e5"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd46e050013LAXq8Hy9OQiZs",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd45d6f001yCI6g2PzEvIF7P",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886",
+        "cost": 0,
+        "tokens": {
+          "total": 7599,
+          "input": 7431,
+          "output": 152,
+          "reasoning": 16,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd46e33001awH5iJiG69ObM5",
+      "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+      "role": "assistant",
+      "time": {
+        "created": 1780193979955,
+        "completed": 1780193986452
+      },
+      "parentID": "msg_e7bd45d6a001p38xmL9ugH0KNP",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11092,
+        "input": 3628,
+        "output": 284,
+        "reasoning": 12,
+        "cache": {
+          "read": 7168,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd4704c001Rww7E3qNpbUE8J",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd46e33001awH5iJiG69ObM5",
+        "type": "step-start",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886"
+      },
+      {
+        "id": "prt_e7bd4722b001r0nHfUdiCB0nEQ",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd46e33001awH5iJiG69ObM5",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_09e04f8ba122720d016a1b9abcfa3c819abc36f682182488b5"
+          }
+        },
+        "time": {
+          "start": 1780193980971,
+          "end": 1780193986310
+        }
+      },
+      {
+        "id": "prt_e7bd48708001u9ZuBo0eNRZlS9",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd46e33001awH5iJiG69ObM5",
+        "type": "tool",
+        "callID": "call_7wjA9huX4tbrKhwCtSs1mskf",
+        "tool": "session_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1842bbe80ffea4Wu3Z6eGXSBTt",
+            "topic_id": "parent_synthesis_child",
+            "detail": "messages"
+          },
+          "output": "{\n  \"session_id\": \"ses_1842bbe80ffea4Wu3Z6eGXSBTt\",\n  \"topic_id\": \"parent_synthesis_child\",\n  \"detail\": \"messages\",\n  \"ok\": true,\n  \"topic\": {\n    \"id\": \"parent_synthesis_child\",\n    \"label\": \"parent_synthesis_child\",\n    \"compressedSummary\": \"[Topic summary: parent_synthesis_child] User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin... Assistant step without text content\",\n    \"tokenEstimate\": 120,\n    \"messageCount\": 2\n  },\n  \"messages\": [\n    {\n      \"id\": \"msg_e7bd44193001crBjOEmVPWGEhD\",\n      \"role\": \"user\",\n      \"summary\": \"User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin...\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 119,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1780193968531\n    },\n    {\n      \"id\": \"msg_e7bd4419e001u9fS7FXwDSuqdM\",\n      \"role\": \"assistant\",\n      \"summary\": \"Assistant step without text content\",\n      \"keyFacts\": [],\n      \"tokenEstimate\": 1,\n      \"hidden\": false,\n      \"fidelityOverride\": \"inherit\",\n      \"createdAt\": 1780193968542\n    }\n  ],\n  \"next_step\": \"Call message_detail with one message_id to fetch a full message only if needed.\"\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780193986318,
+            "end": 1780193986327
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_09e04f8ba122720d016a1b9ac24f6c819abd636b545760f4e5"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd48718001n1T7uwmIq0Gi7t",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd46e33001awH5iJiG69ObM5",
+        "type": "tool",
+        "callID": "call_ZAFaYzMmVfEEgtcgx7uwsjYg",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs",
+            "offset": 1,
+            "limit": 200
+          },
+          "output": "<path>./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs</path>\n<type>file</type>\n<content>\n1: export function buildReport(input) {\n2:   return {\n3:     summary: input.summary,\n4:   };\n5: }\n\n(End of file - total 5 lines)\n</content>",
+          "title": "src/report.mjs",
+          "metadata": {
+            "preview": "export function buildReport(input) {\n  return {\n    summary: input.summary,\n  };\n}",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1780193986332,
+            "end": 1780193986371
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_09e04f8ba122720d016a1b9ac24f80819a9ace2558e5563e76"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd4871e001NYs2MBweD3DH01",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd46e33001awH5iJiG69ObM5",
+        "type": "tool",
+        "callID": "call_rlbgvWLCDAYz7EwW0y4KTugc",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/test/report.test.mjs",
+            "offset": 1,
+            "limit": 200
+          },
+          "output": "<path>./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/test/report.test.mjs</path>\n<type>file</type>\n<content>\n1: import test from \"node:test\";\n2: import assert from \"node:assert/strict\";\n3: import { buildReport } from \"../src/report.mjs\";\n4: \n5: test(\"keeps report summary\", () => {\n6:   assert.deepEqual(buildReport({ summary: \"failed smoke run\" }), {\n7:     summary: \"failed smoke run\",\n8:   });\n9: });\n\n(End of file - total 9 lines)\n</content>",
+          "title": "test/report.test.mjs",
+          "metadata": {
+            "preview": "import test from \"node:test\";\nimport assert from \"node:assert/strict\";\nimport { buildReport } from \"../src/report.mjs\";\n\ntest(\"keeps report summary\", () => {\n  assert.deepEqual(buildReport({ summary: \"failed smoke run\" }), {\n    summary: \"failed smoke run\",\n  });\n});",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1780193986336,
+            "end": 1780193986372
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_09e04f8ba122720d016a1b9ac24f88819aa34f1c5257fd0b47"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd48721001ay0tsnbWZoRww1",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd46e33001awH5iJiG69ObM5",
+        "type": "tool",
+        "callID": "call_tjefbj4xaIfwLK7G1ZMVhhze",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/package.json",
+            "offset": 1,
+            "limit": 100
+          },
+          "output": "<path>./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/package.json</path>\n<type>file</type>\n<content>\n1: {\n2:   \"type\": \"module\",\n3:   \"scripts\": { \"test\": \"node --test\" }\n4: }\n\n(End of file - total 4 lines)\n</content>",
+          "title": "package.json",
+          "metadata": {
+            "preview": "{\n  \"type\": \"module\",\n  \"scripts\": { \"test\": \"node --test\" }\n}",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1780193986340,
+            "end": 1780193986369
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_09e04f8ba122720d016a1b9ac24f8c819abb8906f6773d9fcf"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd4876b001xlIkvyEk0pd0EO",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd46e33001awH5iJiG69ObM5",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886",
+        "cost": 0,
+        "tokens": {
+          "total": 11092,
+          "input": 3628,
+          "output": 284,
+          "reasoning": 12,
+          "cache": {
+            "read": 7168,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd48796001nikb6aLhw1D8pn",
+      "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+      "role": "assistant",
+      "time": {
+        "created": 1780193986454,
+        "completed": 1780193989912
+      },
+      "parentID": "msg_e7bd45d6a001p38xmL9ugH0KNP",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12021,
+        "input": 1669,
+        "output": 104,
+        "reasoning": 8,
+        "cache": {
+          "read": 10240,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd489fa0015SMc2R9ucUtoCW",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd48796001nikb6aLhw1D8pn",
+        "type": "step-start",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886"
+      },
+      {
+        "id": "prt_e7bd48ca1001O2J7icNp6WfSNU",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd48796001nikb6aLhw1D8pn",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_099e19fc46fc6d34016a1b9ac3c108819a8185234c5b6226b6"
+          }
+        },
+        "time": {
+          "start": 1780193987745,
+          "end": 1780193988196
+        }
+      },
+      {
+        "id": "prt_e7bd48e670013Uz9sA7LqgfM7a",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd48796001nikb6aLhw1D8pn",
+        "type": "text",
+        "text": "The relevant prior session is a parent synthesis, not the style/docs distractors. I’m fetching the exact accepted message so the patch preserves those fields rather than guessing from the visible summary-only test.",
+        "time": {
+          "start": 1780193988199,
+          "end": 1780193988995
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_099e19fc46fc6d34016a1b9ac42980819abfbcd9bc6dfbf400",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd49185001gxgSRW5GNB5M1U",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd48796001nikb6aLhw1D8pn",
+        "type": "tool",
+        "callID": "call_fFc4ORCgzVgI5XSxP8CSiDGs",
+        "tool": "message_detail",
+        "state": {
+          "status": "completed",
+          "input": {
+            "session_id": "ses_1842bbe80ffea4Wu3Z6eGXSBTt",
+            "message_id": "msg_e7bd44193001crBjOEmVPWGEhD"
+          },
+          "output": "{\n  \"session_id\": \"ses_1842bbe80ffea4Wu3Z6eGXSBTt\",\n  \"message_id\": \"msg_e7bd44193001crBjOEmVPWGEhD\",\n  \"ok\": true,\n  \"message\": {\n    \"id\": \"msg_e7bd44193001crBjOEmVPWGEhD\",\n    \"role\": \"user\",\n    \"topicID\": \"parent_synthesis_child\",\n    \"topicLabel\": \"parent_synthesis_child\",\n    \"summary\": \"User request: # Parent synthesis of child report findings session_id: report_parent_synthesis_session title: Parent synthesis of child report findings ## message report_synthesis_fact_1 The parent accepted the test-investigator child fin...\",\n    \"keyFacts\": [],\n    \"tokenEstimate\": 119,\n    \"createdAt\": 1780193968531,\n    \"parts\": [\n      {\n        \"id\": \"prt_e7bd44197001QEIUmkeq0I3g7M\",\n        \"type\": \"text\",\n        \"text\": \"# Parent synthesis of child report findings\\nsession_id: report_parent_synthesis_session\\ntitle: Parent synthesis of child report findings\\n\\n## message report_synthesis_fact_1\\nThe parent accepted the test-investigator child finding: keep failed_test_ids in final reports so later agents can reproduce exact failures.\\n\\n## message report_synthesis_fact_2\\nThe parent also accepted the infra child finding: keep retry_owner so follow-up retries route to the responsible on-call team.\\n\"\n      }\n    ]\n  }\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780193989796,
+            "end": 1780193989820
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_099e19fc46fc6d34016a1b9ac4f180819aa2dbe115beb9d1b5"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd494ec001VWK0fU0igF65Hi",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd48796001nikb6aLhw1D8pn",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886",
+        "cost": 0,
+        "tokens": {
+          "total": 12021,
+          "input": 1669,
+          "output": 104,
+          "reasoning": 8,
+          "cache": {
+            "read": 10240,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd4951a001Wh6Nv21tN2BHZY",
+      "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+      "role": "assistant",
+      "time": {
+        "created": 1780193989914,
+        "completed": 1780193997574
+      },
+      "parentID": "msg_e7bd45d6a001p38xmL9ugH0KNP",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12723,
+        "input": 590,
+        "output": 235,
+        "reasoning": 122,
+        "cache": {
+          "read": 11776,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd4975a001GYQpL2lfhmxOaW",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4951a001Wh6Nv21tN2BHZY",
+        "type": "step-start",
+        "snapshot": "aa1713e0a62cb9093faefd432f5bb757d9fcc886"
+      },
+      {
+        "id": "prt_e7bd4999e001Dmv7BWw0nEmHNq",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4951a001Wh6Nv21tN2BHZY",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0d8ed9a5b535f069016a1b9ac70c9c8199baaa9524c313786f"
+          }
+        },
+        "time": {
+          "start": 1780193991070,
+          "end": 1780193993311
+        }
+      },
+      {
+        "id": "prt_e7bd4a264001JIsNAwJ7I6viNE",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4951a001Wh6Nv21tN2BHZY",
+        "type": "text",
+        "text": "I’m updating `buildReport` to keep only the synthesized report fields from the accepted parent context, while preserving the visible behavior of omitting absent fields.",
+        "time": {
+          "start": 1780193993316,
+          "end": 1780193994087
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0d8ed9a5b535f069016a1b9ac9467c819985120bf4744b70ee",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd4a569001BEspQnh1bC6hMi",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4951a001Wh6Nv21tN2BHZY",
+        "type": "tool",
+        "callID": "call_DGdWVC6ZzT5mkfkiSn8SP2pp",
+        "tool": "apply_patch",
+        "state": {
+          "status": "completed",
+          "input": {
+            "patchText": "*** Begin Patch\n*** Update File: ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n@@\n export function buildReport(input) {\n-  return {\n+  const report = {\n     summary: input.summary,\n   };\n+\n+  if (Object.hasOwn(input, \"failed_test_ids\")) {\n+    report.failed_test_ids = input.failed_test_ids;\n+  }\n+\n+  if (Object.hasOwn(input, \"retry_owner\")) {\n+    report.retry_owner = input.retry_owner;\n+  }\n+\n+  return report;\n }\n*** End Patch"
+          },
+          "output": "Success. Updated the following files:\nM src/report.mjs",
+          "title": "Success. Updated the following files:\nM src/report.mjs",
+          "metadata": {
+            "diff": "Index: ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n===================================================================\n--- ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n+++ ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n@@ -1,5 +1,15 @@\n export function buildReport(input) {\n-  return {\n+  const report = {\n     summary: input.summary,\n   };\n+\n+  if (Object.hasOwn(input, \"failed_test_ids\")) {\n+    report.failed_test_ids = input.failed_test_ids;\n+  }\n+\n+  if (Object.hasOwn(input, \"retry_owner\")) {\n+    report.retry_owner = input.retry_owner;\n+  }\n+\n+  return report;\n }\n\n",
+            "files": [
+              {
+                "filePath": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs",
+                "relativePath": "src/report.mjs",
+                "type": "update",
+                "patch": "Index: ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n===================================================================\n--- ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n+++ ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs\n@@ -1,5 +1,15 @@\n export function buildReport(input) {\n-  return {\n+  const report = {\n     summary: input.summary,\n   };\n+\n+  if (Object.hasOwn(input, \"failed_test_ids\")) {\n+    report.failed_test_ids = input.failed_test_ids;\n+  }\n+\n+  if (Object.hasOwn(input, \"retry_owner\")) {\n+    report.retry_owner = input.retry_owner;\n+  }\n+\n+  return report;\n }\n",
+                "additions": 11,
+                "deletions": 1
+              }
+            ],
+            "diagnostics": {},
+            "truncated": false
+          },
+          "time": {
+            "start": 1780193997425,
+            "end": 1780193997436
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0d8ed9a5b535f069016a1b9aca03dc81998c5d5a80b306e4f0"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd4b2d20016wB6MQPKw21I0r",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4951a001Wh6Nv21tN2BHZY",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "26ce187bcfc55cbe2a09f5581a2a7d040ef0015a",
+        "cost": 0,
+        "tokens": {
+          "total": 12723,
+          "input": 590,
+          "output": 235,
+          "reasoning": 122,
+          "cache": {
+            "read": 11776,
+            "write": 0
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd4b30500176C8xSQmt3GGLz",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4951a001Wh6Nv21tN2BHZY",
+        "type": "patch",
+        "hash": "aa1713e0a62cb9093faefd432f5bb757d9fcc886",
+        "files": [
+          "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/src/report.mjs"
+        ]
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd4b308001aORY6sG3xQavxR",
+      "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+      "role": "assistant",
+      "time": {
+        "created": 1780193997576,
+        "completed": 1780194000756
+      },
+      "parentID": "msg_e7bd45d6a001p38xmL9ugH0KNP",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12829,
+        "input": 458,
+        "output": 83,
+        "reasoning": 0,
+        "cache": {
+          "read": 12288,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd4b5fa001Sz8NYCFuBzBCzv",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4b308001aORY6sG3xQavxR",
+        "type": "step-start",
+        "snapshot": "26ce187bcfc55cbe2a09f5581a2a7d040ef0015a"
+      },
+      {
+        "id": "prt_e7bd4b8b1001olM4iIx8MKIYSe",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4b308001aORY6sG3xQavxR",
+        "type": "tool",
+        "callID": "call_gmLXzSooDp5cRC2JgDdq4HUa",
+        "tool": "bash",
+        "state": {
+          "status": "completed",
+          "input": {
+            "command": "npm test",
+            "timeout": 120000,
+            "workdir": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+            "description": "Runs Node test suite"
+          },
+          "output": "\n> test\n> node --test\n\n✔ keeps report summary (1.17625ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 78.742584\n",
+          "title": "Runs Node test suite",
+          "metadata": {
+            "output": "\n> test\n> node --test\n\n✔ keeps report summary (1.17625ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 78.742584\n",
+            "exit": 0,
+            "description": "Runs Node test suite",
+            "truncated": false
+          },
+          "time": {
+            "start": 1780194000677,
+            "end": 1780194000687
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_02a50e22dc4e0f23016a1b9acef484819b8dc24d8436975913"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd4bf55001BfJa3pjHcLj7CZ",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4b308001aORY6sG3xQavxR",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "26ce187bcfc55cbe2a09f5581a2a7d040ef0015a",
+        "cost": 0,
+        "tokens": {
+          "total": 12829,
+          "input": 458,
+          "output": 83,
+          "reasoning": 0,
+          "cache": {
+            "read": 12288,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd4bf76001t5hBqvhg70OYfw",
+      "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+      "role": "assistant",
+      "time": {
+        "created": 1780194000758,
+        "completed": 1780194004024
+      },
+      "parentID": "msg_e7bd45d6a001p38xmL9ugH0KNP",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13024,
+        "input": 624,
+        "output": 89,
+        "reasoning": 23,
+        "cache": {
+          "read": 12288,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd4c1f6001rEWzQMydpPX5mv",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4bf76001t5hBqvhg70OYfw",
+        "type": "step-start",
+        "snapshot": "26ce187bcfc55cbe2a09f5581a2a7d040ef0015a"
+      },
+      {
+        "id": "prt_e7bd4c3d9001U5XvGZXOC520de",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4bf76001t5hBqvhg70OYfw",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0c08b535ca4243a5016a1b9ad1dd108199986665d4437de374"
+          }
+        },
+        "time": {
+          "start": 1780194001881,
+          "end": 1780194002740
+        }
+      },
+      {
+        "id": "prt_e7bd4c738001CROOFeooBwKHDh",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4bf76001t5hBqvhg70OYfw",
+        "type": "text",
+        "text": "{\"summary\":\"Updated buildReport to preserve accepted synthesized fields failed_test_ids and retry_owner when present, while keeping absent fields omitted.\",\"tests\":\"npm test\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"ses_1842bbe80ffea4Wu3Z6eGXSBTt\",\"message_id\":\"msg_e7bd44193001crBjOEmVPWGEhD\"}}",
+        "time": {
+          "start": 1780194002744,
+          "end": 1780194003938
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0c08b535ca4243a5016a1b9ad2be508199837eb8233f42ea1d",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd4cc13001yJxpkVnzac0Md4",
+        "sessionID": "ses_1842ba29effedVUGz0sA42LFvT",
+        "messageID": "msg_e7bd4bf76001t5hBqvhg70OYfw",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "26ce187bcfc55cbe2a09f5581a2a7d040ef0015a",
+        "cost": 0,
+        "tokens": {
+          "total": 13024,
+          "input": 624,
+          "output": 89,
+          "reasoning": 23,
+          "cache": {
+            "read": 12288,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

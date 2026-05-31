@@ -1,0 +1,647 @@
+[
+  {
+    "info": {
+      "id": "msg_e7bd1d366001gmjdkA2Gva5MSj",
+      "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+      "role": "user",
+      "time": {
+        "created": 1780193809254
+      },
+      "summary": {
+        "diffs": [
+          {
+            "file": "src/retry-delay.mjs",
+            "patch": "Index: src/retry-delay.mjs\n===================================================================\n--- src/retry-delay.mjs\t\n+++ src/retry-delay.mjs\t\n@@ -1,3 +1,3 @@\n export function retryDelayMs(attempt) {\n-  return Math.min(5000, 100 * 2 ** attempt);\n+  return Math.min(2000, 100 * 2 ** attempt);\n }\n",
+            "additions": 1,
+            "deletions": 1,
+            "status": "modified"
+          }
+        ]
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5"
+      },
+      "system": "You are solving a code-recall benchmark. Edit source files as needed, run focused tests if useful, and do not commit changes. Do not edit files under test/. Current repository files and tests are authoritative. Prior transcript files may be useful, irrelevant, or stale. Use RLM-style transcript search with glob/grep/read and optional read-only bash only when it helps the coding task. Do not use decant session tools."
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd1d369001ubxua2O91soxPB",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1d366001gmjdkA2Gva5MSj",
+        "type": "text",
+        "text": "Task: Memory temporal correction retry cap\n\nFix retryDelayMs so it matches the latest accepted retry-delay decision.\nVisible tests cover the basic exponential schedule, but the cap comes from prior work.\nIf prior context is available, use the latest correction rather than stale earlier notes.\n\nOptional transcript corpus: ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts. Prior context may be useful, irrelevant, or stale. Search only if it helps; if it is irrelevant or stale, ignore it.\n\nAfter editing, respond with compact JSON only:\n{\"summary\":\"...\",\"tests\":\"...\",\"recall_decision\":\"used|ignored|rejected|abstained|unavailable\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}\nIf you used a prior session, cite the exact session_id and message_id. If memory was irrelevant, stale, or unavailable, leave evidence fields empty and explain the decision briefly."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd1d39300119Sr1zR7cqgV07",
+      "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+      "role": "assistant",
+      "time": {
+        "created": 1780193809299,
+        "completed": 1780193814457
+      },
+      "parentID": "msg_e7bd1d366001gmjdkA2Gva5MSj",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7174,
+        "input": 6974,
+        "output": 200,
+        "reasoning": 0,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd1d7b6001w1D1Vi1iluedYl",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1d39300119Sr1zR7cqgV07",
+        "type": "step-start",
+        "snapshot": "f39399ac208dd6bd87b23f596df08112197a58cf"
+      },
+      {
+        "id": "prt_e7bd1d91d001bZc50jnHsEGRDw",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1d39300119Sr1zR7cqgV07",
+        "type": "text",
+        "text": "I’ll inspect the retry implementation and search the provided transcript corpus for the latest accepted cap decision before editing.",
+        "time": {
+          "start": 1780193810717,
+          "end": 1780193814295
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0d68681da71dc343016a1b9a12b760819b87e6d3cb00ac64e4",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd1e71b001F1wuwg2UGbLSjQ",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1d39300119Sr1zR7cqgV07",
+        "type": "tool",
+        "callID": "call_du3WxpapapHV56AEY8JGwar3",
+        "tool": "glob",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "**/*",
+            "path": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+          },
+          "output": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/opencode\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/refs/heads/main\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/logs/HEAD\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/logs/refs/heads/main\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/COMMIT_EDITMSG\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/be/1d83a76d6068be7c90ccdbb06e02f525ac6c4f\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/index\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/be/e238261d78bb687f1f8d28932ea52c74f885df\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/f3/9399ac208dd6bd87b23f596df08112197a58cf\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/1c/ab0ddb08c9a5ba61c82d8f64adb8e4fcc10840\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/27/a789f188bde8fb0568b6ca7a0dabe5df7ebb1d\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/49/3e3776deb73df3d9c1b327f68af5a670322ab4\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/18/9f7bf68fc9abf5e1f8da7e30a9856468a87c2e\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/ab/ad998db233aa3d4977cc473ea50674359eb2bc\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/f3/0431f6c2430c55e963efaaee8a285728378418\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/04/62b17d92786dfdf002ddbea59de04a3e063a81\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/aa/1216c789a99a993749e8254b695451ddb16647\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/d3/91b39537e6c4db71045225dc1f264812dc850e\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/12/1e6c03f28d6e8fdfac232c425f7eb002125db5\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/4c/6fa76e0be193850bf78330be8f280ddf610ced\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/2b/23a119cda255ab7c3d13b1c6b4796732f27b01\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/39/d6c807ca57e9dddded0ccf02a9ffa8cb802613\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/objects/2e/29b65236c7121e545cd603c6bcf647c96a3663\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/HEAD\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/config\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/push-to-checkout.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/update.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-push.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-applypatch.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-merge-commit.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/post-update.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/prepare-commit-msg.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-receive.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/fsmonitor-watchman.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/applypatch-msg.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-commit.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/sendemail-validate.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/pre-rebase.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/hooks/commit-msg.sample\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/description\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/info/exclude\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/retry_delay_stale_session.md\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/cache_ttl_distractor_session.md\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/recall_correction_retry_cap_decoy_2.md\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/recall_correction_retry_cap_decoy_3.md\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/recall_correction_retry_cap_decoy_4.md\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/recall_correction_retry_cap_decoy_1.md\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/retry_delay_latest_correction_session.md\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/package.json\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/manifest.json\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/test/retry-delay.test.mjs",
+          "title": "",
+          "metadata": {
+            "count": 52,
+            "truncated": false
+          },
+          "time": {
+            "start": 1780193814320,
+            "end": 1780193814363
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0d68681da71dc343016a1b9a164c18819b95e250ced4e69039"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd1e733001wD8XOB7fVbOh7u",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1d39300119Sr1zR7cqgV07",
+        "type": "tool",
+        "callID": "call_seLbxkCK7p7zykLdt3bXUf8w",
+        "tool": "grep",
+        "state": {
+          "status": "completed",
+          "input": {
+            "pattern": "retryDelayMs|retry-delay|retry delay|cap",
+            "path": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+            "include": "*"
+          },
+          "output": "Found 47 matches\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/logs/refs/heads/main:\n  Line 1: 0000000000000000000000000000000000000000 be1d83a76d6068be7c90ccdbb06e02f525ac6c4f Code Recall Benchmark <code-recall@example.com> 1780193808 -0400\tcommit (initial): seed recall-correction-retry-cap\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/logs/HEAD:\n  Line 1: 0000000000000000000000000000000000000000 be1d83a76d6068be7c90ccdbb06e02f525ac6c4f Code Recall Benchmark <code-recall@example.com> 1780193808 -0400\tcommit (initial): seed recall-correction-retry-cap\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/.git/COMMIT_EDITMSG:\n  Line 1: seed recall-correction-retry-cap\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/retry_delay_stale_session.md:\n  Line 1: # Stale retry delay note\n\n  Line 3: title: Stale retry delay note\n\n  Line 6: Stale earlier note: cap retry delays at 5000ms for batch workers.\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/cache_ttl_distractor_session.md:\n  Line 1: # Cache TTL cap distractor\n\n  Line 3: title: Cache TTL cap distractor\n\n  Line 6: Cache TTLs use namespace-specific caps. This is unrelated to retryDelayMs.\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/recall_correction_retry_cap_decoy_2.md:\n  Line 1: # Memory temporal correction retry cap decoy 2\n\n  Line 2: session_id: recall_correction_retry_cap_decoy_2\n\n  Line 3: title: Memory temporal correction retry cap decoy 2\n\n  Line 6: Decoy 2: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/recall_correction_retry_cap_decoy_3.md:\n  Line 1: # Memory temporal correction retry cap decoy 3\n\n  Line 2: session_id: recall_correction_retry_cap_decoy_3\n\n  Line 3: title: Memory temporal correction retry cap decoy 3\n\n  Line 6: Decoy 3: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/recall_correction_retry_cap_decoy_4.md:\n  Line 1: # Memory temporal correction retry cap decoy 4\n\n  Line 2: session_id: recall_correction_retry_cap_decoy_4\n\n  Line 3: title: Memory temporal correction retry cap decoy 4\n\n  Line 6: Decoy 4: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/recall_correction_retry_cap_decoy_1.md:\n  Line 1: # Memory temporal correction retry cap decoy 1\n\n  Line 2: session_id: recall_correction_retry_cap_decoy_1\n\n  Line 3: title: Memory temporal correction retry cap decoy 1\n\n  Line 6: Decoy 1: mentions src/retry-delay.mjs but does not contain the accepted fix for this task.\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/retry_delay_latest_correction_session.md:\n  Line 6: Earlier retry-delay notes used a 5000ms cap, but that was superseded after mobile clients hit long backoff stalls.\n\n  Line 9: Latest accepted decision: cap retryDelayMs at 2000ms while keeping the 100ms exponential base.\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs:\n  Line 1: export function retryDelayMs(attempt) {\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/manifest.json:\n  Line 2:   \"fixture\": \"recall-correction-retry-cap\",\n\n  Line 13:       \"title\": \"Stale retry delay note\",\n\n  Line 18:       \"title\": \"Cache TTL cap distractor\",\n\n  Line 22:       \"session_id\": \"recall_correction_retry_cap_decoy_1\",\n\n  Line 23:       \"title\": \"Memory temporal correction retry cap decoy 1\",\n\n  Line 24:       \"file\": \"recall_correction_retry_cap_decoy_1.md\"\n\n  Line 27:       \"session_id\": \"recall_correction_retry_cap_decoy_2\",\n\n  Line 28:       \"title\": \"Memory temporal correction retry cap decoy 2\",\n\n  Line 29:       \"file\": \"recall_correction_retry_cap_decoy_2.md\"\n\n  Line 32:       \"session_id\": \"recall_correction_retry_cap_decoy_3\",\n\n  Line 33:       \"title\": \"Memory temporal correction retry cap decoy 3\",\n\n  Line 34:       \"file\": \"recall_correction_retry_cap_decoy_3.md\"\n\n  Line 37:       \"session_id\": \"recall_correction_retry_cap_decoy_4\",\n\n  Line 38:       \"title\": \"Memory temporal correction retry cap decoy 4\",\n\n  Line 39:       \"file\": \"recall_correction_retry_cap_decoy_4.md\"\n\n\n./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/test/retry-delay.test.mjs:\n  Line 3: import { retryDelayMs } from \"../src/retry-delay.mjs\";\n\n  Line 6:   assert.equal(retryDelayMs(0), 100);\n\n  Line 7:   assert.equal(retryDelayMs(1), 200);\n\n  Line 8:   assert.equal(retryDelayMs(3), 800);\n",
+          "title": "retryDelayMs|retry-delay|retry delay|cap",
+          "metadata": {
+            "matches": 47,
+            "truncated": false
+          },
+          "time": {
+            "start": 1780193814328,
+            "end": 1780193814353
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0d68681da71dc343016a1b9a164c28819baf6650ff8629d30f"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd1e790001rEaRRDiEBISFj8",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1d39300119Sr1zR7cqgV07",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "f39399ac208dd6bd87b23f596df08112197a58cf",
+        "cost": 0,
+        "tokens": {
+          "total": 7174,
+          "input": 6974,
+          "output": 200,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd1e7bc001IvM1ZjCpVdf0qv",
+      "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+      "role": "assistant",
+      "time": {
+        "created": 1780193814460,
+        "completed": 1780193821807
+      },
+      "parentID": "msg_e7bd1d366001gmjdkA2Gva5MSj",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12896,
+        "input": 5930,
+        "output": 310,
+        "reasoning": 0,
+        "cache": {
+          "read": 6656,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd1ea0d001n2fojKltcoa1lf",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1e7bc001IvM1ZjCpVdf0qv",
+        "type": "step-start",
+        "snapshot": "f39399ac208dd6bd87b23f596df08112197a58cf"
+      },
+      {
+        "id": "prt_e7bd1ec28001Na9fj1QiY8izL6",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1e7bc001IvM1ZjCpVdf0qv",
+        "type": "text",
+        "text": "The transcript search found a latest correction stating the cap is `2000ms`, superseding an older `5000ms` note. I’ll update the implementation to preserve the existing exponential base and apply that cap.",
+        "time": {
+          "start": 1780193815592,
+          "end": 1780193821510
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_02fc0163148b4eae016a1b9a179b10819abb345fba9caecf39",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd20349001ZdKgoteLN5tqpO",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1e7bc001IvM1ZjCpVdf0qv",
+        "type": "tool",
+        "callID": "call_slkTUwDsfaKd3DexHEFHSbe7",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs",
+            "offset": 1,
+            "limit": 80
+          },
+          "output": "<path>./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs</path>\n<type>file</type>\n<content>\n1: export function retryDelayMs(attempt) {\n2:   return Math.min(5000, 100 * 2 ** attempt);\n3: }\n\n(End of file - total 3 lines)\n</content>",
+          "title": "src/retry-delay.mjs",
+          "metadata": {
+            "preview": "export function retryDelayMs(attempt) {\n  return Math.min(5000, 100 * 2 ** attempt);\n}",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1780193821536,
+            "end": 1780193821551
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_02fc0163148b4eae016a1b9a1d7f98819aaa34a2ba242c6f9b"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd203620013oCmj0f9PxEeWS",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1e7bc001IvM1ZjCpVdf0qv",
+        "type": "tool",
+        "callID": "call_RI87c7pfUGJ6BkYSpHbQow2z",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/retry_delay_latest_correction_session.md",
+            "offset": 1,
+            "limit": 80
+          },
+          "output": "<path>./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/retry_delay_latest_correction_session.md</path>\n<type>file</type>\n<content>\n1: # Retry delay latest correction\n2: session_id: retry_delay_latest_correction_session\n3: title: Retry delay latest correction\n4: \n5: ## message retry_correction_fact_1\n6: Earlier retry-delay notes used a 5000ms cap, but that was superseded after mobile clients hit long backoff stalls.\n7: \n8: ## message retry_correction_fact_2\n9: Latest accepted decision: cap retryDelayMs at 2000ms while keeping the 100ms exponential base.\n\n(End of file - total 9 lines)\n</content>",
+          "title": "recall/transcripts/retry_delay_latest_correction_session.md",
+          "metadata": {
+            "preview": "# Retry delay latest correction\nsession_id: retry_delay_latest_correction_session\ntitle: Retry delay latest correction\n\n## message retry_correction_fact_1\nEarlier retry-delay notes used a 5000ms cap, but that was superseded after mobile clients hit long backoff stalls.\n\n## message retry_correction_fact_2\nLatest accepted decision: cap retryDelayMs at 2000ms while keeping the 100ms exponential base.",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1780193821631,
+            "end": 1780193821641
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_02fc0163148b4eae016a1b9a1d7fcc819ab43fd1df8e3e4b6c"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd203c6001yLySzesEFxsFxt",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1e7bc001IvM1ZjCpVdf0qv",
+        "type": "tool",
+        "callID": "call_yxrhHGdUHOdzulwEE7C7OjRo",
+        "tool": "read",
+        "state": {
+          "status": "completed",
+          "input": {
+            "filePath": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/package.json",
+            "offset": 1,
+            "limit": 120
+          },
+          "output": "<path>./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/package.json</path>\n<type>file</type>\n<content>\n1: {\n2:   \"type\": \"module\",\n3:   \"scripts\": { \"test\": \"node --test\" }\n4: }\n\n(End of file - total 4 lines)\n</content>",
+          "title": "package.json",
+          "metadata": {
+            "preview": "{\n  \"type\": \"module\",\n  \"scripts\": { \"test\": \"node --test\" }\n}",
+            "truncated": false,
+            "loaded": []
+          },
+          "time": {
+            "start": 1780193821662,
+            "end": 1780193821665
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_02fc0163148b4eae016a1b9a1d7fd4819a96413cdf738f48c8"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd20445001cq1MaPWaepi2Kt",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd1e7bc001IvM1ZjCpVdf0qv",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "f39399ac208dd6bd87b23f596df08112197a58cf",
+        "cost": 0,
+        "tokens": {
+          "total": 12896,
+          "input": 5930,
+          "output": 310,
+          "reasoning": 0,
+          "cache": {
+            "read": 6656,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd204710018nX9SeJk0S80mj",
+      "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+      "role": "assistant",
+      "time": {
+        "created": 1780193821809,
+        "completed": 1780193825396
+      },
+      "parentID": "msg_e7bd1d366001gmjdkA2Gva5MSj",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13494,
+        "input": 1067,
+        "output": 139,
+        "reasoning": 0,
+        "cache": {
+          "read": 12288,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd206b9001W7BMSRaUI7HrS7",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd204710018nX9SeJk0S80mj",
+        "type": "step-start",
+        "snapshot": "f39399ac208dd6bd87b23f596df08112197a58cf"
+      },
+      {
+        "id": "prt_e7bd208a3001r40brwE5OfBp42",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd204710018nX9SeJk0S80mj",
+        "type": "tool",
+        "callID": "call_alS3i4rlpU7NBdFdPRMmk7s9",
+        "tool": "apply_patch",
+        "state": {
+          "status": "completed",
+          "input": {
+            "patchText": "*** Begin Patch\n*** Update File: ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n@@\n export function retryDelayMs(attempt) {\n-  return Math.min(5000, 100 * 2 ** attempt);\n+  return Math.min(2000, 100 * 2 ** attempt);\n }\n*** End Patch"
+          },
+          "output": "Success. Updated the following files:\nM src/retry-delay.mjs",
+          "title": "Success. Updated the following files:\nM src/retry-delay.mjs",
+          "metadata": {
+            "diff": "Index: ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n===================================================================\n--- ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n+++ ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n@@ -1,3 +1,3 @@\n export function retryDelayMs(attempt) {\n-  return Math.min(5000, 100 * 2 ** attempt);\n+  return Math.min(2000, 100 * 2 ** attempt);\n }\n\n",
+            "files": [
+              {
+                "filePath": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs",
+                "relativePath": "src/retry-delay.mjs",
+                "type": "update",
+                "patch": "Index: ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n===================================================================\n--- ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n+++ ./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs\n@@ -1,3 +1,3 @@\n export function retryDelayMs(attempt) {\n-  return Math.min(5000, 100 * 2 ** attempt);\n+  return Math.min(2000, 100 * 2 ** attempt);\n }\n",
+                "additions": 1,
+                "deletions": 1
+              }
+            ],
+            "diagnostics": {},
+            "truncated": false
+          },
+          "time": {
+            "start": 1780193825246,
+            "end": 1780193825254
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0619cd2e605ea63d016a1b9a1ed53081998e3a6ed5969a1c63"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd21240001eui0rW8QfqU0VW",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd204710018nX9SeJk0S80mj",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "c2f47c087e4160fdc40034fdb503db8dfce8dd18",
+        "cost": 0,
+        "tokens": {
+          "total": 13494,
+          "input": 1067,
+          "output": 139,
+          "reasoning": 0,
+          "cache": {
+            "read": 12288,
+            "write": 0
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd212730016P9o78enDj2aoV",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd204710018nX9SeJk0S80mj",
+        "type": "patch",
+        "hash": "f39399ac208dd6bd87b23f596df08112197a58cf",
+        "files": [
+          "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/src/retry-delay.mjs"
+        ]
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd21276001q9eWCLlqcNVHAC",
+      "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+      "role": "assistant",
+      "time": {
+        "created": 1780193825398,
+        "completed": 1780193828996
+      },
+      "parentID": "msg_e7bd1d366001gmjdkA2Gva5MSj",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13633,
+        "input": 719,
+        "output": 114,
+        "reasoning": 0,
+        "cache": {
+          "read": 12800,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd2145e0010dwagEtUuI9ZGA",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd21276001q9eWCLlqcNVHAC",
+        "type": "step-start",
+        "snapshot": "c2f47c087e4160fdc40034fdb503db8dfce8dd18"
+      },
+      {
+        "id": "prt_e7bd216c2001qMNAfoKXLvpRzD",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd21276001q9eWCLlqcNVHAC",
+        "type": "text",
+        "text": "The implementation now caps retry delays at `2000ms`. I’ll run the focused test suite.",
+        "time": {
+          "start": 1780193826498,
+          "end": 1780193826939
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_062ff09a21e9d957016a1b9a22727081989792650ad133e583",
+            "phase": "commentary"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd2187d001kfmUa9POzYaQY2",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd21276001q9eWCLlqcNVHAC",
+        "type": "tool",
+        "callID": "call_V5AmsC8OQBSxPdCTiZ4RXtYs",
+        "tool": "bash",
+        "state": {
+          "status": "completed",
+          "input": {
+            "command": "npm test",
+            "timeout": 120000,
+            "workdir": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+            "description": "Runs project test suite"
+          },
+          "output": "\n> test\n> node --test\n\n✔ uses exponential base delay (0.60975ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 88.021292\n",
+          "title": "Runs project test suite",
+          "metadata": {
+            "output": "\n> test\n> node --test\n\n✔ uses exponential base delay (0.60975ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 88.021292\n",
+            "exit": 0,
+            "description": "Runs project test suite",
+            "truncated": false
+          },
+          "time": {
+            "start": 1780193828912,
+            "end": 1780193828918
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_062ff09a21e9d957016a1b9a22f1688198a729fc06c09c1a73"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd2205f001x2gYrqPo5n55pH",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd21276001q9eWCLlqcNVHAC",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "c2f47c087e4160fdc40034fdb503db8dfce8dd18",
+        "cost": 0,
+        "tokens": {
+          "total": 13633,
+          "input": 719,
+          "output": 114,
+          "reasoning": 0,
+          "cache": {
+            "read": 12800,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e7bd22086001m4W7AW0BgfgLZS",
+      "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+      "role": "assistant",
+      "time": {
+        "created": 1780193828998,
+        "completed": 1780193831349
+      },
+      "parentID": "msg_e7bd1d366001gmjdkA2Gva5MSj",
+      "modelID": "gpt-5.5",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree",
+        "root": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree"
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 13787,
+        "input": 405,
+        "output": 70,
+        "reasoning": 0,
+        "cache": {
+          "read": 13312,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e7bd222c5001u85frsIMKH3p4d",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd22086001m4W7AW0BgfgLZS",
+        "type": "step-start",
+        "snapshot": "c2f47c087e4160fdc40034fdb503db8dfce8dd18"
+      },
+      {
+        "id": "prt_e7bd22477001X3Bdx0OoxtFDD3",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd22086001m4W7AW0BgfgLZS",
+        "type": "text",
+        "text": "{\"summary\":\"Updated retryDelayMs cap from 5000ms to the latest accepted 2000ms while preserving the 100ms exponential base.\",\"tests\":\"npm test passed\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"retry_delay_latest_correction_session\",\"message_id\":\"retry_correction_fact_2\"}}",
+        "time": {
+          "start": 1780193830007,
+          "end": 1780193831269
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_03db89c9518dc2f9016a1b9a260188819a88509664f883f49a",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e7bd22993001vwBv0qA2JLOJJI",
+        "sessionID": "ses_1842e2cb1ffexbzlhSXlOnXECw",
+        "messageID": "msg_e7bd22086001m4W7AW0BgfgLZS",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "c2f47c087e4160fdc40034fdb503db8dfce8dd18",
+        "cost": 0,
+        "tokens": {
+          "total": 13787,
+          "input": 405,
+          "output": 70,
+          "reasoning": 0,
+          "cache": {
+            "read": 13312,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

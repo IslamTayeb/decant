@@ -1,0 +1,986 @@
+{
+  "outDir": "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530",
+  "generatedAt": "2026-05-31T02:20:05.614Z",
+  "rows": [
+    {
+      "fixture": "recall-correction-retry-cap",
+      "title": "Memory temporal correction retry cap",
+      "recall_role": "correction",
+      "condition": "default-compaction",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "recall_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/retry-delay.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 289,
+      "output_preview": "{\"summary\":\"Updated retryDelayMs cap from 5000ms to 2000ms while preserving the 100ms exponential base.\",\"tests\":\"npm test passed.\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"retry_delay_latest_correction_session\",\"message_id\":\"retry_correction_fact_2\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "solve_transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "rgb_context_present": true,
+      "rgb_context_preserves_ids": true,
+      "rgb_context_policy_passed": true,
+      "rgb_context_preview": "",
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "recall_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "retry_delay_latest_correction_session",
+      "relevant_message_ids": [
+        "retry_correction_fact_2"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses exponential base delay (0.595208ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 75.417166\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses the latest accepted cap (0.598375ms)\n✔ uses exponential base delay (0.616417ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 75.273292\n",
+        "stderr": ""
+      },
+      "memory_prep_tokens": {
+        "messages": 1,
+        "assistant": 1,
+        "input": 1027,
+        "output": 370,
+        "total": 1406,
+        "reasoning": 9,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1027
+      },
+      "solve_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 3979,
+        "output": 804,
+        "total": 42736,
+        "reasoning": 65,
+        "cacheRead": 37888,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 1254
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 5006,
+        "output": 1174,
+        "total": 44142,
+        "reasoning": 74,
+        "cacheRead": 37888,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 1254
+      },
+      "memory_prep_estimated_cost_usd": 0.016505,
+      "solve_estimated_cost_usd": 0.064909,
+      "estimated_cost_usd": 0.081414,
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 43188
+    },
+    {
+      "fixture": "recall-correction-retry-cap",
+      "title": "Memory temporal correction retry cap",
+      "recall_role": "correction",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "recall_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/retry-delay.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 289,
+      "output_preview": "{\"summary\":\"Updated retryDelayMs cap from 5000ms to the latest accepted 2000ms while preserving the 100ms exponential base.\",\"tests\":\"npm test passed\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"retry_delay_latest_correction_session\",\"message_id\":\"retry_correction_fact_2\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [
+        "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/retry_delay_latest_correction_session.md"
+      ],
+      "solve_transcript_files_read": [
+        "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-correction-retry-cap/conditions/rlm-transcript-search/worktree/recall/transcripts/retry_delay_latest_correction_session.md"
+      ],
+      "irrelevant_transcript_reads": [],
+      "rgb_context_present": true,
+      "rgb_context_preserves_ids": true,
+      "rgb_context_policy_passed": true,
+      "rgb_context_preview": "",
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "recall_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "retry_delay_latest_correction_session",
+      "relevant_message_ids": [
+        "retry_correction_fact_2"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses exponential base delay (0.599959ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 84.915542\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses the latest accepted cap (0.583875ms)\n✔ uses exponential base delay (0.579417ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 74.32825\n",
+        "stderr": ""
+      },
+      "memory_prep_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "solve_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 15095,
+        "output": 833,
+        "total": 60984,
+        "reasoning": 0,
+        "cacheRead": 45056,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 6974
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 15095,
+        "output": 833,
+        "total": 60984,
+        "reasoning": 0,
+        "cacheRead": 45056,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 6974
+      },
+      "memory_prep_estimated_cost_usd": 0,
+      "solve_estimated_cost_usd": 0.122993,
+      "estimated_cost_usd": 0.122993,
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 23581
+    },
+    {
+      "fixture": "recall-correction-retry-cap",
+      "title": "Memory temporal correction retry cap",
+      "recall_role": "correction",
+      "condition": "decant-only",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "recall_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/retry-delay.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 289,
+      "output_preview": "{\"summary\":\"Updated retryDelayMs cap from stale 5000ms to latest accepted 2000ms while keeping 100ms exponential base.\",\"tests\":\"npm test passed\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"ses_1842dcda6ffexb8E1ez280zLq7\",\"message_id\":\"msg_e7bd23280001tX66xS8IqixHJ2\"}}",
+      "tool_names": [
+        "session_lookup",
+        "glob",
+        "grep",
+        "session_detail",
+        "session_detail",
+        "read",
+        "read",
+        "message_detail",
+        "apply_patch",
+        "glob",
+        "read",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "solve_transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "rgb_context_present": true,
+      "rgb_context_preserves_ids": true,
+      "rgb_context_policy_passed": true,
+      "rgb_context_preview": "",
+      "context_tool_call_count": 4,
+      "search_tool_call_count": 3,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "recall_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "ses_1842dcda6ffexb8E1ez280zLq7",
+      "relevant_message_ids": [
+        "msg_e7bd23280001tX66xS8IqixHJ2",
+        "msg_e7bd2328a0016UwSX499FEKS0Q"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses exponential base delay (0.728666ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 78.545292\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ uses the latest accepted cap (0.579708ms)\n✔ uses exponential base delay (0.585875ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 77.84075\n",
+        "stderr": ""
+      },
+      "memory_prep_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "solve_tokens": {
+        "messages": 9,
+        "assistant": 8,
+        "input": 18252,
+        "output": 1142,
+        "total": 84475,
+        "reasoning": 57,
+        "cacheRead": 65024,
+        "cacheWrite": 0,
+        "toolCalls": 12,
+        "maxInput": 7432
+      },
+      "tokens": {
+        "messages": 9,
+        "assistant": 8,
+        "input": 18252,
+        "output": 1142,
+        "total": 84475,
+        "reasoning": 57,
+        "cacheRead": 65024,
+        "cacheWrite": 0,
+        "toolCalls": 12,
+        "maxInput": 7432
+      },
+      "memory_prep_estimated_cost_usd": 0,
+      "solve_estimated_cost_usd": 0.159742,
+      "estimated_cost_usd": 0.159742,
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 46581
+    },
+    {
+      "fixture": "recall-missing-pagination",
+      "title": "Memory missing pagination fix",
+      "recall_role": "missing",
+      "condition": "default-compaction",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "recall_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/pagination.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 325,
+      "output_preview": "{\"summary\":\"Changed totalPages to use Math.ceil so partial pages are counted.\",\"tests\":\"node --test test/pagination.test.mjs\",\"recall_decision\":\"ignored\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}",
+      "tool_names": [
+        "glob",
+        "glob",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "solve_transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "rgb_context_present": true,
+      "rgb_context_preserves_ids": true,
+      "rgb_context_policy_passed": true,
+      "rgb_context_preview": "",
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 2,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "recall_decision": "ignored",
+      "citation_hits": [],
+      "relevant_session_id": "",
+      "relevant_message_ids": [],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ counts full and partial pages (0.581875ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 76.77925\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ rounds up without inventing pages (0.6ms)\n✔ counts full and partial pages (0.60775ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 74.236375\n",
+        "stderr": ""
+      },
+      "memory_prep_tokens": {
+        "messages": 1,
+        "assistant": 1,
+        "input": 861,
+        "output": 419,
+        "total": 1280,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 861
+      },
+      "solve_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 3474,
+        "output": 658,
+        "total": 41516,
+        "reasoning": 8,
+        "cacheRead": 37376,
+        "cacheWrite": 0,
+        "toolCalls": 6,
+        "maxInput": 1295
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 4335,
+        "output": 1077,
+        "total": 42796,
+        "reasoning": 8,
+        "cacheRead": 37376,
+        "cacheWrite": 0,
+        "toolCalls": 6,
+        "maxInput": 1295
+      },
+      "memory_prep_estimated_cost_usd": 0.016875,
+      "solve_estimated_cost_usd": 0.056038000000000004,
+      "estimated_cost_usd": 0.072913,
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 36992
+    },
+    {
+      "fixture": "recall-missing-pagination",
+      "title": "Memory missing pagination fix",
+      "recall_role": "missing",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "recall_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/pagination.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 325,
+      "output_preview": "{\"summary\":\"Fixed totalPages to include partial pages using Math.ceil.\",\"tests\":\"npm test passed\",\"recall_decision\":\"ignored\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "solve_transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "rgb_context_present": true,
+      "rgb_context_preserves_ids": true,
+      "rgb_context_policy_passed": true,
+      "rgb_context_preview": "",
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "recall_decision": "ignored",
+      "citation_hits": [],
+      "relevant_session_id": "",
+      "relevant_message_ids": [],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ counts full and partial pages (0.610459ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 75.430625\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ rounds up without inventing pages (0.581792ms)\n✔ counts full and partial pages (0.580625ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 75.376708\n",
+        "stderr": ""
+      },
+      "memory_prep_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "solve_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 16544,
+        "output": 749,
+        "total": 40845,
+        "reasoning": 0,
+        "cacheRead": 23552,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 7631
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 16544,
+        "output": 749,
+        "total": 40845,
+        "reasoning": 0,
+        "cacheRead": 23552,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 7631
+      },
+      "memory_prep_estimated_cost_usd": 0,
+      "solve_estimated_cost_usd": 0.116966,
+      "estimated_cost_usd": 0.116966,
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 24547
+    },
+    {
+      "fixture": "recall-missing-pagination",
+      "title": "Memory missing pagination fix",
+      "recall_role": "missing",
+      "condition": "decant-only",
+      "benchmark_passed": true,
+      "tests_passed": true,
+      "public_tests_passed": true,
+      "hidden_tests_passed": true,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "recall_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/pagination.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 325,
+      "output_preview": "{\"summary\":\"Changed totalPages to use Math.ceil so partial pages are counted.\",\"tests\":\"npm test\",\"recall_decision\":\"ignored\",\"evidence\":{\"session_id\":\"\",\"message_id\":\"\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "solve_transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "rgb_context_present": true,
+      "rgb_context_preserves_ids": true,
+      "rgb_context_policy_passed": true,
+      "rgb_context_preview": "",
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "recall_decision": "ignored",
+      "citation_hits": [],
+      "relevant_session_id": "",
+      "relevant_message_ids": [],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ counts full and partial pages (0.638542ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 82.938\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ rounds up without inventing pages (0.628958ms)\n✔ counts full and partial pages (0.632917ms)\nℹ tests 2\nℹ suites 0\nℹ pass 2\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 83.083667\n",
+        "stderr": ""
+      },
+      "memory_prep_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "solve_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 9942,
+        "output": 750,
+        "total": 41965,
+        "reasoning": 41,
+        "cacheRead": 31232,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 7426
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 9942,
+        "output": 750,
+        "total": 41965,
+        "reasoning": 41,
+        "cacheRead": 31232,
+        "cacheWrite": 0,
+        "toolCalls": 7,
+        "maxInput": 7426
+      },
+      "memory_prep_estimated_cost_usd": 0,
+      "solve_estimated_cost_usd": 0.089056,
+      "estimated_cost_usd": 0.089056,
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 31429
+    },
+    {
+      "fixture": "recall-synthesis-report",
+      "title": "Memory synthesis report fields",
+      "recall_role": "synthesis",
+      "condition": "default-compaction",
+      "benchmark_passed": false,
+      "tests_passed": false,
+      "public_tests_passed": true,
+      "hidden_tests_passed": false,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "recall_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/report.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 470,
+      "output_preview": "{\"summary\":\"Updated buildReport to preserve summary plus accepted synthesized fields failed_test_ids and retry_owner when present.\",\"tests\":\"npm test passed.\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"report_parent_synthesis_session\",\"message_id\":\"report_synthesis_fact_1, report_synthesis_fact_2\"}}",
+      "tool_names": [
+        "glob",
+        "glob",
+        "glob",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "solve_transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "rgb_context_present": true,
+      "rgb_context_preserves_ids": true,
+      "rgb_context_policy_passed": true,
+      "rgb_context_preview": "",
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 3,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "recall_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "report_parent_synthesis_session",
+      "relevant_message_ids": [
+        "report_synthesis_fact_1",
+        "report_synthesis_fact_2"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ keeps report summary (1.193042ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.42575\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": false,
+        "exitCode": 1,
+        "stdout": "✖ keeps synthesized child-agent fields (2.524042ms)\n✔ keeps report summary (1.321834ms)\nℹ tests 2\nℹ suites 0\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 86.235416\n\n✖ failing tests:\n\ntest at test/hidden-report.test.mjs:5:1\n✖ keeps synthesized child-agent fields (2.524042ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n    {\n  -   failed_test_ids: [\n  -     'auth-smoke',\n  -     'retry-smoke'\n  -   ],\n  -   retry_owner: 'infra-oncall',\n      summary: 'failed smoke run'\n    }\n  \n      at TestContext.<anonymous> (file://./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/default-compaction/worktree/test/hidden-report.test.mjs:6:10)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1201:25)\n      at Test.start (node:internal/test_runner/test:1096:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: { summary: 'failed smoke run' },\n    expected: { summary: 'failed smoke run', failed_test_ids: [ 'auth-smoke', 'retry-smoke' ], retry_owner: 'infra-oncall' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+        "stderr": "",
+        "error": "Error: Command failed: node --test\n\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+      },
+      "memory_prep_tokens": {
+        "messages": 1,
+        "assistant": 1,
+        "input": 1016,
+        "output": 568,
+        "total": 1584,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1016
+      },
+      "solve_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 4956,
+        "output": 899,
+        "total": 43969,
+        "reasoning": 226,
+        "cacheRead": 37888,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 1449
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 5972,
+        "output": 1467,
+        "total": 45553,
+        "reasoning": 226,
+        "cacheRead": 37888,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 1449
+      },
+      "memory_prep_estimated_cost_usd": 0.02212,
+      "solve_estimated_cost_usd": 0.077474,
+      "estimated_cost_usd": 0.099594,
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 55674
+    },
+    {
+      "fixture": "recall-synthesis-report",
+      "title": "Memory synthesis report fields",
+      "recall_role": "synthesis",
+      "condition": "rlm-transcript-search",
+      "benchmark_passed": false,
+      "tests_passed": false,
+      "public_tests_passed": true,
+      "hidden_tests_passed": false,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "recall_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/report.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 444,
+      "output_preview": "{\"summary\":\"Updated buildReport to preserve accepted synthesized fields failed_test_ids and retry_owner when present.\",\"tests\":\"npm test\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"report_parent_synthesis_session\",\"message_id\":\"report_synthesis_fact_1, report_synthesis_fact_2\"}}",
+      "tool_names": [
+        "glob",
+        "grep",
+        "read",
+        "read",
+        "read",
+        "read",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [
+        "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/rlm-transcript-search/worktree/recall/transcripts/report_parent_synthesis_session.md"
+      ],
+      "solve_transcript_files_read": [
+        "./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/rlm-transcript-search/worktree/recall/transcripts/report_parent_synthesis_session.md"
+      ],
+      "irrelevant_transcript_reads": [],
+      "rgb_context_present": true,
+      "rgb_context_preserves_ids": true,
+      "rgb_context_policy_passed": true,
+      "rgb_context_preview": "",
+      "context_tool_call_count": 0,
+      "search_tool_call_count": 2,
+      "read_tool_call_count": 4,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 0,
+      "recall_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "report_parent_synthesis_session",
+      "relevant_message_ids": [
+        "report_synthesis_fact_1",
+        "report_synthesis_fact_2"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ keeps report summary (1.2065ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 78.531583\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": false,
+        "exitCode": 1,
+        "stdout": "✖ keeps synthesized child-agent fields (2.48825ms)\n✔ keeps report summary (1.237625ms)\nℹ tests 2\nℹ suites 0\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 77.40175\n\n✖ failing tests:\n\ntest at test/hidden-report.test.mjs:5:1\n✖ keeps synthesized child-agent fields (2.48825ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n    {\n  -   failed_test_ids: [\n  -     'auth-smoke',\n  -     'retry-smoke'\n  -   ],\n  -   retry_owner: 'infra-oncall',\n      summary: 'failed smoke run'\n    }\n  \n      at TestContext.<anonymous> (file://./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/rlm-transcript-search/worktree/test/hidden-report.test.mjs:6:10)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1201:25)\n      at Test.start (node:internal/test_runner/test:1096:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: { summary: 'failed smoke run' },\n    expected: { summary: 'failed smoke run', failed_test_ids: [ 'auth-smoke', 'retry-smoke' ], retry_owner: 'infra-oncall' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+        "stderr": "",
+        "error": "Error: Command failed: node --test\n\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+      },
+      "memory_prep_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "solve_tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 18827,
+        "output": 930,
+        "total": 54166,
+        "reasoning": 105,
+        "cacheRead": 34304,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 6971
+      },
+      "tokens": {
+        "messages": 6,
+        "assistant": 5,
+        "input": 18827,
+        "output": 930,
+        "total": 54166,
+        "reasoning": 105,
+        "cacheRead": 34304,
+        "cacheWrite": 0,
+        "toolCalls": 8,
+        "maxInput": 6971
+      },
+      "memory_prep_estimated_cost_usd": 0,
+      "solve_estimated_cost_usd": 0.142337,
+      "estimated_cost_usd": 0.142337,
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 32632
+    },
+    {
+      "fixture": "recall-synthesis-report",
+      "title": "Memory synthesis report fields",
+      "recall_role": "synthesis",
+      "condition": "decant-only",
+      "benchmark_passed": false,
+      "tests_passed": false,
+      "public_tests_passed": true,
+      "hidden_tests_passed": false,
+      "expected_files_touched": true,
+      "touched_files_allowed": true,
+      "recall_policy_passed": true,
+      "tool_path_passed": true,
+      "tool_path_failures": [],
+      "forbidden_patch_hits": [],
+      "forbidden_output_hits": [],
+      "touched_files": [
+        "src/report.mjs"
+      ],
+      "unexpected_touched_files": [],
+      "patch_bytes": 470,
+      "output_preview": "{\"summary\":\"Updated buildReport to preserve accepted synthesized fields failed_test_ids and retry_owner when present, while keeping absent fields omitted.\",\"tests\":\"npm test\",\"recall_decision\":\"used\",\"evidence\":{\"session_id\":\"ses_1842bbe80ffea4Wu3Z6eGXSBTt\",\"message_id\":\"msg_e7bd44193001crBjOEmVPWGEhD\"}}",
+      "tool_names": [
+        "glob",
+        "session_lookup",
+        "session_detail",
+        "read",
+        "read",
+        "read",
+        "message_detail",
+        "apply_patch",
+        "bash"
+      ],
+      "transcript_files_read": [],
+      "solve_transcript_files_read": [],
+      "irrelevant_transcript_reads": [],
+      "rgb_context_present": true,
+      "rgb_context_preserves_ids": true,
+      "rgb_context_policy_passed": true,
+      "rgb_context_preview": "",
+      "context_tool_call_count": 3,
+      "search_tool_call_count": 1,
+      "read_tool_call_count": 3,
+      "bash_tool_call_count": 1,
+      "message_detail_call_count": 1,
+      "recall_decision": "used",
+      "citation_hits": [
+        "session",
+        "message"
+      ],
+      "relevant_session_id": "ses_1842bbe80ffea4Wu3Z6eGXSBTt",
+      "relevant_message_ids": [
+        "msg_e7bd44193001crBjOEmVPWGEhD",
+        "msg_e7bd4419e001u9fS7FXwDSuqdM"
+      ],
+      "public_test": {
+        "passed": true,
+        "exitCode": 0,
+        "stdout": "✔ keeps report summary (1.139042ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 79.889833\n",
+        "stderr": ""
+      },
+      "hidden_test": {
+        "passed": false,
+        "exitCode": 1,
+        "stdout": "✖ keeps synthesized child-agent fields (2.280333ms)\n✔ keeps report summary (1.153125ms)\nℹ tests 2\nℹ suites 0\nℹ pass 1\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 99.404\n\n✖ failing tests:\n\ntest at test/hidden-report.test.mjs:5:1\n✖ keeps synthesized child-agent fields (2.280333ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n  + actual - expected\n  \n    {\n  -   failed_test_ids: [\n  -     'auth-smoke',\n  -     'retry-smoke'\n  -   ],\n  -   retry_owner: 'infra-oncall',\n      summary: 'failed smoke run'\n    }\n  \n      at TestContext.<anonymous> (file://./benchmarks/code-recall/runs/gpt55-default-compaction-blog-20260530/fixtures/recall-synthesis-report/conditions/decant-only/worktree/test/hidden-report.test.mjs:6:10)\n      at Test.runInAsyncScope (node:async_hooks:226:14)\n      at Test.run (node:internal/test_runner/test:1201:25)\n      at Test.start (node:internal/test_runner/test:1096:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: { summary: 'failed smoke run' },\n    expected: { summary: 'failed smoke run', failed_test_ids: [ 'auth-smoke', 'retry-smoke' ], retry_owner: 'infra-oncall' },\n    operator: 'deepStrictEqual',\n    diff: 'simple'\n  }\n",
+        "stderr": "",
+        "error": "Error: Command failed: node --test\n\n    at genericNodeError (node:internal/errors:998:15)\n    at wrappedFn (node:internal/errors:543:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+      },
+      "memory_prep_tokens": {
+        "messages": 0,
+        "assistant": 0,
+        "input": 0,
+        "output": 0,
+        "total": 0,
+        "reasoning": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 0
+      },
+      "solve_tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 14400,
+        "output": 947,
+        "total": 69288,
+        "reasoning": 181,
+        "cacheRead": 53760,
+        "cacheWrite": 0,
+        "toolCalls": 9,
+        "maxInput": 7431
+      },
+      "tokens": {
+        "messages": 7,
+        "assistant": 6,
+        "input": 14400,
+        "output": 947,
+        "total": 69288,
+        "reasoning": 181,
+        "cacheRead": 53760,
+        "cacheWrite": 0,
+        "toolCalls": 9,
+        "maxInput": 7431
+      },
+      "memory_prep_estimated_cost_usd": 0,
+      "solve_estimated_cost_usd": 0.13272,
+      "estimated_cost_usd": 0.13272,
+      "models": [
+        "openai/gpt-5.5"
+      ],
+      "duration_ms": 38473
+    }
+  ]
+}
