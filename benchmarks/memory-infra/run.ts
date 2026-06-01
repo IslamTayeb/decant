@@ -564,7 +564,7 @@ function parseOptions(): Options {
   const timeoutMinutes = Number(valueArg(args, "--prompt-timeout-minutes") ?? "10");
   const irregularFacts = args.includes("--irregular-facts");
   assert.ok(Number.isInteger(topicCount) && topicCount >= 1);
-  assert.ok(Number.isInteger(queryCount) && queryCount >= 1);
+  assert.ok(Number.isInteger(queryCount) && queryCount >= 0);
   assert.ok(Number.isInteger(currentQueryCount) && currentQueryCount >= 0);
   assert.ok(Number.isInteger(decoysPerTopic) && decoysPerTopic >= 0);
   assert.ok(Number.isFinite(timeoutMinutes) && timeoutMinutes > 0);

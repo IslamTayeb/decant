@@ -4,6 +4,7 @@ This benchmark is for Decant's infrastructure claim, not general solve rate.
 It creates one long historical memory session with many real topics and explicit
 distractors, then asks several future questions in fresh sessions.
 It can also mix in current-work questions that should not use historical memory.
+Set `--query-count 0` for current-only continuation probes.
 
 Conditions:
 
