@@ -1,0 +1,212 @@
+[
+  {
+    "info": {
+      "id": "msg_e8521f4d4001Y6T52z0M5IlXN7",
+      "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+      "role": "user",
+      "time": {
+        "created": 1780350055636
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files. Use Decant session_lookup to find the relevant historical topic. Call session_lookup exactly once with the exact topic title, limit=1, and detail='full'. Answer from the included topic detail. Do not use raw transcript files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": true,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e8521f4d600114XAZIPAKKCqqt",
+        "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+        "messageID": "msg_e8521f4d4001Y6T52z0M5IlXN7",
+        "type": "text",
+        "text": "Recall the maintained decision for search index freshness incident 13owed6. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e8521f4db001a9MWEsJkk3EoAX",
+      "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+      "role": "assistant",
+      "time": {
+        "created": 1780350055643,
+        "completed": 1780350057581
+      },
+      "parentID": "msg_e8521f4d4001Y6T52z0M5IlXN7",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 4666,
+        "input": 537,
+        "output": 33,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e8521f70c001ASDpT1h9cLvaUw",
+        "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+        "messageID": "msg_e8521f4db001a9MWEsJkk3EoAX",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e8521fa3d0012gkiyI5WVJMEyz",
+        "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+        "messageID": "msg_e8521f4db001a9MWEsJkk3EoAX",
+        "type": "tool",
+        "callID": "call_xa1dSMIzBzPlKy5JnxOY7wI8",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "search index freshness incident 13owed6",
+            "limit": 1,
+            "detail": "full"
+          },
+          "output": "{\n  \"query\": \"search index freshness incident 13owed6\",\n  \"hint\": \"Use the included detail for the best matching topic; avoid repeated lookup unless the top result is clearly wrong.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_17adfa720ffeiwnMYNjyWgfvkO\",\n      \"title\": \"memory infra decant-direct prep\",\n      \"updatedAt\": 1780350009403,\n      \"matchedTopicIDs\": [\n        \"search_freshness_13owed6\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"search_freshness_13owed6\",\n          \"label\": \"search_freshness_13owed6\",\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": []\n        }\n      ],\n      \"omittedTopicCount\": 21,\n      \"lookupScore\": 70,\n      \"lookupReason\": \"topic match: search_freshness_13owed6, search_freshness_1lowtq7, checkout_idempotency_0or73qt\"\n    }\n  ],\n  \"details\": [\n    {\n      \"session_id\": \"ses_17adfa720ffeiwnMYNjyWgfvkO\",\n      \"topic_id\": \"search_freshness_13owed6\",\n      \"detail\": \"full\",\n      \"content\": \"Role: user\\nText:\\nSwitch topics. Topic: search index freshness incident 13owed6.\\nSource file: src/search/freshness.13owed6.ts.\\nImportant rollout flag: FLAG_INDEX_EPOCH_GUARD_1YIVEK8.\\nProtective test: search_rejects_stale_epoch_publish_0z380v2.\\nAccepted design: epoch-stamped publish barrier with rivet-umbra guard 110PIDJ.\\nRejected design: blind last-write-wins publish after amber-ember rollback 16YXNNW.\\nWhy accepted won: prevents a slow crawl from replacing a newer index snapshot; marker 0VNX8Q0 preserved keystone isolation for case 2.\\nStale neighboring detail to avoid for this topic: autocomplete ranking cleanup stale path 0VILAXB.\\nPreserve these exact strings for future selective-memory questions.\\n\\n---\\n\\nRole: assistant\\nText:\\nNoted.\"\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780350057451,
+            "end": 1780350057515
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0d2c43cacddd6966016a1dfc68fc908194900f9b9b0597f64a"
+          }
+        }
+      },
+      {
+        "id": "prt_e8521fc4f001xgBT7atmIPHYG4",
+        "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+        "messageID": "msg_e8521f4db001a9MWEsJkk3EoAX",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 4666,
+          "input": 537,
+          "output": 33,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e8521fc6f001ftPRjmN9oMJhXq",
+      "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+      "role": "assistant",
+      "time": {
+        "created": 1780350057583,
+        "completed": 1780350063221
+      },
+      "parentID": "msg_e8521f4d4001Y6T52z0M5IlXN7",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 5325,
+        "input": 1082,
+        "output": 147,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e8521fef5001kGoaJkvFNY478U",
+        "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+        "messageID": "msg_e8521fc6f001ftPRjmN9oMJhXq",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e85220163001iDPhGJF1RbwCiy",
+        "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+        "messageID": "msg_e8521fc6f001ftPRjmN9oMJhXq",
+        "type": "text",
+        "text": "{\"title\":\"search index freshness incident 13owed6\",\"flag\":\"FLAG_INDEX_EPOCH_GUARD_1YIVEK8\",\"test\":\"search_rejects_stale_epoch_publish_0z380v2\",\"accepted_design\":\"epoch-stamped publish barrier with rivet-umbra guard 110PIDJ\",\"rejected_design\":\"blind last-write-wins publish after amber-ember rollback 16YXNNW\",\"why\":\"prevents a slow crawl from replacing a newer index snapshot; marker 0VNX8Q0 preserved keystone isolation for case 2\",\"citation\":\"src/search/freshness.13owed6.ts\",\"ignored\":\"autocomplete ranking cleanup stale path 0VILAXB\"}",
+        "time": {
+          "start": 1780350058851,
+          "end": 1780350063122
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_091f7fa71ca6bd12016a1dfc6adb648195b7262b954f29100f",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e85221250001l5eDp3A9C2kOI1",
+        "sessionID": "ses_17ade0b3fffeZmM4FP1uClprUT",
+        "messageID": "msg_e8521fc6f001ftPRjmN9oMJhXq",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 5325,
+          "input": 1082,
+          "output": 147,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

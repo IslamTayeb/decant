@@ -1,0 +1,122 @@
+[
+  {
+    "info": {
+      "id": "msg_e852a785e0015wAQ0uI7XiTEFv",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "user",
+      "time": {
+        "created": 1780350613598
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e852a785e0025GzdCCbbOwnJsn",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a785e0015wAQ0uI7XiTEFv",
+        "type": "text",
+        "text": "Recall the maintained decision for cache namespace TTL incident 0rbc72v. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e852a7863001E2DDyOdTwo36CB",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "assistant",
+      "time": {
+        "created": 1780350613603,
+        "completed": 1780350616960
+      },
+      "parentID": "msg_e852a785e0015wAQ0uI7XiTEFv",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-defaults/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 12227,
+        "input": 328,
+        "output": 123,
+        "reasoning": 0,
+        "cache": {
+          "read": 11776,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e852a7ada001OPDs0NDoU9X8MO",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a7863001E2DDyOdTwo36CB",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e852a7c3f001F4ciaHyhs45Bt7",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a7863001E2DDyOdTwo36CB",
+        "type": "text",
+        "text": "{\"title\":\"cache namespace TTL incident 0rbc72v\",\"flag\":\"FLAG_NAMESPACE_TTL_CAP_161TTKL\",\"test\":\"cache_caps_noisy_namespace_ttl_1nvngy7\",\"accepted_design\":\"namespace maximum TTL cap with indigo-lantern guard 1PDKSOU\",\"rejected_design\":\"provider-wide hard-coded TTL after prairie-topaz rollback 0UHVEN5\",\"why\":\"lets each namespace set a bounded freshness budget without penalizing unrelated caches\",\"citation\":\"0rbc72v\",\"ignored\":\"image preview freshness stale path 0LVN468\"}",
+        "time": {
+          "start": 1780350614591,
+          "end": 1780350616817
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0c1780c3064c77c8016a1dfe968adc8190987ae863d4a0ad12",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e852a853a001qD0R224NgPM206",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a7863001E2DDyOdTwo36CB",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 12227,
+          "input": 328,
+          "output": 123,
+          "reasoning": 0,
+          "cache": {
+            "read": 11776,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

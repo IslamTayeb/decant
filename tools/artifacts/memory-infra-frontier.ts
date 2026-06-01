@@ -131,6 +131,38 @@ const runGroups = [
       },
     ],
   },
+  {
+    title: "Irregular Exact-Fidelity Frontier",
+    note:
+      "24 irregular old topics, 8 exact recall queries, and 24 unrelated current-work queries. The default row continues in the same compacted OpenCode session. RGB rows show compressed-artifact failure versus larger-artifact success; Decant recovers exact old facts with no carried memory artifact.",
+    runs: [
+      {
+        run: "gpt55fast-irregular-frontier-t24-r8-c24-defaults",
+        condition: "default-opencode-continuation",
+        label: "default continuation",
+      },
+      {
+        run: "gpt55fast-irregular-frontier-t24-r8-c24-defaults",
+        condition: "default-compaction",
+        label: "pasted default summary",
+      },
+      {
+        run: "gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant",
+        condition: "rgb-context",
+        label: "RGB budget-constrained",
+      },
+      {
+        run: "gpt55fast-irregular-frontier-t24-r8-c24-rgb-unbounded",
+        condition: "rgb-context",
+        label: "RGB unbounded",
+      },
+      {
+        run: "gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant",
+        condition: "decant-direct",
+        label: "Decant direct lookup",
+      },
+    ],
+  },
 ];
 
 const scalingPairs = [

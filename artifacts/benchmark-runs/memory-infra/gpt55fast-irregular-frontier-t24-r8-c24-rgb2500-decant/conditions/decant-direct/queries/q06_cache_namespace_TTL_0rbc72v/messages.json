@@ -1,0 +1,212 @@
+[
+  {
+    "info": {
+      "id": "msg_e852220aa001muawXL6TsoxFqo",
+      "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+      "role": "user",
+      "time": {
+        "created": 1780350066858
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files. Use Decant session_lookup to find the relevant historical topic. Call session_lookup exactly once with the exact topic title, limit=1, and detail='full'. Answer from the included topic detail. Do not use raw transcript files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": true,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e852220ac001K5Rh7PjjOYvWdN",
+        "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+        "messageID": "msg_e852220aa001muawXL6TsoxFqo",
+        "type": "text",
+        "text": "Recall the maintained decision for cache namespace TTL incident 0rbc72v. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e852220b1001IeyWCtSXtnZ6fz",
+      "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+      "role": "assistant",
+      "time": {
+        "created": 1780350066865,
+        "completed": 1780350068583
+      },
+      "parentID": "msg_e852220aa001muawXL6TsoxFqo",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 4670,
+        "input": 539,
+        "output": 35,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e852222ac001kjeu5HZYUI6j3n",
+        "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+        "messageID": "msg_e852220b1001IeyWCtSXtnZ6fz",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e8522250a001La4QRqDbU2spyc",
+        "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+        "messageID": "msg_e852220b1001IeyWCtSXtnZ6fz",
+        "type": "tool",
+        "callID": "call_vG1ban332etSejNPhm7G8YRe",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "cache namespace TTL incident 0rbc72v",
+            "limit": 1,
+            "detail": "full"
+          },
+          "output": "{\n  \"query\": \"cache namespace TTL incident 0rbc72v\",\n  \"hint\": \"Use the included detail for the best matching topic; avoid repeated lookup unless the top result is clearly wrong.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_17adfa720ffeiwnMYNjyWgfvkO\",\n      \"title\": \"memory infra decant-direct prep\",\n      \"updatedAt\": 1780350009403,\n      \"matchedTopicIDs\": [\n        \"cache_namespace_ttl_0rbc72v\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"cache_namespace_ttl_0rbc72v\",\n          \"label\": \"cache_namespace_ttl_0rbc72v\",\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": []\n        }\n      ],\n      \"omittedTopicCount\": 21,\n      \"lookupScore\": 70,\n      \"lookupReason\": \"topic match: cache_namespace_ttl_0rbc72v, cache_namespace_ttl_1uzmybe, checkout_idempotency_0or73qt\"\n    }\n  ],\n  \"details\": [\n    {\n      \"session_id\": \"ses_17adfa720ffeiwnMYNjyWgfvkO\",\n      \"topic_id\": \"cache_namespace_ttl_0rbc72v\",\n      \"detail\": \"full\",\n      \"content\": \"Role: user\\nText:\\nSwitch topics. Topic: cache namespace TTL incident 0rbc72v.\\nSource file: src/cache/namespace_ttl.0rbc72v.ts.\\nImportant rollout flag: FLAG_NAMESPACE_TTL_CAP_161TTKL.\\nProtective test: cache_caps_noisy_namespace_ttl_1nvngy7.\\nAccepted design: namespace maximum TTL cap with indigo-lantern guard 1PDKSOU.\\nRejected design: provider-wide hard-coded TTL after prairie-topaz rollback 0UHVEN5.\\nWhy accepted won: lets each namespace set a bounded freshness budget without penalizing unrelated caches; marker 0MDQF47 preserved brisk isolation for case 2.\\nStale neighboring detail to avoid for this topic: image preview freshness stale path 0LVN468.\\nPreserve these exact strings for future selective-memory questions.\\n\\n---\\n\\nRole: assistant\\nText:\\nNoted.\"\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780350068446,
+            "end": 1780350068512
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0929aee526e4f253016a1dfc73f390819689a93778156ab316"
+          }
+        }
+      },
+      {
+        "id": "prt_e85222745001MNN7QKWw2VicL4",
+        "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+        "messageID": "msg_e852220b1001IeyWCtSXtnZ6fz",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 4670,
+          "input": 539,
+          "output": 35,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e85222769001xOe3cpD5ud0USp",
+      "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+      "role": "assistant",
+      "time": {
+        "created": 1780350068585,
+        "completed": 1780350072157
+      },
+      "parentID": "msg_e852220aa001muawXL6TsoxFqo",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 5342,
+        "input": 1097,
+        "output": 149,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e852229d0001Z5meZgmLrmYUNA",
+        "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+        "messageID": "msg_e85222769001xOe3cpD5ud0USp",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e85222a66001ag4IlBvq0aUDF4",
+        "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+        "messageID": "msg_e85222769001xOe3cpD5ud0USp",
+        "type": "text",
+        "text": "{\"title\":\"cache namespace TTL incident 0rbc72v\",\"flag\":\"FLAG_NAMESPACE_TTL_CAP_161TTKL\",\"test\":\"cache_caps_noisy_namespace_ttl_1nvngy7\",\"accepted_design\":\"namespace maximum TTL cap with indigo-lantern guard 1PDKSOU\",\"rejected_design\":\"provider-wide hard-coded TTL after prairie-topaz rollback 0UHVEN5\",\"why\":\"lets each namespace set a bounded freshness budget without penalizing unrelated caches; marker 0MDQF47 preserved brisk isolation for case 2\",\"citation\":\"Source file: src/cache/namespace_ttl.0rbc72v.ts.\",\"ignored\":\"image preview freshness stale path 0LVN468\"}",
+        "time": {
+          "start": 1780350069350,
+          "end": 1780350072076
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0dae4ca69c2bdcb2016a1dfc755f608194933e161440cbc87b",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e8522353b0014hiqrOqgo94V2i",
+        "sessionID": "ses_17adddf6affexrIlVIbvBZYb7v",
+        "messageID": "msg_e85222769001xOe3cpD5ud0USp",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 5342,
+          "input": 1097,
+          "output": 149,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

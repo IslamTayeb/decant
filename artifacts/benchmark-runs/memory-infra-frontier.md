@@ -1,6 +1,6 @@
 # Memory Infra Frontier
 
-- Generated: 2026-06-01T21:31:48.919Z
+- Generated: 2026-06-01T21:58:36.798Z
 - Costs are diagnostic estimates from token accounting, not billing truth.
 - Carried chars are the maintained/default memory artifact size multiplied across future query turns.
 
@@ -60,6 +60,22 @@ Decant vs passing RGB: 9.2% lower query tokens, 16.3% lower query cost, 22.3% lo
 At c48, all three main contenders pass. Decant total cost is 25.2% lower than real default continuation and 22.3% lower than RGB, with zero current-work carried memory.
 
 At c96, RGB and Decant both pass while default continuation drops to 1/4 recall. Decant total cost is 25.1% lower than RGB, with zero current-work carried memory.
+
+## Irregular Exact-Fidelity Frontier
+
+24 irregular old topics, 8 exact recall queries, and 24 unrelated current-work queries. The default row continues in the same compacted OpenCode session. RGB rows show compressed-artifact failure versus larger-artifact success; Decant recovers exact old facts with no carried memory artifact.
+
+| Run | Row | Condition | Pass | Recall | Current | Artifact Chars | Total Carried Chars | Current Carried Chars | Query Input | Query Tokens | Query Cost | Total Cost |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| gpt55fast-irregular-frontier-t24-r8-c24-defaults | default continuation | default-opencode-continuation | false | 1/8 | 24/24 | 13,844 | 443,008 | 332,256 | 27,160 | 451,621 | $0.42 | $0.85 |
+| gpt55fast-irregular-frontier-t24-r8-c24-defaults | pasted default summary | default-compaction | false | 1/8 | 24/24 | 11,488 | 367,616 | 275,712 | 83,161 | 263,494 | $0.61 | $0.91 |
+| gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant | RGB budget-constrained | rgb-context | false | 0/8 | 24/24 | 7,998 | 255,936 | 191,952 | 63,748 | 227,517 | $0.52 | $0.86 |
+| gpt55fast-irregular-frontier-t24-r8-c24-rgb-unbounded | RGB unbounded | rgb-context | true | 8/8 | 24/24 | 12,248 | 391,936 | 293,952 | 67,364 | 259,947 | $0.53 | $0.92 |
+| gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant | Decant direct lookup | decant-direct | true | 8/8 | 24/24 | 0 | 0 | 0 | 40,305 | 198,987 | $0.37 | $0.63 |
+
+Decant vs passing RGB: 23.5% lower query tokens, 29.6% lower query cost, 31.5% lower total cost.
+
+Default OpenCode continuation: 1/8 recall, 24/24 current. This separates current-task hygiene from exact historical recovery.
 
 ## Fanout Scaling
 

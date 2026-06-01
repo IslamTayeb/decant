@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e852a5c480015PJ41pKZEKN1Ec",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "user",
+      "time": {
+        "created": 1780350606408
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e852a5c48002dDIbfE00xwI1en",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a5c480015PJ41pKZEKN1Ec",
+        "type": "text",
+        "text": "Recall the maintained decision for search index freshness incident 13owed6. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e852a5c4e001MQl2pe4xPvqHIv",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "assistant",
+      "time": {
+        "created": 1780350606414,
+        "completed": 1780350610284
+      },
+      "parentID": "msg_e852a5c480015PJ41pKZEKN1Ec",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-defaults/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11636,
+        "input": 726,
+        "output": 125,
+        "reasoning": 33,
+        "cache": {
+          "read": 10752,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e852a5e67001UhcngyHejo9I5Q",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a5c4e001MQl2pe4xPvqHIv",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e852a5fa80010K0EZvpKtljR9h",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a5c4e001MQl2pe4xPvqHIv",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_093e466dc5bc1313016a1dfe8f4944819088e8525aa03e7da4"
+          }
+        },
+        "time": {
+          "start": 1780350607272,
+          "end": 1780350608092
+        }
+      },
+      {
+        "id": "prt_e852a62e1001bbyAK0aEdd3EJT",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a5c4e001MQl2pe4xPvqHIv",
+        "type": "text",
+        "text": "{\"title\":\"search index freshness incident 13owed6\",\"flag\":\"FLAG_INDEX_EPOCH_GUARD_1YIVEK8\",\"test\":\"search_rejects_stale_epoch_publish_0z380v2\",\"accepted_design\":\"epoch-stamped publish barrier with rivet-umbra guard 110PIDJ\",\"rejected_design\":\"blind last-write-wins publish after amber-ember rollback 16YXNNW\",\"why\":\"prevents a slow crawl from replacing a newer index snapshot\",\"citation\":\"13owed6\",\"ignored\":\"autocomplete ranking cleanup stale path 0VILAXB\"}",
+        "time": {
+          "start": 1780350608097,
+          "end": 1780350610183
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_093e466dc5bc1313016a1dfe901b848190aefc531f069adb26",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e852a6b43001k5aiTBH6Y5y9eF",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a5c4e001MQl2pe4xPvqHIv",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 11636,
+          "input": 726,
+          "output": 125,
+          "reasoning": 33,
+          "cache": {
+            "read": 10752,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

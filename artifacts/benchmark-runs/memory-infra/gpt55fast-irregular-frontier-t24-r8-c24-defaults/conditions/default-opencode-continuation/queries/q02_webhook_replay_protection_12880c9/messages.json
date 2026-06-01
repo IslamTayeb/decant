@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e852a020d001MwBdz5LHDMHvE5",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "user",
+      "time": {
+        "created": 1780350583309
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e852a020d0021ufNT84zxpblw1",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a020d001MwBdz5LHDMHvE5",
+        "type": "text",
+        "text": "Recall the maintained decision for webhook replay protection incident 12880c9. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e852a0212001JmIpHxJaPuZTbe",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "assistant",
+      "time": {
+        "created": 1780350583314,
+        "completed": 1780350587793
+      },
+      "parentID": "msg_e852a020d001MwBdz5LHDMHvE5",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-defaults/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9698,
+        "input": 338,
+        "output": 128,
+        "reasoning": 16,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e852a043f001OeojjLHWyMsgVq",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a0212001JmIpHxJaPuZTbe",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e852a0546001dEpOAqr4XU0Gnj",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a0212001JmIpHxJaPuZTbe",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_09c0be7d0899547a016a1dfe7825188190a1422965e4c9746b"
+          }
+        },
+        "time": {
+          "start": 1780350584134,
+          "end": 1780350587429
+        }
+      },
+      {
+        "id": "prt_e852a1229001y2jlBD5asJ5N1j",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a0212001JmIpHxJaPuZTbe",
+        "type": "text",
+        "text": "{\"title\":\"webhook replay protection incident 12880c9\",\"flag\":\"FLAG_WEBHOOK_NONCE_LEDGER_16QNT9R\",\"test\":\"webhook_rejects_reused_nonce_1wl6s4t\",\"accepted_design\":\"nonce ledger keyed by provider event id with prairie-saffron guard 1IOBUZS\",\"rejected_design\":\"timestamp-only replay window after willow-cedar rollback 1RMGTNJ\",\"why\":\"blocks fast replays inside timestamp tolerance\",\"citation\":\"12880c9\",\"ignored\":\"stripe retry cosmetics stale path 0KVG4VQ\"}",
+        "time": {
+          "start": 1780350587433,
+          "end": 1780350587707
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_09c0be7d0899547a016a1dfe7b71c8819080ea568afb453455",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e852a1365001pxu8Ur4KPMAibh",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a0212001JmIpHxJaPuZTbe",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 9698,
+          "input": 338,
+          "output": 128,
+          "reasoning": 16,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

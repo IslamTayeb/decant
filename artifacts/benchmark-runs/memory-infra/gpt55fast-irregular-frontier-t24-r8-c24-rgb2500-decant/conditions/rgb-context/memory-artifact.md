@@ -1,0 +1,42 @@
+```markdown
+Memory context: 24 real topics. No DISTRACTOR records.
+
+Why:
+W1 preserves shard-local ordering while letting unrelated carts retry independently.
+W2 prevents a slow crawl from replacing a newer index snapshot.
+W3 keeps quiet-hour promises without delaying every workspace behind one global clock.
+W4 blocks fast replays even when the attacker stays inside the timestamp tolerance.
+W5 lets each namespace set a bounded freshness budget without penalizing unrelated caches.
+W6 prevents a user from bouncing between treatment and control across refreshes.
+W7 lets clean rows commit while preserving exact diagnostics for rejected rows.
+W8 prevents a slow SMS provider from exhausting memory for email and push sends.
+W9 avoids logout races during rotation while still closing replay opportunities.
+W10 keeps newly added sensitive fields private even before regexes are updated.
+W11 lets a new worker recover abandoned exports without duplicating active work.
+W12 keeps one request internally consistent while allowing later requests to see updates.
+
+- checkout idempotency 0or73qt | src/checkout/idempotency.0or73qt.ts | FLAG_CHECKOUT_IDEMPOTENCY_V3_0TKS5NV | checkout_dedupes_retry_after_timeout_0kk4icp | A per-cart idempotency key store with amber-dovetail guard 0CPGJX8 | R global checkout mutex after harbor-lantern rollback 1NO7YH7 | W1
+- search index freshness 1lowtq7 | src/search/freshness.1lowtq7.ts | FLAG_INDEX_EPOCH_GUARD_14MWRGT | search_rejects_stale_epoch_publish_1rkix6f | A epoch-stamped publish barrier with fennel-indigo guard 0CBWWP2 | R blind last-write-wins publish after marble-quartz rollback 1RR2O0P | W2
+- email digest batching 0ddfi0h | src/mail/digest.0ddfi0h.ts | FLAG_DIGEST_BATCH_WINDOW_0TCPHQV | digest_batches_by_workspace_timezone_0pfucrp | A workspace-local send window with keystone-nickel guard 0RW1I0W | R single UTC midnight cron after rivet-velvet rollback 1GDMXDZ | W3
+- webhook replay protection 12880c9 | src/webhooks/replay.12880c9.ts | FLAG_WEBHOOK_NONCE_LEDGER_16QNT9R | webhook_rejects_reused_nonce_1wl6s4t | A nonce ledger keyed by provider event id with prairie-saffron guard 1IOBUZS | R timestamp-only replay window after willow-cedar rollback 1RMGTNJ | W4
+- cache namespace TTL 1uzmybe | src/cache/namespace_ttl.1uzmybe.ts | FLAG_NAMESPACE_TTL_CAP_0QSHWJC | cache_caps_noisy_namespace_ttl_1qdykta | A namespace maximum TTL cap with umbra-xenon guard 1P9Z26F | R provider-wide hard-coded TTL after dovetail-harbor rollback 1V877GS | W5
+- feature rollout sampling 02u6ks6 | src/rollout/sampling.02u6ks6.ts | FLAG_STICKY_ROLLOUT_HASH_1VJUC1G | rollout_keeps_user_bucket_stable_1p1ajii | A stable hash over actor and flag with brisk-ember guard 1J4XBSB | R per-request random sampling after indigo-marble rollback 0Y70HQG | W6
+- csv import quarantine 18db99g | src/imports/quarantine.18db99g.ts | FLAG_IMPORT_ROW_QUARANTINE_0UP4UII | import_quarantines_bad_rows_only_0d8waik | A row-level quarantine ledger with glacier-jigsaw guard 1D0YOK1 | R abort entire import on first invalid row after nickel-rivet rollback 06NAID6 | W7
+- notification fanout 1o2nkc7 | src/notify/fanout.1o2nkc7.ts | FLAG_FANOUT_BACKPRESSURE_0ASQQC5 | fanout_applies_channel_backpressure_0llus8f | A per-channel bounded queue with lantern-onyx guard 19Y8GF2 | R unbounded global fanout array after saffron-willow rollback 1JE9FI9 | W8
+- session rotation 1hptfzy | src/session/rotation.1hptfzy.ts | FLAG_SESSION_ROTATION_GRACE_1W700X8 | session_accepts_previous_cookie_once_05ezjsi | A one-use previous-cookie grace with quartz-topaz guard 0DVX7ZN | R accept every old cookie until expiry after xenon-dovetail rollback 0W5UOYO | W9
+- audit log redaction 0137vnk | src/audit/redact.0137vnk.ts | FLAG_AUDIT_FIELD_ALLOWLIST_17CJ3DI | audit_redacts_unknown_fields_1jgdjfs | A field allowlist redactor with velvet-amber guard 1CHN91X | R regex-only secret scrubber after ember-indigo rollback 03RV7G6 | W10
+- report export leases 166tvzv | src/reports/export_lease.166tvzv.ts | FLAG_EXPORT_LEASE_STEAL_0PY8DYH | export_worker_steals_expired_lease_0zzjko3 | A expiring worker lease with compare-and-swap with cedar-fennel guard 1C8LGRE | R permanent worker ownership after jigsaw-nickel rollback 1AAMBYT | W11
+- tenant config snapshots 05lcfbs | src/config/snapshot.05lcfbs.ts | FLAG_CONFIG_SNAPSHOT_PIN_0OYHCJI | config_pins_snapshot_for_request_1uqlyg0 | A request-scoped config snapshot with harbor-keystone guard 09I3VXP | R live config reads at every call site after onyx-saffron rollback 1CI2CXQ | W12
+- checkout idempotency 06dkxeu | src/checkout/idempotency.06dkxeu.ts | FLAG_CHECKOUT_IDEMPOTENCY_V3_1Z06Y9W | checkout_dedupes_retry_after_timeout_0mbtfga | A per-cart idempotency key store with marble-prairie guard 089K3QZ | R global checkout mutex after topaz-xenon rollback 0Z2HCD4 | W1
+- search index freshness 13owed6 | src/search/freshness.13owed6.ts | FLAG_INDEX_EPOCH_GUARD_1YIVEK8 | search_rejects_stale_epoch_publish_0z380v2 | A epoch-stamped publish barrier with rivet-umbra guard 110PIDJ | R blind last-write-wins publish after amber-ember rollback 16YXNNW | W2
+- email digest batching 0i92crm | src/mail/digest.0i92crm.ts | FLAG_DIGEST_BATCH_WINDOW_07YT6Z4 | digest_batches_by_workspace_timezone_110jngm | A workspace-local send window with willow-brisk guard 10I4OOF | R single UTC midnight cron after fennel-jigsaw rollback 1QZ4OMC | W3
+- webhook replay protection 134k1y8 | src/webhooks/replay.134k1y8.ts | FLAG_WEBHOOK_NONCE_LEDGER_0ACR7P2 | webhook_rejects_reused_nonce_0mglnrc | A nonce ledger keyed by provider event id with dovetail-glacier guard 0EE5BW5 | R timestamp-only replay window after keystone-onyx rollback 0THNP06 | W4
+- cache namespace TTL 0rbc72v | src/cache/namespace_ttl.0rbc72v.ts | FLAG_NAMESPACE_TTL_CAP_161TTKL | cache_caps_noisy_namespace_ttl_1nvngy7 | A namespace maximum TTL cap with indigo-lantern guard 1PDKSOU | R provider-wide hard-coded TTL after prairie-topaz rollback 0UHVEN5 | W5
+- feature rollout sampling 14plb4x | src/rollout/sampling.14plb4x.ts | FLAG_STICKY_ROLLOUT_HASH_1LGO61Z | rollout_keeps_user_bucket_stable_0pgshud | A stable hash over actor and flag with nickel-quartz guard 0GKUDN4 | R per-request random sampling after umbra-amber rollback 0LAWBVB | W6
+- csv import quarantine 1apt87p | src/imports/quarantine.1apt87p.ts | FLAG_IMPORT_ROW_QUARANTINE_1FJEA4R | import_quarantines_bad_rows_only_15tzi15 | A row-level quarantine ledger with saffron-velvet guard 0S5ATJ0 | R abort entire import on first invalid row after brisk-fennel rollback 0V76UEJ | W7
+- notification fanout 1aspc7a | src/notify/fanout.1aspc7a.ts | FLAG_FANOUT_BACKPRESSURE_14E53HG | fanout_applies_channel_backpressure_1q26pga | A per-channel bounded queue with xenon-cedar guard 1OIWCEZ | R unbounded global fanout array after glacier-keystone rollback 1QPOQEW | W8
+- session rotation 0o83phc | src/session/rotation.0o83phc.ts | FLAG_SESSION_ROTATION_GRACE_1MRY6XI | session_accepts_previous_cookie_once_00jfpt4 | A one-use previous-cookie grace with ember-harbor guard 1UTX5XX | R accept every old cookie until expiry after lantern-prairie rollback 1M2PQ2E | W9
+- audit log redaction 10y6prc | src/audit/redact.10y6prc.ts | FLAG_AUDIT_FIELD_ALLOWLIST_1DW98A6 | audit_redacts_unknown_fields_0vr9jhs | A field allowlist redactor with jigsaw-marble guard 1VS8BVH | R regex-only secret scrubber after quartz-umbra rollback 0X0TQSU | W10
+- report export leases 0elv0r8 | src/reports/export_lease.0elv0r8.ts | FLAG_EXPORT_LEASE_STEAL_0VM7I6I | export_worker_steals_expired_lease_031wzak | A expiring worker lease with compare-and-swap with onyx-rivet guard 1PRARVL | R permanent worker ownership after velvet-brisk rollback 12WB6A2 | W11
+- tenant config snapshots 0s9jjxf | src/config/snapshot.0s9jjxf.ts | FLAG_CONFIG_SNAPSHOT_PIN_1EHRJXD | config_pins_snapshot_for_request_0uxub6z | A request-scoped config snapshot with topaz-willow guard 19ZX8KI | R live config reads at every call site after cedar-glacier rollback 0FOT0H9 | W12
+```

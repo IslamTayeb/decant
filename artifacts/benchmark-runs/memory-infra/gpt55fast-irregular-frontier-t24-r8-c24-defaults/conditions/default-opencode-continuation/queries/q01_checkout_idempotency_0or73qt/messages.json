@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e8529dd85001lExWF2VOjQMWCR",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "user",
+      "time": {
+        "created": 1780350573957
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e8529dd85002dPbsr43LfXYErz",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e8529dd85001lExWF2VOjQMWCR",
+        "type": "text",
+        "text": "Recall the maintained decision for checkout idempotency incident 0or73qt. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e8529dd8a0012YAS67w3QVl3Pg",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "assistant",
+      "time": {
+        "created": 1780350573962,
+        "completed": 1780350579018
+      },
+      "parentID": "msg_e8529dd85001lExWF2VOjQMWCR",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-defaults/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9123,
+        "input": 719,
+        "output": 136,
+        "reasoning": 76,
+        "cache": {
+          "read": 8192,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e8529e0a8001UUH4LmCrvCU7ii",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e8529dd8a0012YAS67w3QVl3Pg",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e8529e1ca001ZghCSNrIniKwyY",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e8529dd8a0012YAS67w3QVl3Pg",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0d359d3434be4eea016a1dfe6f11e0819686cbfec0f17fe976"
+          }
+        },
+        "time": {
+          "start": 1780350575050,
+          "end": 1780350576845
+        }
+      },
+      {
+        "id": "prt_e8529e8d0001o05NRami9zYFBZ",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e8529dd8a0012YAS67w3QVl3Pg",
+        "type": "text",
+        "text": "{\"title\":\"checkout idempotency incident 0or73qt\",\"flag\":\"FLAG_CHECKOUT_IDEMPOTENCY_V3_0TKS5NV\",\"test\":\"checkout_dedupes_retry_after_timeout_0kk4icp\",\"accepted_design\":\"per-cart idempotency key store with amber-dovetail guard 0CPGJX8\",\"rejected_design\":\"global checkout mutex after harbor-lantern rollback 1NO7YH7\",\"why\":\"preserves shard-local ordering while letting unrelated carts retry independently\",\"citation\":\"0or73qt\",\"ignored\":\"billing retry backoff stale path 0EWWZD6\"}",
+        "time": {
+          "start": 1780350576848,
+          "end": 1780350578912
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0d359d3434be4eea016a1dfe70db108196b7965b1af87d228c",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e8529f1170015abWZB4JUiTmig",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e8529dd8a0012YAS67w3QVl3Pg",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 9123,
+          "input": 719,
+          "output": 136,
+          "reasoning": 76,
+          "cache": {
+            "read": 8192,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

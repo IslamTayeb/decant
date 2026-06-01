@@ -1,0 +1,212 @@
+[
+  {
+    "info": {
+      "id": "msg_e8521c90b001N29mk1mDgKpTyX",
+      "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+      "role": "user",
+      "time": {
+        "created": 1780350044427
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files. Use Decant session_lookup to find the relevant historical topic. Call session_lookup exactly once with the exact topic title, limit=1, and detail='full'. Answer from the included topic detail. Do not use raw transcript files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": true,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e8521c90d001O823tb02KBR8CH",
+        "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+        "messageID": "msg_e8521c90b001N29mk1mDgKpTyX",
+        "type": "text",
+        "text": "Recall the maintained decision for report export leases incident 166tvzv. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e8521c912001DQoAmTYM99QQxw",
+      "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+      "role": "assistant",
+      "time": {
+        "created": 1780350044434,
+        "completed": 1780350046403
+      },
+      "parentID": "msg_e8521c90b001N29mk1mDgKpTyX",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 4672,
+        "input": 538,
+        "output": 38,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e8521cb80001Zomxsn463BFFHN",
+        "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+        "messageID": "msg_e8521c912001DQoAmTYM99QQxw",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e8521cdf60012P0Ie8n80zaQ51",
+        "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+        "messageID": "msg_e8521c912001DQoAmTYM99QQxw",
+        "type": "tool",
+        "callID": "call_tH0EDQD1hOZay88VOI6uITvM",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "maintained decision for report export leases incident 166tvzv",
+            "limit": 1,
+            "detail": "full"
+          },
+          "output": "{\n  \"query\": \"maintained decision for report export leases incident 166tvzv\",\n  \"hint\": \"Use the included detail for the best matching topic; avoid repeated lookup unless the top result is clearly wrong.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_17adfa720ffeiwnMYNjyWgfvkO\",\n      \"title\": \"memory infra decant-direct prep\",\n      \"updatedAt\": 1780350009403,\n      \"matchedTopicIDs\": [\n        \"reports_export_lease_166tvzv\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"reports_export_lease_166tvzv\",\n          \"label\": \"reports_export_lease_166tvzv\",\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": []\n        }\n      ],\n      \"omittedTopicCount\": 21,\n      \"lookupScore\": 58,\n      \"lookupReason\": \"topic match: reports_export_lease_166tvzv, reports_export_lease_0elv0r8, config_snapshot_0s9jjxf\"\n    }\n  ],\n  \"details\": [\n    {\n      \"session_id\": \"ses_17adfa720ffeiwnMYNjyWgfvkO\",\n      \"topic_id\": \"reports_export_lease_166tvzv\",\n      \"detail\": \"full\",\n      \"content\": \"Role: user\\nText:\\nSwitch topics. Topic: report export leases incident 166tvzv.\\nSource file: src/reports/export_lease.166tvzv.ts.\\nImportant rollout flag: FLAG_EXPORT_LEASE_STEAL_0PY8DYH.\\nProtective test: export_worker_steals_expired_lease_0zzjko3.\\nAccepted design: expiring worker lease with compare-and-swap with cedar-fennel guard 1C8LGRE.\\nRejected design: permanent worker ownership after jigsaw-nickel rollback 1AAMBYT.\\nWhy accepted won: lets a new worker recover abandoned exports without duplicating active work; marker 1SD23G3 preserved topaz isolation for case 1.\\nStale neighboring detail to avoid for this topic: CSV heading title case stale path 1FXZ3V0.\\nPreserve these exact strings for future selective-memory questions.\\n\\n---\\n\\nRole: assistant\\nText:\\nNoted.\"\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780350046263,
+            "end": 1780350046320
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0eb7c5904e14af4e016a1dfc5db6008197829e495c868120b8"
+          }
+        }
+      },
+      {
+        "id": "prt_e8521d094001QL4zuuJXhqSo1y",
+        "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+        "messageID": "msg_e8521c912001DQoAmTYM99QQxw",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 4672,
+          "input": 538,
+          "output": 38,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e8521d0c5001xI6O3HId6ngDCE",
+      "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+      "role": "assistant",
+      "time": {
+        "created": 1780350046405,
+        "completed": 1780350052106
+      },
+      "parentID": "msg_e8521c90b001N29mk1mDgKpTyX",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 5370,
+        "input": 1111,
+        "output": 163,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e8521d2c7001TYZYzkusBfBXO4",
+        "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+        "messageID": "msg_e8521d0c5001xI6O3HId6ngDCE",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e8521d5720012APcapwI1iUyFW",
+        "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+        "messageID": "msg_e8521d0c5001xI6O3HId6ngDCE",
+        "type": "text",
+        "text": "{\"title\":\"reports_export_lease_166tvzv\",\"flag\":\"FLAG_EXPORT_LEASE_STEAL_0PY8DYH\",\"test\":\"export_worker_steals_expired_lease_0zzjko3\",\"accepted_design\":\"expiring worker lease with compare-and-swap with cedar-fennel guard 1C8LGRE\",\"rejected_design\":\"permanent worker ownership after jigsaw-nickel rollback 1AAMBYT\",\"why\":\"lets a new worker recover abandoned exports without duplicating active work; marker 1SD23G3 preserved topaz isolation for case 1\",\"citation\":\"Source file: src/reports/export_lease.166tvzv.ts.\",\"ignored\":\"CSV heading title case stale path 1FXZ3V0\"}",
+        "time": {
+          "start": 1780350047602,
+          "end": 1780350052018
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0ae7a6ba82b52497016a1dfc5f8a308190a716767c3d17b106",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e8521e6e7001yZ6LUQwyMVT0Wq",
+        "sessionID": "ses_17ade370affeZAkpqX3B5NYy44",
+        "messageID": "msg_e8521d0c5001xI6O3HId6ngDCE",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 5370,
+          "input": 1111,
+          "output": 163,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

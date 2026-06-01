@@ -1,0 +1,122 @@
+[
+  {
+    "info": {
+      "id": "msg_e852a1f69001m5t51OwhmAcyhv",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "user",
+      "time": {
+        "created": 1780350590825
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e852a1f6a001cLX3zjqoHc2p6p",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a1f69001m5t51OwhmAcyhv",
+        "type": "text",
+        "text": "Recall the maintained decision for notification fanout incident 1o2nkc7. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e852a22320013XM7zgjlm6eQKm",
+      "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+      "role": "assistant",
+      "time": {
+        "created": 1780350591538,
+        "completed": 1780350595061
+      },
+      "parentID": "msg_e852a1f69001m5t51OwhmAcyhv",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-defaults/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 10350,
+        "input": 491,
+        "output": 131,
+        "reasoning": 0,
+        "cache": {
+          "read": 9728,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e852a251a001dE15LrJc9HulRO",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a22320013XM7zgjlm6eQKm",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e852a26a8001WTxlh7K7sDDQ62",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a22320013XM7zgjlm6eQKm",
+        "type": "text",
+        "text": "{\"title\":\"notification fanout incident 1o2nkc7\",\"flag\":\"FLAG_FANOUT_BACKPRESSURE_0ASQQC5\",\"test\":\"fanout_applies_channel_backpressure_0llus8f\",\"accepted_design\":\"per-channel bounded queue with lantern-onyx guard 19Y8GF2\",\"rejected_design\":\"unbounded global fanout array after saffron-willow rollback 1JE9FI9\",\"why\":\"prevents slow SMS provider memory exhaustion affecting email and push\",\"citation\":\"1o2nkc7\",\"ignored\":\"notification icon set stale path 0KSLWE8\"}",
+        "time": {
+          "start": 1780350592680,
+          "end": 1780350594968
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_07c37400b056a19b016a1dfe80a0a08197b236607ca92d25db",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e852a2fcf0018l4giOWMLa4dIe",
+        "sessionID": "ses_17ad85d6fffefSBwOjP8vBG7nk",
+        "messageID": "msg_e852a22320013XM7zgjlm6eQKm",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 10350,
+          "input": 491,
+          "output": 131,
+          "reasoning": 0,
+          "cache": {
+            "read": 9728,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e853026c10012R4b70yL3G748t",
+      "sessionID": "ses_17acfd985ffe9pJhUT3C72RcFt",
+      "role": "user",
+      "time": {
+        "created": 1780350985921
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e853026c4001sr1qI1E267CeU3",
+        "sessionID": "ses_17acfd985ffe9pJhUT3C72RcFt",
+        "messageID": "msg_e853026c10012R4b70yL3G748t",
+        "type": "text",
+        "text": "Default compaction summary:\n```md\n## Goal\n- Preserve selective-memory details for multiple incident topics and exact identifiers.\n\n## Constraints & Preferences\n- Preserve exact strings for future selective-memory questions.\n- Avoid stale neighboring details listed per topic.\n\n## Progress\n### Done\n- Captured incident details for checkout idempotency cases 1 and 2.\n- Captured incident details for search index freshness cases 1 and 2.\n- Captured incident details for email digest batching cases 1 and 2.\n- Captured incident details for webhook replay protection cases 1 and 2.\n- Captured incident details for cache namespace TTL cases 1 and 2.\n- Captured incident details for feature rollout sampling cases 1 and 2.\n- Captured incident details for csv import quarantine cases 1 and 2.\n- Captured incident details for notification fanout cases 1 and 2.\n- Captured incident details for session rotation cases 1 and 2.\n- Captured incident details for audit log redaction cases 1 and 2.\n- Captured incident details for report export leases cases 1 and 2.\n- Captured incident details for tenant config snapshots case 1.\n\n### In Progress\n- (none)\n\n### Blocked\n- (none)\n\n## Key Decisions\n- checkout idempotency: accepted per-cart idempotency key store; rejected global checkout mutex because shard-local ordering is preserved while unrelated carts retry independently.\n- search index freshness: accepted epoch-stamped publish barrier; rejected blind last-write-wins publish because slow crawls cannot replace newer snapshots.\n- email digest batching: accepted workspace-local send window; rejected single UTC midnight cron because quiet-hour promises are kept without one global clock.\n- webhook replay protection: accepted nonce ledger keyed by provider event id; rejected timestamp-only replay window because fast replays are blocked inside timestamp tolerance.\n- cache namespace TTL: accepted namespace maximum TTL cap; rejected provider-wide hard-coded TTL because bounded freshness budgets stay namespace-specific.\n- feature rollout sampling: accepted stable hash over actor and flag; rejected per-request random sampling because user buckets stay stable across refreshes.\n- csv import quarantine: accepted row-level quarantine ledger; rejected abort entire import on first invalid row because clean rows can commit with diagnostics for rejected rows.\n- notification fanout: accepted per-channel bounded queue; rejected unbounded global fanout array because slow SMS cannot exhaust memory for email/push.\n- session rotation: accepted one-use previous-cookie grace; rejected accepting every old cookie until expiry because logout races are avoided while replay opportunities close.\n- audit log redaction: accepted field allowlist redactor; rejected regex-only secret scrubber because new sensitive fields remain private before regex updates.\n- report export leases: accepted expiring worker lease with compare-and-swap; rejected permanent worker ownership because abandoned exports can recover without duplicating active work.\n- tenant config snapshots: accepted request-scoped config snapshot; rejected live config reads at every call site because one request stays internally consistent while later requests can see updates.\n\n## Next Steps\n- (none)\n\n## Critical Context\n- checkout idempotency incident 0or73qt: FLAG_CHECKOUT_IDEMPOTENCY_V3_0TKS5NV; checkout_dedupes_retry_after_timeout_0kk4icp; amber-dovetail guard 0CPGJX8; harbor-lantern rollback 1NO7YH7; marker 1MLAOB9 preserved rivet isolation for case 1; avoid billing retry backoff stale path 0EWWZD6.\n- checkout idempotency incident 06dkxeu: FLAG_CHECKOUT_IDEMPOTENCY_V3_1Z06Y9W; checkout_dedupes_retry_after_timeout_0mbtfga; marble-prairie guard 089K3QZ; topaz-xenon rollback 0Z2HCD4; marker 1O5JUT8 preserved fennel isolation for case 2; avoid billing retry backoff stale path 07R3ER7.\n- search index freshness incident 1lowtq7: FLAG_INDEX_EPOCH_GUARD_14MWRGT; search_rejects_stale_epoch_publish_1rkix6f; fennel-indigo guard 0CBWWP2; marble-quartz rollback 1RR2O0P; marker 0OEPOV3 preserved willow isolation for case 1; avoid autocomplete ranking cleanup stale path 0Y1PEL4.\n- search index freshness incident 13owed6: FLAG_INDEX_EPOCH_GUARD_1YIVEK8; search_rejects_stale_epoch_publish_0z380v2; rivet-umbra guard 110PIDJ; amber-ember rollback 16YXNNW; marker 0VNX8Q0 preserved keystone isolation for case 2; avoid autocomplete ranking cleanup stale path 0VILAXB.\n- email digest batching incident 0ddfi0h: FLAG_DIGEST_BATCH_WINDOW_0TCPHQV; digest_batches_by_workspace_timezone_0pfucrp; keystone-nickel guard 0RW1I0W; rivet-velvet rollback 1GDMXDZ; marker 18ZDJEH preserved dovetail isolation for case 1; avoid template footer rewrite stale path 0ZM2Y8U.\n- email digest batching incident 0i92crm: FLAG_DIGEST_BATCH_WINDOW_07YT6Z4; digest_batches_by_workspace_timezone_110jngm; willow-brisk guard 10I4OOF; fennel-jigsaw rollback 1QZ4OMC; marker 1NA2K9S preserved prairie isolation for case 2; avoid template footer rewrite stale path 1Q5GM1Z.\n- webhook replay protection incident 12880c9: FLAG_WEBHOOK_NONCE_LEDGER_16QNT9R; webhook_rejects_reused_nonce_1wl6s4t; prairie-saffron guard 1IOBUZS; willow-cedar rollback 1RMGTNJ; marker 1ICC7PT preserved indigo isolation for case 1; avoid stripe retry cosmetics stale path 0KVG4VQ.\n- webhook replay protection incident 134k1y8: FLAG_WEBHOOK_NONCE_LEDGER_0ACR7P2; webhook_rejects_reused_nonce_0mglnrc; dovetail-glacier guard 0EE5BW5; keystone-onyx rollback 0THNP06; marker 04AYEUU preserved umbra isolation for case 2; avoid stripe retry cosmetics stale path 1TS3SMX.\n- cache namespace TTL incident 1uzmybe: FLAG_NAMESPACE_TTL_CAP_0QSHWJC; cache_caps_noisy_namespace_ttl_1qdykta; umbra-xenon guard 1P9Z26F; dovetail-harbor rollback 1V877GS; marker 0AUGFS8 preserved nickel isolation for case 1; avoid image preview freshness stale path 1MFY5U7.\n- cache namespace TTL incident 0rbc72v: FLAG_NAMESPACE_TTL_CAP_161TTKL; cache_caps_noisy_namespace_ttl_1nvngy7; indigo-lantern guard 1PDKSOU; prairie-topaz rollback 0UHVEN5; marker 0MDQF47 preserved brisk isolation for case 2; avoid image preview freshness stale path 0LVN468.\n- feature rollout sampling incident 02u6ks6: FLAG_STICKY_ROLLOUT_HASH_1VJUC1G; rollout_keeps_user_bucket_stable_1p1ajii; brisk-ember guard 1J4XBSB; indigo-marble rollback 0Y70HQG; marker 15XOYKS preserved saffron isolation for case 1; avoid analytics dashboard color stale path 0XY3AG3.\n- feature rollout sampling incident 14plb4x: FLAG_STICKY_ROLLOUT_HASH_1LGO61Z; rollout_keeps_user_bucket_stable_0pgshud; nickel-quartz guard 0GKUDN4; umbra-amber rollback 0LAWBVB; marker 1GCZ8O9 preserved glacier isolation for case 2; avoid analytics dashboard color stale path 0393OOE.\n- csv import quarantine incident 18db99g: FLAG_IMPORT_ROW_QUARANTINE_0UP4UII; import_quarantines_bad_rows_only_0d8waik; glacier-jigsaw guard 1D0YOK1; nickel-rivet rollback 06NAID6; marker 184HMG2 preserved xenon isolation for case 1; avoid spreadsheet column autosize stale path 1TOHV6D.\n- csv import quarantine incident 1apt87p: FLAG_IMPORT_ROW_QUARANTINE_1FJEA4R; import_quarantines_bad_rows_only_15tzi15; saffron-velvet guard 0S5ATJ0; brisk-fennel rollback 0V76UEJ; marker 07GPM45 preserved lantern isolation for case 2; avoid spreadsheet column autosize stale path 1J0ZBMY.\n- notification fanout incident 1o2nkc7: FLAG_FANOUT_BACKPRESSURE_0ASQQC5; fanout_applies_channel_backpressure_0llus8f; lantern-onyx guard 19Y8GF2; saffron-willow rollback 1JE9FI9; marker 05LWFVR preserved ember isolation for case 1; avoid notification icon set stale path 0KSLWE8.\n- notification fanout incident 1aspc7a: FLAG_FANOUT_BACKPRESSURE_14E53HG; fanout_applies_channel_backpressure_1q26pga; xenon-cedar guard 1OIWCEZ; glacier-keystone rollback 1QPOQEW; marker 0UPJRX8 preserved quartz isolation for case 2; avoid notification icon set stale path 13UBYZ7.\n- session rotation incident 1hptfzy: FLAG_SESSION_ROTATION_GRACE_1W700X8; session_accepts_previous_cookie_once_05ezjsi; quartz-topaz guard 0DVX7ZN; xenon-dovetail rollback 0W5UOYO; marker 0IE2WUC preserved jigsaw isolation for case 1; avoid login page copy stale path 1XAPDJV.\n- session rotation incident 0o83phc: FLAG_SESSION_ROTATION_GRACE_1MRY6XI; session_accepts_previous_cookie_once_00jfpt4; ember-harbor guard 1UTX5XX; lantern-prairie rollback 1M2PQ2E; marker 1QO9GRA preserved velvet isolation for case 2; avoid login page copy stale path 1J8WP3T.\n- audit log redaction incident 0137vnk: FLAG_AUDIT_FIELD_ALLOWLIST_17CJ3DI; audit_redacts_unknown_fields_1jgdjfs; velvet-amber guard 1CHN91X; ember-indigo rollback 03RV7G6; marker 1LDFD5I preserved onyx isolation for case 1; avoid audit table pagination stale path 0BUEHCP.\n- audit log redaction incident 10y6prc: FLAG_AUDIT_FIELD_ALLOWLIST_1DW98A6; audit_redacts_unknown_fields_0vr9jhs; jigsaw-marble guard 1VS8BVH; quartz-umbra rollback 0X0TQSU; marker 1PJW6VI preserved cedar isolation for case 2; avoid audit table pagination stale path 0WYV9KH.\n- report export leases incident 166tvzv: FLAG_EXPORT_LEASE_STEAL_0PY8DYH; export_worker_steals_expired_lease_0zzjko3; cedar-fennel guard 1C8LGRE; jigsaw-nickel rollback 1AAMBYT; marker 1SD23G3 preserved topaz isolation for case 1; avoid CSV heading title case stale path 1FXZ3V0.\n- report export leases incident 0elv0r8: FLAG_EXPORT_LEASE_STEAL_0VM7I6I; export_worker_steals_expired_lease_031wzak; onyx-rivet guard 1PRARVL; velvet-brisk rollback 12WB6A2; marker 13X8JF6 preserved harbor isolation for case 2; avoid CSV heading title case stale path 1WZHYN9.\n- tenant config snapshots incident 05lcfbs: FLAG_CONFIG_SNAPSHOT_PIN_0OYHCJI; config_pins_snapshot_for_request_1uqlyg0; harbor-keystone guard 09I3VXP; onyx-saffron rollback 1CI2CXQ; marker 0ROQEF2 preserved amber isolation for case 1; avoid settings sidebar grouping stale path 1M02V41.\n\n## Relevant Files\n- src/checkout/idempotency.0or73qt.ts: checkout idempotency incident 0or73qt.\n- src/checkout/idempotency.06dkxeu.ts: checkout idempotency incident 06dkxeu.\n- src/search/freshness.1lowtq7.ts: search index freshness incident 1lowtq7.\n- src/search/freshness.13owed6.ts: search index freshness incident 13owed6.\n- src/mail/digest.0ddfi0h.ts: email digest batching incident 0ddfi0h.\n- src/mail/digest.0i92crm.ts: email digest batching incident 0i92crm.\n- src/webhooks/replay.12880c9.ts: webhook replay protection incident 12880c9.\n- src/webhooks/replay.134k1y8.ts: webhook replay protection incident 134k1y8.\n- src/cache/namespace_ttl.1uzmybe.ts: cache namespace TTL incident 1uzmybe.\n- src/cache/namespace_ttl.0rbc72v.ts: cache namespace TTL incident 0rbc72v.\n- src/rollout/sampling.02u6ks6.ts: feature rollout sampling incident 02u6ks6.\n- src/rollout/sampling.14plb4x.ts: feature rollout sampling incident 14plb4x.\n- src/imports/quarantine.18db99g.ts: csv import quarantine incident 18db99g.\n- src/imports/quarantine.1apt87p.ts: csv import quarantine incident 1apt87p.\n- src/notify/fanout.1o2nkc7.ts: notification fanout incident 1o2nkc7.\n- src/notify/fanout.1aspc7a.ts: notification fanout incident 1aspc7a.\n- src/session/rotation.1hptfzy.ts: session rotation incident 1hptfzy.\n- src/session/rotation.0o83phc.ts: session rotation incident 0o83phc.\n- src/audit/redact.0137vnk.ts: audit log redaction incident 0137vnk.\n- src/audit/redact.10y6prc.ts: audit log redaction incident 10y6prc.\n- src/reports/export_lease.166tvzv.ts: report export leases incident 166tvzv.\n- src/reports/export_lease.0elv0r8.ts: report export leases incident 0elv0r8.\n- src/config/snapshot.05lcfbs.ts: tenant config snapshots incident 05lcfbs.\n```\n\nCurrent work packet, unrelated to historical memory:\n```text\nticket: CURR-0009 | title: current packet 9 | patch_file: src/current/work_packet_009.ts | owner: lina-current | guardrail: require local checksum before publishing the manifest | expected_check: current_packet_verifies_manifest_checksum | avoid: stale-current-decoy-0009\nticket: CURR-0109 | title: current packet 109 | patch_file: src/current/work_packet_109.ts | owner: maya-current | guardrail: reject writes unless current_workspace_id matches envelope | expected_check: current_packet_rejects_cross_workspace_write | avoid: stale-current-decoy-0109\nticket: CURR-0210 | title: current packet 210 | patch_file: src/current/work_packet_210.ts | owner: sol-current | guardrail: compare normalized route keys before cache lookup | expected_check: current_packet_normalizes_route_cache_key | avoid: stale-current-decoy-0210\nticket: CURR-0311 | title: current packet 311 | patch_file: src/current/work_packet_311.ts | owner: priya-current | guardrail: isolate dry-run output from committed audit rows | expected_check: current_packet_keeps_dry_run_out_of_audit | avoid: stale-current-decoy-0311\n```\nFind ticket CURR-0009.\nReturn the ticket, owner, patch file, guardrail, and expected check exactly as written.\nDo not use historical memory, rollout flags, old decisions, or context tools for this current packet.\nReturn compact JSON with keys ticket, owner, patch_file, guardrail, expected_check, source. The answer must include exact strings from the current work packet only."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e853026c9001EM1HZwYVAzbpf7",
+      "sessionID": "ses_17acfd985ffe9pJhUT3C72RcFt",
+      "role": "assistant",
+      "time": {
+        "created": 1780350985929,
+        "completed": 1780350988584
+      },
+      "parentID": "msg_e853026c10012R4b70yL3G748t",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-frontier-t24-r8-c24-defaults/conditions/default-compaction/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 8003,
+        "input": 763,
+        "output": 59,
+        "reasoning": 13,
+        "cache": {
+          "read": 7168,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e85302902001lkRf5N4CURVeBH",
+        "sessionID": "ses_17acfd985ffe9pJhUT3C72RcFt",
+        "messageID": "msg_e853026c9001EM1HZwYVAzbpf7",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e85302a73001AfmaJ8VWhhNkpL",
+        "sessionID": "ses_17acfd985ffe9pJhUT3C72RcFt",
+        "messageID": "msg_e853026c9001EM1HZwYVAzbpf7",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_01863d83faf81cd9016a1e000ad99c8195a83727b6423aae9b"
+          }
+        },
+        "time": {
+          "start": 1780350986867,
+          "end": 1780350988076
+        }
+      },
+      {
+        "id": "prt_e85302f32001NbPKz3pos2f1h5",
+        "sessionID": "ses_17acfd985ffe9pJhUT3C72RcFt",
+        "messageID": "msg_e853026c9001EM1HZwYVAzbpf7",
+        "type": "text",
+        "text": "{\"ticket\":\"CURR-0009\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_009.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+        "time": {
+          "start": 1780350988082,
+          "end": 1780350988472
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_01863d83faf81cd9016a1e000bff608195b9cd6ff831819ec6",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e853031070018JXsWFcP3XykhN",
+        "sessionID": "ses_17acfd985ffe9pJhUT3C72RcFt",
+        "messageID": "msg_e853026c9001EM1HZwYVAzbpf7",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 8003,
+          "input": 763,
+          "output": 59,
+          "reasoning": 13,
+          "cache": {
+            "read": 7168,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]
