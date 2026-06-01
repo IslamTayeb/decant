@@ -6,6 +6,7 @@ import { tool } from "@opencode-ai/plugin/tool";
 import {
   applyAnnotationEnvelope,
   buildAnnotationSystemPrompt,
+  buildCompactionArchiveOverview,
   buildTopicMessageSummaries,
   buildCompactionPrompt,
   buildContextMapToolView,
@@ -483,10 +484,6 @@ const server: Plugin = async (ctx) => {
     const view = buildContextMapToolView(map);
     const archive = await readMapCompactionArchive(map);
     if (!archive) return view;
-    const session = await getSession(sessionID).catch(() => ({
-      id: sessionID,
-      title: sessionID,
-    }));
     return {
       ...view,
       compacted_archive: {
@@ -496,10 +493,7 @@ const server: Plugin = async (ctx) => {
         archived_at: archive.archivedAt,
         compacted_at: archive.compaction.compactedAt,
         summary_message_id: archive.compaction.summaryMessageID,
-        topics: buildHistoricalOverview({
-          map: archive.map,
-          session,
-        }).topics,
+        topics: buildCompactionArchiveOverview(archive.map),
         next_steps: [
           "Use session_detail with this session_id and an archived topic_id to inspect a compacted topic.",
           "Use message_detail on one archived message_id only when the topic-level detail is insufficient.",

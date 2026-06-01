@@ -18,6 +18,9 @@ Conditions:
   through Decant session/topic/message tools.
 - `decant-direct`: future recall queries use one `session_lookup` call with
   included detail; current-work queries should not call context tools.
+- `decant-archive-continuation`: the historical session is compacted with
+  Decant enabled, future queries continue in that same session, and recall
+  queries must route through the compacted archive exposed by `view_context`.
 
 The main metrics split memory maintenance from later query cost:
 

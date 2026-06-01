@@ -27,7 +27,8 @@ type ConditionID =
   | "default-opencode-continuation"
   | "rgb-context"
   | "decant-map"
-  | "decant-direct";
+  | "decant-direct"
+  | "decant-archive-continuation";
 
 type Options = {
   conditions: ConditionID[];
@@ -193,6 +194,7 @@ const defaultConditions: ConditionID[] = [
 const validConditions: ConditionID[] = [
   ...defaultConditions,
   "default-opencode-continuation",
+  "decant-archive-continuation",
 ];
 
 const topicSeeds = [
@@ -381,6 +383,7 @@ async function runCondition(
       conditionDir,
       modelSlug: options.modelSlug,
       plugin: isDecantCondition(condition),
+      taskBoundary: condition === "decant-archive-continuation",
     });
     server = await startServer(env, worktree);
     client = createOpencodeClient({ baseUrl: server.url });
@@ -407,7 +410,8 @@ async function runCondition(
 
     if (
       condition === "default-compaction" ||
-      condition === "default-opencode-continuation"
+      condition === "default-opencode-continuation" ||
+      condition === "decant-archive-continuation"
     ) {
       await summarizeSession(
         client,
@@ -456,7 +460,7 @@ async function runCondition(
 
     for (const query of queries) {
       console.log(`memory-infra: ${condition} ${query.id}`);
-      const querySession = isDefaultContinuation(condition)
+      const querySession = isSameSessionContinuation(condition)
         ? prepSession
         : await createSession(
             client,
@@ -892,7 +896,10 @@ function buildQueryPrompt(
         text: textWithArtifact("Default compaction summary"),
       };
     }
-    if (condition === "default-opencode-continuation") {
+    if (
+      condition === "default-opencode-continuation" ||
+      condition === "decant-archive-continuation"
+    ) {
       return {
         system: jsonSystemPrompt(),
         tools: noTools(),
@@ -955,6 +962,23 @@ function buildQueryPrompt(
     return {
       system: jsonSystemPrompt(),
       tools: noTools(),
+      text: [query.text, outputContract].join("\n"),
+    };
+  }
+  if (condition === "decant-archive-continuation") {
+    return {
+      system: [
+        jsonSystemPrompt(),
+        "This is the same session after compaction.",
+        "Use view_context to inspect compacted_archive topics.",
+        "Then call session_detail exactly once on the matching archived topic with detail='full'.",
+        "Answer from the compaction archive detail. Do not use session_lookup or raw transcript files.",
+      ].join(" "),
+      tools: {
+        ...noTools(),
+        view_context: true,
+        session_detail: true,
+      },
       text: [query.text, outputContract].join("\n"),
     };
   }
@@ -1073,18 +1097,13 @@ function routePolicyPassed(condition: ConditionID, queries: QueryStats[]) {
   return queries.every((query) =>
     query.kind === "current"
       ? query.context_tool_call_count === 0
-      : !isDecantCondition(condition) ||
-        (condition === "decant-direct"
-          ? query.tool_names.includes("session_lookup")
-          : query.tool_names.includes("session_lookup") &&
-            (query.tool_names.includes("session_detail") ||
-              query.tool_names.includes("message_detail"))),
+      : queryRoutePolicyPassed(condition, query, query.tool_names),
   );
 }
 
 function queryRoutePolicyPassed(
   condition: ConditionID,
-  query: Query,
+  query: Pick<Query, "kind">,
   toolNames: string[],
 ) {
   const contextToolCount = toolNames.filter((tool) =>
@@ -1092,6 +1111,12 @@ function queryRoutePolicyPassed(
   ).length;
   if (query.kind === "current") return contextToolCount === 0;
   if (!isDecantCondition(condition)) return contextToolCount === 0;
+  if (condition === "decant-archive-continuation") {
+    return (
+      toolNames.includes("view_context") &&
+      toolNames.includes("session_detail")
+    );
+  }
   if (condition === "decant-direct") return toolNames.includes("session_lookup");
   return (
     toolNames.includes("session_lookup") &&
@@ -1100,11 +1125,18 @@ function queryRoutePolicyPassed(
 }
 
 function isDecantCondition(condition: ConditionID) {
-  return condition === "decant-map" || condition === "decant-direct";
+  return (
+    condition === "decant-map" ||
+    condition === "decant-direct" ||
+    condition === "decant-archive-continuation"
+  );
 }
 
-function isDefaultContinuation(condition: ConditionID) {
-  return condition === "default-opencode-continuation";
+function isSameSessionContinuation(condition: ConditionID) {
+  return (
+    condition === "default-opencode-continuation" ||
+    condition === "decant-archive-continuation"
+  );
 }
 
 function buildRunStats({
@@ -1234,6 +1266,7 @@ async function buildOpenCodeEnv(input: {
   conditionDir: string;
   modelSlug: string;
   plugin: boolean;
+  taskBoundary?: boolean;
 }) {
   await Promise.all(
     Object.values(input.opencodeRoot).map((dir) =>
@@ -1263,6 +1296,7 @@ async function buildOpenCodeEnv(input: {
     DECANT_CACHE_STABLE: "1",
     DECANT_STABLE_PLACEHOLDERS: "1",
     DECANT_STABLE_ANCHORS: "1",
+    ...(input.taskBoundary ? { DECANT_TASK_BOUNDARY: "1" } : {}),
     OPENCODE_CONFIG_CONTENT: JSON.stringify(config),
     ...(authContent ? { OPENCODE_AUTH_CONTENT: authContent } : {}),
   } satisfies NodeJS.ProcessEnv;

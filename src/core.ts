@@ -1267,7 +1267,7 @@ export function buildCompactionPrompt(map: ContextMapFile) {
 export function buildContextMapToolView(map: ContextMapFile) {
   const topics = map.topicOrder
     .map((topicID) => map.topics[topicID])
-    .filter(Boolean);
+    .filter((topic): topic is TopicEntry => Boolean(topic));
   return {
     session_id: map.sessionID,
     total_token_estimate: map.totalTokenEstimate,
@@ -1284,9 +1284,9 @@ export function buildContextMapToolView(map: ContextMapFile) {
     topics: topics.map((topic) => ({
       id: topic.id,
       label: topic.label,
-      summary: topic.summary,
+      summary: topicSummaryForToolView(topic),
       placeholder: topic.placeholder,
-      key_facts: topic.keyFacts,
+      key_facts: topicKeyFactsForToolView(topic),
       fidelity: topic.fidelity,
       fidelity_source:
         topic.fidelitySource === "default" ? "auto" : topic.fidelitySource,
@@ -1300,7 +1300,7 @@ export function buildContextMapToolView(map: ContextMapFile) {
         id: message.id,
         role: message.role,
         topic_id: message.topicID,
-        summary: message.summary,
+        summary: messageSummaryForToolView(map, message),
         hidden: message.hidden,
         fidelity_override: message.fidelityOverride,
         token_estimate: message.tokenEstimate,
@@ -1315,6 +1315,35 @@ export function buildContextMapToolView(map: ContextMapFile) {
         suggested_topic_label: item.suggestedTopicLabel,
       })),
   };
+}
+
+function topicSummaryForToolView(topic: TopicEntry) {
+  if (topic.fidelity === "full" || topic.fidelity === "summary") {
+    return topic.summary;
+  }
+  if (topic.fidelity === "hidden") return "Hidden topic.";
+  return topic.placeholder;
+}
+
+function topicKeyFactsForToolView(topic: TopicEntry) {
+  return topic.fidelity === "full" || topic.fidelity === "summary"
+    ? topic.keyFacts
+    : [];
+}
+
+function messageSummaryForToolView(map: ContextMapFile, message: MessageEntry) {
+  const topic = message.topicID ? map.topics[message.topicID] : undefined;
+  const treatment = computeEffectiveTreatment(message, topic);
+  if (
+    treatment === "kept-full" ||
+    treatment === "summarized" ||
+    treatment === "unassigned"
+  ) {
+    return message.summary;
+  }
+  if (treatment === "compressed-paragraph") return "Compressed topic message.";
+  if (treatment === "placeholder-stub") return "Placeholder topic message.";
+  return "Hidden message.";
 }
 
 export function buildHistoricalOverview(input: {
@@ -1351,6 +1380,20 @@ export function buildHistoricalOverview(input: {
         activeForCommit: activeTopicIDs.has(topic.id),
       })),
   };
+}
+
+export function buildCompactionArchiveOverview(map: ContextMapFile) {
+  return map.topicOrder
+    .map((topicID) => map.topics[topicID])
+    .filter((topic): topic is TopicEntry => Boolean(topic))
+    .map((topic) => ({
+      id: topic.id,
+      label: topic.label,
+      placeholder: topic.placeholder,
+      tokenEstimate: topic.tokenEstimate,
+      messageCount: topic.messageIDs.length,
+      fidelity: topic.fidelity,
+    }));
 }
 
 export function buildTopicMessageSummaries(input: {

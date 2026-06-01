@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  buildCompactionArchiveOverview,
   buildFallbackMapFromMessages,
   buildContextMapToolView,
   buildSessionZoomText,
@@ -49,7 +50,7 @@ function topic(input: Partial<TopicEntry> & Pick<TopicEntry, "id">) {
     label: input.label ?? input.id,
     summary: input.summary ?? input.id,
     placeholder: input.placeholder ?? input.id,
-    keyFacts: [],
+    keyFacts: input.keyFacts ?? [],
     fidelity: input.fidelity ?? "full",
     fidelitySource: "default",
     messageIDs,
@@ -316,6 +317,68 @@ test("context tool view exposes every topic fidelity level", () => {
     "placeholder",
     "hidden",
   ]);
+});
+
+test("context tool view respects placeholder topic fidelity", () => {
+  const contextMap = map(
+    [
+      topic({
+        id: "session_summary",
+        summary: "Exact flag FLAG_ARCHIVED_ONLY and test archived_only_case.",
+        placeholder: "Historical context compacted",
+        keyFacts: ["FLAG_ARCHIVED_ONLY"],
+        fidelity: "placeholder",
+        messageIDs: ["m1"],
+      }),
+    ],
+    [
+      message({
+        id: "m1",
+        topicID: "session_summary",
+        summary: "Exact flag FLAG_ARCHIVED_ONLY and test archived_only_case.",
+      }),
+    ],
+  );
+
+  const view = buildContextMapToolView(contextMap);
+
+  assert.equal(view.topics[0]?.summary, "Historical context compacted");
+  assert.deepEqual(view.topics[0]?.key_facts, []);
+  assert.equal(view.messages[0]?.summary, "Placeholder topic message.");
+  assert.equal(JSON.stringify(view).includes("FLAG_ARCHIVED_ONLY"), false);
+  assert.equal(JSON.stringify(view).includes("archived_only_case"), false);
+});
+
+test("compaction archive overview exposes routing stubs only", () => {
+  const contextMap = map(
+    [
+      topic({
+        id: "auth",
+        label: "Auth rationale",
+        summary: "Exact flag FLAG_AUTH_REFRESH_V3 and test auth_refresh_retry_case.",
+        placeholder: "Auth rationale archived.",
+        keyFacts: ["FLAG_AUTH_REFRESH_V3"],
+        messageIDs: ["m1"],
+        tokenEstimate: 42,
+      }),
+    ],
+    [message({ id: "m1", topicID: "auth" })],
+  );
+
+  const overview = buildCompactionArchiveOverview(contextMap);
+
+  assert.deepEqual(overview, [
+    {
+      id: "auth",
+      label: "Auth rationale",
+      placeholder: "Auth rationale archived.",
+      tokenEstimate: 42,
+      messageCount: 1,
+      fidelity: "full",
+    },
+  ]);
+  assert.equal(JSON.stringify(overview).includes("FLAG_AUTH_REFRESH_V3"), false);
+  assert.equal(JSON.stringify(overview).includes("auth_refresh_retry_case"), false);
 });
 
 test("compaction reset can keep historical summaries as placeholders", () => {
