@@ -43,6 +43,7 @@ import {
   writeDebugLog,
   appendTrace,
   archiveContextMapForCompaction,
+  readCompactionArchive,
   readGitAiDecantIndex,
 } from "./storage";
 import { buildFallbackMapFromMessages } from "./core";
@@ -479,7 +480,74 @@ const server: Plugin = async (ctx) => {
     const messages = await getMessages(sessionID);
     const map =
       (await persistCoverage(sessionID, messages)) ?? (await getMap(sessionID));
-    return buildContextMapToolView(map);
+    const view = buildContextMapToolView(map);
+    const archive = await readMapCompactionArchive(map);
+    if (!archive) return view;
+    const session = await getSession(sessionID).catch(() => ({
+      id: sessionID,
+      title: sessionID,
+    }));
+    return {
+      ...view,
+      compacted_archive: {
+        available: true,
+        source: "compaction_archive",
+        session_id: sessionID,
+        archived_at: archive.archivedAt,
+        compacted_at: archive.compaction.compactedAt,
+        summary_message_id: archive.compaction.summaryMessageID,
+        topics: buildHistoricalOverview({
+          map: archive.map,
+          session,
+        }).topics,
+        next_steps: [
+          "Use session_detail with this session_id and an archived topic_id to inspect a compacted topic.",
+          "Use message_detail on one archived message_id only when the topic-level detail is insufficient.",
+        ],
+      },
+    };
+  }
+
+  async function readMapCompactionArchive(map: ContextMapFile) {
+    const archive = await readCompactionArchive(map.compaction?.archivePath).catch(
+      () => undefined,
+    );
+    if (!archive) return undefined;
+    return archive;
+  }
+
+  async function mapForSessionTopic(sessionID: string, topicID: string) {
+    const { session, map } = await ensureHistoricalMap(sessionID);
+    if (map.topics[topicID]) {
+      return { session, map, source: "active" as const };
+    }
+    const archive = await readMapCompactionArchive(map);
+    if (archive?.map.topics[topicID]) {
+      return {
+        session,
+        map: archive.map,
+        source: "compaction_archive" as const,
+        archive,
+      };
+    }
+    return { session, map, source: "active" as const };
+  }
+
+  async function mapForSessionMessage(sessionID: string, messageID: string) {
+    const { session, map } = await ensureHistoricalMap(sessionID);
+    if (map.messages[messageID]) {
+      return { session, map, source: "active" as const };
+    }
+    const archive = await readMapCompactionArchive(map);
+    if (archive?.map.messages[messageID]) {
+      return {
+        session,
+        map: archive.map,
+        source: "compaction_archive" as const,
+        archive,
+      };
+    }
+    return { session, map, source: "active" as const };
   }
 
   async function sessionLookup(
@@ -1156,7 +1224,7 @@ const server: Plugin = async (ctx) => {
       }),
       session_detail: tool({
         description:
-          "Get progressive detail from a past session topic: compressed summary, message summaries, or full topic transcript",
+          "Get progressive detail from a current or past session topic, including compacted archive topics: compressed summary, message summaries, or full topic transcript",
         args: {
           session_id: tool.schema.string().describe("Session ID to look up"),
           topic_id: tool.schema
@@ -1172,13 +1240,18 @@ const server: Plugin = async (ctx) => {
           toolCtx.metadata({
             title: `Session detail: ${args.topic_id}`,
           });
-          const { map } = await ensureHistoricalMap(args.session_id);
+          const resolved = await mapForSessionTopic(
+            args.session_id,
+            args.topic_id,
+          );
+          const { map } = resolved;
           if (args.detail === "messages") {
             return JSON.stringify(
               {
                 session_id: args.session_id,
                 topic_id: args.topic_id,
                 detail: args.detail,
+                source: resolved.source,
                 ...buildTopicMessageSummaries({
                   map,
                   topicID: args.topic_id,
@@ -1199,6 +1272,7 @@ const server: Plugin = async (ctx) => {
               session_id: args.session_id,
               topic_id: args.topic_id,
               detail: args.detail,
+              source: resolved.source,
               content: buildSessionZoomText({
                 map,
                 topicID: args.topic_id,
@@ -1213,7 +1287,7 @@ const server: Plugin = async (ctx) => {
       }),
       message_detail: tool({
         description:
-          "Fetch one full historical message after session_detail detail='messages' identifies the relevant message_id",
+          "Fetch one full current or historical message after session_detail detail='messages' identifies the relevant message_id",
         args: {
           session_id: tool.schema.string().describe("Session ID to look up"),
           message_id: tool.schema
@@ -1222,12 +1296,17 @@ const server: Plugin = async (ctx) => {
         },
         async execute(args, toolCtx) {
           toolCtx.metadata({ title: `Message detail: ${args.message_id}` });
-          const { map } = await ensureHistoricalMap(args.session_id);
+          const resolved = await mapForSessionMessage(
+            args.session_id,
+            args.message_id,
+          );
+          const { map } = resolved;
           const messages = await getMessages(args.session_id);
           return JSON.stringify(
             {
               session_id: args.session_id,
               message_id: args.message_id,
+              source: resolved.source,
               ...buildMessageDetail({
                 map,
                 messageID: args.message_id,

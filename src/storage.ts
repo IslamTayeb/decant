@@ -18,6 +18,20 @@ import { computeEffectiveTreatment, rebuildTotals } from "./core";
 
 const MAP_VERSION = 1 as const;
 
+export type CompactionArchiveFile = {
+  version: 1;
+  reason: "compaction";
+  archivedAt: number;
+  sessionID: string;
+  compaction: {
+    compactedAt: number;
+    summaryMessageID: string;
+    summaryText: string;
+    includeMessageID?: string;
+  };
+  map: ContextMapFile;
+};
+
 function homeDir() {
   return process.env.HOME || os.homedir();
 }
@@ -268,6 +282,18 @@ export async function archiveContextMapForCompaction(input: {
     map: input.map,
   });
   return archivePath;
+}
+
+export async function readCompactionArchive(
+  archivePath: string | undefined,
+): Promise<CompactionArchiveFile | undefined> {
+  if (!archivePath) return undefined;
+  const raw = await fs.readFile(archivePath, "utf8");
+  const parsed = JSON.parse(raw) as Partial<CompactionArchiveFile>;
+  if (parsed.reason !== "compaction" || !parsed.map) return undefined;
+  const archive = parsed as CompactionArchiveFile;
+  rebuildTotals(archive.map);
+  return archive;
 }
 
 export async function readCommitMap(): Promise<CommitMapFile> {
