@@ -1,0 +1,212 @@
+[
+  {
+    "info": {
+      "id": "msg_e85916e4c001cMhM86DfwOtBGr",
+      "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+      "role": "user",
+      "time": {
+        "created": 1780357361228
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files. Use Decant session_lookup to find the relevant historical topic. Call session_lookup exactly once with the exact topic title, limit=1, and detail='full'. Answer from the included topic detail. Do not use raw transcript files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": true,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e85916e4f001QtaqWsTD7fKzKm",
+        "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+        "messageID": "msg_e85916e4c001cMhM86DfwOtBGr",
+        "type": "text",
+        "text": "Recall the maintained decision for email digest batching incident 0ddfi0h. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e85916e55001A02FbQM7d9bBTm",
+      "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+      "role": "assistant",
+      "time": {
+        "created": 1780357361237,
+        "completed": 1780357363118
+      },
+      "parentID": "msg_e85916e4c001cMhM86DfwOtBGr",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-cross-threshold-t8-r4-c48-rep1/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 4662,
+        "input": 531,
+        "output": 35,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e85917168001Xuurd0J4U8sPHf",
+        "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+        "messageID": "msg_e85916e55001A02FbQM7d9bBTm",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e8591730e001D0haGbdKD4q8Oj",
+        "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+        "messageID": "msg_e85916e55001A02FbQM7d9bBTm",
+        "type": "tool",
+        "callID": "call_2IQzUd4pjL64MFHwlhDM9EcI",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "email digest batching incident 0ddfi0h",
+            "limit": 1,
+            "detail": "full"
+          },
+          "output": "{\n  \"query\": \"email digest batching incident 0ddfi0h\",\n  \"hint\": \"Use the included detail for the best matching topic; avoid repeated lookup unless the top result is clearly wrong.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_17a6f494cffeu4tjQ9D1HZWVd5\",\n      \"title\": \"memory infra decant-direct prep\",\n      \"updatedAt\": 1780357346565,\n      \"matchedTopicIDs\": [\n        \"mail_digest_0ddfi0h\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"mail_digest_0ddfi0h\",\n          \"label\": \"mail_digest_0ddfi0h\",\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": []\n        }\n      ],\n      \"omittedTopicCount\": 5,\n      \"lookupScore\": 38,\n      \"lookupReason\": \"topic match: mail_digest_0ddfi0h, checkout_idempotency_0or73qt, search_freshness_1lowtq7\"\n    }\n  ],\n  \"details\": [\n    {\n      \"session_id\": \"ses_17a6f494cffeu4tjQ9D1HZWVd5\",\n      \"topic_id\": \"mail_digest_0ddfi0h\",\n      \"detail\": \"full\",\n      \"content\": \"Role: user\\nText:\\nSwitch topics. Topic: email digest batching incident 0ddfi0h.\\nSource file: src/mail/digest.0ddfi0h.ts.\\nImportant rollout flag: FLAG_DIGEST_BATCH_WINDOW_0TCPHQV.\\nProtective test: digest_batches_by_workspace_timezone_0pfucrp.\\nAccepted design: workspace-local send window with keystone-nickel guard 0RW1I0W.\\nRejected design: single UTC midnight cron after rivet-velvet rollback 1GDMXDZ.\\nWhy accepted won: keeps quiet-hour promises without delaying every workspace behind one global clock; marker 18ZDJEH preserved dovetail isolation for case 1.\\nStale neighboring detail to avoid for this topic: template footer rewrite stale path 0ZM2Y8U.\\nPreserve these exact strings for future selective-memory questions.\\n\\n---\\n\\nRole: assistant\\nText:\\nNoted. I’ll preserve the email digest batching incident `0ddfi0h` details exactly, including the rollout flag, protective test, accepted/rejected designs, rationale, marker, and stale neighboring detail to avoid.\"\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780357363004,
+            "end": 1780357363041
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_09ec5daade4c721c016a1e18f271cc81938e55d95ee7bd4a97"
+          }
+        }
+      },
+      {
+        "id": "prt_e859175880014UMDhXcCxPBS0Y",
+        "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+        "messageID": "msg_e85916e55001A02FbQM7d9bBTm",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 4662,
+          "input": 531,
+          "output": 35,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e859175b0001K81MYmM3W1RX4u",
+      "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+      "role": "assistant",
+      "time": {
+        "created": 1780357363120,
+        "completed": 1780357367746
+      },
+      "parentID": "msg_e85916e4c001cMhM86DfwOtBGr",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-cross-threshold-t8-r4-c48-rep1/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 5378,
+        "input": 1131,
+        "output": 151,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e85917bc5001Tstd4lGe15D1I3",
+        "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+        "messageID": "msg_e859175b0001K81MYmM3W1RX4u",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e85917c99001wseRYGPfJmM52U",
+        "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+        "messageID": "msg_e859175b0001K81MYmM3W1RX4u",
+        "type": "text",
+        "text": "{\"title\":\"email digest batching incident 0ddfi0h\",\"flag\":\"FLAG_DIGEST_BATCH_WINDOW_0TCPHQV\",\"test\":\"digest_batches_by_workspace_timezone_0pfucrp\",\"accepted_design\":\"workspace-local send window with keystone-nickel guard 0RW1I0W\",\"rejected_design\":\"single UTC midnight cron after rivet-velvet rollback 1GDMXDZ\",\"why\":\"keeps quiet-hour promises without delaying every workspace behind one global clock; marker 18ZDJEH preserved dovetail isolation for case 1\",\"citation\":\"Source file: src/mail/digest.0ddfi0h.ts.\",\"ignored\":\"template footer rewrite stale path 0ZM2Y8U\"}",
+        "time": {
+          "start": 1780357364889,
+          "end": 1780357367644
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_056d50e7dc5e15d2016a1e18f4e3d88196872dfc068b40891c",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e859187940013XVwEQ1iPqrCEg",
+        "sessionID": "ses_17a6e91ceffemxBnIIrbh5N3KZ",
+        "messageID": "msg_e859175b0001K81MYmM3W1RX4u",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 5378,
+          "input": 1131,
+          "output": 151,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

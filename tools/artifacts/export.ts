@@ -66,6 +66,8 @@ const publishedRuns = new Map([
       "gpt55fast-irregular-t24-r4-c12-rgb-longtimeout",
       "gpt55fast-irregular-t24-r4-c12-decant",
       "gpt55fast-threshold-irregular-t8-r4-c48-all",
+      "gpt55fast-cross-threshold-t8-r4-c48-rep1",
+      "gpt55fast-cross-threshold-t8-r4-c48-rep2",
       "gpt55fast-threshold-irregular-t8-r4-c96-main",
       "gpt55fast-irregular-frontier-t24-r8-c24-defaults",
       "gpt55fast-irregular-frontier-t24-r8-c24-rgb2500-decant",

@@ -1,6 +1,6 @@
 # Memory Infra Frontier
 
-- Generated: 2026-06-01T21:58:36.798Z
+- Generated: 2026-06-01T23:47:27.329Z
 - Costs are diagnostic estimates from token accounting, not billing truth.
 - Carried chars are the maintained/default memory artifact size multiplied across future query turns.
 
@@ -60,6 +60,32 @@ Decant vs passing RGB: 9.2% lower query tokens, 16.3% lower query cost, 22.3% lo
 At c48, all three main contenders pass. Decant total cost is 25.2% lower than real default continuation and 22.3% lower than RGB, with zero current-work carried memory.
 
 At c96, RGB and Decant both pass while default continuation drops to 1/4 recall. Decant total cost is 25.1% lower than RGB, with zero current-work carried memory.
+
+## Cross-Session Threshold Repeats
+
+Three runs of the same cross-session selective-memory shape: 8 irregular old topics, 4 exact recall queries, and 48 unrelated current-work queries. Future tasks run in fresh sessions. Default compaction and RGB carry a memory artifact into every query; Decant uses direct lookup only on recall turns.
+
+| Run | Row | Condition | Pass | Recall | Current | Artifact Chars | Total Carried Chars | Current Carried Chars | Query Input | Query Tokens | Query Cost | Total Cost |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| gpt55fast-threshold-irregular-t8-r4-c48-all | rep0 default compaction | default-compaction | false | 2/4 | 48/48 | 5,227 | 271,804 | 250,896 | 94,479 | 321,592 | $0.72 | $0.89 |
+| gpt55fast-threshold-irregular-t8-r4-c48-all | rep0 RGB | rgb-context | true | 4/4 | 48/48 | 4,202 | 218,504 | 201,696 | 88,221 | 305,439 | $0.67 | $0.85 |
+| gpt55fast-threshold-irregular-t8-r4-c48-all | rep0 Decant direct | decant-direct | true | 4/4 | 48/48 | 0 | 0 | 0 | 68,639 | 277,404 | $0.56 | $0.66 |
+| gpt55fast-cross-threshold-t8-r4-c48-rep1 | rep1 default compaction | default-compaction | false | 0/4 | 48/48 | 4,999 | 259,948 | 239,952 | 91,205 | 313,247 | $0.70 | $0.82 |
+| gpt55fast-cross-threshold-t8-r4-c48-rep1 | rep1 RGB | rgb-context | true | 4/4 | 48/48 | 4,091 | 212,732 | 196,368 | 83,397 | 304,634 | $0.65 | $0.81 |
+| gpt55fast-cross-threshold-t8-r4-c48-rep1 | rep1 Decant direct | decant-direct | true | 4/4 | 48/48 | 0 | 0 | 0 | 44,367 | 277,747 | $0.46 | $0.59 |
+| gpt55fast-cross-threshold-t8-r4-c48-rep2 | rep2 default compaction | default-compaction | false | 1/4 | 48/48 | 5,945 | 309,140 | 285,360 | 46,125 | 325,041 | $0.50 | $0.65 |
+| gpt55fast-cross-threshold-t8-r4-c48-rep2 | rep2 RGB | rgb-context | true | 4/4 | 48/48 | 4,132 | 214,864 | 198,336 | 71,109 | 304,682 | $0.60 | $0.73 |
+| gpt55fast-cross-threshold-t8-r4-c48-rep2 | rep2 Decant direct | decant-direct | true | 4/4 | 48/48 | 0 | 0 | 0 | 56,416 | 277,337 | $0.51 | $0.60 |
+
+Aggregate across repeat rows:
+
+| Condition | Pass Runs | Query Pass | Recall Pass | Current Pass | Avg Query Input | Avg Query Tokens | Avg Query Cost | Avg Total Cost | Avg Current Carried Chars |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| default-compaction | 0/3 | 147/156 | 3/12 | 144/144 | 77,270 | 319,960 | $0.64 | $0.79 | 258,736 |
+| rgb-context | 3/3 | 156/156 | 12/12 | 144/144 | 80,909 | 304,918 | $0.64 | $0.80 | 198,800 |
+| decant-direct | 3/3 | 156/156 | 12/12 | 144/144 | 56,474 | 277,496 | $0.51 | $0.62 | 0 |
+
+Aggregate Decant vs RGB: 9.0% lower query tokens, 20.5% lower query cost, 22.5% lower total cost.
 
 ## Irregular Exact-Fidelity Frontier
 

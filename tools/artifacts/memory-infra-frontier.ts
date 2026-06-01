@@ -132,6 +132,58 @@ const runGroups = [
     ],
   },
   {
+    title: "Cross-Session Threshold Repeats",
+    note:
+      "Three runs of the same cross-session selective-memory shape: 8 irregular old topics, 4 exact recall queries, and 48 unrelated current-work queries. Future tasks run in fresh sessions. Default compaction and RGB carry a memory artifact into every query; Decant uses direct lookup only on recall turns.",
+    runs: [
+      {
+        run: "gpt55fast-threshold-irregular-t8-r4-c48-all",
+        condition: "default-compaction",
+        label: "rep0 default compaction",
+      },
+      {
+        run: "gpt55fast-threshold-irregular-t8-r4-c48-all",
+        condition: "rgb-context",
+        label: "rep0 RGB",
+      },
+      {
+        run: "gpt55fast-threshold-irregular-t8-r4-c48-all",
+        condition: "decant-direct",
+        label: "rep0 Decant direct",
+      },
+      {
+        run: "gpt55fast-cross-threshold-t8-r4-c48-rep1",
+        condition: "default-compaction",
+        label: "rep1 default compaction",
+      },
+      {
+        run: "gpt55fast-cross-threshold-t8-r4-c48-rep1",
+        condition: "rgb-context",
+        label: "rep1 RGB",
+      },
+      {
+        run: "gpt55fast-cross-threshold-t8-r4-c48-rep1",
+        condition: "decant-direct",
+        label: "rep1 Decant direct",
+      },
+      {
+        run: "gpt55fast-cross-threshold-t8-r4-c48-rep2",
+        condition: "default-compaction",
+        label: "rep2 default compaction",
+      },
+      {
+        run: "gpt55fast-cross-threshold-t8-r4-c48-rep2",
+        condition: "rgb-context",
+        label: "rep2 RGB",
+      },
+      {
+        run: "gpt55fast-cross-threshold-t8-r4-c48-rep2",
+        condition: "decant-direct",
+        label: "rep2 Decant direct",
+      },
+    ],
+  },
+  {
     title: "Irregular Exact-Fidelity Frontier",
     note:
       "24 irregular old topics, 8 exact recall queries, and 24 unrelated current-work queries. The default row continues in the same compacted OpenCode session. RGB rows show compressed-artifact failure versus larger-artifact success; Decant recovers exact old facts with no carried memory artifact.",
@@ -257,11 +309,14 @@ async function renderMarkdown() {
         ].join(" | ").replace(/^/, "| ").replace(/$/, " |"),
       );
     }
+    if (group.title === "Cross-Session Threshold Repeats") {
+      lines.push("", ...renderRepeatAggregate(rows));
+    }
     const decant = rows.find((item) => item.row.condition === "decant-direct");
     const rgb = rows.find(
       (item) => item.row.condition === "rgb-context" && item.row.pass,
     );
-    if (decant && rgb) {
+    if (decant && rgb && group.title !== "Cross-Session Threshold Repeats") {
       lines.push(
         "",
         `Decant vs passing RGB: ${delta(decant.row.query_tokens.total, rgb.row.query_tokens.total)} query tokens, ${delta(decant.row.query_estimated_cost_usd, rgb.row.query_estimated_cost_usd)} query cost, ${delta(decant.row.total_estimated_cost_usd, rgb.row.total_estimated_cost_usd)} total cost.`,
@@ -337,6 +392,53 @@ async function renderMarkdown() {
   );
 
   return lines.join("\n").trimEnd();
+}
+
+function renderRepeatAggregate(rows: RunRow[]) {
+  const conditions = ["default-compaction", "rgb-context", "decant-direct"];
+  const lines = [
+    "Aggregate across repeat rows:",
+    "",
+    "| Condition | Pass Runs | Query Pass | Recall Pass | Current Pass | Avg Query Input | Avg Query Tokens | Avg Query Cost | Avg Total Cost | Avg Current Carried Chars |",
+    "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+  ];
+  for (const condition of conditions) {
+    const matching = rows.filter((item) => item.row.condition === condition);
+    if (matching.length === 0) continue;
+    const sum = (fn: (row: Row) => number) =>
+      matching.reduce((total, item) => total + fn(item.row), 0);
+    const avg = (fn: (row: Row) => number) => sum(fn) / matching.length;
+    lines.push(
+      [
+        condition,
+        `${matching.filter((item) => item.row.pass).length}/${matching.length}`,
+        `${sum((row) => row.query_passes)}/${sum((row) => row.query_total)}`,
+        `${sum((row) => row.recall_passes)}/${sum((row) => row.recall_total)}`,
+        `${sum((row) => row.current_passes)}/${sum((row) => row.current_total)}`,
+        formatNumber(Math.round(avg((row) => row.query_tokens.input))),
+        formatNumber(Math.round(avg((row) => row.query_tokens.total))),
+        formatUsd(avg((row) => row.query_estimated_cost_usd)),
+        formatUsd(avg((row) => row.total_estimated_cost_usd)),
+        formatNumber(
+          Math.round(avg((row) => row.current_carried_context_chars_total)),
+        ),
+      ]
+        .join(" | ")
+        .replace(/^/, "| ")
+        .replace(/$/, " |"),
+    );
+  }
+  const rgb = rows.filter((item) => item.row.condition === "rgb-context");
+  const decant = rows.filter((item) => item.row.condition === "decant-direct");
+  if (rgb.length && decant.length) {
+    const avg = (items: RunRow[], fn: (row: Row) => number) =>
+      items.reduce((total, item) => total + fn(item.row), 0) / items.length;
+    lines.push(
+      "",
+      `Aggregate Decant vs RGB: ${delta(avg(decant, (row) => row.query_tokens.total), avg(rgb, (row) => row.query_tokens.total))} query tokens, ${delta(avg(decant, (row) => row.query_estimated_cost_usd), avg(rgb, (row) => row.query_estimated_cost_usd))} query cost, ${delta(avg(decant, (row) => row.total_estimated_cost_usd), avg(rgb, (row) => row.total_estimated_cost_usd))} total cost.`,
+    );
+  }
+  return lines;
 }
 
 async function readSingleRow(run: string): Promise<RunRow> {

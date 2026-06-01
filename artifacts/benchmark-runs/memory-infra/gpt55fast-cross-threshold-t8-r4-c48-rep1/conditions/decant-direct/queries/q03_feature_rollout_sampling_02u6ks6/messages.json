@@ -1,0 +1,228 @@
+[
+  {
+    "info": {
+      "id": "msg_e85919858001Olcpf46IgWh9sO",
+      "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+      "role": "user",
+      "time": {
+        "created": 1780357371992
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files. Use Decant session_lookup to find the relevant historical topic. Call session_lookup exactly once with the exact topic title, limit=1, and detail='full'. Answer from the included topic detail. Do not use raw transcript files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": true,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e8591985b001hw4lC1Jghgi2Ha",
+        "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+        "messageID": "msg_e85919858001Olcpf46IgWh9sO",
+        "type": "text",
+        "text": "Recall the maintained decision for feature rollout sampling incident 02u6ks6. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e85919862001RC3o9PbT7VBSKy",
+      "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+      "role": "assistant",
+      "time": {
+        "created": 1780357372002,
+        "completed": 1780357375817
+      },
+      "parentID": "msg_e85919858001Olcpf46IgWh9sO",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-cross-threshold-t8-r4-c48-rep1/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 4707,
+        "input": 531,
+        "output": 37,
+        "reasoning": 43,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e85919ae4001rTs2r72TF4pDYJ",
+        "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+        "messageID": "msg_e85919862001RC3o9PbT7VBSKy",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e85919be4001wP2EYr6H1QxwqV",
+        "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+        "messageID": "msg_e85919862001RC3o9PbT7VBSKy",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0385c3bac03fa7bd016a1e18fce1f48190b6c4633abe88e06f"
+          }
+        },
+        "time": {
+          "start": 1780357372900,
+          "end": 1780357375414
+        }
+      },
+      {
+        "id": "prt_e8591a5b8001pBkH7CaYVnaVIg",
+        "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+        "messageID": "msg_e85919862001RC3o9PbT7VBSKy",
+        "type": "tool",
+        "callID": "call_sJwwRrVozRJeY3bAaKLCCqv1",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "feature rollout sampling incident 02u6ks6",
+            "limit": 1,
+            "detail": "full"
+          },
+          "output": "{\n  \"query\": \"feature rollout sampling incident 02u6ks6\",\n  \"hint\": \"Use the included detail for the best matching topic; avoid repeated lookup unless the top result is clearly wrong.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_17a6f494cffeu4tjQ9D1HZWVd5\",\n      \"title\": \"memory infra decant-direct prep\",\n      \"updatedAt\": 1780357346565,\n      \"matchedTopicIDs\": [\n        \"rollout_sampling_02u6ks6\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"rollout_sampling_02u6ks6\",\n          \"label\": \"rollout_sampling_02u6ks6\",\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": []\n        }\n      ],\n      \"omittedTopicCount\": 5,\n      \"lookupScore\": 38,\n      \"lookupReason\": \"topic match: rollout_sampling_02u6ks6, checkout_idempotency_0or73qt, search_freshness_1lowtq7\"\n    }\n  ],\n  \"details\": [\n    {\n      \"session_id\": \"ses_17a6f494cffeu4tjQ9D1HZWVd5\",\n      \"topic_id\": \"rollout_sampling_02u6ks6\",\n      \"detail\": \"full\",\n      \"content\": \"Role: user\\nText:\\nSwitch topics. Topic: feature rollout sampling incident 02u6ks6.\\nSource file: src/rollout/sampling.02u6ks6.ts.\\nImportant rollout flag: FLAG_STICKY_ROLLOUT_HASH_1VJUC1G.\\nProtective test: rollout_keeps_user_bucket_stable_1p1ajii.\\nAccepted design: stable hash over actor and flag with brisk-ember guard 1J4XBSB.\\nRejected design: per-request random sampling after indigo-marble rollback 0Y70HQG.\\nWhy accepted won: prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1.\\nStale neighboring detail to avoid for this topic: analytics dashboard color stale path 0XY3AG3.\\nPreserve these exact strings for future selective-memory questions.\\n\\n---\\n\\nRole: assistant\\nText:\\nNoted. I’ll preserve the feature rollout sampling incident `02u6ks6` details exactly, including the rollout flag, protective test, accepted/rejected designs, rationale, marker, and stale neighboring detail to avoid.\"\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780357375527,
+            "end": 1780357375682
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0385c3bac03fa7bd016a1e18ff6b14819094b4e74e6c22a633"
+          }
+        }
+      },
+      {
+        "id": "prt_e8591a7250015syj5a1j3BDzAB",
+        "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+        "messageID": "msg_e85919862001RC3o9PbT7VBSKy",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 4707,
+          "input": 531,
+          "output": 37,
+          "reasoning": 43,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e8591a74b001LFSCT866CkA9j8",
+      "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+      "role": "assistant",
+      "time": {
+        "created": 1780357375819,
+        "completed": 1780357379777
+      },
+      "parentID": "msg_e85919858001Olcpf46IgWh9sO",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-cross-threshold-t8-r4-c48-rep1/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 5446,
+        "input": 1189,
+        "output": 161,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e8591a981001MOcjKG7M2kp0vW",
+        "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+        "messageID": "msg_e8591a74b001LFSCT866CkA9j8",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e8591aadc001zYvFd1x5Sh27ID",
+        "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+        "messageID": "msg_e8591a74b001LFSCT866CkA9j8",
+        "type": "text",
+        "text": "{\"title\":\"feature rollout sampling incident 02u6ks6\",\"flag\":\"FLAG_STICKY_ROLLOUT_HASH_1VJUC1G\",\"test\":\"rollout_keeps_user_bucket_stable_1p1ajii\",\"accepted_design\":\"stable hash over actor and flag with brisk-ember guard 1J4XBSB\",\"rejected_design\":\"per-request random sampling after indigo-marble rollback 0Y70HQG\",\"why\":\"prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1\",\"citation\":\"Source file: src/rollout/sampling.02u6ks6.ts.\",\"ignored\":\"analytics dashboard color stale path 0XY3AG3\"}",
+        "time": {
+          "start": 1780357376732,
+          "end": 1780357379681
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_02cb1eedea324ed4016a1e1900bc4c8190b23381d235d5bbc3",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e8591b697001sNvgnBnledJQ6z",
+        "sessionID": "ses_17a6e67c1ffef4aNS1Kib1klkG",
+        "messageID": "msg_e8591a74b001LFSCT866CkA9j8",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 5446,
+          "input": 1189,
+          "output": 161,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]
