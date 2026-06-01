@@ -1,0 +1,569 @@
+{
+  "condition": "rgb-context",
+  "pass": false,
+  "query_passes": 15,
+  "query_total": 16,
+  "recall_passes": 15,
+  "recall_total": 16,
+  "current_passes": 0,
+  "current_total": 0,
+  "topic_count": 96,
+  "decoys_per_topic": 0,
+  "memory_artifact_chars": 3585,
+  "carried_context_chars_per_query": 3585,
+  "carried_context_chars_total": 57360,
+  "current_carried_context_chars_total": 0,
+  "prep_tokens": {
+    "messages": 196,
+    "assistant": 98,
+    "input": 84880,
+    "output": 2919,
+    "total": 1360520,
+    "reasoning": 401,
+    "cacheRead": 1272320,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 14885
+  },
+  "query_tokens": {
+    "messages": 32,
+    "assistant": 16,
+    "input": 16154,
+    "output": 1747,
+    "total": 88530,
+    "reasoning": 2533,
+    "cacheRead": 68096,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 1683
+  },
+  "recall_query_tokens": {
+    "messages": 32,
+    "assistant": 16,
+    "input": 16154,
+    "output": 1747,
+    "total": 88530,
+    "reasoning": 2533,
+    "cacheRead": 68096,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 1683
+  },
+  "current_query_tokens": {
+    "messages": 0,
+    "assistant": 0,
+    "input": 0,
+    "output": 0,
+    "total": 0,
+    "reasoning": 0,
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 0
+  },
+  "total_tokens": {
+    "messages": 228,
+    "assistant": 114,
+    "input": 101034,
+    "output": 4666,
+    "total": 1449050,
+    "reasoning": 2934,
+    "cacheRead": 1340416,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 14885
+  },
+  "prep_estimated_cost_usd": 1.1601599999999999,
+  "query_estimated_cost_usd": 0.243218,
+  "total_estimated_cost_usd": 1.403378,
+  "avg_query_input_tokens": 1010,
+  "max_query_input_tokens": 1683,
+  "avg_query_tool_calls": 0,
+  "unnecessary_context_tool_calls": 0,
+  "route_passed": true,
+  "queries": [
+    {
+      "kind": "recall",
+      "query_id": "q01_checkout_idempotency_1",
+      "topic_id": "checkout_idempotency_1",
+      "passed": true,
+      "required_hits": [
+        "FLAG_CHECKOUT_IDEMPOTENCY_V3_R1",
+        "checkout_dedupes_retry_after_timeout_r1",
+        "per-cart idempotency key store",
+        "global checkout mutex",
+        "preserves shard-local ordering while letting unrelated carts retry independently"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"checkout idempotency\",\"flag\":\"FLAG_CHECKOUT_IDEMPOTENCY_V3_R1\",\"test\":\"checkout_dedupes_retry_after_timeout_r1\",\"accepted_design\":\"per-cart idempotency key store\",\"rejected_design\":\"global checkout mutex\",\"why\":\"preserves shard-local ordering while letting unrelated carts retry independently.\",\"citation\":\"Maintained RGB context item 1\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 1680,
+        "output": 87,
+        "total": 5672,
+        "reasoning": 321,
+        "cacheRead": 3584,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1680
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q02_csv_import_quarantine_1",
+      "topic_id": "csv_import_quarantine_1",
+      "passed": false,
+      "required_hits": [
+        "row-level quarantine ledger",
+        "abort entire import on first invalid row",
+        "lets clean rows commit while preserving exact diagnostics for rejected rows"
+      ],
+      "missing_required": [
+        "FLAG_IMPORT_ROW_QUARANTINE_R1",
+        "import_quarantines_bad_rows_only_r1"
+      ],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"csv import quarantine\",\"flag\":\"FLAG_IMPORT_ROW_QUARANTINE_R{N}\",\"test\":\"import_quarantines_bad_rows_only_r{N}\",\"accepted_design\":\"row-level quarantine ledger\",\"rejected_design\":\"abort entire import on first invalid row\",\"why\":\"lets clean rows commit while preserving exact diagnostics for rejected rows.\",\"citation\":\"7. csv import quarantine | src/imports/quarantine.ts | FLAG_IMPORT_ROW_QUARANTINE_R{N} | import_quarantines_bad_rows_only_r{N} | A: row-level quarantine ledger | R: abort entire import on first invalid row | W: lets clean rows commit while preserving exact diagnostics for rejected rows.\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 1679,
+        "output": 148,
+        "total": 5483,
+        "reasoning": 72,
+        "cacheRead": 3584,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1679
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q03_search_index_freshness_2",
+      "topic_id": "search_index_freshness_2",
+      "passed": true,
+      "required_hits": [
+        "FLAG_INDEX_EPOCH_GUARD_R2",
+        "search_rejects_stale_epoch_publish_r2",
+        "epoch-stamped publish barrier round 2",
+        "blind last-write-wins publish round 2",
+        "prevents a slow crawl from replacing a newer index snapshot in round 2"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"search index freshness round 2\",\"flag\":\"FLAG_INDEX_EPOCH_GUARD_R2\",\"test\":\"search_rejects_stale_epoch_publish_r2\",\"accepted_design\":\"epoch-stamped publish barrier round 2\",\"rejected_design\":\"blind last-write-wins publish round 2\",\"why\":\"prevents a slow crawl from replacing a newer index snapshot in round 2.\",\"citation\":\"Maintained RGB context topic 2, R2\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 1682,
+        "output": 101,
+        "total": 5498,
+        "reasoning": 131,
+        "cacheRead": 3584,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1682
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q04_notification_fanout_2",
+      "topic_id": "notification_fanout_2",
+      "passed": true,
+      "required_hits": [
+        "FLAG_FANOUT_BACKPRESSURE_R2",
+        "fanout_applies_channel_backpressure_r2",
+        "per-channel bounded queue round 2",
+        "unbounded global fanout array round 2",
+        "prevents a slow SMS provider from exhausting memory for email and push sends in round 2"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"notification fanout round 2\",\"flag\":\"FLAG_FANOUT_BACKPRESSURE_R2\",\"test\":\"fanout_applies_channel_backpressure_r2\",\"accepted_design\":\"per-channel bounded queue round 2\",\"rejected_design\":\"unbounded global fanout array round 2\",\"why\":\"prevents a slow SMS provider from exhausting memory for email and push sends in round 2\",\"citation\":\"Maintained RGB context item 8\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 1682,
+        "output": 99,
+        "total": 5446,
+        "reasoning": 81,
+        "cacheRead": 3584,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1682
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q05_search_index_freshness_3",
+      "topic_id": "search_index_freshness_3",
+      "passed": true,
+      "required_hits": [
+        "FLAG_INDEX_EPOCH_GUARD_R3",
+        "search_rejects_stale_epoch_publish_r3",
+        "epoch-stamped publish barrier round 3",
+        "blind last-write-wins publish round 3",
+        "prevents a slow crawl from replacing a newer index snapshot in round 3"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"search index freshness round 3\",\"flag\":\"FLAG_INDEX_EPOCH_GUARD_R3\",\"test\":\"search_rejects_stale_epoch_publish_r3\",\"accepted_design\":\"epoch-stamped publish barrier round 3\",\"rejected_design\":\"blind last-write-wins publish round 3\",\"why\":\"prevents a slow crawl from replacing a newer index snapshot in round 3\",\"citation\":\"src/search/freshness.ts\",\"ignored\":false}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 1682,
+        "output": 98,
+        "total": 5433,
+        "reasoning": 69,
+        "cacheRead": 3584,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1682
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q06_session_rotation_3",
+      "topic_id": "session_rotation_3",
+      "passed": true,
+      "required_hits": [
+        "FLAG_SESSION_ROTATION_GRACE_R3",
+        "session_accepts_previous_cookie_once_r3",
+        "one-use previous-cookie grace round 3",
+        "accept every old cookie until expiry round 3",
+        "avoids logout races during rotation while still closing replay opportunities in round 3"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"session rotation round 3\",\"flag\":\"FLAG_SESSION_ROTATION_GRACE_R3\",\"test\":\"session_accepts_previous_cookie_once_r3\",\"accepted_design\":\"one-use previous-cookie grace round 3\",\"rejected_design\":\"accept every old cookie until expiry round 3\",\"why\":\"avoids logout races during rotation while still closing replay opportunities in round 3.\",\"citation\":\"src/session/rotation.ts\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 1681,
+        "output": 92,
+        "total": 5524,
+        "reasoning": 167,
+        "cacheRead": 3584,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1681
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q07_email_digest_batching_4",
+      "topic_id": "email_digest_batching_4",
+      "passed": true,
+      "required_hits": [
+        "FLAG_DIGEST_BATCH_WINDOW_R4",
+        "digest_batches_by_workspace_timezone_r4",
+        "workspace-local send window round 4",
+        "single UTC midnight cron round 4",
+        "keeps quiet-hour promises without delaying every workspace behind one global clock in round 4"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"email digest batching round 4\",\"flag\":\"FLAG_DIGEST_BATCH_WINDOW_R4\",\"test\":\"digest_batches_by_workspace_timezone_r4\",\"accepted_design\":\"workspace-local send window round 4\",\"rejected_design\":\"single UTC midnight cron round 4\",\"why\":\"keeps quiet-hour promises without delaying every workspace behind one global clock in round 4.\",\"citation\":\"Maintained RGB context topic 3 round 4\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 146,
+        "output": 95,
+        "total": 5576,
+        "reasoning": 215,
+        "cacheRead": 5120,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 146
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q08_session_rotation_4",
+      "topic_id": "session_rotation_4",
+      "passed": true,
+      "required_hits": [
+        "FLAG_SESSION_ROTATION_GRACE_R4",
+        "session_accepts_previous_cookie_once_r4",
+        "one-use previous-cookie grace round 4",
+        "accept every old cookie until expiry round 4",
+        "avoids logout races during rotation while still closing replay opportunities in round 4"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"session rotation round 4\",\"flag\":\"FLAG_SESSION_ROTATION_GRACE_R4\",\"test\":\"session_accepts_previous_cookie_once_r4\",\"accepted_design\":\"one-use previous-cookie grace round 4\",\"rejected_design\":\"accept every old cookie until expiry round 4\",\"why\":\"avoids logout races during rotation while still closing replay opportunities in round 4.\",\"citation\":\"Maintained RGB context topic 9, R4\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 145,
+        "output": 97,
+        "total": 5519,
+        "reasoning": 157,
+        "cacheRead": 5120,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 145
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q09_webhook_replay_protection_5",
+      "topic_id": "webhook_replay_protection_5",
+      "passed": true,
+      "required_hits": [
+        "FLAG_WEBHOOK_NONCE_LEDGER_R5",
+        "webhook_rejects_reused_nonce_r5",
+        "nonce ledger keyed by provider event id round 5",
+        "timestamp-only replay window round 5",
+        "blocks fast replays even when the attacker stays inside the timestamp tolerance in round 5"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"webhook replay protection round 5\",\"flag\":\"FLAG_WEBHOOK_NONCE_LEDGER_R5\",\"test\":\"webhook_rejects_reused_nonce_r5\",\"accepted_design\":\"nonce ledger keyed by provider event id round 5\",\"rejected_design\":\"timestamp-only replay window round 5\",\"why\":\"blocks fast replays even when the attacker stays inside the timestamp tolerance in round 5.\",\"citation\":\"src/webhooks/replay.ts\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 146,
+        "output": 100,
+        "total": 5556,
+        "reasoning": 190,
+        "cacheRead": 5120,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 146
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q10_audit_log_redaction_5",
+      "topic_id": "audit_log_redaction_5",
+      "passed": true,
+      "required_hits": [
+        "FLAG_AUDIT_FIELD_ALLOWLIST_R5",
+        "audit_redacts_unknown_fields_r5",
+        "field allowlist redactor round 5",
+        "regex-only secret scrubber round 5",
+        "keeps newly added sensitive fields private even before regexes are updated in round 5"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"audit log redaction round 5\",\"flag\":\"FLAG_AUDIT_FIELD_ALLOWLIST_R5\",\"test\":\"audit_redacts_unknown_fields_r5\",\"accepted_design\":\"field allowlist redactor round 5\",\"rejected_design\":\"regex-only secret scrubber round 5\",\"why\":\"keeps newly added sensitive fields private even before regexes are updated in round 5\",\"citation\":\"Maintained RGB context item 10\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 1683,
+        "output": 97,
+        "total": 5462,
+        "reasoning": 98,
+        "cacheRead": 3584,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1683
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q11_webhook_replay_protection_6",
+      "topic_id": "webhook_replay_protection_6",
+      "passed": true,
+      "required_hits": [
+        "FLAG_WEBHOOK_NONCE_LEDGER_R6",
+        "webhook_rejects_reused_nonce_r6",
+        "nonce ledger keyed by provider event id round 6",
+        "timestamp-only replay window round 6",
+        "blocks fast replays even when the attacker stays inside the timestamp tolerance in round 6"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"webhook replay protection round 6\",\"flag\":\"FLAG_WEBHOOK_NONCE_LEDGER_R6\",\"test\":\"webhook_rejects_reused_nonce_r6\",\"accepted_design\":\"nonce ledger keyed by provider event id round 6\",\"rejected_design\":\"timestamp-only replay window round 6\",\"why\":\"blocks fast replays even when the attacker stays inside the timestamp tolerance in round 6.\",\"citation\":\"Maintained RGB context topic 4, R6\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 1682,
+        "output": 104,
+        "total": 5571,
+        "reasoning": 201,
+        "cacheRead": 3584,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1682
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q12_report_export_leases_6",
+      "topic_id": "report_export_leases_6",
+      "passed": true,
+      "required_hits": [
+        "FLAG_EXPORT_LEASE_STEAL_R6",
+        "export_worker_steals_expired_lease_r6",
+        "expiring worker lease with compare-and-swap round 6",
+        "permanent worker ownership round 6",
+        "lets a new worker recover abandoned exports without duplicating active work in round 6"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"report export leases round 6\",\"flag\":\"FLAG_EXPORT_LEASE_STEAL_R6\",\"test\":\"export_worker_steals_expired_lease_r6\",\"accepted_design\":\"expiring worker lease with compare-and-swap round 6\",\"rejected_design\":\"permanent worker ownership round 6\",\"why\":\"lets a new worker recover abandoned exports without duplicating active work in round 6\",\"citation\":\"Maintained RGB context topic 11, R6\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 146,
+        "output": 105,
+        "total": 5456,
+        "reasoning": 85,
+        "cacheRead": 5120,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 146
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q13_cache_namespace_TTL_7",
+      "topic_id": "cache_namespace_TTL_7",
+      "passed": true,
+      "required_hits": [
+        "FLAG_NAMESPACE_TTL_CAP_R7",
+        "cache_caps_noisy_namespace_ttl_r7",
+        "namespace maximum TTL cap round 7",
+        "provider-wide hard-coded TTL round 7",
+        "lets each namespace set a bounded freshness budget without penalizing unrelated caches in round 7"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"cache namespace TTL round 7\",\"flag\":\"FLAG_NAMESPACE_TTL_CAP_R7\",\"test\":\"cache_caps_noisy_namespace_ttl_r7\",\"accepted_design\":\"namespace maximum TTL cap round 7\",\"rejected_design\":\"provider-wide hard-coded TTL round 7\",\"why\":\"lets each namespace set a bounded freshness budget without penalizing unrelated caches in round 7\",\"citation\":\"5. cache namespace TTL | src/cache/namespace_ttl.ts | FLAG_NAMESPACE_TTL_CAP_R{N} | cache_caps_noisy_namespace_ttl_r{N} | A: namespace maximum TTL cap | R: provider-wide hard-coded TTL | W: lets each namespace set a bounded freshness budget without penalizing unrelated caches.\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 146,
+        "output": 154,
+        "total": 5534,
+        "reasoning": 114,
+        "cacheRead": 5120,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 146
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q14_report_export_leases_7",
+      "topic_id": "report_export_leases_7",
+      "passed": true,
+      "required_hits": [
+        "FLAG_EXPORT_LEASE_STEAL_R7",
+        "export_worker_steals_expired_lease_r7",
+        "expiring worker lease with compare-and-swap round 7",
+        "permanent worker ownership round 7",
+        "lets a new worker recover abandoned exports without duplicating active work in round 7"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"report export leases round 7\",\"flag\":\"FLAG_EXPORT_LEASE_STEAL_R7\",\"test\":\"export_worker_steals_expired_lease_r7\",\"accepted_design\":\"expiring worker lease with compare-and-swap round 7\",\"rejected_design\":\"permanent worker ownership round 7\",\"why\":\"lets a new worker recover abandoned exports without duplicating active work in round 7.\",\"citation\":\"src/reports/export_lease.ts\",\"ignored\":[]}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 1682,
+        "output": 102,
+        "total": 5528,
+        "reasoning": 160,
+        "cacheRead": 3584,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 1682
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q15_feature_rollout_sampling_8",
+      "topic_id": "feature_rollout_sampling_8",
+      "passed": true,
+      "required_hits": [
+        "FLAG_STICKY_ROLLOUT_HASH_R8",
+        "rollout_keeps_user_bucket_stable_r8",
+        "stable hash over actor and flag round 8",
+        "per-request random sampling round 8",
+        "prevents a user from bouncing between treatment and control across refreshes in round 8"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"feature rollout sampling round 8\",\"flag\":\"FLAG_STICKY_ROLLOUT_HASH_R8\",\"test\":\"rollout_keeps_user_bucket_stable_r8\",\"accepted_design\":\"stable hash over actor and flag round 8\",\"rejected_design\":\"per-request random sampling round 8\",\"why\":\"prevents a user from bouncing between treatment and control across refreshes in round 8.\",\"citation\":\"6. feature rollout sampling | src/rollout/sampling.ts | FLAG_STICKY_ROLLOUT_HASH_R{N} | rollout_keeps_user_bucket_stable_r{N} | A: stable hash over actor and flag | R: per-request random sampling | W: prevents a user from bouncing between treatment and control across refreshes.\",\"ignored\":\"general knowledge\"}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 146,
+        "output": 166,
+        "total": 5736,
+        "reasoning": 304,
+        "cacheRead": 5120,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 146
+      }
+    },
+    {
+      "kind": "recall",
+      "query_id": "q16_tenant_config_snapshots_8",
+      "topic_id": "tenant_config_snapshots_8",
+      "passed": true,
+      "required_hits": [
+        "FLAG_CONFIG_SNAPSHOT_PIN_R8",
+        "config_pins_snapshot_for_request_r8",
+        "request-scoped config snapshot round 8",
+        "live config reads at every call site round 8",
+        "keeps one request internally consistent while allowing later requests to see updates in round 8"
+      ],
+      "missing_required": [],
+      "forbidden_hits": [],
+      "output_preview": "{\"title\":\"tenant config snapshots round 8\",\"flag\":\"FLAG_CONFIG_SNAPSHOT_PIN_R8\",\"test\":\"config_pins_snapshot_for_request_r8\",\"accepted_design\":\"request-scoped config snapshot round 8\",\"rejected_design\":\"live config reads at every call site round 8\",\"why\":\"keeps one request internally consistent while allowing later requests to see updates in round 8.\",\"citation\":\"Maintained RGB context topic 12, R8\",\"ignored\":\"general knowledge\"}",
+      "tool_names": [],
+      "context_tool_call_count": 0,
+      "tokens": {
+        "messages": 2,
+        "assistant": 1,
+        "input": 146,
+        "output": 102,
+        "total": 5536,
+        "reasoning": 168,
+        "cacheRead": 5120,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 146
+      }
+    }
+  ],
+  "memory_artifact_preview": "```md\nMemory context: 96 topics = 12 base topics x R1-R8. For R1 title/design/why have no suffix. For R2-R8 title appends `round N`; accepted/rejected append `round N`; why appends `in round N`. Flags/tests use `_R{N}` or `_r{N}`.\n\n1. checkout idempotency | src/checkout/idempotency.ts | FLAG_CHECKOUT_IDEMPOTENCY_V3_R{N} | checkout_dedupes_retry_after_timeout_r{N} | A: per-cart idempotency key store | R: global checkout mutex | W: preserves shard-local ordering while letting unrelated carts retry independently.\n2. search index freshness | src/search/freshness.ts | FLAG_INDEX_EPOCH_GUARD_R{N} | search_rejects_stale_epoch_publish_r{N} | A: epoch-stamped publish barrier | R: blind last-write-wins publish | W: prevents a slow crawl from replacing a newer index snapshot.\n3. email digest batching | src/mail/digest.ts | FLAG_DIGEST_BATCH_WINDOW_R{N} | digest_batches_by_workspace_timezone_r{N} | A: workspace-local send window | R: single UTC midnight cron | W: keeps quiet-hour promises without delaying every workspace behind one global clock.\n4. webhook replay protection | src/webhooks/replay.ts | FLAG_WEBHOOK_NONCE_LEDGER_R{N} | webhook_rejects_reused_nonce_r{N} | A: nonce ledger keyed by provider event id | R: timestamp-only replay window | W: blocks fast replays even when the attacker stays inside the timestamp tolerance.\n5. cache namespace TTL | src/cache/namespace_ttl.ts | FLAG_NAMESPACE_TTL_CAP_R{N} | cache_caps_noisy_namespace_ttl_r{N} | A: namespace maximum TTL cap | R: provider-wide hard-coded TTL | W: lets each namespace set a bounded freshness budget without penalizing un",
+  "duration_ms": 403589
+}

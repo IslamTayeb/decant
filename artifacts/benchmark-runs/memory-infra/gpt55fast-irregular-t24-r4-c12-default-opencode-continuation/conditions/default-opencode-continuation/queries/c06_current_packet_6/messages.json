@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e84ebc3a1001WU7oGDw1EifyEg",
+      "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+      "role": "user",
+      "time": {
+        "created": 1780346504097
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e84ebc3a1002k1cg0UM2BrD0ad",
+        "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+        "messageID": "msg_e84ebc3a1001WU7oGDw1EifyEg",
+        "type": "text",
+        "text": "Current work packet, unrelated to historical memory:\n```text\nticket: CURR-0006 | title: current packet 6 | patch_file: src/current/work_packet_006.ts | owner: sol-current | guardrail: compare normalized route keys before cache lookup | expected_check: current_packet_normalizes_route_cache_key | avoid: stale-current-decoy-0006\nticket: CURR-0106 | title: current packet 106 | patch_file: src/current/work_packet_106.ts | owner: omar-current | guardrail: pin the request clock before evaluating freshness | expected_check: current_packet_pins_request_clock | avoid: stale-current-decoy-0106\nticket: CURR-0207 | title: current packet 207 | patch_file: src/current/work_packet_207.ts | owner: lina-current | guardrail: require local checksum before publishing the manifest | expected_check: current_packet_verifies_manifest_checksum | avoid: stale-current-decoy-0207\nticket: CURR-0308 | title: current packet 308 | patch_file: src/current/work_packet_308.ts | owner: noah-current | guardrail: cap retry window at the active deploy generation | expected_check: current_packet_caps_retry_generation | avoid: stale-current-decoy-0308\n```\nFind ticket CURR-0006.\nReturn the ticket, owner, patch file, guardrail, and expected check exactly as written.\nDo not use historical memory, rollout flags, old decisions, or context tools for this current packet.\nReturn compact JSON with keys ticket, owner, patch_file, guardrail, expected_check, source. The answer must include exact strings from the current work packet only."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84ebc3a6001KXUjnXdjMrbmnB",
+      "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+      "role": "assistant",
+      "time": {
+        "created": 1780346504102,
+        "completed": 1780346512004
+      },
+      "parentID": "msg_e84ebc3a1001WU7oGDw1EifyEg",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-t24-r4-c12-default-opencode-continuation/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 11830,
+        "input": 488,
+        "output": 59,
+        "reasoning": 19,
+        "cache": {
+          "read": 11264,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84ebd789001PLDEcv36HlHV2m",
+        "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+        "messageID": "msg_e84ebc3a6001KXUjnXdjMrbmnB",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84ebd904001QxilpvrFDZTDIb",
+        "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+        "messageID": "msg_e84ebc3a6001KXUjnXdjMrbmnB",
+        "type": "reasoning",
+        "text": "**Focusing on compact JSON**\n\nI need to make sure I understand that the system is specifying to provide only compact JSON from the packet. It seems crucial to stick directly to that requirement, prioritizing clarity and precision in the response. So, I’ll avoid any extraneous information and just focus on delivering what’s necessary in that compact JSON format. Keeping it straightforward is key!",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0c6e97d2670341c8016a1dee8d8d2c819988eeeec3d1e7a714"
+          }
+        },
+        "time": {
+          "start": 1780346509572,
+          "end": 1780346511707
+        }
+      },
+      {
+        "id": "prt_e84ebe15d001LD9AmGFaeRPM2g",
+        "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+        "messageID": "msg_e84ebc3a6001KXUjnXdjMrbmnB",
+        "type": "text",
+        "text": "{\"ticket\":\"CURR-0006\",\"owner\":\"sol-current\",\"patch_file\":\"src/current/work_packet_006.ts\",\"guardrail\":\"compare normalized route keys before cache lookup\",\"expected_check\":\"current_packet_normalizes_route_cache_key\",\"source\":\"current work packet\"}",
+        "time": {
+          "start": 1780346511709,
+          "end": 1780346511914
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0c6e97d2670341c8016a1dee8faed8819990fab9bbd1188ff5",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84ebe263001feHHC1ng3fBREq",
+        "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+        "messageID": "msg_e84ebc3a6001KXUjnXdjMrbmnB",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 11830,
+          "input": 488,
+          "output": 59,
+          "reasoning": 19,
+          "cache": {
+            "read": 11264,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

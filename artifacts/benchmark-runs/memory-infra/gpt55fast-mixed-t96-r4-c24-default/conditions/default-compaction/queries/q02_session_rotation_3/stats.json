@@ -1,0 +1,31 @@
+{
+  "kind": "recall",
+  "query_id": "q02_session_rotation_3",
+  "topic_id": "session_rotation_3",
+  "passed": false,
+  "required_hits": [
+    "FLAG_SESSION_ROTATION_GRACE_R3",
+    "session_accepts_previous_cookie_once_r3"
+  ],
+  "missing_required": [
+    "one-use previous-cookie grace round 3",
+    "accept every old cookie until expiry round 3",
+    "avoids logout races during rotation while still closing replay opportunities in round 3"
+  ],
+  "forbidden_hits": [],
+  "output_preview": "{\"title\":\"session rotation round 3\",\"flag\":\"FLAG_SESSION_ROTATION_GRACE_R3\",\"test\":\"session_accepts_previous_cookie_once_r3\",\"accepted_design\":\"one-use previous-cookie grace\",\"rejected_design\":\"accept every old cookie until expiry\",\"why\":\"Accepted per-topic shard/local/scope-safe designs over global/blind/unbounded alternatives to preserve correctness without penalizing unrelated work.\",\"citation\":\"session rotation: `src/session/rotation.ts`; flags `FLAG_SESSION_ROTATION_GRACE_R1` through `FLAG_SESSION_ROTATION_GRACE_R8`; tests `session_accepts_previous_cookie_once_r1` through `session_accepts_previous_cookie_once_r8`; accepted `one-use previous-cookie grace`; rejected `accept every old cookie until expiry`; avoid `login page copy`.\",\"ignored\":\"login page copy\"}",
+  "tool_names": [],
+  "context_tool_call_count": 0,
+  "tokens": {
+    "messages": 2,
+    "assistant": 1,
+    "input": 5690,
+    "output": 170,
+    "total": 5994,
+    "reasoning": 134,
+    "cacheRead": 0,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 5690
+  }
+}

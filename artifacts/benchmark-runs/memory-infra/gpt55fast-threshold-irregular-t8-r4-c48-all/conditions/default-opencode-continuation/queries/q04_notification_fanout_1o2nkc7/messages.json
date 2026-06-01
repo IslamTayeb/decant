@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e84efe83f001nKSbpL2ii3LISh",
+      "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+      "role": "user",
+      "time": {
+        "created": 1780346775615
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e84efe83f002BBXW9cv3KRm6ou",
+        "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+        "messageID": "msg_e84efe83f001nKSbpL2ii3LISh",
+        "type": "text",
+        "text": "Recall the maintained decision for notification fanout incident 1o2nkc7. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84efe843001Vaw5HeVgclzQPI",
+      "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+      "role": "assistant",
+      "time": {
+        "created": 1780346775619,
+        "completed": 1780346803605
+      },
+      "parentID": "msg_e84efe83f001nKSbpL2ii3LISh",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 8728,
+        "input": 366,
+        "output": 158,
+        "reasoning": 12,
+        "cache": {
+          "read": 8192,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84f03233001JvSdDJG7BceJc3",
+        "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+        "messageID": "msg_e84efe843001Vaw5HeVgclzQPI",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84f03c93001Q23tv4JnpgNCZi",
+        "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+        "messageID": "msg_e84efe843001Vaw5HeVgclzQPI",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0042561451db4619016a1defac9a288193bfe69213a7f1ab03"
+          }
+        },
+        "time": {
+          "start": 1780346797203,
+          "end": 1780346802198
+        }
+      },
+      {
+        "id": "prt_e84f050ef001ugP0aurKzQ97nz",
+        "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+        "messageID": "msg_e84efe843001Vaw5HeVgclzQPI",
+        "type": "text",
+        "text": "{\"title\":\"notification fanout incident 1o2nkc7\",\"flag\":\"FLAG_FANOUT_BACKPRESSURE_0ASQQC5\",\"test\":\"fanout_applies_channel_backpressure_0llus8f\",\"accepted_design\":\"per-channel bounded queue with lantern-onyx guard 19Y8GF2\",\"rejected_design\":\"unbounded global fanout array after saffron-willow rollback 1JE9FI9\",\"why\":\"prevents a slow SMS provider from exhausting memory for email and push sends; marker 05LWFVR preserved ember isolation for case 1\",\"citation\":\"src/notify/fanout.1o2nkc7.ts\",\"ignored\":\"notification icon set stale path 0KSLWE8\"}",
+        "time": {
+          "start": 1780346802415,
+          "end": 1780346803523
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0042561451db4619016a1defb1515c8193824a7e198d24b090",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84f05574001oH4L7rJVL4fKY1",
+        "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+        "messageID": "msg_e84efe843001Vaw5HeVgclzQPI",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 8728,
+          "input": 366,
+          "output": 158,
+          "reasoning": 12,
+          "cache": {
+            "read": 8192,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

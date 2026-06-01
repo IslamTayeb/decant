@@ -1,0 +1,1078 @@
+[
+  {
+    "info": {
+      "id": "msg_e84fa0711001Vg88T4iFtwYzau",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347438865
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "This is historical memory for an agent-infra benchmark. Do not edit files or call tools. Acknowledge concisely while preserving exact flags, tests, accepted designs, rejected designs, and stale details to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa0714001AhGNGMth08tgCa",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa0711001Vg88T4iFtwYzau",
+        "type": "text",
+        "text": "Switch topics. Topic: checkout idempotency incident 0or73qt.\nSource file: src/checkout/idempotency.0or73qt.ts.\nImportant rollout flag: FLAG_CHECKOUT_IDEMPOTENCY_V3_0TKS5NV.\nProtective test: checkout_dedupes_retry_after_timeout_0kk4icp.\nAccepted design: per-cart idempotency key store with amber-dovetail guard 0CPGJX8.\nRejected design: global checkout mutex after harbor-lantern rollback 1NO7YH7.\nWhy accepted won: preserves shard-local ordering while letting unrelated carts retry independently; marker 1MLAOB9 preserved rivet isolation for case 1.\nStale neighboring detail to avoid for this topic: billing retry backoff stale path 0EWWZD6.\nPreserve these exact strings for future selective-memory questions."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa071b001HiHjC5g3rTnVUY",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347438875,
+        "completed": 1780347441553
+      },
+      "parentID": "msg_e84fa0711001Vg88T4iFtwYzau",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 6868,
+        "input": 6830,
+        "output": 38,
+        "reasoning": 0,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa0a81001jWVA4lny27N2Wz",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa071b001HiHjC5g3rTnVUY",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84fa0c25001G6WhG5iKThKJVz",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa071b001HiHjC5g3rTnVUY",
+        "type": "text",
+        "text": "Acknowledged. I’ll preserve the checkout idempotency incident details exactly, including the flag, test, accepted/rejected designs, rationale, and stale detail to avoid.",
+        "time": {
+          "start": 1780347440165,
+          "end": 1780347441388
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0cfcac8b459bbfba016a1df23025e88195b24e5c20400a329c",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84fa1163001tbPw0sITsSLrG8",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa071b001HiHjC5g3rTnVUY",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 6868,
+          "input": 6830,
+          "output": 38,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa12f9001rX1seD8WkelW3N",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347441913
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "This is historical memory for an agent-infra benchmark. Do not edit files or call tools. Acknowledge concisely while preserving exact flags, tests, accepted designs, rejected designs, and stale details to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa12f90028c8H4IBFNQFwJx",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa12f9001rX1seD8WkelW3N",
+        "type": "text",
+        "text": "Switch topics. Topic: search index freshness incident 1lowtq7.\nSource file: src/search/freshness.1lowtq7.ts.\nImportant rollout flag: FLAG_INDEX_EPOCH_GUARD_14MWRGT.\nProtective test: search_rejects_stale_epoch_publish_1rkix6f.\nAccepted design: epoch-stamped publish barrier with fennel-indigo guard 0CBWWP2.\nRejected design: blind last-write-wins publish after marble-quartz rollback 1RR2O0P.\nWhy accepted won: prevents a slow crawl from replacing a newer index snapshot; marker 0OEPOV3 preserved willow isolation for case 1.\nStale neighboring detail to avoid for this topic: autocomplete ranking cleanup stale path 0Y1PEL4.\nPreserve these exact strings for future selective-memory questions."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa1301001NJ74rZHboAsKXQ",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347441921,
+        "completed": 1780347448262
+      },
+      "parentID": "msg_e84fa12f9001rX1seD8WkelW3N",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7084,
+        "input": 391,
+        "output": 37,
+        "reasoning": 0,
+        "cache": {
+          "read": 6656,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa15a30019KhepH2Xjaukjh",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa1301001NJ74rZHboAsKXQ",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84fa172e001sIA39BUwr5HbxT",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa1301001NJ74rZHboAsKXQ",
+        "type": "text",
+        "text": "Acknowledged. I’ll preserve the search index freshness incident details exactly, including the flag, test, accepted/rejected designs, rationale, and stale detail to avoid.",
+        "time": {
+          "start": 1780347442990,
+          "end": 1780347448087
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0fac967ea93f2c12016a1df232f4848195acbe2fffca85a319",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84fa2b7d001y5AYmEO5B7JVRj",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa1301001NJ74rZHboAsKXQ",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 7084,
+          "input": 391,
+          "output": 37,
+          "reasoning": 0,
+          "cache": {
+            "read": 6656,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa2ede001mQih9BRYA8oVcO",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347449054
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "This is historical memory for an agent-infra benchmark. Do not edit files or call tools. Acknowledge concisely while preserving exact flags, tests, accepted designs, rejected designs, and stale details to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa2edf001BxrhWhqqxLzyTS",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa2ede001mQih9BRYA8oVcO",
+        "type": "text",
+        "text": "Switch topics. Topic: email digest batching incident 0ddfi0h.\nSource file: src/mail/digest.0ddfi0h.ts.\nImportant rollout flag: FLAG_DIGEST_BATCH_WINDOW_0TCPHQV.\nProtective test: digest_batches_by_workspace_timezone_0pfucrp.\nAccepted design: workspace-local send window with keystone-nickel guard 0RW1I0W.\nRejected design: single UTC midnight cron after rivet-velvet rollback 1GDMXDZ.\nWhy accepted won: keeps quiet-hour promises without delaying every workspace behind one global clock; marker 18ZDJEH preserved dovetail isolation for case 1.\nStale neighboring detail to avoid for this topic: template footer rewrite stale path 0ZM2Y8U.\nPreserve these exact strings for future selective-memory questions."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa2ee6001kQU2bHfHvGJtPH",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347449062,
+        "completed": 1780347451030
+      },
+      "parentID": "msg_e84fa2ede001mQih9BRYA8oVcO",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7297,
+        "input": 604,
+        "output": 37,
+        "reasoning": 0,
+        "cache": {
+          "read": 6656,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa31b2001pZYMfbqvd9c1OA",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa2ee6001kQU2bHfHvGJtPH",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84fa3361001v01asONPMRrrYL",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa2ee6001kQU2bHfHvGJtPH",
+        "type": "text",
+        "text": "Acknowledged. I’ll preserve the email digest batching incident details exactly, including the flag, test, accepted/rejected designs, rationale, and stale detail to avoid.",
+        "time": {
+          "start": 1780347450209,
+          "end": 1780347450912
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_04875dda15e83bc6016a1df23a20fc8191895c75b1468cb5db",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84fa3674001v24do5GS9H3sMk",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa2ee6001kQU2bHfHvGJtPH",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 7297,
+          "input": 604,
+          "output": 37,
+          "reasoning": 0,
+          "cache": {
+            "read": 6656,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa36d4001x9kwS5XvJfHabQ",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347451092
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "This is historical memory for an agent-infra benchmark. Do not edit files or call tools. Acknowledge concisely while preserving exact flags, tests, accepted designs, rejected designs, and stale details to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa36d4002k7TTHl1TL6jbj6",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa36d4001x9kwS5XvJfHabQ",
+        "type": "text",
+        "text": "Switch topics. Topic: webhook replay protection incident 12880c9.\nSource file: src/webhooks/replay.12880c9.ts.\nImportant rollout flag: FLAG_WEBHOOK_NONCE_LEDGER_16QNT9R.\nProtective test: webhook_rejects_reused_nonce_1wl6s4t.\nAccepted design: nonce ledger keyed by provider event id with prairie-saffron guard 1IOBUZS.\nRejected design: timestamp-only replay window after willow-cedar rollback 1RMGTNJ.\nWhy accepted won: blocks fast replays even when the attacker stays inside the timestamp tolerance; marker 1ICC7PT preserved indigo isolation for case 1.\nStale neighboring detail to avoid for this topic: stripe retry cosmetics stale path 0KVG4VQ.\nPreserve these exact strings for future selective-memory questions."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa36d8001b61Bfx1hNxtRct",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347451096,
+        "completed": 1780347453827
+      },
+      "parentID": "msg_e84fa36d4001x9kwS5XvJfHabQ",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7515,
+        "input": 310,
+        "output": 37,
+        "reasoning": 0,
+        "cache": {
+          "read": 7168,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa3982001vP0xtU7fa5nxGZ",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa36d8001b61Bfx1hNxtRct",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84fa3b23001lMJem83Ca09b8k",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa36d8001b61Bfx1hNxtRct",
+        "type": "text",
+        "text": "Acknowledged. I’ll preserve the webhook replay protection incident details exactly, including the flag, test, accepted/rejected designs, rationale, and stale detail to avoid.",
+        "time": {
+          "start": 1780347452195,
+          "end": 1780347453702
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_06d0a3fb979eb206016a1df23c2d04819081da8be346e14ed6",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84fa4160001DGIlVO0ZmeFV5W",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa36d8001b61Bfx1hNxtRct",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 7515,
+          "input": 310,
+          "output": 37,
+          "reasoning": 0,
+          "cache": {
+            "read": 7168,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa42be001WgzCttGbrukFwo",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347454142
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "This is historical memory for an agent-infra benchmark. Do not edit files or call tools. Acknowledge concisely while preserving exact flags, tests, accepted designs, rejected designs, and stale details to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa42be002GdNsVxJEaJkGZM",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa42be001WgzCttGbrukFwo",
+        "type": "text",
+        "text": "Switch topics. Topic: cache namespace TTL incident 1uzmybe.\nSource file: src/cache/namespace_ttl.1uzmybe.ts.\nImportant rollout flag: FLAG_NAMESPACE_TTL_CAP_0QSHWJC.\nProtective test: cache_caps_noisy_namespace_ttl_1qdykta.\nAccepted design: namespace maximum TTL cap with umbra-xenon guard 1P9Z26F.\nRejected design: provider-wide hard-coded TTL after dovetail-harbor rollback 1V877GS.\nWhy accepted won: lets each namespace set a bounded freshness budget without penalizing unrelated caches; marker 0AUGFS8 preserved nickel isolation for case 1.\nStale neighboring detail to avoid for this topic: image preview freshness stale path 1MFY5U7.\nPreserve these exact strings for future selective-memory questions."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa42c3001J0WwGLIfNB8Rfp",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347454147,
+        "completed": 1780347470030
+      },
+      "parentID": "msg_e84fa42be001WgzCttGbrukFwo",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7732,
+        "input": 527,
+        "output": 37,
+        "reasoning": 0,
+        "cache": {
+          "read": 7168,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa4558001wu1GyGqtEwl1yI",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa42c3001J0WwGLIfNB8Rfp",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84fa478b001KYfRMNs8Z6AYRf",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa42c3001J0WwGLIfNB8Rfp",
+        "type": "text",
+        "text": "Acknowledged. I’ll preserve the cache namespace TTL incident details exactly, including the flag, test, accepted/rejected designs, rationale, and stale detail to avoid.",
+        "time": {
+          "start": 1780347455371,
+          "end": 1780347469917
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0b85266a997e6078016a1df23f5954819583e06202f90819c8",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84fa80af0011tfDqSmTOlNrMB",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa42c3001J0WwGLIfNB8Rfp",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 7732,
+          "input": 527,
+          "output": 37,
+          "reasoning": 0,
+          "cache": {
+            "read": 7168,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa8249001C3ZixQHs8Txw2b",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347470409
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "This is historical memory for an agent-infra benchmark. Do not edit files or call tools. Acknowledge concisely while preserving exact flags, tests, accepted designs, rejected designs, and stale details to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa8249002mo6jFX4FgYctqn",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa8249001C3ZixQHs8Txw2b",
+        "type": "text",
+        "text": "Switch topics. Topic: feature rollout sampling incident 02u6ks6.\nSource file: src/rollout/sampling.02u6ks6.ts.\nImportant rollout flag: FLAG_STICKY_ROLLOUT_HASH_1VJUC1G.\nProtective test: rollout_keeps_user_bucket_stable_1p1ajii.\nAccepted design: stable hash over actor and flag with brisk-ember guard 1J4XBSB.\nRejected design: per-request random sampling after indigo-marble rollback 0Y70HQG.\nWhy accepted won: prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1.\nStale neighboring detail to avoid for this topic: analytics dashboard color stale path 0XY3AG3.\nPreserve these exact strings for future selective-memory questions."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa824f001qvGOgYpMhazBHT",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347470415,
+        "completed": 1780347472725
+      },
+      "parentID": "msg_e84fa8249001C3ZixQHs8Txw2b",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7954,
+        "input": 749,
+        "output": 37,
+        "reasoning": 0,
+        "cache": {
+          "read": 7168,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa865e0016xm3bIAt2dmEM9",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa824f001qvGOgYpMhazBHT",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84fa8800001KJh0XFllfHnFVE",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa824f001qvGOgYpMhazBHT",
+        "type": "text",
+        "text": "Acknowledged. I’ll preserve the feature rollout sampling incident details exactly, including the flag, test, accepted/rejected designs, rationale, and stale detail to avoid.",
+        "time": {
+          "start": 1780347471872,
+          "end": 1780347472632
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_02ec8300191a5157016a1df24fd8908196b9cbe16134432c95",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84fa8b35001eP4xmQ3L6UvRkM",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa824f001qvGOgYpMhazBHT",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 7954,
+          "input": 749,
+          "output": 37,
+          "reasoning": 0,
+          "cache": {
+            "read": 7168,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa8e3d001tvkZIOb4WUeg5w",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347473469
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "This is historical memory for an agent-infra benchmark. Do not edit files or call tools. Acknowledge concisely while preserving exact flags, tests, accepted designs, rejected designs, and stale details to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa8e3d002UCHKgvbiTzxnl3",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa8e3d001tvkZIOb4WUeg5w",
+        "type": "text",
+        "text": "Switch topics. Topic: csv import quarantine incident 18db99g.\nSource file: src/imports/quarantine.18db99g.ts.\nImportant rollout flag: FLAG_IMPORT_ROW_QUARANTINE_0UP4UII.\nProtective test: import_quarantines_bad_rows_only_0d8waik.\nAccepted design: row-level quarantine ledger with glacier-jigsaw guard 1D0YOK1.\nRejected design: abort entire import on first invalid row after nickel-rivet rollback 06NAID6.\nWhy accepted won: lets clean rows commit while preserving exact diagnostics for rejected rows; marker 184HMG2 preserved xenon isolation for case 1.\nStale neighboring detail to avoid for this topic: spreadsheet column autosize stale path 1TOHV6D.\nPreserve these exact strings for future selective-memory questions."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa8e44001dGyU6FAcM6I5uJ",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347473476,
+        "completed": 1780347475290
+      },
+      "parentID": "msg_e84fa8e3d001tvkZIOb4WUeg5w",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 8169,
+        "input": 452,
+        "output": 37,
+        "reasoning": 0,
+        "cache": {
+          "read": 7680,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa908f0012pb2kMWGP9DTWc",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa8e44001dGyU6FAcM6I5uJ",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84fa923a001sUTEVzHwnGyW8g",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa8e44001dGyU6FAcM6I5uJ",
+        "type": "text",
+        "text": "Acknowledged. I’ll preserve the csv import quarantine incident details exactly, including the flag, test, accepted/rejected designs, rationale, and stale detail to avoid.",
+        "time": {
+          "start": 1780347474490,
+          "end": 1780347475198
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_08a6631c678659f6016a1df2527904819482d7265c578d4e2e",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84fa953c001OgCGc9U5Pk5lPd",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa8e44001dGyU6FAcM6I5uJ",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 8169,
+          "input": 452,
+          "output": 37,
+          "reasoning": 0,
+          "cache": {
+            "read": 7680,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa9631001ehN3JXMXDq8xZl",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347475505
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "This is historical memory for an agent-infra benchmark. Do not edit files or call tools. Acknowledge concisely while preserving exact flags, tests, accepted designs, rejected designs, and stale details to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa9631002Si8KoJ0su5jjxP",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa9631001ehN3JXMXDq8xZl",
+        "type": "text",
+        "text": "Switch topics. Topic: notification fanout incident 1o2nkc7.\nSource file: src/notify/fanout.1o2nkc7.ts.\nImportant rollout flag: FLAG_FANOUT_BACKPRESSURE_0ASQQC5.\nProtective test: fanout_applies_channel_backpressure_0llus8f.\nAccepted design: per-channel bounded queue with lantern-onyx guard 19Y8GF2.\nRejected design: unbounded global fanout array after saffron-willow rollback 1JE9FI9.\nWhy accepted won: prevents a slow SMS provider from exhausting memory for email and push sends; marker 05LWFVR preserved ember isolation for case 1.\nStale neighboring detail to avoid for this topic: notification icon set stale path 0KSLWE8.\nPreserve these exact strings for future selective-memory questions."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fa9636001gfmStBrZ49Rj8M",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347475510,
+        "completed": 1780347481966
+      },
+      "parentID": "msg_e84fa9631001ehN3JXMXDq8xZl",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 8390,
+        "input": 673,
+        "output": 37,
+        "reasoning": 0,
+        "cache": {
+          "read": 7680,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84fa9938001pQNWEijKktimTR",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa9636001gfmStBrZ49Rj8M",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84fa9b2f001DHjFOEZmuK6Qxg",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa9636001gfmStBrZ49Rj8M",
+        "type": "text",
+        "text": "Acknowledged. I’ll preserve the notification fanout incident details exactly, including the flag, test, accepted/rejected designs, rationale, and stale detail to avoid.",
+        "time": {
+          "start": 1780347476783,
+          "end": 1780347481829
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0287fdad81e39035016a1df254c03c8195b1af074c854e6a69",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84faaf4c001viXNQt1WTP4hj0",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fa9636001gfmStBrZ49Rj8M",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 8390,
+          "input": 673,
+          "output": 37,
+          "reasoning": 0,
+          "cache": {
+            "read": 7680,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fab217001ARlADlKFU52hsu",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347482647
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "This is historical memory for an agent-infra benchmark. Do not edit files or call tools. Acknowledge concisely while preserving exact flags, tests, accepted designs, rejected designs, and stale details to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84fab2170026Ot0p6S6xp0cBH",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fab217001ARlADlKFU52hsu",
+        "type": "text",
+        "text": "Boundary note: the product-memory investigation is complete. Future questions may ask for one old decision at a time. Do not carry every old detail into unrelated work unless a memory tool or maintained context marks it relevant."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84fab21c001ZRGHQtqu79BshL",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347482652,
+        "completed": 1780347497338
+      },
+      "parentID": "msg_e84fab217001ARlADlKFU52hsu",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 8468,
+        "input": 246,
+        "output": 30,
+        "reasoning": 0,
+        "cache": {
+          "read": 8192,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84fab4f90010bSXAtxg6xKKPq",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fab21c001ZRGHQtqu79BshL",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84fab67b001Z56Tg7H5yNA4YW",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fab21c001ZRGHQtqu79BshL",
+        "type": "text",
+        "text": "Acknowledged. I’ll only surface these old decisions when directly relevant or asked for, rather than carrying all details into unrelated work.",
+        "time": {
+          "start": 1780347483771,
+          "end": 1780347497016
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_00f785f402613a16016a1df25bc1008194bcba2f00233ca99e",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84faeb570017QRe4O2yRKUObs",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84fab21c001ZRGHQtqu79BshL",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 8468,
+          "input": 246,
+          "output": 30,
+          "reasoning": 0,
+          "cache": {
+            "read": 8192,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84faed9f001l5HWAvJGQjBK32",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "user",
+      "time": {
+        "created": 1780347497887
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "You are an RGB-style editable context maintainer. Rewrite the long prior conversation into a compact future-use memory context. Future questions are unknown, so preserve exact useful facts for every real topic. Drop distractors and stale details except when naming what to avoid.",
+      "tools": {}
+    },
+    "parts": [
+      {
+        "id": "prt_e84faed9f002y4BYjtGTAxlIZc",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84faed9f001l5HWAvJGQjBK32",
+        "type": "text",
+        "text": "Create one maintained memory context for 8 real topics.\nDo not assume the future query target.\nThe facts are intentionally irregular: do not compress them with round-number formulas or inferred suffix rules. Preserve exact per-topic strings.\nFor each real topic, include title, file, rollout flag, protective test, accepted design, rejected design, and the why sentence.\nExclude records explicitly labeled DISTRACTOR.\nReturn markdown only; do not call tools."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84faeda5001LWa3PeB3BrADjc",
+      "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+      "role": "assistant",
+      "time": {
+        "created": 1780347497893,
+        "completed": 1780347520818
+      },
+      "parentID": "msg_e84faed9f001l5HWAvJGQjBK32",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9772,
+        "input": 8569,
+        "output": 1178,
+        "reasoning": 25,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84faf0460014vDy0EyDyGzSbW",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84faeda5001LWa3PeB3BrADjc",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84faf1f8001y4sXlmGgpFZCrl",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84faeda5001LWa3PeB3BrADjc",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_085b225d19339095016a1df26afb688190a7d2132fb52a756a"
+          }
+        },
+        "time": {
+          "start": 1780347499000,
+          "end": 1780347499861
+        }
+      },
+      {
+        "id": "prt_e84faf5580012t3TxTE944NEly",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84faeda5001LWa3PeB3BrADjc",
+        "type": "text",
+        "text": "# Maintained Memory Context\n\n## checkout idempotency incident 0or73qt\n- File: `src/checkout/idempotency.0or73qt.ts`\n- Rollout flag: `FLAG_CHECKOUT_IDEMPOTENCY_V3_0TKS5NV`\n- Protective test: `checkout_dedupes_retry_after_timeout_0kk4icp`\n- Accepted design: per-cart idempotency key store with amber-dovetail guard 0CPGJX8.\n- Rejected design: global checkout mutex after harbor-lantern rollback 1NO7YH7.\n- Why accepted won: preserves shard-local ordering while letting unrelated carts retry independently; marker 1MLAOB9 preserved rivet isolation for case 1.\n\n## search index freshness incident 1lowtq7\n- File: `src/search/freshness.1lowtq7.ts`\n- Rollout flag: `FLAG_INDEX_EPOCH_GUARD_14MWRGT`\n- Protective test: `search_rejects_stale_epoch_publish_1rkix6f`\n- Accepted design: epoch-stamped publish barrier with fennel-indigo guard 0CBWWP2.\n- Rejected design: blind last-write-wins publish after marble-quartz rollback 1RR2O0P.\n- Why accepted won: prevents a slow crawl from replacing a newer index snapshot; marker 0OEPOV3 preserved willow isolation for case 1.\n\n## email digest batching incident 0ddfi0h\n- File: `src/mail/digest.0ddfi0h.ts`\n- Rollout flag: `FLAG_DIGEST_BATCH_WINDOW_0TCPHQV`\n- Protective test: `digest_batches_by_workspace_timezone_0pfucrp`\n- Accepted design: workspace-local send window with keystone-nickel guard 0RW1I0W.\n- Rejected design: single UTC midnight cron after rivet-velvet rollback 1GDMXDZ.\n- Why accepted won: keeps quiet-hour promises without delaying every workspace behind one global clock; marker 18ZDJEH preserved dovetail isolation for case 1.\n\n## webhook replay protection incident 12880c9\n- File: `src/webhooks/replay.12880c9.ts`\n- Rollout flag: `FLAG_WEBHOOK_NONCE_LEDGER_16QNT9R`\n- Protective test: `webhook_rejects_reused_nonce_1wl6s4t`\n- Accepted design: nonce ledger keyed by provider event id with prairie-saffron guard 1IOBUZS.\n- Rejected design: timestamp-only replay window after willow-cedar rollback 1RMGTNJ.\n- Why accepted won: blocks fast replays even when the attacker stays inside the timestamp tolerance; marker 1ICC7PT preserved indigo isolation for case 1.\n\n## cache namespace TTL incident 1uzmybe\n- File: `src/cache/namespace_ttl.1uzmybe.ts`\n- Rollout flag: `FLAG_NAMESPACE_TTL_CAP_0QSHWJC`\n- Protective test: `cache_caps_noisy_namespace_ttl_1qdykta`\n- Accepted design: namespace maximum TTL cap with umbra-xenon guard 1P9Z26F.\n- Rejected design: provider-wide hard-coded TTL after dovetail-harbor rollback 1V877GS.\n- Why accepted won: lets each namespace set a bounded freshness budget without penalizing unrelated caches; marker 0AUGFS8 preserved nickel isolation for case 1.\n\n## feature rollout sampling incident 02u6ks6\n- File: `src/rollout/sampling.02u6ks6.ts`\n- Rollout flag: `FLAG_STICKY_ROLLOUT_HASH_1VJUC1G`\n- Protective test: `rollout_keeps_user_bucket_stable_1p1ajii`\n- Accepted design: stable hash over actor and flag with brisk-ember guard 1J4XBSB.\n- Rejected design: per-request random sampling after indigo-marble rollback 0Y70HQG.\n- Why accepted won: prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1.\n\n## csv import quarantine incident 18db99g\n- File: `src/imports/quarantine.18db99g.ts`\n- Rollout flag: `FLAG_IMPORT_ROW_QUARANTINE_0UP4UII`\n- Protective test: `import_quarantines_bad_rows_only_0d8waik`\n- Accepted design: row-level quarantine ledger with glacier-jigsaw guard 1D0YOK1.\n- Rejected design: abort entire import on first invalid row after nickel-rivet rollback 06NAID6.\n- Why accepted won: lets clean rows commit while preserving exact diagnostics for rejected rows; marker 184HMG2 preserved xenon isolation for case 1.\n\n## notification fanout incident 1o2nkc7\n- File: `src/notify/fanout.1o2nkc7.ts`\n- Rollout flag: `FLAG_FANOUT_BACKPRESSURE_0ASQQC5`\n- Protective test: `fanout_applies_channel_backpressure_0llus8f`\n- Accepted design: per-channel bounded queue with lantern-onyx guard 19Y8GF2.\n- Rejected design: unbounded global fanout array after saffron-willow rollback 1JE9FI9.\n- Why accepted won: prevents a slow SMS provider from exhausting memory for email and push sends; marker 05LWFVR preserved ember isolation for case 1.",
+        "time": {
+          "start": 1780347499864,
+          "end": 1780347520688
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_085b225d19339095016a1df26bd4c48190985e8e036b2c3ece",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84fb4713001i1KoexgLIRjk3S",
+        "sessionID": "ses_17b05f904ffeqZCzNPj1fND4qS",
+        "messageID": "msg_e84faeda5001LWa3PeB3BrADjc",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 9772,
+          "input": 8569,
+          "output": 1178,
+          "reasoning": 25,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

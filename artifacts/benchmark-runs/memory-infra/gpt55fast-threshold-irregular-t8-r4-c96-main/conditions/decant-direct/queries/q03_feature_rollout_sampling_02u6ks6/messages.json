@@ -1,0 +1,212 @@
+[
+  {
+    "info": {
+      "id": "msg_e851371c5001R81grVCfmr1uvT",
+      "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+      "role": "user",
+      "time": {
+        "created": 1780349104581
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files. Use Decant session_lookup to find the relevant historical topic. Call session_lookup exactly once with the exact topic title, limit=1, and detail='full'. Answer from the included topic detail. Do not use raw transcript files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": true,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e851371c7002UsXPZyyoXIAsbe",
+        "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+        "messageID": "msg_e851371c5001R81grVCfmr1uvT",
+        "type": "text",
+        "text": "Recall the maintained decision for feature rollout sampling incident 02u6ks6. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e851371cc001il8k86iDgNoEWw",
+      "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+      "role": "assistant",
+      "time": {
+        "created": 1780349104588,
+        "completed": 1780349106617
+      },
+      "parentID": "msg_e851371c5001R81grVCfmr1uvT",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c96-main/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 4660,
+        "input": 529,
+        "output": 35,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e851374dd0018ORC2AB1Tk5q9O",
+        "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+        "messageID": "msg_e851371cc001il8k86iDgNoEWw",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e851377180011Dkcqqq8mIq2IN",
+        "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+        "messageID": "msg_e851371cc001il8k86iDgNoEWw",
+        "type": "tool",
+        "callID": "call_GpZ4cvKSKdzmMjLP7liLzJx7",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "feature rollout sampling incident 02u6ks6",
+            "limit": 1,
+            "detail": "full"
+          },
+          "output": "{\n  \"query\": \"feature rollout sampling incident 02u6ks6\",\n  \"hint\": \"Use the included detail for the best matching topic; avoid repeated lookup unless the top result is clearly wrong.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_17aed460bffeSu7F2JVALRFen9\",\n      \"title\": \"memory infra decant-direct prep\",\n      \"updatedAt\": 1780349080782,\n      \"matchedTopicIDs\": [\n        \"rollout_sampling_02u6ks6\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"rollout_sampling_02u6ks6\",\n          \"label\": \"rollout_sampling_02u6ks6\",\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": []\n        }\n      ],\n      \"omittedTopicCount\": 5,\n      \"lookupScore\": 38,\n      \"lookupReason\": \"topic match: rollout_sampling_02u6ks6, checkout_idempotency_0or73qt, search_freshness_1lowtq7\"\n    }\n  ],\n  \"details\": [\n    {\n      \"session_id\": \"ses_17aed460bffeSu7F2JVALRFen9\",\n      \"topic_id\": \"rollout_sampling_02u6ks6\",\n      \"detail\": \"full\",\n      \"content\": \"Role: user\\nText:\\nSwitch topics. Topic: feature rollout sampling incident 02u6ks6.\\nSource file: src/rollout/sampling.02u6ks6.ts.\\nImportant rollout flag: FLAG_STICKY_ROLLOUT_HASH_1VJUC1G.\\nProtective test: rollout_keeps_user_bucket_stable_1p1ajii.\\nAccepted design: stable hash over actor and flag with brisk-ember guard 1J4XBSB.\\nRejected design: per-request random sampling after indigo-marble rollback 0Y70HQG.\\nWhy accepted won: prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1.\\nStale neighboring detail to avoid for this topic: analytics dashboard color stale path 0XY3AG3.\\nPreserve these exact strings for future selective-memory questions.\\n\\n---\\n\\nRole: assistant\\nText:\\nNoted for future reference: feature rollout sampling incident `02u6ks6`, including the source file, rollout flag, protective test, accepted/rejected design, rationale, and stale neighboring detail to avoid.\"\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780349106473,
+            "end": 1780349106533
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_0b91c3c9f5bf0e0f016a1df8b1eb5481a1bc398feaec9aa34d"
+          }
+        }
+      },
+      {
+        "id": "prt_e85137990001RO3sm9CL3Eb6AO",
+        "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+        "messageID": "msg_e851371cc001il8k86iDgNoEWw",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 4660,
+          "input": 529,
+          "output": 35,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e851379ba001cIe9PtqkfP7VZL",
+      "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+      "role": "assistant",
+      "time": {
+        "created": 1780349106618,
+        "completed": 1780349110544
+      },
+      "parentID": "msg_e851371c5001R81grVCfmr1uvT",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c96-main/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 5383,
+        "input": 1129,
+        "output": 158,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e85137c02001f0h2kjomjv5ERo",
+        "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+        "messageID": "msg_e851379ba001cIe9PtqkfP7VZL",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e85137d47001gAfgMaoEnGgYv4",
+        "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+        "messageID": "msg_e851379ba001cIe9PtqkfP7VZL",
+        "type": "text",
+        "text": "{\"title\":\"feature rollout sampling incident 02u6ks6\",\"flag\":\"FLAG_STICKY_ROLLOUT_HASH_1VJUC1G\",\"test\":\"rollout_keeps_user_bucket_stable_1p1ajii\",\"accepted_design\":\"stable hash over actor and flag with brisk-ember guard 1J4XBSB\",\"rejected_design\":\"per-request random sampling after indigo-marble rollback 0Y70HQG\",\"why\":\"prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1\",\"citation\":\"src/rollout/sampling.02u6ks6.ts\",\"ignored\":\"analytics dashboard color stale path 0XY3AG3\"}",
+        "time": {
+          "start": 1780349107527,
+          "end": 1780349110444
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0ca2d7866bc9c490016a1df8b3845c819da86dfbd5533a9e91",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e851388e0001MJTEWK4PTUK03I",
+        "sessionID": "ses_17aec8e54ffehM7XENK5aWFAJ8",
+        "messageID": "msg_e851379ba001cIe9PtqkfP7VZL",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 5383,
+          "input": 1129,
+          "output": 158,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

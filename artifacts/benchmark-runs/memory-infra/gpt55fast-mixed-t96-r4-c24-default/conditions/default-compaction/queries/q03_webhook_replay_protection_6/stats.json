@@ -1,0 +1,31 @@
+{
+  "kind": "recall",
+  "query_id": "q03_webhook_replay_protection_6",
+  "topic_id": "webhook_replay_protection_6",
+  "passed": false,
+  "required_hits": [
+    "FLAG_WEBHOOK_NONCE_LEDGER_R6",
+    "webhook_rejects_reused_nonce_r6"
+  ],
+  "missing_required": [
+    "nonce ledger keyed by provider event id round 6",
+    "timestamp-only replay window round 6",
+    "blocks fast replays even when the attacker stays inside the timestamp tolerance in round 6"
+  ],
+  "forbidden_hits": [],
+  "output_preview": "{\"title\":\"webhook replay protection round 6\",\"flag\":\"FLAG_WEBHOOK_NONCE_LEDGER_R6\",\"test\":\"webhook_rejects_reused_nonce_r6\",\"accepted_design\":\"nonce ledger keyed by provider event id\",\"rejected_design\":\"timestamp-only replay window\",\"why\":\"preserve correctness without penalizing unrelated work\",\"citation\":\"webhook replay protection: `src/webhooks/replay.ts`; flags `FLAG_WEBHOOK_NONCE_LEDGER_R1` through `FLAG_WEBHOOK_NONCE_LEDGER_R8`; tests `webhook_rejects_reused_nonce_r1` through `webhook_rejects_reused_nonce_r8`; accepted `nonce ledger keyed by provider event id`; rejected `timestamp-only replay window`; avoid `stripe retry cosmetics`.\",\"ignored\":\"stripe retry cosmetics\"}",
+  "tool_names": [],
+  "context_tool_call_count": 0,
+  "tokens": {
+    "messages": 2,
+    "assistant": 1,
+    "input": 571,
+    "output": 168,
+    "total": 5918,
+    "reasoning": 59,
+    "cacheRead": 5120,
+    "cacheWrite": 0,
+    "toolCalls": 0,
+    "maxInput": 571
+  }
+}

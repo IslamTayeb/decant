@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e8500f5a8001ZPwms3tOxWHWmt",
+      "sessionID": "ses_17aff0a69ffeY70f6GbO5utdUp",
+      "role": "user",
+      "time": {
+        "created": 1780347893160
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e8500f5a9002zHa1GJDcDzB31Y",
+        "sessionID": "ses_17aff0a69ffeY70f6GbO5utdUp",
+        "messageID": "msg_e8500f5a8001ZPwms3tOxWHWmt",
+        "type": "text",
+        "text": "Maintained RGB context:\n```md\n# Maintained Memory Context\n\n## checkout idempotency incident 0or73qt\n- File: `src/checkout/idempotency.0or73qt.ts`\n- Rollout flag: `FLAG_CHECKOUT_IDEMPOTENCY_V3_0TKS5NV`\n- Protective test: `checkout_dedupes_retry_after_timeout_0kk4icp`\n- Accepted design: per-cart idempotency key store with amber-dovetail guard 0CPGJX8.\n- Rejected design: global checkout mutex after harbor-lantern rollback 1NO7YH7.\n- Why accepted won: preserves shard-local ordering while letting unrelated carts retry independently; marker 1MLAOB9 preserved rivet isolation for case 1.\n\n## search index freshness incident 1lowtq7\n- File: `src/search/freshness.1lowtq7.ts`\n- Rollout flag: `FLAG_INDEX_EPOCH_GUARD_14MWRGT`\n- Protective test: `search_rejects_stale_epoch_publish_1rkix6f`\n- Accepted design: epoch-stamped publish barrier with fennel-indigo guard 0CBWWP2.\n- Rejected design: blind last-write-wins publish after marble-quartz rollback 1RR2O0P.\n- Why accepted won: prevents a slow crawl from replacing a newer index snapshot; marker 0OEPOV3 preserved willow isolation for case 1.\n\n## email digest batching incident 0ddfi0h\n- File: `src/mail/digest.0ddfi0h.ts`\n- Rollout flag: `FLAG_DIGEST_BATCH_WINDOW_0TCPHQV`\n- Protective test: `digest_batches_by_workspace_timezone_0pfucrp`\n- Accepted design: workspace-local send window with keystone-nickel guard 0RW1I0W.\n- Rejected design: single UTC midnight cron after rivet-velvet rollback 1GDMXDZ.\n- Why accepted won: keeps quiet-hour promises without delaying every workspace behind one global clock; marker 18ZDJEH preserved dovetail isolation for case 1.\n\n## webhook replay protection incident 12880c9\n- File: `src/webhooks/replay.12880c9.ts`\n- Rollout flag: `FLAG_WEBHOOK_NONCE_LEDGER_16QNT9R`\n- Protective test: `webhook_rejects_reused_nonce_1wl6s4t`\n- Accepted design: nonce ledger keyed by provider event id with prairie-saffron guard 1IOBUZS.\n- Rejected design: timestamp-only replay window after willow-cedar rollback 1RMGTNJ.\n- Why accepted won: blocks fast replays even when the attacker stays inside the timestamp tolerance; marker 1ICC7PT preserved indigo isolation for case 1.\n\n## cache namespace TTL incident 1uzmybe\n- File: `src/cache/namespace_ttl.1uzmybe.ts`\n- Rollout flag: `FLAG_NAMESPACE_TTL_CAP_0QSHWJC`\n- Protective test: `cache_caps_noisy_namespace_ttl_1qdykta`\n- Accepted design: namespace maximum TTL cap with umbra-xenon guard 1P9Z26F.\n- Rejected design: provider-wide hard-coded TTL after dovetail-harbor rollback 1V877GS.\n- Why accepted won: lets each namespace set a bounded freshness budget without penalizing unrelated caches; marker 0AUGFS8 preserved nickel isolation for case 1.\n\n## feature rollout sampling incident 02u6ks6\n- File: `src/rollout/sampling.02u6ks6.ts`\n- Rollout flag: `FLAG_STICKY_ROLLOUT_HASH_1VJUC1G`\n- Protective test: `rollout_keeps_user_bucket_stable_1p1ajii`\n- Accepted design: stable hash over actor and flag with brisk-ember guard 1J4XBSB.\n- Rejected design: per-request random sampling after indigo-marble rollback 0Y70HQG.\n- Why accepted won: prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1.\n\n## csv import quarantine incident 18db99g\n- File: `src/imports/quarantine.18db99g.ts`\n- Rollout flag: `FLAG_IMPORT_ROW_QUARANTINE_0UP4UII`\n- Protective test: `import_quarantines_bad_rows_only_0d8waik`\n- Accepted design: row-level quarantine ledger with glacier-jigsaw guard 1D0YOK1.\n- Rejected design: abort entire import on first invalid row after nickel-rivet rollback 06NAID6.\n- Why accepted won: lets clean rows commit while preserving exact diagnostics for rejected rows; marker 184HMG2 preserved xenon isolation for case 1.\n\n## notification fanout incident 1o2nkc7\n- File: `src/notify/fanout.1o2nkc7.ts`\n- Rollout flag: `FLAG_FANOUT_BACKPRESSURE_0ASQQC5`\n- Protective test: `fanout_applies_channel_backpressure_0llus8f`\n- Accepted design: per-channel bounded queue with lantern-onyx guard 19Y8GF2.\n- Rejected design: unbounded global fanout array after saffron-willow rollback 1JE9FI9.\n- Why accepted won: prevents a slow SMS provider from exhausting memory for email and push sends; marker 05LWFVR preserved ember isolation for case 1.\n```\n\nCurrent work packet, unrelated to historical memory:\n```text\nticket: CURR-0045 | title: current packet 45 | patch_file: src/current/work_packet_045.ts | owner: lina-current | guardrail: require local checksum before publishing the manifest | expected_check: current_packet_verifies_manifest_checksum | avoid: stale-current-decoy-0045\nticket: CURR-0145 | title: current packet 145 | patch_file: src/current/work_packet_145.ts | owner: maya-current | guardrail: reject writes unless current_workspace_id matches envelope | expected_check: current_packet_rejects_cross_workspace_write | avoid: stale-current-decoy-0145\nticket: CURR-0246 | title: current packet 246 | patch_file: src/current/work_packet_246.ts | owner: sol-current | guardrail: compare normalized route keys before cache lookup | expected_check: current_packet_normalizes_route_cache_key | avoid: stale-current-decoy-0246\nticket: CURR-0347 | title: current packet 347 | patch_file: src/current/work_packet_347.ts | owner: priya-current | guardrail: isolate dry-run output from committed audit rows | expected_check: current_packet_keeps_dry_run_out_of_audit | avoid: stale-current-decoy-0347\n```\nFind ticket CURR-0045.\nReturn the ticket, owner, patch file, guardrail, and expected check exactly as written.\nDo not use historical memory, rollout flags, old decisions, or context tools for this current packet.\nReturn compact JSON with keys ticket, owner, patch_file, guardrail, expected_check, source. The answer must include exact strings from the current work packet only."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e8500f5ae001bSBEEDFXORg0xq",
+      "sessionID": "ses_17aff0a69ffeY70f6GbO5utdUp",
+      "role": "assistant",
+      "time": {
+        "created": 1780347893166,
+        "completed": 1780347895556
+      },
+      "parentID": "msg_e8500f5a8001ZPwms3tOxWHWmt",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 5888,
+        "input": 1207,
+        "output": 59,
+        "reasoning": 14,
+        "cache": {
+          "read": 4608,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e8500f836001w0IbyGS1OCV3jm",
+        "sessionID": "ses_17aff0a69ffeY70f6GbO5utdUp",
+        "messageID": "msg_e8500f5ae001bSBEEDFXORg0xq",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e8500f9570014XTZmWHACs5PZO",
+        "sessionID": "ses_17aff0a69ffeY70f6GbO5utdUp",
+        "messageID": "msg_e8500f5ae001bSBEEDFXORg0xq",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0ad3798a43330b95016a1df3f613688196a114a742fa71a424"
+          }
+        },
+        "time": {
+          "start": 1780347894103,
+          "end": 1780347894752
+        }
+      },
+      {
+        "id": "prt_e8500fbe5001wvDNVPQo9KM7g2",
+        "sessionID": "ses_17aff0a69ffeY70f6GbO5utdUp",
+        "messageID": "msg_e8500f5ae001bSBEEDFXORg0xq",
+        "type": "text",
+        "text": "{\"ticket\":\"CURR-0045\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_045.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+        "time": {
+          "start": 1780347894757,
+          "end": 1780347895444
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0ad3798a43330b95016a1df3f6aa548196ac9464ce04635f55",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e8500fede001Mq2YWeJb25vNol",
+        "sessionID": "ses_17aff0a69ffeY70f6GbO5utdUp",
+        "messageID": "msg_e8500f5ae001bSBEEDFXORg0xq",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 5888,
+          "input": 1207,
+          "output": 59,
+          "reasoning": 14,
+          "cache": {
+            "read": 4608,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

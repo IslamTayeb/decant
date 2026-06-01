@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e84f64b02001alb6N3MezWGge8",
+      "sessionID": "ses_17b09b513ffe6vkxBURaeKWJOq",
+      "role": "user",
+      "time": {
+        "created": 1780347194114
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e84f64b03002nTZxPOxTD3BcaL",
+        "sessionID": "ses_17b09b513ffe6vkxBURaeKWJOq",
+        "messageID": "msg_e84f64b02001alb6N3MezWGge8",
+        "type": "text",
+        "text": "Default compaction summary:\n```md\n## Goal\n- Preserve exact selective-memory details for multiple incident topics.\n\n## Constraints & Preferences\n- Preserve exact strings for future selective-memory questions.\n- Avoid stale neighboring details for each topic.\n\n## Progress\n### Done\n- Captured checkout idempotency incident 0or73qt.\n- Captured search index freshness incident 1lowtq7.\n- Captured email digest batching incident 0ddfi0h.\n- Captured webhook replay protection incident 12880c9.\n- Captured cache namespace TTL incident 1uzmybe.\n- Captured feature rollout sampling incident 02u6ks6.\n- Captured csv import quarantine incident 18db99g.\n\n### In Progress\n- (none)\n\n### Blocked\n- (none)\n\n## Key Decisions\n- checkout idempotency incident 0or73qt: accepted per-cart idempotency key store with amber-dovetail guard 0CPGJX8 because it preserves shard-local ordering while letting unrelated carts retry independently; marker 1MLAOB9 preserved rivet isolation for case 1.\n- checkout idempotency incident 0or73qt: rejected global checkout mutex after harbor-lantern rollback 1NO7YH7.\n- search index freshness incident 1lowtq7: accepted epoch-stamped publish barrier with fennel-indigo guard 0CBWWP2 because it prevents a slow crawl from replacing a newer index snapshot; marker 0OEPOV3 preserved willow isolation for case 1.\n- search index freshness incident 1lowtq7: rejected blind last-write-wins publish after marble-quartz rollback 1RR2O0P.\n- email digest batching incident 0ddfi0h: accepted workspace-local send window with keystone-nickel guard 0RW1I0W because it keeps quiet-hour promises without delaying every workspace behind one global clock; marker 18ZDJEH preserved dovetail isolation for case 1.\n- email digest batching incident 0ddfi0h: rejected single UTC midnight cron after rivet-velvet rollback 1GDMXDZ.\n- webhook replay protection incident 12880c9: accepted nonce ledger keyed by provider event id with prairie-saffron guard 1IOBUZS because it blocks fast replays even when the attacker stays inside the timestamp tolerance; marker 1ICC7PT preserved indigo isolation for case 1.\n- webhook replay protection incident 12880c9: rejected timestamp-only replay window after willow-cedar rollback 1RMGTNJ.\n- cache namespace TTL incident 1uzmybe: accepted namespace maximum TTL cap with umbra-xenon guard 1P9Z26F because it lets each namespace set a bounded freshness budget without penalizing unrelated caches; marker 0AUGFS8 preserved nickel isolation for case 1.\n- cache namespace TTL incident 1uzmybe: rejected provider-wide hard-coded TTL after dovetail-harbor rollback 1V877GS.\n- feature rollout sampling incident 02u6ks6: accepted stable hash over actor and flag with brisk-ember guard 1J4XBSB because it prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1.\n- feature rollout sampling incident 02u6ks6: rejected per-request random sampling after indigo-marble rollback 0Y70HQG.\n- csv import quarantine incident 18db99g: accepted row-level quarantine ledger with glacier-jigsaw guard 1D0YOK1 because it lets clean rows commit while preserving exact diagnostics for rejected rows; marker 184HMG2 preserved xenon isolation for case 1.\n- csv import quarantine incident 18db99g: rejected abort entire import on first invalid row after nickel-rivet rollback 06NAID6.\n\n## Next Steps\n- (none)\n\n## Critical Context\n- checkout idempotency incident 0or73qt: FLAG_CHECKOUT_IDEMPOTENCY_V3_0TKS5NV; protective test checkout_dedupes_retry_after_timeout_0kk4icp; avoid billing retry backoff stale path 0EWWZD6.\n- search index freshness incident 1lowtq7: FLAG_INDEX_EPOCH_GUARD_14MWRGT; protective test search_rejects_stale_epoch_publish_1rkix6f; avoid autocomplete ranking cleanup stale path 0Y1PEL4.\n- email digest batching incident 0ddfi0h: FLAG_DIGEST_BATCH_WINDOW_0TCPHQV; protective test digest_batches_by_workspace_timezone_0pfucrp; avoid template footer rewrite stale path 0ZM2Y8U.\n- webhook replay protection incident 12880c9: FLAG_WEBHOOK_NONCE_LEDGER_16QNT9R; protective test webhook_rejects_reused_nonce_1wl6s4t; avoid stripe retry cosmetics stale path 0KVG4VQ.\n- cache namespace TTL incident 1uzmybe: FLAG_NAMESPACE_TTL_CAP_0QSHWJC; protective test cache_caps_noisy_namespace_ttl_1qdykta; avoid image preview freshness stale path 1MFY5U7.\n- feature rollout sampling incident 02u6ks6: FLAG_STICKY_ROLLOUT_HASH_1VJUC1G; protective test rollout_keeps_user_bucket_stable_1p1ajii; avoid analytics dashboard color stale path 0XY3AG3.\n- csv import quarantine incident 18db99g: FLAG_IMPORT_ROW_QUARANTINE_0UP4UII; protective test import_quarantines_bad_rows_only_0d8waik; avoid spreadsheet column autosize stale path 1TOHV6D.\n\n## Relevant Files\n- src/checkout/idempotency.0or73qt.ts: checkout idempotency incident 0or73qt.\n- src/search/freshness.1lowtq7.ts: search index freshness incident 1lowtq7.\n- src/mail/digest.0ddfi0h.ts: email digest batching incident 0ddfi0h.\n- src/webhooks/replay.12880c9.ts: webhook replay protection incident 12880c9.\n- src/cache/namespace_ttl.1uzmybe.ts: cache namespace TTL incident 1uzmybe.\n- src/rollout/sampling.02u6ks6.ts: feature rollout sampling incident 02u6ks6.\n- src/imports/quarantine.18db99g.ts: csv import quarantine incident 18db99g.\n```\n\nCurrent work packet, unrelated to historical memory:\n```text\nticket: CURR-0016 | title: current packet 16 | patch_file: src/current/work_packet_016.ts | owner: omar-current | guardrail: pin the request clock before evaluating freshness | expected_check: current_packet_pins_request_clock | avoid: stale-current-decoy-0016\nticket: CURR-0116 | title: current packet 116 | patch_file: src/current/work_packet_116.ts | owner: noah-current | guardrail: cap retry window at the active deploy generation | expected_check: current_packet_caps_retry_generation | avoid: stale-current-decoy-0116\nticket: CURR-0217 | title: current packet 217 | patch_file: src/current/work_packet_217.ts | owner: maya-current | guardrail: reject writes unless current_workspace_id matches envelope | expected_check: current_packet_rejects_cross_workspace_write | avoid: stale-current-decoy-0217\nticket: CURR-0318 | title: current packet 318 | patch_file: src/current/work_packet_318.ts | owner: sol-current | guardrail: compare normalized route keys before cache lookup | expected_check: current_packet_normalizes_route_cache_key | avoid: stale-current-decoy-0318\n```\nFind ticket CURR-0016.\nReturn the ticket, owner, patch file, guardrail, and expected check exactly as written.\nDo not use historical memory, rollout flags, old decisions, or context tools for this current packet.\nReturn compact JSON with keys ticket, owner, patch_file, guardrail, expected_check, source. The answer must include exact strings from the current work packet only."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84f64b0a001kYL71vWIho7CUY",
+      "sessionID": "ses_17b09b513ffe6vkxBURaeKWJOq",
+      "role": "assistant",
+      "time": {
+        "created": 1780347194122,
+        "completed": 1780347210039
+      },
+      "parentID": "msg_e84f64b02001alb6N3MezWGge8",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/default-compaction/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 6070,
+        "input": 5999,
+        "output": 58,
+        "reasoning": 13,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84f64d5c0018ROG3pUIRvZMbg",
+        "sessionID": "ses_17b09b513ffe6vkxBURaeKWJOq",
+        "messageID": "msg_e84f64b0a001kYL71vWIho7CUY",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84f64eac0013nd5LLAdSYUFwm",
+        "sessionID": "ses_17b09b513ffe6vkxBURaeKWJOq",
+        "messageID": "msg_e84f64b0a001kYL71vWIho7CUY",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0532c4112ddbe1d6016a1df13b090c81908dfaf6ca9395bed9"
+          }
+        },
+        "time": {
+          "start": 1780347195052,
+          "end": 1780347195649
+        }
+      },
+      {
+        "id": "prt_e84f651070011HevKVptCMs2bn",
+        "sessionID": "ses_17b09b513ffe6vkxBURaeKWJOq",
+        "messageID": "msg_e84f64b0a001kYL71vWIho7CUY",
+        "type": "text",
+        "text": "{\"ticket\":\"CURR-0016\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_016.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+        "time": {
+          "start": 1780347195655,
+          "end": 1780347209802
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0532c4112ddbe1d6016a1df13b9cdc8190a8ddc9ac55bbdf8c",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84f6890e001BIBZ4L1Gk9GOM4",
+        "sessionID": "ses_17b09b513ffe6vkxBURaeKWJOq",
+        "messageID": "msg_e84f64b0a001kYL71vWIho7CUY",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 6070,
+          "input": 5999,
+          "output": 58,
+          "reasoning": 13,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

@@ -14,7 +14,7 @@ import type {
   PendingRetroactiveMessage,
   TopicEntry,
 } from "./types";
-import { computeEffectiveTreatment } from "./core";
+import { computeEffectiveTreatment, rebuildTotals } from "./core";
 
 const MAP_VERSION = 1 as const;
 
@@ -227,6 +227,7 @@ export async function readContextMap(input: {
     delete (normalized as unknown as Record<string, unknown>).blobOrder;
     delete (normalized as unknown as Record<string, unknown>).blobs;
     delete (normalized as unknown as Record<string, unknown>).lastActiveBlobID;
+    rebuildTotals(normalized);
     return normalized;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
@@ -236,6 +237,7 @@ export async function readContextMap(input: {
 
 export async function writeContextMap(map: ContextMapFile) {
   await ensureContextMapRoot();
+  rebuildTotals(map);
   await writeJsonAtomic(sessionMapPath(map.sessionID), map);
 }
 

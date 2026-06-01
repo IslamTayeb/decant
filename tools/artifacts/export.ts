@@ -16,12 +16,19 @@ type Manifest = {
   }>;
 };
 
+type ExportOptions = {
+  benchmark?: string;
+  run?: string;
+};
+
 const repoRoot = path.resolve(process.cwd());
 const artifactRoot = path.join(repoRoot, "artifacts", "benchmark-runs");
 const benchmarkRuns = [
   path.join("benchmarks", "code-recall", "runs"),
   path.join("benchmarks", "context-canaries", "runs"),
+  path.join("benchmarks", "memory-infra", "runs"),
   path.join("benchmarks", "provenance-qa", "runs"),
+  path.join("benchmarks", "reversible-memory", "runs"),
   path.join("benchmarks", "swebench-context", "runs"),
 ];
 
@@ -39,13 +46,39 @@ const publishedRuns = new Map([
     new Set(["bedrock-opus46-all-hypotheses", "gpt55-all-hypotheses"]),
   ],
   [
+    "memory-infra",
+    new Set([
+      "gpt55fast-mixed-t96-r4-c24-default",
+      "gpt55fast-mixed-t96-r4-c24-rgb-current",
+      "gpt55fast-mixed-t96-r4-c24-decant-numeric-fix",
+      "gpt55fast-mixed-t96-r4-c48-rgb",
+      "gpt55fast-mixed-t96-r4-c48-decant",
+      "gpt55fast-mixed-t96-r4-c96-default",
+      "gpt55fast-mixed-t96-r4-c96-rgb",
+      "gpt55fast-mixed-t96-r4-c96-decant",
+      "gpt55fast-mixed-t96-r4-c96-rgb-rep2",
+      "gpt55fast-mixed-t96-r4-c96-decant-rep2",
+      "gpt55fast-frontier-t96-r16-rgb-budget2000",
+      "gpt55fast-frontier-t96-r16-rgb-unbounded",
+      "gpt55fast-frontier-t96-r16-decant",
+      "gpt55fast-mixed-t48-r4-c24-decoy1-decant-penalty",
+      "gpt55fast-irregular-t24-r4-c12-default-opencode-continuation",
+      "gpt55fast-irregular-t24-r4-c12-rgb-longtimeout",
+      "gpt55fast-irregular-t24-r4-c12-decant",
+      "gpt55fast-threshold-irregular-t8-r4-c48-all",
+      "gpt55fast-threshold-irregular-t8-r4-c96-main",
+    ]),
+  ],
+  [
     "provenance-qa",
     new Set([
+      "default-compaction-gpt55-matrix",
       "gpt55-blog-full-matrix-final",
       "gpt55-parent-gpt54mini-child-subagents-fixed",
       "gpt55-rlm-hybrid",
     ]),
   ],
+  ["reversible-memory", new Set(["gpt55-reversible-memory-final3-20260525"])],
   [
     "swebench-context",
     new Set([
@@ -113,6 +146,8 @@ const textExtensions = new Set([
 const redactedJsonKeys = new Set(["reasoningEncryptedContent"]);
 
 async function main() {
+  const options = parseOptions();
+  const filtered = Boolean(options.benchmark || options.run);
   const manifest: Manifest = {
     generatedAt: new Date().toISOString(),
     sourceRoot: ".",
@@ -122,16 +157,17 @@ async function main() {
     runs: [],
   };
 
-  await fs.rm(artifactRoot, { recursive: true, force: true });
+  if (!filtered) await fs.rm(artifactRoot, { recursive: true, force: true });
   await fs.mkdir(artifactRoot, { recursive: true });
 
   for (const relativeRunsDir of benchmarkRuns) {
     const runsDir = path.join(repoRoot, relativeRunsDir);
     const benchmark = path.basename(path.dirname(runsDir));
+    if (options.benchmark && benchmark !== options.benchmark) continue;
     const publishableRuns = publishedRuns.get(benchmark) ?? new Set<string>();
-    const runNames = (await directoryNames(runsDir)).filter((run) =>
-      publishableRuns.has(run),
-    );
+    const runNames = (await directoryNames(runsDir))
+      .filter((run) => publishableRuns.has(run))
+      .filter((run) => !options.run || run === options.run);
     for (const run of runNames) {
       const source = path.join(runsDir, run);
       const destination = path.join(
@@ -140,6 +176,7 @@ async function main() {
         normalizePathSegment(run),
       );
       const before = manifest.copiedFiles;
+      await fs.rm(destination, { recursive: true, force: true });
       await copyPortableArtifacts(source, destination, source, manifest);
       const copiedFiles = manifest.copiedFiles - before;
       if (copiedFiles === 0) continue;
@@ -166,6 +203,41 @@ async function main() {
       `Skipped ${manifest.skippedFiles.length} raw or oversized files`,
     );
   }
+}
+
+function parseOptions(): ExportOptions {
+  const options: ExportOptions = {};
+  for (let index = 2; index < process.argv.length; index++) {
+    const arg = process.argv[index];
+    if (arg === "--benchmark") {
+      options.benchmark = requireValue(arg, process.argv[++index]);
+      continue;
+    }
+    if (arg.startsWith("--benchmark=")) {
+      options.benchmark = arg.slice("--benchmark=".length);
+      continue;
+    }
+    if (arg === "--run") {
+      options.run = requireValue(arg, process.argv[++index]);
+      continue;
+    }
+    if (arg.startsWith("--run=")) {
+      options.run = arg.slice("--run=".length);
+      continue;
+    }
+    throw new Error(`Unknown option: ${arg}`);
+  }
+  if (options.run && !options.benchmark) {
+    throw new Error("--run requires --benchmark");
+  }
+  return options;
+}
+
+function requireValue(flag: string, value: string | undefined) {
+  if (!value || value.startsWith("--")) {
+    throw new Error(`${flag} requires a value`);
+  }
+  return value;
 }
 
 async function directoryNames(dir: string) {

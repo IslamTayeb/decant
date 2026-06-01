@@ -227,6 +227,7 @@ export type HistoricalSessionOverview = {
   title: string;
   updatedAt?: number;
   matchedTopicIDs: string[];
+  omittedTopicCount?: number;
   topics: Array<{
     id: string;
     label: string;

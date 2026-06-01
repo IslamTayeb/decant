@@ -1,0 +1,122 @@
+[
+  {
+    "info": {
+      "id": "msg_e850601a9001TLk5hW6MDEWnJ5",
+      "sessionID": "ses_17afb1b04ffeLxdwQhrWB2RTO2",
+      "role": "user",
+      "time": {
+        "created": 1780348223913
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e850601a9002grEIamyEZTB8Bl",
+        "sessionID": "ses_17afb1b04ffeLxdwQhrWB2RTO2",
+        "messageID": "msg_e850601a9001TLk5hW6MDEWnJ5",
+        "type": "text",
+        "text": "Recall the maintained decision for feature rollout sampling incident 02u6ks6. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e850601b2001IPV5U9Th4nnqqk",
+      "sessionID": "ses_17afb1b04ffeLxdwQhrWB2RTO2",
+      "role": "assistant",
+      "time": {
+        "created": 1780348223922,
+        "completed": 1780348228113
+      },
+      "parentID": "msg_e850601a9001TLk5hW6MDEWnJ5",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c96-main/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 7895,
+        "input": 1607,
+        "output": 144,
+        "reasoning": 0,
+        "cache": {
+          "read": 6144,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e8506048b001cxZPOzJeuVp9XY",
+        "sessionID": "ses_17afb1b04ffeLxdwQhrWB2RTO2",
+        "messageID": "msg_e850601b2001IPV5U9Th4nnqqk",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e85060742001L7Bodqty4JoM8S",
+        "sessionID": "ses_17afb1b04ffeLxdwQhrWB2RTO2",
+        "messageID": "msg_e850601b2001IPV5U9Th4nnqqk",
+        "type": "text",
+        "text": "{\"title\":\"feature rollout sampling incident 02u6ks6\",\"flag\":\"FLAG_STICKY_ROLLOUT_HASH_1VJUC1G\",\"test\":\"rollout_keeps_user_bucket_stable_1p1ajii\",\"accepted_design\":\"stable hash over actor and flag with brisk-ember guard 1J4XBSB\",\"rejected_design\":\"per-request random sampling after indigo-marble rollback 0Y70HQG\",\"why\":\"accepted design prevents a user from bouncing between treatment and control across refreshes\",\"citation\":\"src/rollout/sampling.02u6ks6.ts\",\"ignored\":\"analytics dashboard color stale path 0XY3AG3\"}",
+        "time": {
+          "start": 1780348225346,
+          "end": 1780348227969
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0998a1bea65d2a71016a1df54150d88194b9126e491d591413",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e850611e4001zHnSv7jnzFcy7W",
+        "sessionID": "ses_17afb1b04ffeLxdwQhrWB2RTO2",
+        "messageID": "msg_e850601b2001IPV5U9Th4nnqqk",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 7895,
+          "input": 1607,
+          "output": 144,
+          "reasoning": 0,
+          "cache": {
+            "read": 6144,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

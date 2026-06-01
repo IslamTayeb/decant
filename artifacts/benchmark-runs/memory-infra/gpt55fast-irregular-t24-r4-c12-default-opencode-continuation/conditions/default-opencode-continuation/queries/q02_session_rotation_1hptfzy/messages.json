@@ -1,0 +1,122 @@
+[
+  {
+    "info": {
+      "id": "msg_e84eb6b4f001EqsNFILZ9Mp1R1",
+      "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+      "role": "user",
+      "time": {
+        "created": 1780346481487
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e84eb6b4f002ujs0Fm5CTsxApp",
+        "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+        "messageID": "msg_e84eb6b4f001EqsNFILZ9Mp1R1",
+        "type": "text",
+        "text": "Recall the maintained decision for session rotation incident 1hptfzy. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84eb6b54001F6xufSFTH08cxa",
+      "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+      "role": "assistant",
+      "time": {
+        "created": 1780346481492,
+        "completed": 1780346484984
+      },
+      "parentID": "msg_e84eb6b4f001EqsNFILZ9Mp1R1",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-t24-r4-c12-default-opencode-continuation/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 9686,
+        "input": 337,
+        "output": 133,
+        "reasoning": 0,
+        "cache": {
+          "read": 9216,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84eb6dcb00180X00XCh5NlJwq",
+        "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+        "messageID": "msg_e84eb6b54001F6xufSFTH08cxa",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84eb6f1c0014MOsQETzbb4eAT",
+        "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+        "messageID": "msg_e84eb6b54001F6xufSFTH08cxa",
+        "type": "text",
+        "text": "{\"title\":\"session rotation incident 1hptfzy\",\"flag\":\"FLAG_SESSION_ROTATION_GRACE_1W700X8\",\"test\":\"session_accepts_previous_cookie_once_05ezjsi\",\"accepted_design\":\"one-use previous-cookie grace with quartz-topaz guard 0DVX7ZN\",\"rejected_design\":\"accept every old cookie until expiry after xenon-dovetail rollback 0W5UOYO\",\"why\":\"avoids logout races during rotation while still closing replay opportunities\",\"citation\":\"src/session/rotation.1hptfzy.ts\",\"ignored\":\"login page copy stale path 1XAPDJV\"}",
+        "time": {
+          "start": 1780346482461,
+          "end": 1780346484881
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_07289334ff357869016a1dee726ee8819ab2a9ab9dde03f682",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84eb78d9001D6IL4enitPUYun",
+        "sessionID": "ses_17b16cc20ffeauxGVBKMG6eU40",
+        "messageID": "msg_e84eb6b54001F6xufSFTH08cxa",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 9686,
+          "input": 337,
+          "output": 133,
+          "reasoning": 0,
+          "cache": {
+            "read": 9216,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "info": {
+      "id": "msg_e84f1accc001YjqeNBblR4pbuk",
+      "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+      "role": "user",
+      "time": {
+        "created": 1780346891468
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e84f1accc002xtU6VjPJOPtYaG",
+        "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+        "messageID": "msg_e84f1accc001YjqeNBblR4pbuk",
+        "type": "text",
+        "text": "Current work packet, unrelated to historical memory:\n```text\nticket: CURR-0032 | title: current packet 32 | patch_file: src/current/work_packet_032.ts | owner: noah-current | guardrail: cap retry window at the active deploy generation | expected_check: current_packet_caps_retry_generation | avoid: stale-current-decoy-0032\nticket: CURR-0132 | title: current packet 132 | patch_file: src/current/work_packet_132.ts | owner: sol-current | guardrail: compare normalized route keys before cache lookup | expected_check: current_packet_normalizes_route_cache_key | avoid: stale-current-decoy-0132\nticket: CURR-0233 | title: current packet 233 | patch_file: src/current/work_packet_233.ts | owner: priya-current | guardrail: isolate dry-run output from committed audit rows | expected_check: current_packet_keeps_dry_run_out_of_audit | avoid: stale-current-decoy-0233\nticket: CURR-0334 | title: current packet 334 | patch_file: src/current/work_packet_334.ts | owner: omar-current | guardrail: pin the request clock before evaluating freshness | expected_check: current_packet_pins_request_clock | avoid: stale-current-decoy-0334\n```\nFind ticket CURR-0032.\nReturn the ticket, owner, patch file, guardrail, and expected check exactly as written.\nDo not use historical memory, rollout flags, old decisions, or context tools for this current packet.\nReturn compact JSON with keys ticket, owner, patch_file, guardrail, expected_check, source. The answer must include exact strings from the current work packet only."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84f1acd2001ZI8A2blKypqN7Y",
+      "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+      "role": "assistant",
+      "time": {
+        "created": 1780346891475,
+        "completed": 1780346895458
+      },
+      "parentID": "msg_e84f1accc001YjqeNBblR4pbuk",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c48-all/conditions/default-opencode-continuation/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 20338,
+        "input": 825,
+        "output": 57,
+        "reasoning": 0,
+        "cache": {
+          "read": 19456,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84f1aef7001aoDKN60ek71aQL",
+        "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+        "messageID": "msg_e84f1acd2001ZI8A2blKypqN7Y",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84f1b7ec001aNSGzjiMhzbHXr",
+        "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+        "messageID": "msg_e84f1acd2001ZI8A2blKypqN7Y",
+        "type": "text",
+        "text": "{\"ticket\":\"CURR-0032\",\"owner\":\"noah-current\",\"patch_file\":\"src/current/work_packet_032.ts\",\"guardrail\":\"cap retry window at the active deploy generation\",\"expected_check\":\"current_packet_caps_retry_generation\",\"source\":\"current work packet\"}",
+        "time": {
+          "start": 1780346894316,
+          "end": 1780346895351
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_041b0e63769719be016a1df00e42bc8195b754bca07a9aba66",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84f1bc37001rNdtCiVP1Egsi0",
+        "sessionID": "ses_17b114909ffeeMu3sXZInKcJ12",
+        "messageID": "msg_e84f1acd2001ZI8A2blKypqN7Y",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 20338,
+          "input": 825,
+          "output": 57,
+          "reasoning": 0,
+          "cache": {
+            "read": 19456,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

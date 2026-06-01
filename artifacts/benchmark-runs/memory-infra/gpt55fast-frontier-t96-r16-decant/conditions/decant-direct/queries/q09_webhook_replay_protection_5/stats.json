@@ -1,0 +1,34 @@
+{
+  "kind": "recall",
+  "query_id": "q09_webhook_replay_protection_5",
+  "topic_id": "webhook_replay_protection_5",
+  "passed": true,
+  "required_hits": [
+    "FLAG_WEBHOOK_NONCE_LEDGER_R5",
+    "webhook_rejects_reused_nonce_r5",
+    "nonce ledger keyed by provider event id round 5",
+    "timestamp-only replay window round 5",
+    "blocks fast replays even when the attacker stays inside the timestamp tolerance in round 5"
+  ],
+  "missing_required": [],
+  "forbidden_hits": [
+    "stripe retry cosmetics round 5"
+  ],
+  "output_preview": "{\"title\":\"webhook replay protection round 5\",\"flag\":\"FLAG_WEBHOOK_NONCE_LEDGER_R5\",\"test\":\"webhook_rejects_reused_nonce_r5\",\"accepted_design\":\"nonce ledger keyed by provider event id round 5\",\"rejected_design\":\"timestamp-only replay window round 5\",\"why\":\"blocks fast replays even when the attacker stays inside the timestamp tolerance in round 5\",\"citation\":\"Source file: src/webhooks/replay.ts.\",\"ignored\":\"stripe retry cosmetics round 5\"}",
+  "tool_names": [
+    "session_lookup"
+  ],
+  "context_tool_call_count": 1,
+  "tokens": {
+    "messages": 3,
+    "assistant": 2,
+    "input": 1560,
+    "output": 139,
+    "total": 9891,
+    "reasoning": 0,
+    "cacheRead": 8192,
+    "cacheWrite": 0,
+    "toolCalls": 1,
+    "maxInput": 1041
+  }
+}

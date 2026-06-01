@@ -1,0 +1,212 @@
+[
+  {
+    "info": {
+      "id": "msg_e814b6c46001GH3t60OFBLV2Z9",
+      "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+      "role": "user",
+      "time": {
+        "created": 1780285664326
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files. Use Decant session_lookup to find the relevant historical topic. Call session_lookup exactly once with the exact topic title, limit=1, and detail='full'. Answer from the included topic detail. Do not use raw transcript files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": true,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e814b6c48001UipbwhgeOl3ABu",
+        "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+        "messageID": "msg_e814b6c46001GH3t60OFBLV2Z9",
+        "type": "text",
+        "text": "Recall the maintained decision for webhook replay protection round 6. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e814b6c4d001R8Yn970rbOrV5F",
+      "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+      "role": "assistant",
+      "time": {
+        "created": 1780285664333,
+        "completed": 1780285666689
+      },
+      "parentID": "msg_e814b6c46001GH3t60OFBLV2Z9",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-mixed-t96-r4-c24-decant-numeric-fix/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 4659,
+        "input": 531,
+        "output": 32,
+        "reasoning": 0,
+        "cache": {
+          "read": 4096,
+          "write": 0
+        }
+      },
+      "finish": "tool-calls"
+    },
+    "parts": [
+      {
+        "id": "prt_e814b6e7d001qKVK9Mud0XcvAl",
+        "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+        "messageID": "msg_e814b6c4d001R8Yn970rbOrV5F",
+        "type": "step-start",
+        "snapshot": "2e51b3241d379c7099d89c2ae2be5e8ac2e6b873"
+      },
+      {
+        "id": "prt_e814b72e200192rHozE3Y51sTq",
+        "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+        "messageID": "msg_e814b6c4d001R8Yn970rbOrV5F",
+        "type": "tool",
+        "callID": "call_ZLq2GR4CzsP1qttPnVSVJtgn",
+        "tool": "session_lookup",
+        "state": {
+          "status": "completed",
+          "input": {
+            "query": "webhook replay protection round 6",
+            "limit": 1,
+            "detail": "full"
+          },
+          "output": "{\n  \"query\": \"webhook replay protection round 6\",\n  \"hint\": \"Use the included detail for the best matching topic; avoid repeated lookup unless the top result is clearly wrong.\",\n  \"sessions\": [\n    {\n      \"sessionID\": \"ses_17ebb880dffegS3bx06bHi7eph\",\n      \"title\": \"memory infra decant-direct prep\",\n      \"updatedAt\": 1780285612007,\n      \"matchedTopicIDs\": [\n        \"webhooks_replay_6\"\n      ],\n      \"topics\": [\n        {\n          \"id\": \"webhooks_replay_6\",\n          \"label\": \"webhooks_replay_6\",\n          \"messageCount\": 2,\n          \"fidelity\": \"full\",\n          \"keyFacts\": []\n        }\n      ],\n      \"omittedTopicCount\": 93,\n      \"lookupScore\": 190,\n      \"lookupReason\": \"topic match: webhooks_replay_6, webhooks_replay_2, webhooks_replay_3\"\n    }\n  ],\n  \"details\": [\n    {\n      \"session_id\": \"ses_17ebb880dffegS3bx06bHi7eph\",\n      \"topic_id\": \"webhooks_replay_6\",\n      \"detail\": \"full\",\n      \"content\": \"Role: user\\nText:\\nSwitch topics. Topic: webhook replay protection round 6.\\nSource file: src/webhooks/replay.ts.\\nImportant rollout flag: FLAG_WEBHOOK_NONCE_LEDGER_R6.\\nProtective test: webhook_rejects_reused_nonce_r6.\\nAccepted design: nonce ledger keyed by provider event id round 6.\\nRejected design: timestamp-only replay window round 6.\\nWhy accepted won: blocks fast replays even when the attacker stays inside the timestamp tolerance in round 6.\\nStale neighboring detail to avoid for this topic: stripe retry cosmetics round 6.\\nPreserve these exact strings for future selective-memory questions.\\n\\n---\\n\\nRole: assistant\\nText:\\nAcknowledged. Preserved exact topic details for future selective-memory questions.\"\n    }\n  ]\n}",
+          "title": "",
+          "metadata": {
+            "truncated": false
+          },
+          "time": {
+            "start": 1780285666511,
+            "end": 1780285666591
+          }
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "fc_071c40eda1e0604e016a1d00e20f5c819782662b0802808464"
+          }
+        }
+      },
+      {
+        "id": "prt_e814b754f001vV7ULuCS59mALk",
+        "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+        "messageID": "msg_e814b6c4d001R8Yn970rbOrV5F",
+        "type": "step-finish",
+        "reason": "tool-calls",
+        "snapshot": "2e51b3241d379c7099d89c2ae2be5e8ac2e6b873",
+        "cost": 0,
+        "tokens": {
+          "total": 4659,
+          "input": 531,
+          "output": 32,
+          "reasoning": 0,
+          "cache": {
+            "read": 4096,
+            "write": 0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e814b7583001RX4YnD065PaY2Z",
+      "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+      "role": "assistant",
+      "time": {
+        "created": 1780285666691,
+        "completed": 1780285669837
+      },
+      "parentID": "msg_e814b6c46001GH3t60OFBLV2Z9",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-mixed-t96-r4-c24-decant-numeric-fix/conditions/decant-direct/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 5227,
+        "input": 5120,
+        "output": 107,
+        "reasoning": 0,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e814b77a1001Ro2t54fYxPrI33",
+        "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+        "messageID": "msg_e814b7583001RX4YnD065PaY2Z",
+        "type": "step-start",
+        "snapshot": "2e51b3241d379c7099d89c2ae2be5e8ac2e6b873"
+      },
+      {
+        "id": "prt_e814b7a15001bTz6UFO23kKfLy",
+        "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+        "messageID": "msg_e814b7583001RX4YnD065PaY2Z",
+        "type": "text",
+        "text": "{\"title\":\"webhook replay protection round 6\",\"flag\":\"FLAG_WEBHOOK_NONCE_LEDGER_R6\",\"test\":\"webhook_rejects_reused_nonce_r6\",\"accepted_design\":\"nonce ledger keyed by provider event id round 6\",\"rejected_design\":\"timestamp-only replay window round 6\",\"why\":\"blocks fast replays even when the attacker stays inside the timestamp tolerance in round 6\",\"citation\":\"Source file: src/webhooks/replay.ts.\",\"ignored\":\"stripe retry cosmetics round 6\"}",
+        "time": {
+          "start": 1780285667861,
+          "end": 1780285669730
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0a7e357d59c3e6aa016a1d00e3d6bc8197b957962450d8d64a",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e814b81a5001aXo53vbPAoQaly",
+        "sessionID": "ses_17eb493cdffeCY8eY6SaNKpnG0",
+        "messageID": "msg_e814b7583001RX4YnD065PaY2Z",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "2e51b3241d379c7099d89c2ae2be5e8ac2e6b873",
+        "cost": 0,
+        "tokens": {
+          "total": 5227,
+          "input": 5120,
+          "output": 107,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e850d4765001ghyFwTxHF7RM2g",
+      "sessionID": "ses_17af2b8afffej22uFpDQbZax9d",
+      "role": "user",
+      "time": {
+        "created": 1780348700517
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e850d4767001sgwkzok4hx2XRU",
+        "sessionID": "ses_17af2b8afffej22uFpDQbZax9d",
+        "messageID": "msg_e850d4765001ghyFwTxHF7RM2g",
+        "type": "text",
+        "text": "Maintained RGB context:\n```md\n## Maintained Memory Context\n\n### Checkout Idempotency Incident `0or73qt`\n- File: `src/checkout/idempotency.0or73qt.ts`\n- Rollout flag: `FLAG_CHECKOUT_IDEMPOTENCY_V3_0TKS5NV`\n- Protective test: `checkout_dedupes_retry_after_timeout_0kk4icp`\n- Accepted design: per-cart idempotency key store with amber-dovetail guard 0CPGJX8.\n- Rejected design: global checkout mutex after harbor-lantern rollback 1NO7YH7.\n- Why: preserves shard-local ordering while letting unrelated carts retry independently; marker 1MLAOB9 preserved rivet isolation for case 1.\n\n### Search Index Freshness Incident `1lowtq7`\n- File: `src/search/freshness.1lowtq7.ts`\n- Rollout flag: `FLAG_INDEX_EPOCH_GUARD_14MWRGT`\n- Protective test: `search_rejects_stale_epoch_publish_1rkix6f`\n- Accepted design: epoch-stamped publish barrier with fennel-indigo guard 0CBWWP2.\n- Rejected design: blind last-write-wins publish after marble-quartz rollback 1RR2O0P.\n- Why: prevents a slow crawl from replacing a newer index snapshot; marker 0OEPOV3 preserved willow isolation for case 1.\n\n### Email Digest Batching Incident `0ddfi0h`\n- File: `src/mail/digest.0ddfi0h.ts`\n- Rollout flag: `FLAG_DIGEST_BATCH_WINDOW_0TCPHQV`\n- Protective test: `digest_batches_by_workspace_timezone_0pfucrp`\n- Accepted design: workspace-local send window with keystone-nickel guard 0RW1I0W.\n- Rejected design: single UTC midnight cron after rivet-velvet rollback 1GDMXDZ.\n- Why: keeps quiet-hour promises without delaying every workspace behind one global clock; marker 18ZDJEH preserved dovetail isolation for case 1.\n\n### Webhook Replay Protection Incident `12880c9`\n- File: `src/webhooks/replay.12880c9.ts`\n- Rollout flag: `FLAG_WEBHOOK_NONCE_LEDGER_16QNT9R`\n- Protective test: `webhook_rejects_reused_nonce_1wl6s4t`\n- Accepted design: nonce ledger keyed by provider event id with prairie-saffron guard 1IOBUZS.\n- Rejected design: timestamp-only replay window after willow-cedar rollback 1RMGTNJ.\n- Why: blocks fast replays even when the attacker stays inside the timestamp tolerance; marker 1ICC7PT preserved indigo isolation for case 1.\n\n### Cache Namespace TTL Incident `1uzmybe`\n- File: `src/cache/namespace_ttl.1uzmybe.ts`\n- Rollout flag: `FLAG_NAMESPACE_TTL_CAP_0QSHWJC`\n- Protective test: `cache_caps_noisy_namespace_ttl_1qdykta`\n- Accepted design: namespace maximum TTL cap with umbra-xenon guard 1P9Z26F.\n- Rejected design: provider-wide hard-coded TTL after dovetail-harbor rollback 1V877GS.\n- Why: lets each namespace set a bounded freshness budget without penalizing unrelated caches; marker 0AUGFS8 preserved nickel isolation for case 1.\n\n### Feature Rollout Sampling Incident `02u6ks6`\n- File: `src/rollout/sampling.02u6ks6.ts`\n- Rollout flag: `FLAG_STICKY_ROLLOUT_HASH_1VJUC1G`\n- Protective test: `rollout_keeps_user_bucket_stable_1p1ajii`\n- Accepted design: stable hash over actor and flag with brisk-ember guard 1J4XBSB.\n- Rejected design: per-request random sampling after indigo-marble rollback 0Y70HQG.\n- Why: prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1.\n\n### CSV Import Quarantine Incident `18db99g`\n- File: `src/imports/quarantine.18db99g.ts`\n- Rollout flag: `FLAG_IMPORT_ROW_QUARANTINE_0UP4UII`\n- Protective test: `import_quarantines_bad_rows_only_0d8waik`\n- Accepted design: row-level quarantine ledger with glacier-jigsaw guard 1D0YOK1.\n- Rejected design: abort entire import on first invalid row after nickel-rivet rollback 06NAID6.\n- Why: lets clean rows commit while preserving exact diagnostics for rejected rows; marker 184HMG2 preserved xenon isolation for case 1.\n\n### Notification Fanout Incident `1o2nkc7`\n- File: `src/notify/fanout.1o2nkc7.ts`\n- Rollout flag: `FLAG_FANOUT_BACKPRESSURE_0ASQQC5`\n- Protective test: `fanout_applies_channel_backpressure_0llus8f`\n- Accepted design: per-channel bounded queue with lantern-onyx guard 19Y8GF2.\n- Rejected design: unbounded global fanout array after saffron-willow rollback 1JE9FI9.\n- Why: prevents a slow SMS provider from exhausting memory for email and push sends; marker 05LWFVR preserved ember isolation for case 1.\n```\n\nRecall the maintained decision for feature rollout sampling incident 02u6ks6. Return the rollout flag, failed/protective test, accepted design, rejected design, and why the accepted design won. Use only the memory mechanism available in this condition; do not guess from general knowledge.\nReturn compact JSON with keys title, flag, test, accepted_design, rejected_design, why, citation, ignored. The answer must include exact strings from memory."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e850d476e0010mXHd14cQD5T3p",
+      "sessionID": "ses_17af2b8afffej22uFpDQbZax9d",
+      "role": "assistant",
+      "time": {
+        "created": 1780348700526,
+        "completed": 1780348705653
+      },
+      "parentID": "msg_e850d4765001ghyFwTxHF7RM2g",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-threshold-irregular-t8-r4-c96-main/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 5733,
+        "input": 1956,
+        "output": 156,
+        "reasoning": 37,
+        "cache": {
+          "read": 3584,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e850d498e001Y5fmc75j65j3T8",
+        "sessionID": "ses_17af2b8afffej22uFpDQbZax9d",
+        "messageID": "msg_e850d476e0010mXHd14cQD5T3p",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e850d4d2c0018ToMuoq0C9qbFF",
+        "sessionID": "ses_17af2b8afffej22uFpDQbZax9d",
+        "messageID": "msg_e850d476e0010mXHd14cQD5T3p",
+        "type": "reasoning",
+        "text": "**Considering response format**\n\nI need to provide the answer in JSON format only, which means no tools should be used. The user has given some memory details, and I'll need to include a citation for accuracy. If there's something I'm ignoring, I might mention that it’s not used in my general knowledge. I want to ensure that the JSON is compact and that I use the exact strings provided. This detail matters a lot!",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_04c253843bb5dc0e016a1df71df6cc81959a9a86ee43641984"
+          }
+        },
+        "time": {
+          "start": 1780348701996,
+          "end": 1780348704164
+        }
+      },
+      {
+        "id": "prt_e850d55a8001JMGlvGU5KF4egv",
+        "sessionID": "ses_17af2b8afffej22uFpDQbZax9d",
+        "messageID": "msg_e850d476e0010mXHd14cQD5T3p",
+        "type": "text",
+        "text": "{\"title\":\"Feature Rollout Sampling Incident 02u6ks6\",\"flag\":\"FLAG_STICKY_ROLLOUT_HASH_1VJUC1G\",\"test\":\"rollout_keeps_user_bucket_stable_1p1ajii\",\"accepted_design\":\"stable hash over actor and flag with brisk-ember guard 1J4XBSB\",\"rejected_design\":\"per-request random sampling after indigo-marble rollback 0Y70HQG\",\"why\":\"prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1\",\"citation\":\"Maintained RGB context: Feature Rollout Sampling Incident `02u6ks6`\",\"ignored\":\"general knowledge\"}",
+        "time": {
+          "start": 1780348704168,
+          "end": 1780348705543
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_04c253843bb5dc0e016a1df72021708195af9cd089ad634879",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e850d5b52001u4TJQcmcwfu3yk",
+        "sessionID": "ses_17af2b8afffej22uFpDQbZax9d",
+        "messageID": "msg_e850d476e0010mXHd14cQD5T3p",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 5733,
+          "input": 1956,
+          "output": 156,
+          "reasoning": 37,
+          "cache": {
+            "read": 3584,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

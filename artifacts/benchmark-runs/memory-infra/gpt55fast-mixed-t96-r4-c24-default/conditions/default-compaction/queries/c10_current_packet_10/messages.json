@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e8137f5b0001BplZJP1Zb6Pd7R",
+      "sessionID": "ses_17ec80a61ffe2PRW5RNliXN23N",
+      "role": "user",
+      "time": {
+        "created": 1780284388784
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e8137f5b1002CFjxeajXi0hjwO",
+        "sessionID": "ses_17ec80a61ffe2PRW5RNliXN23N",
+        "messageID": "msg_e8137f5b0001BplZJP1Zb6Pd7R",
+        "type": "text",
+        "text": "Default compaction summary:\n```md\n## Goal\n- Preserve checkout/search/mail/webhook/cache/rollout/import/notify/session/audit/report/config rollout-memory facts for future selective-memory questions.\n\n## Constraints & Preferences\n- Preserve exact file paths, rollout flags, protective tests, accepted/rejected designs, reasons, and stale neighboring details.\n- Avoid stale neighboring details for each topic.\n\n## Progress\n### Done\n- Recorded topic facts for rounds 1-8, except tenant config snapshots recorded through round 7.\n\n### In Progress\n- (none)\n\n### Blocked\n- (none)\n\n## Key Decisions\n- Accepted per-topic shard/local/scope-safe designs over global/blind/unbounded alternatives to preserve correctness without penalizing unrelated work.\n\n## Next Steps\n- (none)\n\n## Critical Context\n- checkout idempotency: `src/checkout/idempotency.ts`; flags `FLAG_CHECKOUT_IDEMPOTENCY_V3_R1` through `FLAG_CHECKOUT_IDEMPOTENCY_V3_R8`; tests `checkout_dedupes_retry_after_timeout_r1` through `checkout_dedupes_retry_after_timeout_r8`; accepted `per-cart idempotency key store`; rejected `global checkout mutex`; avoid `billing retry backoff`.\n- search index freshness: `src/search/freshness.ts`; flags `FLAG_INDEX_EPOCH_GUARD_R1` through `FLAG_INDEX_EPOCH_GUARD_R8`; tests `search_rejects_stale_epoch_publish_r1` through `search_rejects_stale_epoch_publish_r8`; accepted `epoch-stamped publish barrier`; rejected `blind last-write-wins publish`; avoid `autocomplete ranking cleanup`.\n- email digest batching: `src/mail/digest.ts`; flags `FLAG_DIGEST_BATCH_WINDOW_R1` through `FLAG_DIGEST_BATCH_WINDOW_R8`; tests `digest_batches_by_workspace_timezone_r1` through `digest_batches_by_workspace_timezone_r8`; accepted `workspace-local send window`; rejected `single UTC midnight cron`; avoid `template footer rewrite`.\n- webhook replay protection: `src/webhooks/replay.ts`; flags `FLAG_WEBHOOK_NONCE_LEDGER_R1` through `FLAG_WEBHOOK_NONCE_LEDGER_R8`; tests `webhook_rejects_reused_nonce_r1` through `webhook_rejects_reused_nonce_r8`; accepted `nonce ledger keyed by provider event id`; rejected `timestamp-only replay window`; avoid `stripe retry cosmetics`.\n- cache namespace TTL: `src/cache/namespace_ttl.ts`; flags `FLAG_NAMESPACE_TTL_CAP_R1` through `FLAG_NAMESPACE_TTL_CAP_R8`; tests `cache_caps_noisy_namespace_ttl_r1` through `cache_caps_noisy_namespace_ttl_r8`; accepted `namespace maximum TTL cap`; rejected `provider-wide hard-coded TTL`; avoid `image preview freshness`.\n- feature rollout sampling: `src/rollout/sampling.ts`; flags `FLAG_STICKY_ROLLOUT_HASH_R1` through `FLAG_STICKY_ROLLOUT_HASH_R8`; tests `rollout_keeps_user_bucket_stable_r1` through `rollout_keeps_user_bucket_stable_r8`; accepted `stable hash over actor and flag`; rejected `per-request random sampling`; avoid `analytics dashboard color`.\n- csv import quarantine: `src/imports/quarantine.ts`; flags `FLAG_IMPORT_ROW_QUARANTINE_R1` through `FLAG_IMPORT_ROW_QUARANTINE_R8`; tests `import_quarantines_bad_rows_only_r1` through `import_quarantines_bad_rows_only_r8`; accepted `row-level quarantine ledger`; rejected `abort entire import on first invalid row`; avoid `spreadsheet column autosize`.\n- notification fanout: `src/notify/fanout.ts`; flags `FLAG_FANOUT_BACKPRESSURE_R1` through `FLAG_FANOUT_BACKPRESSURE_R8`; tests `fanout_applies_channel_backpressure_r1` through `fanout_applies_channel_backpressure_r8`; accepted `per-channel bounded queue`; rejected `unbounded global fanout array`; avoid `notification icon set`.\n- session rotation: `src/session/rotation.ts`; flags `FLAG_SESSION_ROTATION_GRACE_R1` through `FLAG_SESSION_ROTATION_GRACE_R8`; tests `session_accepts_previous_cookie_once_r1` through `session_accepts_previous_cookie_once_r8`; accepted `one-use previous-cookie grace`; rejected `accept every old cookie until expiry`; avoid `login page copy`.\n- audit log redaction: `src/audit/redact.ts`; flags `FLAG_AUDIT_FIELD_ALLOWLIST_R1` through `FLAG_AUDIT_FIELD_ALLOWLIST_R8`; tests `audit_redacts_unknown_fields_r1` through `audit_redacts_unknown_fields_r8`; accepted `field allowlist redactor`; rejected `regex-only secret scrubber`; avoid `audit table pagination`.\n- report export leases: `src/reports/export_lease.ts`; flags `FLAG_EXPORT_LEASE_STEAL_R1` through `FLAG_EXPORT_LEASE_STEAL_R8`; tests `export_worker_steals_expired_lease_r1` through `export_worker_steals_expired_lease_r8`; accepted `expiring worker lease with compare-and-swap`; rejected `permanent worker ownership`; avoid `CSV heading title case`.\n- tenant config snapshots: `src/config/snapshot.ts`; flags `FLAG_CONFIG_SNAPSHOT_PIN_R1` through `FLAG_CONFIG_SNAPSHOT_PIN_R7`; tests `config_pins_snapshot_for_request_r1` through `config_pins_snapshot_for_request_r7`; accepted `request-scoped config snapshot`; rejected `live config reads at every call site`; avoid `settings sidebar grouping`.\n\n## Relevant Files\n- `src/checkout/idempotency.ts`: checkout idempotency.\n- `src/search/freshness.ts`: search index freshness.\n- `src/mail/digest.ts`: email digest batching.\n- `src/webhooks/replay.ts`: webhook replay protection.\n- `src/cache/namespace_ttl.ts`: cache namespace TTL.\n- `src/rollout/sampling.ts`: feature rollout sampling.\n- `src/imports/quarantine.ts`: csv import quarantine.\n- `src/notify/fanout.ts`: notification fanout.\n- `src/session/rotation.ts`: session rotation.\n- `src/audit/redact.ts`: audit log redaction.\n- `src/reports/export_lease.ts`: report export leases.\n- `src/config/snapshot.ts`: tenant config snapshots.\n```\n\nCurrent work packet, unrelated to historical memory:\n```text\nticket: CURR-0010 | title: current packet 10 | patch_file: src/current/work_packet_010.ts | owner: omar-current | guardrail: pin the request clock before evaluating freshness | expected_check: current_packet_pins_request_clock | avoid: stale-current-decoy-0010\nticket: CURR-0110 | title: current packet 110 | patch_file: src/current/work_packet_110.ts | owner: noah-current | guardrail: cap retry window at the active deploy generation | expected_check: current_packet_caps_retry_generation | avoid: stale-current-decoy-0110\nticket: CURR-0211 | title: current packet 211 | patch_file: src/current/work_packet_211.ts | owner: maya-current | guardrail: reject writes unless current_workspace_id matches envelope | expected_check: current_packet_rejects_cross_workspace_write | avoid: stale-current-decoy-0211\nticket: CURR-0312 | title: current packet 312 | patch_file: src/current/work_packet_312.ts | owner: sol-current | guardrail: compare normalized route keys before cache lookup | expected_check: current_packet_normalizes_route_cache_key | avoid: stale-current-decoy-0312\n```\nFind ticket CURR-0010.\nReturn the ticket, owner, patch file, guardrail, and expected check exactly as written.\nDo not use historical memory, rollout flags, old decisions, or context tools for this current packet.\nReturn compact JSON with keys ticket, owner, patch_file, guardrail, expected_check, source. The answer must include exact strings from the current work packet only."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e8137f5b6001ngy0WrhGzvF2Ed",
+      "sessionID": "ses_17ec80a61ffe2PRW5RNliXN23N",
+      "role": "assistant",
+      "time": {
+        "created": 1780284388791,
+        "completed": 1780284400786
+      },
+      "parentID": "msg_e8137f5b0001BplZJP1Zb6Pd7R",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-mixed-t96-r4-c24-default/conditions/default-compaction/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 6025,
+        "input": 834,
+        "output": 58,
+        "reasoning": 13,
+        "cache": {
+          "read": 5120,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e8137f9f00012Br7mS52FTkPL2",
+        "sessionID": "ses_17ec80a61ffe2PRW5RNliXN23N",
+        "messageID": "msg_e8137f5b6001ngy0WrhGzvF2Ed",
+        "type": "step-start",
+        "snapshot": "1924e1ef4dcab7b4e467f398645b904e9f71a935"
+      },
+      {
+        "id": "prt_e8137fc55001iREblFKXguh4yv",
+        "sessionID": "ses_17ec80a61ffe2PRW5RNliXN23N",
+        "messageID": "msg_e8137f5b6001ngy0WrhGzvF2Ed",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0e11d7dce7b3e403016a1cfbe64a9c8195b83784b160eff7f5"
+          }
+        },
+        "time": {
+          "start": 1780284390485,
+          "end": 1780284390751
+        }
+      },
+      {
+        "id": "prt_e8137fd62001iwrcgo6JLO5Wbk",
+        "sessionID": "ses_17ec80a61ffe2PRW5RNliXN23N",
+        "messageID": "msg_e8137f5b6001ngy0WrhGzvF2Ed",
+        "type": "text",
+        "text": "{\"ticket\":\"CURR-0010\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_010.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+        "time": {
+          "start": 1780284390754,
+          "end": 1780284400684
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0e11d7dce7b3e403016a1cfbe6d4b081959f1c7d94047e34f1",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e8138246c0019mscPWFFE2UM7P",
+        "sessionID": "ses_17ec80a61ffe2PRW5RNliXN23N",
+        "messageID": "msg_e8137f5b6001ngy0WrhGzvF2Ed",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "1924e1ef4dcab7b4e467f398645b904e9f71a935",
+        "cost": 0,
+        "tokens": {
+          "total": 6025,
+          "input": 834,
+          "output": 58,
+          "reasoning": 13,
+          "cache": {
+            "read": 5120,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

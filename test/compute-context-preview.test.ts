@@ -2,7 +2,14 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  buildFallbackMapFromMessages,
+  buildContextMapToolView,
+  buildSessionZoomText,
+  buildTopicMessageSummaries,
   computeContextPreview,
+  matchTopicIDsForQuery,
+  mergeContextMaps,
+  resetMapAfterCompaction,
   transformMessagesForContext,
   updateMessageControls,
 } from "../src/core";
@@ -29,7 +36,7 @@ function message(input: Partial<MessageEntry> & Pick<MessageEntry, "id">) {
     tokenEstimate: input.tokenEstimate ?? 1000,
     createdAt: now,
     updatedAt: now,
-    source: "derived",
+    source: input.source ?? "derived",
     partTypes: ["text"],
     toolNames: [],
   } satisfies MessageEntry;
@@ -53,7 +60,7 @@ function topic(input: Partial<TopicEntry> & Pick<TopicEntry, "id">) {
   } satisfies TopicEntry;
 }
 
-function map(topics: TopicEntry[], messages: MessageEntry[]) {
+function map(topics: TopicEntry[], messages: MessageEntry[]): ContextMapFile {
   return {
     version: 1,
     sessionID: "ses_test",
@@ -79,11 +86,15 @@ function map(topics: TopicEntry[], messages: MessageEntry[]) {
   } satisfies ContextMapFile;
 }
 
-function messageLike(id: string, text: string): MessageLike {
+function messageLike(
+  id: string,
+  text: string,
+  role: MessageLike["info"]["role"] = "assistant",
+): MessageLike {
   return {
     info: {
       id,
-      role: "assistant",
+      role,
       time: { created: now },
     },
     parts: [
@@ -292,4 +303,222 @@ test("hidden topics allow explicit full and summary message overrides", () => {
   assert.equal(transformed[1]?.parts[0]?.text, "full text");
   assert.equal(preview.topics[0]?.effectiveTokens, 1060);
   assert.equal(preview.topics[0]?.effectiveLabel, "2 overrides");
+});
+
+test("context tool view exposes every topic fidelity level", () => {
+  const contextMap = map([], []);
+  const view = buildContextMapToolView(contextMap);
+
+  assert.deepEqual(view.controls.fidelity_levels, [
+    "full",
+    "summary",
+    "compressed",
+    "placeholder",
+    "hidden",
+  ]);
+});
+
+test("compaction reset can keep historical summaries as placeholders", () => {
+  const contextMap = map(
+    [topic({ id: "auth", messageIDs: ["m1"] })],
+    [message({ id: "m1", topicID: "auth" })],
+  );
+
+  const reset = resetMapAfterCompaction({
+    map: contextMap,
+    summaryText: "Long stale auth and docs context.",
+    summaryMessageID: "summary",
+    summaryFidelity: "placeholder",
+  });
+
+  assert.equal(reset.topics.session_summary?.fidelity, "placeholder");
+  assert.equal(
+    reset.topics.session_summary?.placeholder,
+    "Historical context compacted",
+  );
+});
+
+test("map merge reconciles topic message IDs after preserving annotations", () => {
+  const existing = map(
+    [topic({ id: "auth", messageIDs: ["m1"] })],
+    [message({ id: "m1", topicID: "auth", source: "annotation" })],
+  );
+  const fresh = map(
+    [topic({ id: "broad", messageIDs: ["m1", "m2"] })],
+    [
+      message({ id: "m1", topicID: "broad" }),
+      message({ id: "m2", topicID: "broad" }),
+    ],
+  );
+
+  const merged = mergeContextMaps(existing, fresh);
+
+  assert.equal(merged.messages.m1?.topicID, "auth");
+  assert.equal(merged.messages.m2?.topicID, "broad");
+  assert.deepEqual(merged.topics.auth?.messageIDs, ["m1"]);
+  assert.deepEqual(merged.topics.broad?.messageIDs, ["m2"]);
+  const broad = buildTopicMessageSummaries({ map: merged, topicID: "broad" });
+  assert.equal(broad.ok, true);
+  assert.deepEqual(broad.ok ? broad.messages.map((item) => item.id) : [], [
+    "m2",
+  ]);
+});
+
+test("map merge preserves existing derived topic assignments", () => {
+  const existing = map(
+    [topic({ id: "auth", messageIDs: ["m1"] })],
+    [message({ id: "m1", topicID: "auth" })],
+  );
+  const fresh = map(
+    [topic({ id: "docs", messageIDs: ["m1"] })],
+    [message({ id: "m1", topicID: "docs" })],
+  );
+
+  const merged = mergeContextMaps(existing, fresh);
+
+  assert.equal(merged.messages.m1?.topicID, "auth");
+  assert.deepEqual(merged.topics.auth?.messageIDs, ["m1"]);
+  assert.deepEqual(merged.topics.docs?.messageIDs, []);
+});
+
+test("map merge preserves annotation cursor when fallback has none", () => {
+  const existing = map(
+    [topic({ id: "auth", messageIDs: ["m1"] })],
+    [message({ id: "m1", topicID: "auth" })],
+  );
+  existing.lastAnnotatedMessageID = "m1";
+  const fresh = map(
+    [topic({ id: "auth", messageIDs: ["m1", "m2"] })],
+    [
+      message({ id: "m1", topicID: "auth" }),
+      message({ id: "m2", topicID: "auth" }),
+    ],
+  );
+
+  const merged = mergeContextMaps(existing, fresh);
+
+  assert.equal(merged.lastAnnotatedMessageID, "m1");
+});
+
+test("fallback map keeps user continuations in the current topic", () => {
+  const contextMap = buildFallbackMapFromMessages({
+    sessionID: "ses_test",
+    messages: [
+      messageLike(
+        "auth_user_1",
+        "We are investigating an auth rate limiter race in src/auth/rate_limiter.ts.",
+        "user",
+      ),
+      messageLike("auth_assistant_1", "Explained the auth rate limiter race."),
+      messageLike(
+        "docs_user_1",
+        "Switch topics. Draft onboarding docs with feature-flag documentation.",
+        "user",
+      ),
+      messageLike("docs_assistant_1", "Outlined onboarding docs."),
+      messageLike(
+        "auth_user_2",
+        "Switch back to auth. The accepted design is a per-tenant async queue helper.",
+        "user",
+      ),
+      messageLike("auth_assistant_2", "Preserved the auth queue design."),
+      messageLike(
+        "auth_user_3",
+        "The rollback flag for the auth queue rollout is FLAG_AUTH_QUEUE_ROLLBACK.",
+        "user",
+      ),
+    ],
+  });
+
+  assert.equal(
+    contextMap.messages.auth_user_3?.topicID,
+    contextMap.messages.auth_user_2?.topicID,
+  );
+  assert.notEqual(
+    contextMap.messages.auth_user_3?.topicID,
+    contextMap.messages.docs_user_1?.topicID,
+  );
+});
+
+test("full session zoom omits duplicate summaries when text is available", () => {
+  const contextMap = map(
+    [topic({ id: "topic", messageIDs: ["m1"] })],
+    [
+      message({
+        id: "m1",
+        topicID: "topic",
+        summary: "duplicate summary",
+      }),
+    ],
+  );
+
+  const text = buildSessionZoomText({
+    map: contextMap,
+    topicID: "topic",
+    fidelity: "full",
+    messages: [messageLike("m1", "original text", "user")],
+  });
+
+  assert.match(text, /Role: user/);
+  assert.match(text, /Text:\noriginal text/);
+  assert.doesNotMatch(text, /duplicate summary/);
+});
+
+test("topic lookup keeps numeric round discriminators", () => {
+  const contextMap = map(
+    [
+      topic({
+        id: "session_rotation_2",
+        summary: "Topic: session rotation round 2.",
+        placeholder: "session rotation round 2",
+      }),
+      topic({
+        id: "session_rotation_3",
+        summary: "Topic: session rotation round 3.",
+        placeholder: "session rotation round 3",
+      }),
+      topic({
+        id: "session_rotation_4",
+        summary: "Topic: session rotation round 4.",
+        placeholder: "session rotation round 4",
+      }),
+    ],
+    [],
+  );
+
+  assert.equal(
+    matchTopicIDsForQuery(
+      contextMap,
+      "maintained decision for session rotation round 3",
+    )[0],
+    "session_rotation_3",
+  );
+});
+
+test("topic lookup ranks maintained decisions ahead of decoys", () => {
+  const contextMap = map(
+    [
+      topic({
+        id: "checkout_real",
+        summary:
+          "Topic: checkout idempotency. Accepted design: per-cart idempotency key store. Rejected design: global checkout mutex.",
+        placeholder: "checkout idempotency maintained decision",
+      }),
+      topic({
+        id: "checkout_decoy",
+        summary:
+          "Explicit DISTRACTOR for checkout idempotency. Wrong flag and wrong design. If asked for the maintained decision, ignore this distractor.",
+        placeholder: "checkout idempotency distractor",
+      }),
+    ],
+    [],
+  );
+
+  assert.equal(
+    matchTopicIDsForQuery(
+      contextMap,
+      "maintained decision for checkout idempotency",
+    )[0],
+    "checkout_real",
+  );
 });

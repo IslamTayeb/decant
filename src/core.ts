@@ -345,6 +345,20 @@ export function createTopicEntry(input: {
 }
 
 export function rebuildTotals(map: ContextMapFile) {
+  for (const topic of Object.values(map.topics)) {
+    topic.messageIDs = [];
+  }
+  const messages = Object.values(map.messages).sort(
+    (a, b) => a.createdAt - b.createdAt,
+  );
+  for (const message of messages) {
+    if (!message.topicID) continue;
+    const topic = map.topics[message.topicID];
+    if (!topic) continue;
+    if (!topic.messageIDs.includes(message.id))
+      topic.messageIDs.push(message.id);
+    topic.lastActiveAt = Math.max(topic.lastActiveAt, message.createdAt);
+  }
   map.totalTokenEstimate = Object.values(map.messages).reduce(
     (sum, entry) => sum + entry.tokenEstimate,
     0,
@@ -756,6 +770,8 @@ export function mergeContextMaps(
   const merged: ContextMapFile = {
     ...fresh,
     compaction: existing.compaction ?? fresh.compaction,
+    lastAnnotatedMessageID:
+      fresh.lastAnnotatedMessageID ?? existing.lastAnnotatedMessageID,
     settings: {
       ...fresh.settings,
       ...existing.settings,
@@ -803,10 +819,7 @@ export function mergeContextMaps(
     }
     merged.messages[messageID] = {
       ...next,
-      topicID:
-        prior.source === "annotation" && prior.topicID
-          ? prior.topicID
-          : next.topicID,
+      topicID: prior.topicID ?? next.topicID,
       hidden: prior.hidden,
       hiddenSource: prior.hiddenSource,
       fidelityOverride: prior.fidelityOverride,
@@ -1153,7 +1166,7 @@ export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
   const lines = [
     "Context map plugin is active.",
     "User controls are authoritative: do not override user-set fidelity or hidden-message choices unless the user explicitly asks.",
-    "Available tools: view_context (see topics and fidelity), set_fidelity (change detail level for a topic), session_tree (inspect parent/sub-agent lineage), session_lookup + session_detail + message_detail (progressively inspect past sessions), blame_lookup (find which session produced code).",
+    "Available tools: view_context (see topics and fidelity), set_fidelity (change detail level for a topic: full, summary, compressed, placeholder, hidden), session_tree (inspect parent/sub-agent lineage), session_lookup + session_detail + message_detail (progressively inspect past sessions), blame_lookup (find which session produced code).",
     "Historical investigation flow: use blame_lookup or session_lookup to find an OpenCode session; read the compressed summaries in overview.topics; call session_detail with detail='messages' for per-message summaries in a chosen topic; call message_detail for one full message only when necessary.",
     "Cache-aware context management: changing fidelity reshapes the next prompt and can reduce provider prompt-cache hits for unchanged later messages. Avoid small or frequent context edits. Use set_fidelity when an older topic is clearly stale or large enough that dropping/summarizing it is worth the one-time cache disruption.",
   ];
@@ -1165,7 +1178,7 @@ export function buildPluginGuidanceSystemPrompt(map: ContextMapFile) {
         Math.round(totalTokens / 1000) +
         "k tokens across " +
         topicCount +
-        " topics. Use set_fidelity to reduce older topics to 'summary' or 'hidden'. Prioritize topics not discussed in recent turns.",
+        " topics. Use set_fidelity to reduce older topics to 'summary', 'compressed', 'placeholder', or 'hidden'. Prioritize topics not discussed in recent turns.",
     );
   } else if (totalTokens > 20_000 && topicCount >= 2) {
     lines.push(
@@ -1260,7 +1273,13 @@ export function buildContextMapToolView(map: ContextMapFile) {
     total_token_estimate: map.totalTokenEstimate,
     controls: {
       user_controls_are_authoritative: true,
-      fidelity_levels: ["full", "summary", "hidden"],
+      fidelity_levels: [
+        "full",
+        "summary",
+        "compressed",
+        "placeholder",
+        "hidden",
+      ],
     },
     topics: topics.map((topic) => ({
       id: topic.id,
@@ -1453,8 +1472,7 @@ export function buildSessionZoomText(input: {
         .join("\n");
       return [
         `Role: ${message.info.role}`,
-        `Summary: ${summary}`,
-        text ? `Text:\n${text}` : undefined,
+        text ? `Text:\n${text}` : `Summary: ${summary}`,
       ]
         .filter(Boolean)
         .join("\n");
@@ -1494,26 +1512,34 @@ export function buildFallbackMapFromMessages(input: {
   let currentTopicID: string | undefined;
   for (const message of input.messages) {
     const summary = deriveSummaryFromMessage(message);
-    if (!currentTopicID || message.info.role === "user") {
+    if (!currentTopicID) {
       currentTopicID = shouldStartFreshFallbackTopic(summary)
         ? undefined
         : findBestTopicForSummary(map, summary);
-      if (!currentTopicID) {
-        const baseTopicID = slugifyTopicLabel(
-          labelFromSummary(summary, map.topicOrder.length + 1),
-        );
-        currentTopicID = nextAvailableTopicID(map, baseTopicID);
-        map.topics[currentTopicID] = createTopicEntry({
-          id: currentTopicID,
-          label: currentTopicID,
-          summary,
-          placeholder: trimText(summary, 80),
-          createdAt: getMessageCreatedAt(message),
-          fidelity: "full",
-          fidelitySource: "system",
-        });
-        map.topicOrder.push(currentTopicID);
+    } else if (message.info.role === "user") {
+      if (shouldReturnToExistingFallbackTopic(summary)) {
+        currentTopicID =
+          findBestTopicForSummary(map, summary) ?? currentTopicID;
+      } else if (shouldStartFreshFallbackTopic(summary)) {
+        currentTopicID = undefined;
       }
+    }
+
+    if (!currentTopicID) {
+      const baseTopicID = slugifyTopicLabel(
+        labelFromSummary(summary, map.topicOrder.length + 1),
+      );
+      currentTopicID = nextAvailableTopicID(map, baseTopicID);
+      map.topics[currentTopicID] = createTopicEntry({
+        id: currentTopicID,
+        label: currentTopicID,
+        summary,
+        placeholder: trimText(summary, 80),
+        createdAt: getMessageCreatedAt(message),
+        fidelity: "full",
+        fidelitySource: "system",
+      });
+      map.topicOrder.push(currentTopicID);
     }
 
     const entry = createMessageEntry({
@@ -1538,9 +1564,13 @@ export function buildFallbackMapFromMessages(input: {
   return map;
 }
 
+function shouldReturnToExistingFallbackTopic(summary: string) {
+  return /\b(return|back|resume|revisit)\b/i.test(summary);
+}
+
 function shouldStartFreshFallbackTopic(summary: string) {
   const lowered = summary.toLowerCase();
-  if (/\b(return|back|resume|revisit)\b/.test(lowered)) return false;
+  if (shouldReturnToExistingFallbackTopic(summary)) return false;
   return (
     /\b(?:switch|change|shift|move)\s+(?:topics?|gears)\b/.test(lowered) ||
     /\b(?:new|different|separate|unrelated)\s+topic\b/.test(lowered)
@@ -1556,33 +1586,39 @@ function nextAvailableTopicID(map: ContextMapFile, baseTopicID: string) {
 
 export function matchTopicIDsForQuery(map: ContextMapFile, query: string) {
   const words = keywordSet(query);
+  const phrase = normalizeLookupPhrase(query);
   const matches = map.topicOrder
     .map((topicID) => map.topics[topicID])
     .filter(Boolean)
-    .map((topic) => ({ topicID: topic.id, score: scoreTopic(topic, words) }))
+    .map((topic) => ({
+      topicID: topic.id,
+      score: scoreTopic(topic, words, phrase),
+    }))
     .filter((item) => item.score > 0)
     .sort((a, b) => b.score - a.score);
   return matches.map((item) => item.topicID);
 }
 
-function scoreTopic(topic: TopicEntry, words: Set<string>) {
-  const haystack = keywordSet(
-    `${topic.label} ${topic.summary} ${topic.placeholder} ${topic.keyFacts.join(" ")}`,
-  );
+function scoreTopic(topic: TopicEntry, words: Set<string>, phrase = "") {
+  const text = `${topic.label} ${topic.summary} ${topic.placeholder} ${topic.keyFacts.join(" ")}`;
+  const haystack = keywordSet(text);
+  const normalized = normalizeLookupPhrase(text);
   let score = 0;
+  if (phrase && normalized.includes(phrase)) score += Math.max(8, words.size * 2);
   for (const word of words) {
     if (haystack.has(word)) score += 1;
   }
-  return score;
+  return score - topicNegativeLookupPenalty(text);
 }
 
 function findBestTopicForSummary(map: ContextMapFile, summary: string) {
   const words = keywordSet(summary);
+  const phrase = normalizeLookupPhrase(summary);
   let best: { topicID: string; score: number } | undefined;
   for (const topicID of map.topicOrder) {
     const topic = map.topics[topicID];
     if (!topic) continue;
-    const score = scoreTopic(topic, words);
+    const score = scoreTopic(topic, words, phrase);
     if (score < 2) continue;
     if (!best || score > best.score) best = { topicID, score };
   }
@@ -1626,9 +1662,41 @@ function keywordSet(text: string) {
     .replace(/[^a-z0-9\s]+/g, " ")
     .split(/\s+/)
     .map((item) => item.trim())
-    .filter((item) => item.length >= 3)
+    .filter((item) => item.length >= 3 || /^\d+$/.test(item))
     .filter((item) => !STOP_WORDS.has(item));
   return new Set(values);
+}
+
+function normalizeLookupPhrase(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function topicNegativeLookupPenalty(text: string) {
+  const lowered = text.toLowerCase();
+  const patterns = [
+    "distractor",
+    "decoy",
+    "not the final rationale",
+    "not final rationale",
+    "not the accepted decision",
+    "wrong flag",
+    "wrong test",
+    "wrong design",
+    "should not be used",
+    "should never be used",
+    "should not explain",
+    "do not use",
+    "do not apply",
+    "ignore this",
+  ];
+  return patterns.reduce(
+    (penalty, pattern) => penalty + (lowered.includes(pattern) ? 12 : 0),
+    0,
+  );
 }
 
 function collapseWhitespace(value: string) {

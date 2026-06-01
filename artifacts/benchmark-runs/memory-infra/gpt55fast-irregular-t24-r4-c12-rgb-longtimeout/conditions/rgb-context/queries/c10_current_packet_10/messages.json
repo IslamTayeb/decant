@@ -1,0 +1,138 @@
+[
+  {
+    "info": {
+      "id": "msg_e84e8c594001xLcBBUt2PkZDgC",
+      "sessionID": "ses_17b173a7cffeuoc3FlVKJekj8C",
+      "role": "user",
+      "time": {
+        "created": 1780346307988
+      },
+      "summary": {
+        "diffs": []
+      },
+      "agent": "build",
+      "model": {
+        "providerID": "openai",
+        "modelID": "gpt-5.5-fast"
+      },
+      "system": "Answer with compact JSON only. Do not edit files.",
+      "tools": {
+        "bash": false,
+        "glob": false,
+        "grep": false,
+        "read": false,
+        "write": false,
+        "edit": false,
+        "apply_patch": false,
+        "session_lookup": false,
+        "session_detail": false,
+        "message_detail": false,
+        "session_tree": false,
+        "view_context": false,
+        "set_fidelity": false
+      }
+    },
+    "parts": [
+      {
+        "id": "prt_e84e8c596001l0r4pXDN7DfTkc",
+        "sessionID": "ses_17b173a7cffeuoc3FlVKJekj8C",
+        "messageID": "msg_e84e8c594001xLcBBUt2PkZDgC",
+        "type": "text",
+        "text": "Maintained RGB context:\n```md\n## Maintained Memory Context: 24 Real Topics\n\n### checkout idempotency incident 0or73qt\n- File: `src/checkout/idempotency.0or73qt.ts`\n- Rollout flag: `FLAG_CHECKOUT_IDEMPOTENCY_V3_0TKS5NV`\n- Protective test: `checkout_dedupes_retry_after_timeout_0kk4icp`\n- Accepted design: per-cart idempotency key store with amber-dovetail guard 0CPGJX8.\n- Rejected design: global checkout mutex after harbor-lantern rollback 1NO7YH7.\n- Why accepted won: preserves shard-local ordering while letting unrelated carts retry independently; marker 1MLAOB9 preserved rivet isolation for case 1.\n\n### search index freshness incident 1lowtq7\n- File: `src/search/freshness.1lowtq7.ts`\n- Rollout flag: `FLAG_INDEX_EPOCH_GUARD_14MWRGT`\n- Protective test: `search_rejects_stale_epoch_publish_1rkix6f`\n- Accepted design: epoch-stamped publish barrier with fennel-indigo guard 0CBWWP2.\n- Rejected design: blind last-write-wins publish after marble-quartz rollback 1RR2O0P.\n- Why accepted won: prevents a slow crawl from replacing a newer index snapshot; marker 0OEPOV3 preserved willow isolation for case 1.\n\n### email digest batching incident 0ddfi0h\n- File: `src/mail/digest.0ddfi0h.ts`\n- Rollout flag: `FLAG_DIGEST_BATCH_WINDOW_0TCPHQV`\n- Protective test: `digest_batches_by_workspace_timezone_0pfucrp`\n- Accepted design: workspace-local send window with keystone-nickel guard 0RW1I0W.\n- Rejected design: single UTC midnight cron after rivet-velvet rollback 1GDMXDZ.\n- Why accepted won: keeps quiet-hour promises without delaying every workspace behind one global clock; marker 18ZDJEH preserved dovetail isolation for case 1.\n\n### webhook replay protection incident 12880c9\n- File: `src/webhooks/replay.12880c9.ts`\n- Rollout flag: `FLAG_WEBHOOK_NONCE_LEDGER_16QNT9R`\n- Protective test: `webhook_rejects_reused_nonce_1wl6s4t`\n- Accepted design: nonce ledger keyed by provider event id with prairie-saffron guard 1IOBUZS.\n- Rejected design: timestamp-only replay window after willow-cedar rollback 1RMGTNJ.\n- Why accepted won: blocks fast replays even when the attacker stays inside the timestamp tolerance; marker 1ICC7PT preserved indigo isolation for case 1.\n\n### cache namespace TTL incident 1uzmybe\n- File: `src/cache/namespace_ttl.1uzmybe.ts`\n- Rollout flag: `FLAG_NAMESPACE_TTL_CAP_0QSHWJC`\n- Protective test: `cache_caps_noisy_namespace_ttl_1qdykta`\n- Accepted design: namespace maximum TTL cap with umbra-xenon guard 1P9Z26F.\n- Rejected design: provider-wide hard-coded TTL after dovetail-harbor rollback 1V877GS.\n- Why accepted won: lets each namespace set a bounded freshness budget without penalizing unrelated caches; marker 0AUGFS8 preserved nickel isolation for case 1.\n\n### feature rollout sampling incident 02u6ks6\n- File: `src/rollout/sampling.02u6ks6.ts`\n- Rollout flag: `FLAG_STICKY_ROLLOUT_HASH_1VJUC1G`\n- Protective test: `rollout_keeps_user_bucket_stable_1p1ajii`\n- Accepted design: stable hash over actor and flag with brisk-ember guard 1J4XBSB.\n- Rejected design: per-request random sampling after indigo-marble rollback 0Y70HQG.\n- Why accepted won: prevents a user from bouncing between treatment and control across refreshes; marker 15XOYKS preserved saffron isolation for case 1.\n\n### csv import quarantine incident 18db99g\n- File: `src/imports/quarantine.18db99g.ts`\n- Rollout flag: `FLAG_IMPORT_ROW_QUARANTINE_0UP4UII`\n- Protective test: `import_quarantines_bad_rows_only_0d8waik`\n- Accepted design: row-level quarantine ledger with glacier-jigsaw guard 1D0YOK1.\n- Rejected design: abort entire import on first invalid row after nickel-rivet rollback 06NAID6.\n- Why accepted won: lets clean rows commit while preserving exact diagnostics for rejected rows; marker 184HMG2 preserved xenon isolation for case 1.\n\n### notification fanout incident 1o2nkc7\n- File: `src/notify/fanout.1o2nkc7.ts`\n- Rollout flag: `FLAG_FANOUT_BACKPRESSURE_0ASQQC5`\n- Protective test: `fanout_applies_channel_backpressure_0llus8f`\n- Accepted design: per-channel bounded queue with lantern-onyx guard 19Y8GF2.\n- Rejected design: unbounded global fanout array after saffron-willow rollback 1JE9FI9.\n- Why accepted won: prevents a slow SMS provider from exhausting memory for email and push sends; marker 05LWFVR preserved ember isolation for case 1.\n\n### session rotation incident 1hptfzy\n- File: `src/session/rotation.1hptfzy.ts`\n- Rollout flag: `FLAG_SESSION_ROTATION_GRACE_1W700X8`\n- Protective test: `session_accepts_previous_cookie_once_05ezjsi`\n- Accepted design: one-use previous-cookie grace with quartz-topaz guard 0DVX7ZN.\n- Rejected design: accept every old cookie until expiry after xenon-dovetail rollback 0W5UOYO.\n- Why accepted won: avoids logout races during rotation while still closing replay opportunities; marker 0IE2WUC preserved jigsaw isolation for case 1.\n\n### audit log redaction incident 0137vnk\n- File: `src/audit/redact.0137vnk.ts`\n- Rollout flag: `FLAG_AUDIT_FIELD_ALLOWLIST_17CJ3DI`\n- Protective test: `audit_redacts_unknown_fields_1jgdjfs`\n- Accepted design: field allowlist redactor with velvet-amber guard 1CHN91X.\n- Rejected design: regex-only secret scrubber after ember-indigo rollback 03RV7G6.\n- Why accepted won: keeps newly added sensitive fields private even before regexes are updated; marker 1LDFD5I preserved onyx isolation for case 1.\n\n### report export leases incident 166tvzv\n- File: `src/reports/export_lease.166tvzv.ts`\n- Rollout flag: `FLAG_EXPORT_LEASE_STEAL_0PY8DYH`\n- Protective test: `export_worker_steals_expired_lease_0zzjko3`\n- Accepted design: expiring worker lease with compare-and-swap with cedar-fennel guard 1C8LGRE.\n- Rejected design: permanent worker ownership after jigsaw-nickel rollback 1AAMBYT.\n- Why accepted won: lets a new worker recover abandoned exports without duplicating active work; marker 1SD23G3 preserved topaz isolation for case 1.\n\n### tenant config snapshots incident 05lcfbs\n- File: `src/config/snapshot.05lcfbs.ts`\n- Rollout flag: `FLAG_CONFIG_SNAPSHOT_PIN_0OYHCJI`\n- Protective test: `config_pins_snapshot_for_request_1uqlyg0`\n- Accepted design: request-scoped config snapshot with harbor-keystone guard 09I3VXP.\n- Rejected design: live config reads at every call site after onyx-saffron rollback 1CI2CXQ.\n- Why accepted won: keeps one request internally consistent while allowing later requests to see updates; marker 0ROQEF2 preserved amber isolation for case 1.\n\n### checkout idempotency incident 06dkxeu\n- File: `src/checkout/idempotency.06dkxeu.ts`\n- Rollout flag: `FLAG_CHECKOUT_IDEMPOTENCY_V3_1Z06Y9W`\n- Protective test: `checkout_dedupes_retry_after_timeout_0mbtfga`\n- Accepted design: per-cart idempotency key store with marble-prairie guard 089K3QZ.\n- Rejected design: global checkout mutex after topaz-xenon rollback 0Z2HCD4.\n- Why accepted won: preserves shard-local ordering while letting unrelated carts retry independently; marker 1O5JUT8 preserved fennel isolation for case 2.\n\n### search index freshness incident 13owed6\n- File: `src/search/freshness.13owed6.ts`\n- Rollout flag: `FLAG_INDEX_EPOCH_GUARD_1YIVEK8`\n- Protective test: `search_rejects_stale_epoch_publish_0z380v2`\n- Accepted design: epoch-stamped publish barrier with rivet-umbra guard 110PIDJ.\n- Rejected design: blind last-write-wins publish after amber-ember rollback 16YXNNW.\n- Why accepted won: prevents a slow crawl from replacing a newer index snapshot; marker 0VNX8Q0 preserved keystone isolation for case 2.\n\n### email digest batching incident 0i92crm\n- File: `src/mail/digest.0i92crm.ts`\n- Rollout flag: `FLAG_DIGEST_BATCH_WINDOW_07YT6Z4`\n- Protective test: `digest_batches_by_workspace_timezone_110jngm`\n- Accepted design: workspace-local send window with willow-brisk guard 10I4OOF.\n- Rejected design: single UTC midnight cron after fennel-jigsaw rollback 1QZ4OMC.\n- Why accepted won: keeps quiet-hour promises without delaying every workspace behind one global clock; marker 1NA2K9S preserved prairie isolation for case 2.\n\n### webhook replay protection incident 134k1y8\n- File: `src/webhooks/replay.134k1y8.ts`\n- Rollout flag: `FLAG_WEBHOOK_NONCE_LEDGER_0ACR7P2`\n- Protective test: `webhook_rejects_reused_nonce_0mglnrc`\n- Accepted design: nonce ledger keyed by provider event id with dovetail-glacier guard 0EE5BW5.\n- Rejected design: timestamp-only replay window after keystone-onyx rollback 0THNP06.\n- Why accepted won: blocks fast replays even when the attacker stays inside the timestamp tolerance; marker 04AYEUU preserved umbra isolation for case 2.\n\n### cache namespace TTL incident 0rbc72v\n- File: `src/cache/namespace_ttl.0rbc72v.ts`\n- Rollout flag: `FLAG_NAMESPACE_TTL_CAP_161TTKL`\n- Protective test: `cache_caps_noisy_namespace_ttl_1nvngy7`\n- Accepted design: namespace maximum TTL cap with indigo-lantern guard 1PDKSOU.\n- Rejected design: provider-wide hard-coded TTL after prairie-topaz rollback 0UHVEN5.\n- Why accepted won: lets each namespace set a bounded freshness budget without penalizing unrelated caches; marker 0MDQF47 preserved brisk isolation for case 2.\n\n### feature rollout sampling incident 14plb4x\n- File: `src/rollout/sampling.14plb4x.ts`\n- Rollout flag: `FLAG_STICKY_ROLLOUT_HASH_1LGO61Z`\n- Protective test: `rollout_keeps_user_bucket_stable_0pgshud`\n- Accepted design: stable hash over actor and flag with nickel-quartz guard 0GKUDN4.\n- Rejected design: per-request random sampling after umbra-amber rollback 0LAWBVB.\n- Why accepted won: prevents a user from bouncing between treatment and control across refreshes; marker 1GCZ8O9 preserved glacier isolation for case 2.\n\n### csv import quarantine incident 1apt87p\n- File: `src/imports/quarantine.1apt87p.ts`\n- Rollout flag: `FLAG_IMPORT_ROW_QUARANTINE_1FJEA4R`\n- Protective test: `import_quarantines_bad_rows_only_15tzi15`\n- Accepted design: row-level quarantine ledger with saffron-velvet guard 0S5ATJ0.\n- Rejected design: abort entire import on first invalid row after brisk-fennel rollback 0V76UEJ.\n- Why accepted won: lets clean rows commit while preserving exact diagnostics for rejected rows; marker 07GPM45 preserved lantern isolation for case 2.\n\n### notification fanout incident 1aspc7a\n- File: `src/notify/fanout.1aspc7a.ts`\n- Rollout flag: `FLAG_FANOUT_BACKPRESSURE_14E53HG`\n- Protective test: `fanout_applies_channel_backpressure_1q26pga`\n- Accepted design: per-channel bounded queue with xenon-cedar guard 1OIWCEZ.\n- Rejected design: unbounded global fanout array after glacier-keystone rollback 1QPOQEW.\n- Why accepted won: prevents a slow SMS provider from exhausting memory for email and push sends; marker 0UPJRX8 preserved quartz isolation for case 2.\n\n### session rotation incident 0o83phc\n- File: `src/session/rotation.0o83phc.ts`\n- Rollout flag: `FLAG_SESSION_ROTATION_GRACE_1MRY6XI`\n- Protective test: `session_accepts_previous_cookie_once_00jfpt4`\n- Accepted design: one-use previous-cookie grace with ember-harbor guard 1UTX5XX.\n- Rejected design: accept every old cookie until expiry after lantern-prairie rollback 1M2PQ2E.\n- Why accepted won: avoids logout races during rotation while still closing replay opportunities; marker 1QO9GRA preserved velvet isolation for case 2.\n\n### audit log redaction incident 10y6prc\n- File: `src/audit/redact.10y6prc.ts`\n- Rollout flag: `FLAG_AUDIT_FIELD_ALLOWLIST_1DW98A6`\n- Protective test: `audit_redacts_unknown_fields_0vr9jhs`\n- Accepted design: field allowlist redactor with jigsaw-marble guard 1VS8BVH.\n- Rejected design: regex-only secret scrubber after quartz-umbra rollback 0X0TQSU.\n- Why accepted won: keeps newly added sensitive fields private even before regexes are updated; marker 1PJW6VI preserved cedar isolation for case 2.\n\n### report export leases incident 0elv0r8\n- File: `src/reports/export_lease.0elv0r8.ts`\n- Rollout flag: `FLAG_EXPORT_LEASE_STEAL_0VM7I6I`\n- Protective test: `export_worker_steals_expired_lease_031wzak`\n- Accepted design: expiring worker lease with compare-and-swap with onyx-rivet guard 1PRARVL.\n- Rejected design: permanent worker ownership after velvet-brisk rollback 12WB6A2.\n- Why accepted won: lets a new worker recover abandoned exports without duplicating active work; marker 13X8JF6 preserved harbor isolation for case 2.\n\n### tenant config snapshots incident 0s9jjxf\n- File: `src/config/snapshot.0s9jjxf.ts`\n- Rollout flag: `FLAG_CONFIG_SNAPSHOT_PIN_1EHRJXD`\n- Protective test: `config_pins_snapshot_for_request_0uxub6z`\n- Accepted design: request-scoped config snapshot with topaz-willow guard 19ZX8KI.\n- Rejected design: live config reads at every call site after cedar-glacier rollback 0FOT0H9.\n- Why accepted won: keeps one request internally consistent while allowing later requests to see updates; marker 1J9I3GR preserved marble isolation for case 2.\n```\n\nCurrent work packet, unrelated to historical memory:\n```text\nticket: CURR-0010 | title: current packet 10 | patch_file: src/current/work_packet_010.ts | owner: omar-current | guardrail: pin the request clock before evaluating freshness | expected_check: current_packet_pins_request_clock | avoid: stale-current-decoy-0010\nticket: CURR-0110 | title: current packet 110 | patch_file: src/current/work_packet_110.ts | owner: noah-current | guardrail: cap retry window at the active deploy generation | expected_check: current_packet_caps_retry_generation | avoid: stale-current-decoy-0110\nticket: CURR-0211 | title: current packet 211 | patch_file: src/current/work_packet_211.ts | owner: maya-current | guardrail: reject writes unless current_workspace_id matches envelope | expected_check: current_packet_rejects_cross_workspace_write | avoid: stale-current-decoy-0211\nticket: CURR-0312 | title: current packet 312 | patch_file: src/current/work_packet_312.ts | owner: sol-current | guardrail: compare normalized route keys before cache lookup | expected_check: current_packet_normalizes_route_cache_key | avoid: stale-current-decoy-0312\n```\nFind ticket CURR-0010.\nReturn the ticket, owner, patch file, guardrail, and expected check exactly as written.\nDo not use historical memory, rollout flags, old decisions, or context tools for this current packet.\nReturn compact JSON with keys ticket, owner, patch_file, guardrail, expected_check, source. The answer must include exact strings from the current work packet only."
+      }
+    ]
+  },
+  {
+    "info": {
+      "id": "msg_e84e8c59a001G8olSkFI7aWyxE",
+      "sessionID": "ses_17b173a7cffeuoc3FlVKJekj8C",
+      "role": "assistant",
+      "time": {
+        "created": 1780346307994,
+        "completed": 1780346310524
+      },
+      "parentID": "msg_e84e8c594001xLcBBUt2PkZDgC",
+      "modelID": "gpt-5.5-fast",
+      "providerID": "openai",
+      "mode": "build",
+      "agent": "build",
+      "path": {
+        "cwd": "./benchmarks/memory-infra/runs/gpt55fast-irregular-t24-r4-c12-rgb-longtimeout/conditions/rgb-context/worktree",
+        "root": "."
+      },
+      "cost": 0,
+      "tokens": {
+        "total": 8203,
+        "input": 452,
+        "output": 58,
+        "reasoning": 13,
+        "cache": {
+          "read": 7680,
+          "write": 0
+        }
+      },
+      "finish": "stop"
+    },
+    "parts": [
+      {
+        "id": "prt_e84e8c84f001eN4stsHNEAEEns",
+        "sessionID": "ses_17b173a7cffeuoc3FlVKJekj8C",
+        "messageID": "msg_e84e8c59a001G8olSkFI7aWyxE",
+        "type": "step-start",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+      },
+      {
+        "id": "prt_e84e8c9f6001MXojVy73zkJnpH",
+        "sessionID": "ses_17b173a7cffeuoc3FlVKJekj8C",
+        "messageID": "msg_e84e8c59a001G8olSkFI7aWyxE",
+        "type": "reasoning",
+        "text": "",
+        "metadata": {
+          "openai": {
+            "itemId": "rs_0c8d1c22521584dd016a1dedc52bf88199ab9cffdddb4462fe"
+          }
+        },
+        "time": {
+          "start": 1780346309110,
+          "end": 1780346309691
+        }
+      },
+      {
+        "id": "prt_e84e8cc40001dmqkR8YhaK4eSA",
+        "sessionID": "ses_17b173a7cffeuoc3FlVKJekj8C",
+        "messageID": "msg_e84e8c59a001G8olSkFI7aWyxE",
+        "type": "text",
+        "text": "{\"ticket\":\"CURR-0010\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_010.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+        "time": {
+          "start": 1780346309696,
+          "end": 1780346310423
+        },
+        "metadata": {
+          "openai": {
+            "itemId": "msg_0c8d1c22521584dd016a1dedc5b86c81998d49ddd0f6e9f4e2",
+            "phase": "final_answer"
+          }
+        }
+      },
+      {
+        "id": "prt_e84e8cf5a001xJ2PzM6gbZPptN",
+        "sessionID": "ses_17b173a7cffeuoc3FlVKJekj8C",
+        "messageID": "msg_e84e8c59a001G8olSkFI7aWyxE",
+        "type": "step-finish",
+        "reason": "stop",
+        "snapshot": "4b825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "cost": 0,
+        "tokens": {
+          "total": 8203,
+          "input": 452,
+          "output": 58,
+          "reasoning": 13,
+          "cache": {
+            "read": 7680,
+            "write": 0
+          }
+        }
+      }
+    ]
+  }
+]

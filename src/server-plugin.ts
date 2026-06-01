@@ -76,6 +76,7 @@ function staticPluginGuidanceSystemPrompt() {
   return [
     "Context map plugin is active.",
     "Use view_context and set_fidelity only when older context is clearly stale or large enough to justify reshaping the prompt.",
+    "Fidelity levels: full, summary, compressed, placeholder, hidden.",
     "User controls are authoritative: do not override user-set fidelity or hidden-message choices unless the user explicitly asks.",
   ].join("\n");
 }
@@ -368,7 +369,9 @@ const server: Plugin = async (ctx) => {
       compactedAt,
       includeMessageID: input.includeMessageID,
       archivePath,
-      summaryFidelity: envFlag("DECANT_TASK_BOUNDARY") ? "summary" : undefined,
+      summaryFidelity: envFlag("DECANT_TASK_BOUNDARY")
+        ? "placeholder"
+        : undefined,
     });
     await writeContextMap(reset);
     const preview = computeContextPreview(reset);
@@ -425,6 +428,24 @@ const server: Plugin = async (ctx) => {
     return { session, map };
   }
 
+  async function fallbackHistoricalMap(sessionID: string) {
+    const session = await getSession(sessionID);
+    const messages = await getMessages(sessionID);
+    if (messages.length === 0) {
+      return { session, map: await getMap(sessionID, session.directory), messages };
+    }
+    return {
+      session,
+      map: buildFallbackMapFromMessages({
+        sessionID,
+        directory: session.directory,
+        worktree: ctx.worktree,
+        messages,
+      }),
+      messages,
+    };
+  }
+
   async function isChildSession(sessionID: string) {
     if (childSessionCache.has(sessionID))
       return childSessionCache.get(sessionID)!;
@@ -461,14 +482,28 @@ const server: Plugin = async (ctx) => {
     return buildContextMapToolView(map);
   }
 
-  async function sessionLookup(query: string, limit: number) {
+  async function sessionLookup(
+    query: string,
+    limit: number,
+    excludeSessionID?: string,
+    options: { preferFallbackMap?: boolean } = {},
+  ) {
     const sessions = await listSessions();
     const lowered = query.trim().toLowerCase();
-    const results: HistoricalSessionOverview[] = [];
+    if (!lowered) return [];
+    const candidates: Array<{
+      overview: HistoricalSessionOverview & {
+        lookupScore: number;
+        lookupReason: string;
+      };
+      score: number;
+      updatedAt: number;
+    }> = [];
 
     for (const session of sessions) {
-      if (results.length >= limit) break;
-      const titleMatch = (session.title ?? "").toLowerCase().includes(lowered);
+      if (session.id === excludeSessionID) continue;
+      const title = session.title ?? "";
+      const titleMatch = title.toLowerCase().includes(lowered);
       const hasMapFile = await fs
         .access(sessionMapPath(session.id))
         .then(() => true)
@@ -476,15 +511,177 @@ const server: Plugin = async (ctx) => {
 
       if (!titleMatch && !hasMapFile) continue;
 
-      const { map } = await ensureHistoricalMap(session.id);
+      const { map } = options.preferFallbackMap
+        ? await fallbackHistoricalMap(session.id)
+        : await ensureHistoricalMap(session.id);
       const matchedTopicIDs = titleMatch
         ? []
         : matchTopicIDsForQuery(map, query);
       if (!titleMatch && matchedTopicIDs.length === 0) continue;
-      results.push(buildHistoricalOverview({ map, session, matchedTopicIDs }));
+      const score = scoreSessionLookup({
+        query,
+        session,
+        overview: buildHistoricalOverview({ map, session, matchedTopicIDs }),
+        matchedTopicIDs,
+        titleMatch,
+      });
+      if (score <= 0) continue;
+      const overview = orderMatchedTopicsFirst(
+        buildHistoricalOverview({ map, session, matchedTopicIDs }),
+        matchedTopicIDs,
+      );
+      const narrowed = narrowLookupOverview(overview, matchedTopicIDs);
+      candidates.push({
+        overview: {
+          ...narrowed,
+          lookupScore: score,
+          lookupReason: titleMatch
+            ? "title match"
+            : `topic match: ${matchedTopicIDs.slice(0, 3).join(", ")}`,
+        },
+        score,
+        updatedAt: session.time?.updated ?? 0,
+      });
     }
 
-    return results;
+    return candidates
+      .sort((a, b) => b.score - a.score || b.updatedAt - a.updatedAt)
+      .slice(0, limit)
+      .map((candidate) => candidate.overview);
+  }
+
+  function orderMatchedTopicsFirst(
+    overview: HistoricalSessionOverview,
+    matchedTopicIDs: string[],
+  ) {
+    if (matchedTopicIDs.length === 0) return overview;
+    const rank = new Map(
+      matchedTopicIDs.map((topicID, index) => [topicID, index]),
+    );
+    return {
+      ...overview,
+      topics: [...overview.topics].sort(
+        (a, b) =>
+          (rank.get(a.id) ?? Number.POSITIVE_INFINITY) -
+          (rank.get(b.id) ?? Number.POSITIVE_INFINITY),
+      ),
+    };
+  }
+
+  function narrowLookupOverview(
+    overview: HistoricalSessionOverview,
+    matchedTopicIDs: string[],
+  ) {
+    const matched = new Set(matchedTopicIDs);
+    const maxTopics = matchedTopicIDs.length > 0 ? 3 : 5;
+    const topics =
+      matchedTopicIDs.length > 0
+        ? overview.topics.filter((topic) => matched.has(topic.id)).slice(0, maxTopics)
+        : overview.topics.slice(0, maxTopics);
+    return {
+      ...overview,
+      matchedTopicIDs: topics.map((topic) => topic.id),
+      topics,
+      omittedTopicCount: Math.max(0, overview.topics.length - topics.length),
+    };
+  }
+
+  function slimLookupOverviewForIncludedDetail(
+    overview: HistoricalSessionOverview & {
+      lookupScore: number;
+      lookupReason: string;
+    },
+  ) {
+    const topic = overview.topics[0];
+    return {
+      sessionID: overview.sessionID,
+      title: overview.title,
+      updatedAt: overview.updatedAt,
+      matchedTopicIDs: topic ? [topic.id] : overview.matchedTopicIDs.slice(0, 1),
+      topics: topic
+        ? [
+            {
+              id: topic.id,
+              label: topic.label,
+              messageCount: topic.messageCount,
+              fidelity: topic.fidelity,
+              keyFacts: topic.keyFacts,
+            },
+          ]
+        : [],
+      omittedTopicCount: overview.omittedTopicCount,
+      lookupScore: overview.lookupScore,
+      lookupReason: overview.lookupReason,
+    };
+  }
+
+  function scoreSessionLookup(input: {
+    query: string;
+    session: SessionLike;
+    overview: HistoricalSessionOverview;
+    matchedTopicIDs: string[];
+    titleMatch: boolean;
+  }) {
+    const words = lookupWords(input.query);
+    const phrase = input.query.trim().toLowerCase();
+    const titleScore = scoreLookupText(input.session.title ?? "", words, phrase);
+    const topicScores = input.overview.topics.map((topic) => {
+      const topicText = [
+        topic.label,
+        topic.summary,
+        topic.compressedSummary,
+        topic.placeholder,
+        topic.keyFacts.join(" "),
+      ].join(" ");
+      return (
+        scoreLookupText(topicText, words, phrase) -
+        lookupNegativePenalty(topicText)
+      );
+    });
+    const bestTopicScore = Math.max(0, ...topicScores);
+    const matchedTopicBonus = input.matchedTopicIDs.length * 2;
+    const titleBonus = input.titleMatch ? 8 : 0;
+    const negativePenalty = input.titleMatch
+      ? lookupNegativePenalty(input.session.title ?? "")
+      : 0;
+    return titleScore * 3 + bestTopicScore * 2 + matchedTopicBonus + titleBonus - negativePenalty;
+  }
+
+  function lookupWords(query: string) {
+    return query
+      .toLowerCase()
+      .split(/[^a-z0-9_/.-]+/)
+      .map((word) => word.trim())
+      .filter((word) => word.length >= 3);
+  }
+
+  function scoreLookupText(text: string, words: string[], phrase: string) {
+    const lowered = text.toLowerCase();
+    let score = phrase && lowered.includes(phrase) ? Math.max(6, words.length) : 0;
+    for (const word of words) {
+      if (lowered.includes(word)) score += 1;
+    }
+    return score;
+  }
+
+  function lookupNegativePenalty(text: string) {
+    const lowered = text.toLowerCase();
+    const patterns = [
+      "distractor",
+      "decoy",
+      "not the final rationale",
+      "not final rationale",
+      "should not be used",
+      "should never be used",
+      "should not explain",
+      "do not use",
+      "do not apply",
+      "ignore this",
+    ];
+    return patterns.reduce(
+      (penalty, pattern) => penalty + (lowered.includes(pattern) ? 12 : 0),
+      0,
+    );
   }
 
   async function sessionTree(
@@ -806,15 +1003,15 @@ const server: Plugin = async (ctx) => {
       }),
       set_fidelity: tool({
         description:
-          "Set how much detail to keep for a topic (full, summary, hidden). Use for stale or large topics; avoid frequent small edits because prompt reshaping can reduce provider prompt-cache hits.",
+          "Set how much detail to keep for a topic (full, summary, compressed, placeholder, hidden). Use for stale or large topics; avoid frequent small edits because prompt reshaping can reduce provider prompt-cache hits.",
         args: {
           topic_id: tool.schema
             .string()
             .describe("Topic ID (snake_case label)"),
           fidelity: tool.schema
-            .enum(["full", "summary", "hidden"])
+            .enum(["full", "summary", "compressed", "placeholder", "hidden"])
             .describe(
-              "Detail level: full (keep everything), summary (one-line per message), hidden (remove from context)",
+              "Detail level: full (keep everything), summary (one-line per message), compressed (one topic paragraph), placeholder (one stub), hidden (remove from context)",
             ),
           force_user_override: tool.schema
             .boolean()
@@ -857,18 +1054,66 @@ const server: Plugin = async (ctx) => {
             .max(10)
             .optional()
             .describe("Max sessions to return"),
+          detail: tool.schema
+            .enum(["none", "summary", "full"])
+            .optional()
+            .describe(
+              "Optionally include detail for the best matched topic in each returned session.",
+            ),
         },
         async execute(args, toolCtx) {
           toolCtx.metadata({ title: `Session lookup: ${args.query}` });
-          const sessions = await sessionLookup(args.query, args.limit ?? 5);
+          const detail = args.detail ?? "none";
+          const sessions = await sessionLookup(
+            args.query,
+            args.limit ?? 5,
+            toolCtx.sessionID,
+            { preferFallbackMap: detail !== "none" },
+          );
+          const details =
+            detail === "none"
+              ? []
+              : await Promise.all(
+                  sessions.flatMap((session) =>
+                    session.topics.slice(0, 1).map(async (topic) => {
+                      let messages: MessageLike[] | undefined;
+                      const historical =
+                        detail === "full"
+                          ? await fallbackHistoricalMap(
+                              session.sessionID,
+                            ).then((result) => {
+                              messages = result.messages;
+                              return result;
+                            })
+                          : await ensureHistoricalMap(session.sessionID);
+                      return {
+                        session_id: session.sessionID,
+                        topic_id: topic.id,
+                        detail,
+                        content: buildSessionZoomText({
+                          map: historical.map,
+                          topicID: topic.id,
+                          fidelity: detail === "full" ? "full" : "compressed",
+                          messages,
+                        }),
+                      };
+                    }),
+                  ),
+                );
           return JSON.stringify(
             {
               query: args.query,
               hint:
                 sessions.length > 0
-                  ? "Use session_detail in a sub-agent (Task tool) for deeper investigation."
+                  ? detail === "none"
+                    ? "Use session_detail on the best matching topic; avoid repeated lookup unless the top result is clearly wrong."
+                    : "Use the included detail for the best matching topic; avoid repeated lookup unless the top result is clearly wrong."
                   : "No matching sessions found.",
-              sessions,
+              sessions:
+                detail === "none"
+                  ? sessions
+                  : sessions.map(slimLookupOverviewForIncludedDetail),
+              details,
             },
             null,
             2,
@@ -1189,6 +1434,7 @@ const server: Plugin = async (ctx) => {
           messages: activeMessages,
         });
         map = mergeContextMaps(map, fallback);
+        map.lastAnnotatedMessageID = input.messageID;
         for (const messageID of Object.keys(map.pendingRetroactive)) {
           if (fallback.messages[messageID])
             delete map.pendingRetroactive[messageID];
