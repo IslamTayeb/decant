@@ -53,6 +53,8 @@ const publishedRuns = new Map([
       "gpt55fast-mixed-t96-r4-c24-decant-numeric-fix",
       "gpt55fast-mixed-t96-r4-c48-rgb",
       "gpt55fast-mixed-t96-r4-c48-decant",
+      "gpt55fast-mixed-t96-r4-c48-rgb-retry",
+      "gpt55fast-mixed-t96-r4-c48-decant-retry",
       "gpt55fast-mixed-t96-r4-c96-default",
       "gpt55fast-mixed-t96-r4-c96-rgb",
       "gpt55fast-mixed-t96-r4-c96-decant",

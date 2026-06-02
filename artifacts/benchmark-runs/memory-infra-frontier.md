@@ -1,6 +1,6 @@
 # Memory Infra Frontier
 
-- Generated: 2026-06-01T23:47:27.329Z
+- Generated: 2026-06-02T03:58:11.704Z
 - Costs are diagnostic estimates from token accounting, not billing truth.
 - Carried chars are the maintained/default memory artifact size multiplied across future query turns.
 
@@ -110,10 +110,10 @@ All rows use 96 old topics and 4 exact recall queries. RGB and Decant both pass 
 | Future Current Turns | RGB Query Tokens | Decant Query Tokens | Query Token Delta | RGB Current Carried Chars | Decant Current Carried Chars | Query Cost Delta | Total Cost Delta |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | 24 current turns | 379,996 | 158,176 | 58.4% lower | 870,504 | 0 | 60.1% lower | 46.2% lower |
-| 48 current turns | 623,109 | 276,620 | 55.6% lower | 1,404,528 | 0 | 58.5% lower | 18.2% lower |
+| 48 current turns | 731,483 | 276,710 | 62.2% lower | 1,819,872 | 0 | 55.2% lower | 43.9% lower |
 | 96 current turns | 1,416,720 | 513,625 | 63.7% lower | 3,537,984 | 0 | 57.4% lower | 30.3% lower |
 | 96 current turns (rep2) | 1,359,724 | 514,375 | 62.2% lower | 3,483,552 | 0 | 55.8% lower | 30.9% lower |
 
-Across 4 same-quality fanout points: yes. Decant query-token reduction range: 55.6%-63.7%. Decant query-cost reduction range: 55.8%-60.1%. RGB current-work old-memory exposure range: 870,504-3,537,984 chars; Decant exposure is 0 in every row.
+Across 4 same-quality fanout points: yes. Decant query-token reduction range: 58.4%-63.7%. Decant query-cost reduction range: 55.2%-60.1%. RGB current-work old-memory exposure range: 870,504-3,537,984 chars; Decant exposure is 0 in every row.
 
 Interpretation: the repeatable signal here is the query-side routing/exposure win. Total cost is listed but should remain secondary because prep cost varies across live model runs.

@@ -1,0 +1,1678 @@
+{
+  "outDir": "./benchmarks/memory-infra/runs/gpt55fast-mixed-t96-r4-c48-decant-retry",
+  "generatedAt": "2026-06-02T03:51:40.089Z",
+  "config": {
+    "topicCount": 96,
+    "queryCount": 4,
+    "currentQueryCount": 48,
+    "decoysPerTopic": 0,
+    "irregularFacts": false,
+    "modelSlug": "openai/gpt-5.5-fast"
+  },
+  "rows": [
+    {
+      "condition": "decant-direct",
+      "pass": true,
+      "query_passes": 52,
+      "query_total": 52,
+      "recall_passes": 4,
+      "recall_total": 4,
+      "current_passes": 48,
+      "current_total": 48,
+      "topic_count": 96,
+      "decoys_per_topic": 0,
+      "memory_artifact_chars": 0,
+      "carried_context_chars_per_query": 0,
+      "carried_context_chars_total": 0,
+      "current_carried_context_chars_total": 0,
+      "prep_tokens": {
+        "messages": 194,
+        "assistant": 97,
+        "input": 70701,
+        "output": 967,
+        "total": 1345524,
+        "reasoning": 0,
+        "cacheRead": 1273856,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 8702
+      },
+      "query_tokens": {
+        "messages": 108,
+        "assistant": 56,
+        "input": 105159,
+        "output": 3363,
+        "total": 276710,
+        "reasoning": 252,
+        "cacheRead": 167936,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 4880
+      },
+      "recall_query_tokens": {
+        "messages": 12,
+        "assistant": 8,
+        "input": 18487,
+        "output": 525,
+        "total": 39543,
+        "reasoning": 51,
+        "cacheRead": 20480,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 4623
+      },
+      "current_query_tokens": {
+        "messages": 96,
+        "assistant": 48,
+        "input": 86672,
+        "output": 2838,
+        "total": 237167,
+        "reasoning": 201,
+        "cacheRead": 147456,
+        "cacheWrite": 0,
+        "toolCalls": 0,
+        "maxInput": 4880
+      },
+      "total_tokens": {
+        "messages": 302,
+        "assistant": 153,
+        "input": 175860,
+        "output": 4330,
+        "total": 1622234,
+        "reasoning": 252,
+        "cacheRead": 1441792,
+        "cacheWrite": 0,
+        "toolCalls": 4,
+        "maxInput": 8702
+      },
+      "prep_estimated_cost_usd": 1.019443,
+      "query_estimated_cost_usd": 0.7182130000000001,
+      "total_estimated_cost_usd": 1.7376559999999999,
+      "avg_query_input_tokens": 2022,
+      "max_query_input_tokens": 5737,
+      "avg_query_tool_calls": 0.07692307692307693,
+      "unnecessary_context_tool_calls": 0,
+      "route_passed": true,
+      "queries": [
+        {
+          "kind": "current",
+          "query_id": "c01_current_packet_1",
+          "topic_id": "current_packet_1",
+          "passed": true,
+          "required_hits": [
+            "CURR-0001",
+            "maya-current",
+            "src/current/work_packet_001.ts",
+            "reject writes unless current_workspace_id matches envelope",
+            "current_packet_rejects_cross_workspace_write"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0001\",\"owner\":\"maya-current\",\"patch_file\":\"src/current/work_packet_001.ts\",\"guardrail\":\"reject writes unless current_workspace_id matches envelope\",\"expected_check\":\"current_packet_rejects_cross_workspace_write\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4880,
+            "output": 61,
+            "total": 4952,
+            "reasoning": 11,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4880
+          }
+        },
+        {
+          "kind": "recall",
+          "query_id": "q01_checkout_idempotency_1",
+          "topic_id": "checkout_idempotency_1",
+          "passed": true,
+          "required_hits": [
+            "FLAG_CHECKOUT_IDEMPOTENCY_V3_R1",
+            "checkout_dedupes_retry_after_timeout_r1",
+            "per-cart idempotency key store",
+            "global checkout mutex",
+            "preserves shard-local ordering while letting unrelated carts retry independently"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [
+            "billing retry backoff"
+          ],
+          "output_preview": "{\"title\":\"checkout idempotency\",\"flag\":\"FLAG_CHECKOUT_IDEMPOTENCY_V3_R1\",\"test\":\"checkout_dedupes_retry_after_timeout_r1\",\"accepted_design\":\"per-cart idempotency key store\",\"rejected_design\":\"global checkout mutex\",\"why\":\"preserves shard-local ordering while letting unrelated carts retry independently\",\"citation\":\"Source file: src/checkout/idempotency.ts.\",\"ignored\":\"billing retry backoff\"}",
+          "tool_names": [
+            "session_lookup"
+          ],
+          "context_tool_call_count": 1,
+          "tokens": {
+            "messages": 3,
+            "assistant": 2,
+            "input": 5607,
+            "output": 125,
+            "total": 9828,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 1,
+            "maxInput": 4621
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c02_current_packet_2",
+          "topic_id": "current_packet_2",
+          "passed": true,
+          "required_hits": [
+            "CURR-0002",
+            "noah-current",
+            "src/current/work_packet_002.ts",
+            "cap retry window at the active deploy generation",
+            "current_packet_caps_retry_generation"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0002\",\"owner\":\"noah-current\",\"patch_file\":\"src/current/work_packet_002.ts\",\"guardrail\":\"cap retry window at the active deploy generation\",\"expected_check\":\"current_packet_caps_retry_generation\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4879,
+            "output": 57,
+            "total": 4936,
+            "reasoning": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4879
+          }
+        },
+        {
+          "kind": "recall",
+          "query_id": "q02_session_rotation_3",
+          "topic_id": "session_rotation_3",
+          "passed": true,
+          "required_hits": [
+            "FLAG_SESSION_ROTATION_GRACE_R3",
+            "session_accepts_previous_cookie_once_r3",
+            "one-use previous-cookie grace round 3",
+            "accept every old cookie until expiry round 3",
+            "avoids logout races during rotation while still closing replay opportunities in round 3"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [
+            "login page copy round 3"
+          ],
+          "output_preview": "{\"title\":\"session rotation round 3\",\"flag\":\"FLAG_SESSION_ROTATION_GRACE_R3\",\"test\":\"session_accepts_previous_cookie_once_r3\",\"accepted_design\":\"one-use previous-cookie grace round 3\",\"rejected_design\":\"accept every old cookie until expiry round 3\",\"why\":\"avoids logout races during rotation while still closing replay opportunities in round 3\",\"citation\":\"Source file: src/session/rotation.ts.\",\"ignored\":\"login page copy round 3\"}",
+          "tool_names": [
+            "session_lookup"
+          ],
+          "context_tool_call_count": 1,
+          "tokens": {
+            "messages": 3,
+            "assistant": 2,
+            "input": 1510,
+            "output": 129,
+            "total": 9831,
+            "reasoning": 0,
+            "cacheRead": 8192,
+            "cacheWrite": 0,
+            "toolCalls": 1,
+            "maxInput": 984
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c03_current_packet_3",
+          "topic_id": "current_packet_3",
+          "passed": true,
+          "required_hits": [
+            "CURR-0003",
+            "lina-current",
+            "src/current/work_packet_003.ts",
+            "require local checksum before publishing the manifest",
+            "current_packet_verifies_manifest_checksum"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0003\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_003.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4880,
+            "output": 57,
+            "total": 4937,
+            "reasoning": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4880
+          }
+        },
+        {
+          "kind": "recall",
+          "query_id": "q03_webhook_replay_protection_6",
+          "topic_id": "webhook_replay_protection_6",
+          "passed": true,
+          "required_hits": [
+            "FLAG_WEBHOOK_NONCE_LEDGER_R6",
+            "webhook_rejects_reused_nonce_r6",
+            "nonce ledger keyed by provider event id round 6",
+            "timestamp-only replay window round 6",
+            "blocks fast replays even when the attacker stays inside the timestamp tolerance in round 6"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [
+            "stripe retry cosmetics round 6"
+          ],
+          "output_preview": "{\"title\":\"webhook replay protection round 6\",\"flag\":\"FLAG_WEBHOOK_NONCE_LEDGER_R6\",\"test\":\"webhook_rejects_reused_nonce_r6\",\"accepted_design\":\"nonce ledger keyed by provider event id round 6\",\"rejected_design\":\"timestamp-only replay window round 6\",\"why\":\"blocks fast replays even when the attacker stays inside the timestamp tolerance in round 6\",\"citation\":\"webhooks_replay_6\",\"ignored\":\"stripe retry cosmetics round 6\"}",
+          "tool_names": [
+            "session_lookup"
+          ],
+          "context_tool_call_count": 1,
+          "tokens": {
+            "messages": 3,
+            "assistant": 2,
+            "input": 5633,
+            "output": 136,
+            "total": 9865,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 1,
+            "maxInput": 4623
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c04_current_packet_4",
+          "topic_id": "current_packet_4",
+          "passed": true,
+          "required_hits": [
+            "CURR-0004",
+            "omar-current",
+            "src/current/work_packet_004.ts",
+            "pin the request clock before evaluating freshness",
+            "current_packet_pins_request_clock"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0004\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_004.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4875,
+            "output": 56,
+            "total": 4931,
+            "reasoning": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4875
+          }
+        },
+        {
+          "kind": "recall",
+          "query_id": "q04_tenant_config_snapshots_8",
+          "topic_id": "tenant_config_snapshots_8",
+          "passed": true,
+          "required_hits": [
+            "FLAG_CONFIG_SNAPSHOT_PIN_R8",
+            "config_pins_snapshot_for_request_r8",
+            "request-scoped config snapshot round 8",
+            "live config reads at every call site round 8",
+            "keeps one request internally consistent while allowing later requests to see updates in round 8"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [
+            "settings sidebar grouping round 8"
+          ],
+          "output_preview": "{\"title\":\"tenant config snapshots round 8\",\"flag\":\"FLAG_CONFIG_SNAPSHOT_PIN_R8\",\"test\":\"config_pins_snapshot_for_request_r8\",\"accepted_design\":\"request-scoped config snapshot round 8\",\"rejected_design\":\"live config reads at every call site round 8\",\"why\":\"keeps one request internally consistent while allowing later requests to see updates in round 8\",\"citation\":\"Source file: src/config/snapshot.ts.\",\"ignored\":\"settings sidebar grouping round 8\"}",
+          "tool_names": [
+            "session_lookup"
+          ],
+          "context_tool_call_count": 1,
+          "tokens": {
+            "messages": 3,
+            "assistant": 2,
+            "input": 5737,
+            "output": 135,
+            "total": 10019,
+            "reasoning": 51,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 1,
+            "maxInput": 4623
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c05_current_packet_5",
+          "topic_id": "current_packet_5",
+          "passed": true,
+          "required_hits": [
+            "CURR-0005",
+            "priya-current",
+            "src/current/work_packet_005.ts",
+            "isolate dry-run output from committed audit rows",
+            "current_packet_keeps_dry_run_out_of_audit"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0005\",\"owner\":\"priya-current\",\"patch_file\":\"src/current/work_packet_005.ts\",\"guardrail\":\"isolate dry-run output from committed audit rows\",\"expected_check\":\"current_packet_keeps_dry_run_out_of_audit\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 64,
+            "total": 4944,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c06_current_packet_6",
+          "topic_id": "current_packet_6",
+          "passed": true,
+          "required_hits": [
+            "CURR-0006",
+            "sol-current",
+            "src/current/work_packet_006.ts",
+            "compare normalized route keys before cache lookup",
+            "current_packet_normalizes_route_cache_key"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0006\",\"owner\":\"sol-current\",\"patch_file\":\"src/current/work_packet_006.ts\",\"guardrail\":\"compare normalized route keys before cache lookup\",\"expected_check\":\"current_packet_normalizes_route_cache_key\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 776,
+            "output": 59,
+            "total": 4942,
+            "reasoning": 11,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 776
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c07_current_packet_7",
+          "topic_id": "current_packet_7",
+          "passed": true,
+          "required_hits": [
+            "CURR-0007",
+            "maya-current",
+            "src/current/work_packet_007.ts",
+            "reject writes unless current_workspace_id matches envelope",
+            "current_packet_rejects_cross_workspace_write"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0007\",\"owner\":\"maya-current\",\"patch_file\":\"src/current/work_packet_007.ts\",\"guardrail\":\"reject writes unless current_workspace_id matches envelope\",\"expected_check\":\"current_packet_rejects_cross_workspace_write\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4880,
+            "output": 61,
+            "total": 4952,
+            "reasoning": 11,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4880
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c08_current_packet_8",
+          "topic_id": "current_packet_8",
+          "passed": true,
+          "required_hits": [
+            "CURR-0008",
+            "noah-current",
+            "src/current/work_packet_008.ts",
+            "cap retry window at the active deploy generation",
+            "current_packet_caps_retry_generation"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0008\",\"owner\":\"noah-current\",\"patch_file\":\"src/current/work_packet_008.ts\",\"guardrail\":\"cap retry window at the active deploy generation\",\"expected_check\":\"current_packet_caps_retry_generation\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 783,
+            "output": 57,
+            "total": 4936,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 783
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c09_current_packet_9",
+          "topic_id": "current_packet_9",
+          "passed": true,
+          "required_hits": [
+            "CURR-0009",
+            "lina-current",
+            "src/current/work_packet_009.ts",
+            "require local checksum before publishing the manifest",
+            "current_packet_verifies_manifest_checksum"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0009\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_009.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4880,
+            "output": 57,
+            "total": 4937,
+            "reasoning": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4880
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c10_current_packet_10",
+          "topic_id": "current_packet_10",
+          "passed": true,
+          "required_hits": [
+            "CURR-0010",
+            "omar-current",
+            "src/current/work_packet_010.ts",
+            "pin the request clock before evaluating freshness",
+            "current_packet_pins_request_clock"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0010\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_010.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 779,
+            "output": 58,
+            "total": 4943,
+            "reasoning": 10,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 779
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c11_current_packet_11",
+          "topic_id": "current_packet_11",
+          "passed": true,
+          "required_hits": [
+            "CURR-0011",
+            "priya-current",
+            "src/current/work_packet_011.ts",
+            "isolate dry-run output from committed audit rows",
+            "current_packet_keeps_dry_run_out_of_audit"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0011\",\"owner\":\"priya-current\",\"patch_file\":\"src/current/work_packet_011.ts\",\"guardrail\":\"isolate dry-run output from committed audit rows\",\"expected_check\":\"current_packet_keeps_dry_run_out_of_audit\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 64,
+            "total": 4944,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c12_current_packet_12",
+          "topic_id": "current_packet_12",
+          "passed": true,
+          "required_hits": [
+            "CURR-0012",
+            "sol-current",
+            "src/current/work_packet_012.ts",
+            "compare normalized route keys before cache lookup",
+            "current_packet_normalizes_route_cache_key"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0012\",\"owner\":\"sol-current\",\"patch_file\":\"src/current/work_packet_012.ts\",\"guardrail\":\"compare normalized route keys before cache lookup\",\"expected_check\":\"current_packet_normalizes_route_cache_key\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4872,
+            "output": 59,
+            "total": 4942,
+            "reasoning": 11,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4872
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c13_current_packet_13",
+          "topic_id": "current_packet_13",
+          "passed": true,
+          "required_hits": [
+            "CURR-0013",
+            "maya-current",
+            "src/current/work_packet_013.ts",
+            "reject writes unless current_workspace_id matches envelope",
+            "current_packet_rejects_cross_workspace_write"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0013\",\"owner\":\"maya-current\",\"patch_file\":\"src/current/work_packet_013.ts\",\"guardrail\":\"reject writes unless current_workspace_id matches envelope\",\"expected_check\":\"current_packet_rejects_cross_workspace_write\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 59,
+            "total": 4939,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c14_current_packet_14",
+          "topic_id": "current_packet_14",
+          "passed": true,
+          "required_hits": [
+            "CURR-0014",
+            "noah-current",
+            "src/current/work_packet_014.ts",
+            "cap retry window at the active deploy generation",
+            "current_packet_caps_retry_generation"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0014\",\"owner\":\"noah-current\",\"patch_file\":\"src/current/work_packet_014.ts\",\"guardrail\":\"cap retry window at the active deploy generation\",\"expected_check\":\"current_packet_caps_retry_generation\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 783,
+            "output": 57,
+            "total": 4936,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 783
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c15_current_packet_15",
+          "topic_id": "current_packet_15",
+          "passed": true,
+          "required_hits": [
+            "CURR-0015",
+            "lina-current",
+            "src/current/work_packet_015.ts",
+            "require local checksum before publishing the manifest",
+            "current_packet_verifies_manifest_checksum"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0015\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_015.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4880,
+            "output": 59,
+            "total": 4949,
+            "reasoning": 10,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4880
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c16_current_packet_16",
+          "topic_id": "current_packet_16",
+          "passed": true,
+          "required_hits": [
+            "CURR-0016",
+            "omar-current",
+            "src/current/work_packet_016.ts",
+            "pin the request clock before evaluating freshness",
+            "current_packet_pins_request_clock"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0016\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_016.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4875,
+            "output": 56,
+            "total": 4931,
+            "reasoning": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4875
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c17_current_packet_17",
+          "topic_id": "current_packet_17",
+          "passed": true,
+          "required_hits": [
+            "CURR-0017",
+            "priya-current",
+            "src/current/work_packet_017.ts",
+            "isolate dry-run output from committed audit rows",
+            "current_packet_keeps_dry_run_out_of_audit"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0017\",\"owner\":\"priya-current\",\"patch_file\":\"src/current/work_packet_017.ts\",\"guardrail\":\"isolate dry-run output from committed audit rows\",\"expected_check\":\"current_packet_keeps_dry_run_out_of_audit\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 64,
+            "total": 4944,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c18_current_packet_18",
+          "topic_id": "current_packet_18",
+          "passed": true,
+          "required_hits": [
+            "CURR-0018",
+            "sol-current",
+            "src/current/work_packet_018.ts",
+            "compare normalized route keys before cache lookup",
+            "current_packet_normalizes_route_cache_key"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0018\",\"owner\":\"sol-current\",\"patch_file\":\"src/current/work_packet_018.ts\",\"guardrail\":\"compare normalized route keys before cache lookup\",\"expected_check\":\"current_packet_normalizes_route_cache_key\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 776,
+            "output": 57,
+            "total": 4929,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 776
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c19_current_packet_19",
+          "topic_id": "current_packet_19",
+          "passed": true,
+          "required_hits": [
+            "CURR-0019",
+            "maya-current",
+            "src/current/work_packet_019.ts",
+            "reject writes unless current_workspace_id matches envelope",
+            "current_packet_rejects_cross_workspace_write"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0019\",\"owner\":\"maya-current\",\"patch_file\":\"src/current/work_packet_019.ts\",\"guardrail\":\"reject writes unless current_workspace_id matches envelope\",\"expected_check\":\"current_packet_rejects_cross_workspace_write\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4880,
+            "output": 59,
+            "total": 4939,
+            "reasoning": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4880
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c20_current_packet_20",
+          "topic_id": "current_packet_20",
+          "passed": true,
+          "required_hits": [
+            "CURR-0020",
+            "noah-current",
+            "src/current/work_packet_020.ts",
+            "cap retry window at the active deploy generation",
+            "current_packet_caps_retry_generation"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0020\",\"owner\":\"noah-current\",\"patch_file\":\"src/current/work_packet_020.ts\",\"guardrail\":\"cap retry window at the active deploy generation\",\"expected_check\":\"current_packet_caps_retry_generation\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 783,
+            "output": 59,
+            "total": 4949,
+            "reasoning": 11,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 783
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c21_current_packet_21",
+          "topic_id": "current_packet_21",
+          "passed": true,
+          "required_hits": [
+            "CURR-0021",
+            "lina-current",
+            "src/current/work_packet_021.ts",
+            "require local checksum before publishing the manifest",
+            "current_packet_verifies_manifest_checksum"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0021\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_021.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 59,
+            "total": 4950,
+            "reasoning": 11,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c22_current_packet_22",
+          "topic_id": "current_packet_22",
+          "passed": true,
+          "required_hits": [
+            "CURR-0022",
+            "omar-current",
+            "src/current/work_packet_022.ts",
+            "pin the request clock before evaluating freshness",
+            "current_packet_pins_request_clock"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0022\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_022.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 779,
+            "output": 58,
+            "total": 4943,
+            "reasoning": 10,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 779
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c23_current_packet_23",
+          "topic_id": "current_packet_23",
+          "passed": true,
+          "required_hits": [
+            "CURR-0023",
+            "priya-current",
+            "src/current/work_packet_023.ts",
+            "isolate dry-run output from committed audit rows",
+            "current_packet_keeps_dry_run_out_of_audit"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0023\",\"owner\":\"priya-current\",\"patch_file\":\"src/current/work_packet_023.ts\",\"guardrail\":\"isolate dry-run output from committed audit rows\",\"expected_check\":\"current_packet_keeps_dry_run_out_of_audit\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 64,
+            "total": 4944,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c24_current_packet_24",
+          "topic_id": "current_packet_24",
+          "passed": true,
+          "required_hits": [
+            "CURR-0024",
+            "sol-current",
+            "src/current/work_packet_024.ts",
+            "compare normalized route keys before cache lookup",
+            "current_packet_normalizes_route_cache_key"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0024\",\"owner\":\"sol-current\",\"patch_file\":\"src/current/work_packet_024.ts\",\"guardrail\":\"compare normalized route keys before cache lookup\",\"expected_check\":\"current_packet_normalizes_route_cache_key\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 776,
+            "output": 59,
+            "total": 4942,
+            "reasoning": 11,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 776
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c25_current_packet_25",
+          "topic_id": "current_packet_25",
+          "passed": true,
+          "required_hits": [
+            "CURR-0025",
+            "maya-current",
+            "src/current/work_packet_025.ts",
+            "reject writes unless current_workspace_id matches envelope",
+            "current_packet_rejects_cross_workspace_write"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0025\",\"owner\":\"maya-current\",\"patch_file\":\"src/current/work_packet_025.ts\",\"guardrail\":\"reject writes unless current_workspace_id matches envelope\",\"expected_check\":\"current_packet_rejects_cross_workspace_write\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 59,
+            "total": 4939,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c26_current_packet_26",
+          "topic_id": "current_packet_26",
+          "passed": true,
+          "required_hits": [
+            "CURR-0026",
+            "noah-current",
+            "src/current/work_packet_026.ts",
+            "cap retry window at the active deploy generation",
+            "current_packet_caps_retry_generation"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0026\",\"owner\":\"noah-current\",\"patch_file\":\"src/current/work_packet_026.ts\",\"guardrail\":\"cap retry window at the active deploy generation\",\"expected_check\":\"current_packet_caps_retry_generation\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 783,
+            "output": 57,
+            "total": 4936,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 783
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c27_current_packet_27",
+          "topic_id": "current_packet_27",
+          "passed": true,
+          "required_hits": [
+            "CURR-0027",
+            "lina-current",
+            "src/current/work_packet_027.ts",
+            "require local checksum before publishing the manifest",
+            "current_packet_verifies_manifest_checksum"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0027\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_027.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 59,
+            "total": 4949,
+            "reasoning": 10,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c28_current_packet_28",
+          "topic_id": "current_packet_28",
+          "passed": true,
+          "required_hits": [
+            "CURR-0028",
+            "omar-current",
+            "src/current/work_packet_028.ts",
+            "pin the request clock before evaluating freshness",
+            "current_packet_pins_request_clock"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0028\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_028.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 779,
+            "output": 58,
+            "total": 4943,
+            "reasoning": 10,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 779
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c29_current_packet_29",
+          "topic_id": "current_packet_29",
+          "passed": true,
+          "required_hits": [
+            "CURR-0029",
+            "priya-current",
+            "src/current/work_packet_029.ts",
+            "isolate dry-run output from committed audit rows",
+            "current_packet_keeps_dry_run_out_of_audit"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0029\",\"owner\":\"priya-current\",\"patch_file\":\"src/current/work_packet_029.ts\",\"guardrail\":\"isolate dry-run output from committed audit rows\",\"expected_check\":\"current_packet_keeps_dry_run_out_of_audit\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 64,
+            "total": 4944,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c30_current_packet_30",
+          "topic_id": "current_packet_30",
+          "passed": true,
+          "required_hits": [
+            "CURR-0030",
+            "sol-current",
+            "src/current/work_packet_030.ts",
+            "compare normalized route keys before cache lookup",
+            "current_packet_normalizes_route_cache_key"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0030\",\"owner\":\"sol-current\",\"patch_file\":\"src/current/work_packet_030.ts\",\"guardrail\":\"compare normalized route keys before cache lookup\",\"expected_check\":\"current_packet_normalizes_route_cache_key\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4872,
+            "output": 57,
+            "total": 4929,
+            "reasoning": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4872
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c31_current_packet_31",
+          "topic_id": "current_packet_31",
+          "passed": true,
+          "required_hits": [
+            "CURR-0031",
+            "maya-current",
+            "src/current/work_packet_031.ts",
+            "reject writes unless current_workspace_id matches envelope",
+            "current_packet_rejects_cross_workspace_write"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0031\",\"owner\":\"maya-current\",\"patch_file\":\"src/current/work_packet_031.ts\",\"guardrail\":\"reject writes unless current_workspace_id matches envelope\",\"expected_check\":\"current_packet_rejects_cross_workspace_write\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 59,
+            "total": 4939,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c32_current_packet_32",
+          "topic_id": "current_packet_32",
+          "passed": true,
+          "required_hits": [
+            "CURR-0032",
+            "noah-current",
+            "src/current/work_packet_032.ts",
+            "cap retry window at the active deploy generation",
+            "current_packet_caps_retry_generation"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0032\",\"owner\":\"noah-current\",\"patch_file\":\"src/current/work_packet_032.ts\",\"guardrail\":\"cap retry window at the active deploy generation\",\"expected_check\":\"current_packet_caps_retry_generation\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 4879,
+            "output": 59,
+            "total": 4949,
+            "reasoning": 11,
+            "cacheRead": 0,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 4879
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c33_current_packet_33",
+          "topic_id": "current_packet_33",
+          "passed": true,
+          "required_hits": [
+            "CURR-0033",
+            "lina-current",
+            "src/current/work_packet_033.ts",
+            "require local checksum before publishing the manifest",
+            "current_packet_verifies_manifest_checksum"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0033\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_033.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 59,
+            "total": 4949,
+            "reasoning": 10,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c34_current_packet_34",
+          "topic_id": "current_packet_34",
+          "passed": true,
+          "required_hits": [
+            "CURR-0034",
+            "omar-current",
+            "src/current/work_packet_034.ts",
+            "pin the request clock before evaluating freshness",
+            "current_packet_pins_request_clock"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0034\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_034.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 779,
+            "output": 56,
+            "total": 4931,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 779
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c35_current_packet_35",
+          "topic_id": "current_packet_35",
+          "passed": true,
+          "required_hits": [
+            "CURR-0035",
+            "priya-current",
+            "src/current/work_packet_035.ts",
+            "isolate dry-run output from committed audit rows",
+            "current_packet_keeps_dry_run_out_of_audit"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0035\",\"owner\":\"priya-current\",\"patch_file\":\"src/current/work_packet_035.ts\",\"guardrail\":\"isolate dry-run output from committed audit rows\",\"expected_check\":\"current_packet_keeps_dry_run_out_of_audit\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 64,
+            "total": 4944,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c36_current_packet_36",
+          "topic_id": "current_packet_36",
+          "passed": true,
+          "required_hits": [
+            "CURR-0036",
+            "sol-current",
+            "src/current/work_packet_036.ts",
+            "compare normalized route keys before cache lookup",
+            "current_packet_normalizes_route_cache_key"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0036\",\"owner\":\"sol-current\",\"patch_file\":\"src/current/work_packet_036.ts\",\"guardrail\":\"compare normalized route keys before cache lookup\",\"expected_check\":\"current_packet_normalizes_route_cache_key\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 776,
+            "output": 57,
+            "total": 4929,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 776
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c37_current_packet_37",
+          "topic_id": "current_packet_37",
+          "passed": true,
+          "required_hits": [
+            "CURR-0037",
+            "maya-current",
+            "src/current/work_packet_037.ts",
+            "reject writes unless current_workspace_id matches envelope",
+            "current_packet_rejects_cross_workspace_write"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0037\",\"owner\":\"maya-current\",\"patch_file\":\"src/current/work_packet_037.ts\",\"guardrail\":\"reject writes unless current_workspace_id matches envelope\",\"expected_check\":\"current_packet_rejects_cross_workspace_write\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 61,
+            "total": 4952,
+            "reasoning": 11,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c38_current_packet_38",
+          "topic_id": "current_packet_38",
+          "passed": true,
+          "required_hits": [
+            "CURR-0038",
+            "noah-current",
+            "src/current/work_packet_038.ts",
+            "cap retry window at the active deploy generation",
+            "current_packet_caps_retry_generation"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0038\",\"owner\":\"noah-current\",\"patch_file\":\"src/current/work_packet_038.ts\",\"guardrail\":\"cap retry window at the active deploy generation\",\"expected_check\":\"current_packet_caps_retry_generation\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 783,
+            "output": 57,
+            "total": 4936,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 783
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c39_current_packet_39",
+          "topic_id": "current_packet_39",
+          "passed": true,
+          "required_hits": [
+            "CURR-0039",
+            "lina-current",
+            "src/current/work_packet_039.ts",
+            "require local checksum before publishing the manifest",
+            "current_packet_verifies_manifest_checksum"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0039\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_039.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 57,
+            "total": 4937,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c40_current_packet_40",
+          "topic_id": "current_packet_40",
+          "passed": true,
+          "required_hits": [
+            "CURR-0040",
+            "omar-current",
+            "src/current/work_packet_040.ts",
+            "pin the request clock before evaluating freshness",
+            "current_packet_pins_request_clock"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0040\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_040.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 779,
+            "output": 56,
+            "total": 4931,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 779
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c41_current_packet_41",
+          "topic_id": "current_packet_41",
+          "passed": true,
+          "required_hits": [
+            "CURR-0041",
+            "priya-current",
+            "src/current/work_packet_041.ts",
+            "isolate dry-run output from committed audit rows",
+            "current_packet_keeps_dry_run_out_of_audit"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0041\",\"owner\":\"priya-current\",\"patch_file\":\"src/current/work_packet_041.ts\",\"guardrail\":\"isolate dry-run output from committed audit rows\",\"expected_check\":\"current_packet_keeps_dry_run_out_of_audit\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 64,
+            "total": 4944,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c42_current_packet_42",
+          "topic_id": "current_packet_42",
+          "passed": true,
+          "required_hits": [
+            "CURR-0042",
+            "sol-current",
+            "src/current/work_packet_042.ts",
+            "compare normalized route keys before cache lookup",
+            "current_packet_normalizes_route_cache_key"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0042\",\"owner\":\"sol-current\",\"patch_file\":\"src/current/work_packet_042.ts\",\"guardrail\":\"compare normalized route keys before cache lookup\",\"expected_check\":\"current_packet_normalizes_route_cache_key\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 776,
+            "output": 59,
+            "total": 4942,
+            "reasoning": 11,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 776
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c43_current_packet_43",
+          "topic_id": "current_packet_43",
+          "passed": true,
+          "required_hits": [
+            "CURR-0043",
+            "maya-current",
+            "src/current/work_packet_043.ts",
+            "reject writes unless current_workspace_id matches envelope",
+            "current_packet_rejects_cross_workspace_write"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0043\",\"owner\":\"maya-current\",\"patch_file\":\"src/current/work_packet_043.ts\",\"guardrail\":\"reject writes unless current_workspace_id matches envelope\",\"expected_check\":\"current_packet_rejects_cross_workspace_write\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 61,
+            "total": 4951,
+            "reasoning": 10,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c44_current_packet_44",
+          "topic_id": "current_packet_44",
+          "passed": true,
+          "required_hits": [
+            "CURR-0044",
+            "noah-current",
+            "src/current/work_packet_044.ts",
+            "cap retry window at the active deploy generation",
+            "current_packet_caps_retry_generation"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0044\",\"owner\":\"noah-current\",\"patch_file\":\"src/current/work_packet_044.ts\",\"guardrail\":\"cap retry window at the active deploy generation\",\"expected_check\":\"current_packet_caps_retry_generation\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 783,
+            "output": 57,
+            "total": 4936,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 783
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c45_current_packet_45",
+          "topic_id": "current_packet_45",
+          "passed": true,
+          "required_hits": [
+            "CURR-0045",
+            "lina-current",
+            "src/current/work_packet_045.ts",
+            "require local checksum before publishing the manifest",
+            "current_packet_verifies_manifest_checksum"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0045\",\"owner\":\"lina-current\",\"patch_file\":\"src/current/work_packet_045.ts\",\"guardrail\":\"require local checksum before publishing the manifest\",\"expected_check\":\"current_packet_verifies_manifest_checksum\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 57,
+            "total": 4937,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c46_current_packet_46",
+          "topic_id": "current_packet_46",
+          "passed": true,
+          "required_hits": [
+            "CURR-0046",
+            "omar-current",
+            "src/current/work_packet_046.ts",
+            "pin the request clock before evaluating freshness",
+            "current_packet_pins_request_clock"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0046\",\"owner\":\"omar-current\",\"patch_file\":\"src/current/work_packet_046.ts\",\"guardrail\":\"pin the request clock before evaluating freshness\",\"expected_check\":\"current_packet_pins_request_clock\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 779,
+            "output": 58,
+            "total": 4943,
+            "reasoning": 10,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 779
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c47_current_packet_47",
+          "topic_id": "current_packet_47",
+          "passed": true,
+          "required_hits": [
+            "CURR-0047",
+            "priya-current",
+            "src/current/work_packet_047.ts",
+            "isolate dry-run output from committed audit rows",
+            "current_packet_keeps_dry_run_out_of_audit"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0047\",\"owner\":\"priya-current\",\"patch_file\":\"src/current/work_packet_047.ts\",\"guardrail\":\"isolate dry-run output from committed audit rows\",\"expected_check\":\"current_packet_keeps_dry_run_out_of_audit\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 784,
+            "output": 64,
+            "total": 4944,
+            "reasoning": 0,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 784
+          }
+        },
+        {
+          "kind": "current",
+          "query_id": "c48_current_packet_48",
+          "topic_id": "current_packet_48",
+          "passed": true,
+          "required_hits": [
+            "CURR-0048",
+            "sol-current",
+            "src/current/work_packet_048.ts",
+            "compare normalized route keys before cache lookup",
+            "current_packet_normalizes_route_cache_key"
+          ],
+          "missing_required": [],
+          "forbidden_hits": [],
+          "output_preview": "{\"ticket\":\"CURR-0048\",\"owner\":\"sol-current\",\"patch_file\":\"src/current/work_packet_048.ts\",\"guardrail\":\"compare normalized route keys before cache lookup\",\"expected_check\":\"current_packet_normalizes_route_cache_key\",\"source\":\"current work packet\"}",
+          "tool_names": [],
+          "context_tool_call_count": 0,
+          "tokens": {
+            "messages": 2,
+            "assistant": 1,
+            "input": 776,
+            "output": 59,
+            "total": 4942,
+            "reasoning": 11,
+            "cacheRead": 4096,
+            "cacheWrite": 0,
+            "toolCalls": 0,
+            "maxInput": 776
+          }
+        }
+      ],
+      "memory_artifact_preview": "",
+      "duration_ms": 468291
+    }
+  ]
+}

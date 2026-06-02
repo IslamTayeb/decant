@@ -225,8 +225,8 @@ const scalingPairs = [
   },
   {
     label: "48 current turns",
-    rgb: "gpt55fast-mixed-t96-r4-c48-rgb",
-    decant: "gpt55fast-mixed-t96-r4-c48-decant",
+    rgb: "gpt55fast-mixed-t96-r4-c48-rgb-retry",
+    decant: "gpt55fast-mixed-t96-r4-c48-decant-retry",
   },
   {
     label: "96 current turns",
