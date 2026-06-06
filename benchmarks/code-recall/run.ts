@@ -50,6 +50,7 @@ type Options = {
   promptTimeoutMs: number;
   repeats: number;
   workers: number;
+  distractorScale: number;
   prepareOnly: boolean;
   analyzeRun?: string;
   combineRuns?: string[];
@@ -909,6 +910,7 @@ async function runFixtureCondition(
       includeTranscripts:
         condition === "rlm-transcript-search" ||
         condition === "rgb-editable-context",
+      distractorScale: options.distractorScale,
     });
     const opencodeRoot = resolveOpenCodeRoot(conditionDir);
     const env = await buildOpenCodeEnv({
@@ -929,6 +931,7 @@ async function runFixtureCondition(
             fixture,
             options.modelSlug,
             options.promptTimeoutMs,
+            options.distractorScale,
           )
         : undefined;
     const seeded = defaultCompaction
@@ -939,13 +942,20 @@ async function runFixtureCondition(
             worktree,
             fixture,
             options.promptTimeoutMs,
+            options.distractorScale,
           )
-        : staticSeededSessions(fixture);
+        : staticSeededSessions(fixture, options.distractorScale);
     if (
       condition === "decant-guided-rlm" ||
       condition === "decant-guided-rgb-editable"
     ) {
-      await writeHybridTranscriptCorpus(client, worktree, fixture, seeded);
+      await writeHybridTranscriptCorpus(
+        client,
+        worktree,
+        fixture,
+        seeded,
+        options.distractorScale,
+      );
     }
 
     let editorMessages: SessionMessage[] = [];
@@ -1118,6 +1128,7 @@ function parseOptions(): Options {
     valueArg(args, "--prompt-timeout-minutes") ?? "12",
   );
   const repeats = Number(valueArg(args, "--repeats") ?? "1");
+  const distractorScale = Number(valueArg(args, "--distractor-scale") ?? "1");
   const workers = Number(
     valueArg(args, "--workers") ??
       process.env.DECANT_E2E_WORKERS ??
@@ -1125,6 +1136,10 @@ function parseOptions(): Options {
   );
   const combineArg = valueArg(args, "--combine-runs");
   assert.ok(Number.isInteger(repeats) && repeats > 0);
+  assert.ok(
+    Number.isInteger(distractorScale) && distractorScale >= 1,
+    "--distractor-scale must be an integer >= 1",
+  );
   assert.ok(Number.isInteger(workers) && workers > 0);
   assert.ok(Number.isFinite(timeoutMinutes) && timeoutMinutes > 0);
   const selectedFixtures = fixtureArg
@@ -1150,6 +1165,7 @@ function parseOptions(): Options {
     promptTimeoutMs: timeoutMinutes * 60_000,
     repeats,
     workers,
+    distractorScale,
     prepareOnly: hasArg(args, "--prepare-only"),
     analyzeRun: analyzeRun ? path.resolve(analyzeRun) : undefined,
     combineRuns: combineArg
@@ -1168,14 +1184,14 @@ function defaultWorkerCount() {
 async function prepareFixtureRepo(
   worktree: string,
   fixture: CodeFixture,
-  options: { includeTranscripts: boolean },
+  options: { includeTranscripts: boolean; distractorScale: number },
 ) {
   await fs.rm(worktree, { recursive: true, force: true });
   for (const item of [...fixture.sourceFiles, ...fixture.publicTestFiles]) {
     await writeWorktreeFile(worktree, item);
   }
   if (options.includeTranscripts)
-    await writeTranscriptCorpus(worktree, fixture);
+    await writeTranscriptCorpus(worktree, fixture, options.distractorScale);
   await execFileAsync("git", ["init"], { cwd: worktree });
   await execFileAsync("git", ["add", "."], { cwd: worktree });
   await execFileAsync(
@@ -1204,8 +1220,12 @@ async function writeWorktreeFile(worktree: string, item: CodeFile) {
   await fs.writeFile(filePath, `${item.lines.join("\n")}\n`);
 }
 
-async function writeTranscriptCorpus(worktree: string, fixture: CodeFixture) {
-  const sessions = allStaticSessions(fixture);
+async function writeTranscriptCorpus(
+  worktree: string,
+  fixture: CodeFixture,
+  distractorScale: number,
+) {
+  const sessions = allStaticSessions(fixture, distractorScale);
   const dir = path.join(worktree, "recall", "transcripts");
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(
@@ -1238,6 +1258,7 @@ async function writeHybridTranscriptCorpus(
   worktree: string,
   fixture: CodeFixture,
   seeded: SeededSessions,
+  distractorScale: number,
 ) {
   const dir = path.join(worktree, "recall", "transcripts");
   await fs.mkdir(dir, { recursive: true });
@@ -1252,6 +1273,10 @@ async function writeHybridTranscriptCorpus(
       ? [{ source: fixture.relevant, role: "relevant" }]
       : []),
     ...fixture.distractors.map((source) => ({ source, role: "distractor" })),
+    ...generatedDecoys(fixture, distractorScale).map((source) => ({
+      source,
+      role: "decoy",
+    })),
   ];
   for (const item of seeded.sessions) {
     const match = sourceSessions.find(
@@ -1280,16 +1305,6 @@ async function writeHybridTranscriptCorpus(
         messages: match.source.messages,
       }),
     );
-  }
-  for (const session of generatedDecoys(fixture)) {
-    const fileName = `${session.sessionID}.md`;
-    entries.push({
-      session_id: session.sessionID,
-      title: session.title,
-      file: fileName,
-      role: "decoy",
-    });
-    await fs.writeFile(path.join(dir, fileName), transcriptMarkdown(session));
   }
   await fs.writeFile(
     path.join(worktree, "recall", "manifest.json"),
@@ -1340,16 +1355,19 @@ function hybridTranscriptMarkdown(input: {
   ].join("\n");
 }
 
-function allStaticSessions(fixture: CodeFixture) {
+function allStaticSessions(fixture: CodeFixture, distractorScale: number) {
   return [
     ...(fixture.relevant ? [fixture.relevant] : []),
     ...fixture.distractors,
-    ...generatedDecoys(fixture),
+    ...generatedDecoys(fixture, distractorScale),
   ];
 }
 
-function generatedDecoys(fixture: CodeFixture): HistoricalSession[] {
-  return Array.from({ length: 4 }, (_, index) => ({
+function generatedDecoys(
+  fixture: CodeFixture,
+  distractorScale: number,
+): HistoricalSession[] {
+  return Array.from({ length: 4 * distractorScale }, (_, index) => ({
     sessionID: `${fixture.id}_decoy_${index + 1}`.replaceAll("-", "_"),
     title: `${fixture.title} decoy ${index + 1}`,
     messages: [
@@ -1497,6 +1515,7 @@ async function seedHistoricalSessions(
   directory: string,
   fixture: CodeFixture,
   timeoutMs: number,
+  distractorScale: number,
 ): Promise<SeededSessions> {
   const sessions: SeededSessions["sessions"] = [];
   let relevantSessionID: string | undefined;
@@ -1544,10 +1563,30 @@ async function seedHistoricalSessions(
       timeoutMs,
     );
   }
+  for (const decoy of generatedDecoys(fixture, distractorScale)) {
+    const sessionID = await createSession(client, directory, decoy.title);
+    sessions.push({
+      id: sessionID,
+      title: decoy.title,
+      role: "decoy",
+    });
+    await prompt(
+      client,
+      directory,
+      sessionID,
+      transcriptMarkdown(decoy),
+      seedSystemPrompt(),
+      {},
+      timeoutMs,
+    );
+  }
   return { relevantSessionID, relevantMessageIDs, sessions };
 }
 
-function staticSeededSessions(fixture: CodeFixture): SeededSessions {
+function staticSeededSessions(
+  fixture: CodeFixture,
+  distractorScale: number,
+): SeededSessions {
   return {
     relevantSessionID: fixture.relevant?.sessionID,
     relevantMessageIDs:
@@ -1569,6 +1608,11 @@ function staticSeededSessions(fixture: CodeFixture): SeededSessions {
         title: item.title,
         role: "distractor" as const,
       })),
+      ...generatedDecoys(fixture, distractorScale).map((item) => ({
+        id: item.sessionID,
+        title: item.title,
+        role: "decoy" as const,
+      })),
     ],
   };
 }
@@ -1579,6 +1623,7 @@ async function seedDefaultCompactionSession(
   fixture: CodeFixture,
   modelSlug: string,
   timeoutMs: number,
+  distractorScale: number,
 ): Promise<{
   sessionID: string;
   seeded: SeededSessions;
@@ -1593,7 +1638,7 @@ async function seedDefaultCompactionSession(
     client,
     directory,
     sessionID,
-    defaultCompactionMemoryPrompt(fixture),
+    defaultCompactionMemoryPrompt(fixture, distractorScale),
     defaultCompactionSeedSystemPrompt(),
     {},
     timeoutMs,
@@ -1621,7 +1666,7 @@ async function seedDefaultCompactionSession(
   assert.ok(summary, "default-compaction did not create a compaction summary");
   return {
     sessionID,
-    seeded: staticSeededSessions(fixture),
+    seeded: staticSeededSessions(fixture, distractorScale),
     compactedMessages,
   };
 }
@@ -1630,13 +1675,16 @@ function defaultCompactionSeedSystemPrompt() {
   return "You are in a normal OpenCode coding session. Do not call tools or edit files. Reply concisely.";
 }
 
-function defaultCompactionMemoryPrompt(fixture: CodeFixture) {
+function defaultCompactionMemoryPrompt(
+  fixture: CodeFixture,
+  distractorScale: number,
+) {
   return [
     "I am pasting old synthetic coding-session logs into this normal session.",
     "Later I may ask for a code patch. If this session is compacted, preserve implementation decisions, corrections, rejected stale details, and exact session_id/message IDs that could affect later code changes.",
     "Some logs are decoys. Current repository files and tests should still override stale prior context.",
     "",
-    allStaticSessions(fixture)
+    allStaticSessions(fixture, distractorScale)
       .map((session) => transcriptMarkdown(session))
       .join("\n---\n"),
   ].join("\n");
@@ -2896,6 +2944,7 @@ async function writeSummary(
     `- Fixtures: ${options.fixtures.join(", ")}`,
     `- Model: ${options.modelSlug}`,
     `- Repeats: ${options.repeats}`,
+    `- Distractor scale: ${options.distractorScale}`,
     "",
     "| Fixture | Condition | Repeat | Pass | Stats | Error |",
     "|---|---|---:|---:|---|---|",

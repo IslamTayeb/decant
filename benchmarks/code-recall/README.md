@@ -19,6 +19,7 @@ bun run benchmark:code-recall -- --conditions default-compaction,rlm-transcript-
 bun run benchmark:code-recall -- --combine-runs benchmarks/code-recall/runs/run-a,benchmarks/code-recall/runs/run-b --out benchmarks/code-recall/runs/combined
 bun run benchmark:code-recall -- --model "<provider>/<model>" --fixtures recall-helpful-schema --conditions code-only --repeats 1
 bun run benchmark:code-recall -- --repeats 3 --out benchmarks/code-recall/runs/repeats
+bun run benchmark:code-recall -- --distractor-scale 3 --fixtures recall-helpful-schema --conditions default-compaction,rgb-editable-context,decant-only
 bun run benchmark:code-recall -- --prompt-timeout-minutes 12
 bun run benchmark:code-recall -- --fixtures recall-unnecessary-slug --conditions code-only --workers 4
 bun run benchmark:code-recall -- --analyze-run benchmarks/code-recall/runs/<run>

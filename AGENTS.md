@@ -140,7 +140,7 @@ Three manual/scripted tests should broadly pass before plugin code is placed und
 
 ## Git Workflow
 
-- Commit only when the project is in a good state: typecheck passes, tests pass, and no known broken state remains.
+- If asked to commit, commit only when the project is in a good state: typecheck passes, tests pass, and no known broken state remains.
 - Commit messages should be concise, with a body explaining what changed and why when useful.
 - Do not amend or force-push unless explicitly asked.
 - If the worktree is dirty, distinguish task changes from unrelated local/user changes. Do not revert unrelated changes without explicit instruction.

@@ -23,6 +23,7 @@ const execFileAsync = promisify(execFile);
 const repoRoot = path.resolve(process.cwd());
 
 type ConditionID =
+  | "default-compaction"
   | "rlm-transcript-search"
   | "rgb-editable-context"
   | "subagent-rlm-transcript-search"
@@ -42,6 +43,7 @@ type Options = {
   modelSlug: string;
   childModelSlug?: string;
   promptTimeoutMs: number;
+  distractorScale: number;
   prepareOnly: boolean;
   analyzeRun?: string;
 };
@@ -190,6 +192,7 @@ const defaultOutDir = path.join(
 );
 
 const defaultConditions: ConditionID[] = [
+  "default-compaction",
   "rlm-transcript-search",
   "rgb-editable-context",
   "subagent-rlm-transcript-search",
@@ -713,6 +716,7 @@ async function runFixtureCondition(
   try {
     await prepareFixtureRepo(worktree, fixture, {
       includeTranscripts: usesStaticTranscripts(condition),
+      distractorScale: options.distractorScale,
     });
     const opencodeRoot = resolveOpenCodeRoot(conditionDir);
     const env = await buildOpenCodeEnv({
@@ -728,16 +732,36 @@ async function runFixtureCondition(
     if (options.childModelSlug)
       await pickModel(client, worktree, options.childModelSlug);
 
-    const seeded = usesDecant(condition)
-      ? await seedHistoricalSessions(
-          client,
-          worktree,
-          fixture,
-          options.promptTimeoutMs,
-        )
-      : staticSeededSessions(fixture);
+    const defaultCompaction =
+      condition === "default-compaction"
+        ? await seedDefaultCompactionSession(
+            client,
+            worktree,
+            fixture,
+            options.modelSlug,
+            options.promptTimeoutMs,
+            options.distractorScale,
+          )
+        : undefined;
+    const seeded = defaultCompaction
+      ? defaultCompaction.seeded
+      : usesDecant(condition)
+        ? await seedHistoricalSessions(
+            client,
+            worktree,
+            fixture,
+            options.promptTimeoutMs,
+            options.distractorScale,
+          )
+        : staticSeededSessions(fixture, options.distractorScale);
     if (usesHybrid(condition)) {
-      await writeHybridTranscriptCorpus(client, worktree, fixture, seeded);
+      await writeHybridTranscriptCorpus(
+        client,
+        worktree,
+        fixture,
+        seeded,
+        options.distractorScale,
+      );
     }
     if (
       condition === "decant-blame-lookup" &&
@@ -796,11 +820,9 @@ async function runFixtureCondition(
       await archiveRawTranscripts(worktree, conditionDir);
     }
 
-    const sessionID = await createSession(
-      client,
-      worktree,
-      `${fixture.id} ${condition}`,
-    );
+    const sessionID =
+      defaultCompaction?.sessionID ??
+      (await createSession(client, worktree, `${fixture.id} ${condition}`));
     const promptInput = buildPromptForCondition(
       fixture,
       condition,
@@ -817,6 +839,12 @@ async function runFixtureCondition(
       options.promptTimeoutMs,
     );
     const messages = await listSessionMessages(client, worktree, sessionID);
+    if (defaultCompaction) {
+      await fs.writeFile(
+        path.join(conditionDir, "compacted-session-messages.json"),
+        `${JSON.stringify(messages, null, 2)}\n`,
+      );
+    }
     const childMessages = await collectChildMessages(
       client,
       worktree,
@@ -924,7 +952,12 @@ function parseOptions(): Options {
   const timeoutMinutes = Number(
     valueArg(args, "--prompt-timeout-minutes") ?? "12",
   );
+  const distractorScale = Number(valueArg(args, "--distractor-scale") ?? "1");
   assert.ok(Number.isFinite(timeoutMinutes) && timeoutMinutes > 0);
+  assert.ok(
+    Number.isInteger(distractorScale) && distractorScale >= 1,
+    "--distractor-scale must be an integer >= 1",
+  );
   const selectedFixtures = fixtureArg
     ? splitList(fixtureArg)
     : fixtures.map((fixture) => fixture.id);
@@ -947,6 +980,7 @@ function parseOptions(): Options {
     modelSlug: requiredModelSlug(),
     childModelSlug: optionalModelSlug(CHILD_MODEL_ENV_VAR),
     promptTimeoutMs: timeoutMinutes * 60_000,
+    distractorScale,
     prepareOnly: hasArg(args, "--prepare-only"),
     analyzeRun: analyzeRun ? path.resolve(analyzeRun) : undefined,
   };
@@ -955,7 +989,7 @@ function parseOptions(): Options {
 async function prepareFixtureRepo(
   worktree: string,
   fixture: Fixture,
-  options: { includeTranscripts: boolean },
+  options: { includeTranscripts: boolean; distractorScale: number },
 ) {
   await fs.rm(worktree, { recursive: true, force: true });
   for (const file of fixture.sourceFiles) {
@@ -968,7 +1002,7 @@ async function prepareFixtureRepo(
     );
   }
   if (options.includeTranscripts)
-    await writeTranscriptCorpus(worktree, fixture);
+    await writeTranscriptCorpus(worktree, fixture, options.distractorScale);
   await execFileAsync("git", ["init"], { cwd: worktree });
   await execFileAsync("git", ["add", "."], { cwd: worktree });
   await execFileAsync(
@@ -986,13 +1020,17 @@ async function prepareFixtureRepo(
   );
 }
 
-async function writeTranscriptCorpus(worktree: string, fixture: Fixture) {
+async function writeTranscriptCorpus(
+  worktree: string,
+  fixture: Fixture,
+  distractorScale: number,
+) {
   const dir = path.join(worktree, "recall", "transcripts");
   await fs.mkdir(dir, { recursive: true });
   const sessions = [
     fixture.relevant,
     ...fixture.distractors,
-    ...generatedDistractors(fixture),
+    ...generatedDistractors(fixture, distractorScale),
   ];
   await fs.writeFile(
     path.join(worktree, "recall", "manifest.json"),
@@ -1023,6 +1061,7 @@ async function writeHybridTranscriptCorpus(
   worktree: string,
   fixture: Fixture,
   seeded: SeededSessions,
+  distractorScale: number,
 ) {
   const dir = path.join(worktree, "recall", "transcripts");
   await fs.mkdir(dir, { recursive: true });
@@ -1036,6 +1075,10 @@ async function writeHybridTranscriptCorpus(
   const seededSources = [
     { source: fixture.relevant, role: "relevant" },
     ...fixture.distractors.map((source) => ({ source, role: "distractor" })),
+    ...generatedDistractors(fixture, distractorScale).map((source) => ({
+      source,
+      role: "distractor",
+    })),
   ];
   for (const item of seeded.sessions) {
     const match = seededSources.find(
@@ -1064,17 +1107,6 @@ async function writeHybridTranscriptCorpus(
         messages: match.source.messages,
       }),
     );
-  }
-
-  for (const session of generatedDistractors(fixture)) {
-    const file = `${session.sessionID}.md`;
-    entries.push({
-      session_id: session.sessionID,
-      title: session.title,
-      file,
-      role: "decoy",
-    });
-    await fs.writeFile(path.join(dir, file), transcriptMarkdown(session));
   }
 
   await fs.writeFile(
@@ -1202,8 +1234,8 @@ function transcriptMarkdown(session: {
   ].join("\n");
 }
 
-function generatedDistractors(fixture: Fixture) {
-  return Array.from({ length: 8 }, (_, index) => ({
+function generatedDistractors(fixture: Fixture, distractorScale: number) {
+  return Array.from({ length: 8 * distractorScale }, (_, index) => ({
     sessionID: `${fixture.id}_decoy_${index + 1}`.replaceAll("-", "_"),
     title: `${fixture.title} decoy ${index + 1}`,
     messages: [
@@ -1457,6 +1489,7 @@ async function seedHistoricalSessions(
   directory: string,
   fixture: Fixture,
   timeoutMs: number,
+  distractorScale: number,
 ): Promise<SeededSessions> {
   const relevantSessionID = await createSession(
     client,
@@ -1492,6 +1525,23 @@ async function seedHistoricalSessions(
       timeoutMs,
     );
   }
+  for (const decoy of generatedDistractors(fixture, distractorScale)) {
+    const sessionID = await createSession(client, directory, decoy.title);
+    sessions.push({
+      id: sessionID,
+      title: decoy.title,
+      role: "distractor",
+    });
+    await prompt(
+      client,
+      directory,
+      sessionID,
+      transcriptMarkdown(decoy),
+      seedSystemPrompt(),
+      {},
+      timeoutMs,
+    );
+  }
   const messages = await listSessionMessages(
     client,
     directory,
@@ -1506,7 +1556,58 @@ async function seedHistoricalSessions(
   };
 }
 
-function staticSeededSessions(fixture: Fixture): SeededSessions {
+async function seedDefaultCompactionSession(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  fixture: Fixture,
+  modelSlug: string,
+  timeoutMs: number,
+  distractorScale: number,
+): Promise<{ sessionID: string; seeded: SeededSessions }> {
+  const sessionID = await createSession(
+    client,
+    directory,
+    `${fixture.id} default-compaction`,
+  );
+  await prompt(
+    client,
+    directory,
+    sessionID,
+    defaultCompactionMemoryPrompt(fixture, distractorScale),
+    defaultCompactionSeedSystemPrompt(),
+    {},
+    timeoutMs,
+  );
+  for (const text of defaultCompactionTailPrompts(fixture)) {
+    await prompt(
+      client,
+      directory,
+      sessionID,
+      text,
+      defaultCompactionSeedSystemPrompt(),
+      {},
+      timeoutMs,
+    );
+  }
+  await summarizeSession(client, directory, sessionID, modelSlug, timeoutMs);
+  const compacted = await listSessionMessages(client, directory, sessionID);
+  const summary = compacted.find(
+    (message) =>
+      (message.info?.role ?? message.role) === "assistant" &&
+      message.info?.summary === true,
+  );
+  assert.ok(summary, "default-compaction did not create a compaction summary");
+  assert.ok(
+    messageText(summary).trim().length > 0,
+    "default-compaction created an empty compaction summary",
+  );
+  return { sessionID, seeded: staticSeededSessions(fixture, distractorScale) };
+}
+
+function staticSeededSessions(
+  fixture: Fixture,
+  distractorScale: number,
+): SeededSessions {
   return {
     relevantMessageIDs: fixture.relevant.messages
       .filter((message) => message.supportsAnswer)
@@ -1522,12 +1623,81 @@ function staticSeededSessions(fixture: Fixture): SeededSessions {
         title: item.title,
         role: "distractor" as const,
       })),
+      ...generatedDistractors(fixture, distractorScale).map((item) => ({
+        id: item.sessionID,
+        title: item.title,
+        role: "distractor" as const,
+      })),
     ],
   };
 }
 
 function seedSystemPrompt() {
   return "Preserve this prior coding-session record for a provenance benchmark. Do not edit files or call tools. Acknowledge concisely while preserving the important rationale.";
+}
+
+function defaultCompactionSeedSystemPrompt() {
+  return "You are in a normal OpenCode session. Do not call tools or edit files. Reply concisely.";
+}
+
+function defaultCompactionMemoryPrompt(
+  fixture: Fixture,
+  distractorScale: number,
+) {
+  return [
+    "I am pasting old synthetic coding-session logs into this normal session.",
+    "Later I may ask why a code line exists. If this session is compacted, preserve exact session_id and message IDs when they explain code intent.",
+    "Some logs are decoys and should not be treated as rationale.",
+    "",
+    defaultCompactionTranscriptBundle(fixture, distractorScale),
+  ].join("\n");
+}
+
+function defaultCompactionTranscriptBundle(
+  fixture: Fixture,
+  distractorScale: number,
+) {
+  return [
+    fixture.relevant,
+    ...fixture.distractors,
+    ...generatedDistractors(fixture, distractorScale),
+  ]
+    .map((session) => transcriptMarkdown(session))
+    .join("\n---\n");
+}
+
+function defaultCompactionTailPrompts(fixture: Fixture) {
+  return [
+    `Unrelated later thread for ${fixture.id}: remember that demo prose should stay short. Acknowledge only.`,
+    `Another unrelated later thread for ${fixture.id}: no code changes, just acknowledge that the UI copy can be reviewed later.`,
+  ];
+}
+
+async function summarizeSession(
+  client: ReturnType<typeof createOpencodeClient>,
+  directory: string,
+  sessionID: string,
+  modelSlug: string,
+  timeoutMs: number,
+) {
+  const model = parseModelSlug(modelSlug);
+  const raw = (await withTimeout(
+    client.session.summarize({
+      sessionID,
+      directory,
+      providerID: model.providerID,
+      modelID: model.modelID,
+      auto: false,
+    }),
+    timeoutMs,
+    `compaction timed out in ${sessionID}`,
+  )) as { data?: unknown; error?: unknown };
+  const dataError =
+    raw.data && typeof raw.data === "object"
+      ? (raw.data as { error?: unknown }).error
+      : undefined;
+  if (raw.error || dataError)
+    throw new Error(JSON.stringify(raw.error ?? dataError));
 }
 
 async function writeBlameCommitMap(
@@ -1581,6 +1751,19 @@ function buildPromptForCondition(
   const distractorTitles = fixture.distractors
     .map((item) => item.title)
     .join(", ");
+  if (condition === "default-compaction") {
+    return {
+      system:
+        "Answer with compact JSON only. Use only the current compacted conversation context. Do not call tools, read files, or invent missing provenance.",
+      tools: {},
+      text: [
+        "The earlier old-session logs in this conversation have been passed through normal OpenCode compaction.",
+        `Question: ${fixture.question}`,
+        `Known decoy topics included: ${distractorTitles}`,
+        answerContract,
+      ].join("\n"),
+    };
+  }
   if (condition === "rlm-transcript-search") {
     return {
       system:
@@ -2059,7 +2242,9 @@ function evaluateToolPath(
     "blame_lookup",
   ];
 
-  if (condition === "rlm-transcript-search") {
+  if (condition === "default-compaction") {
+    rejectTools(["task", ...contextTools, ...searchTools]);
+  } else if (condition === "rlm-transcript-search") {
     requireSearchEvidence();
     rejectTools(["task", ...contextTools]);
   } else if (condition === "rgb-editable-context") {
@@ -2547,6 +2732,7 @@ async function writeSummary(
     `- Child model: ${options.childModelSlug ?? "inherits parent"}`,
     `- Fixtures: ${options.fixtures.join(", ")}`,
     `- Conditions: ${options.conditions.join(", ")}`,
+    `- Distractor scale: ${options.distractorScale}`,
     "",
     "| Fixture | Condition | Pass | Stats | Error |",
     "|---|---|---:|---|---|",

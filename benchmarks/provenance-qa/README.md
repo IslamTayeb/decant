@@ -27,15 +27,19 @@ bun run benchmark:provenance-qa -- --out benchmarks/provenance-qa/runs/manual
 export DECANT_E2E_MODEL="<provider>/<model>"
 bun run benchmark:provenance-blog -- --prepare-only
 bun run benchmark:provenance-blog -- --conditions rlm-transcript-search,decant-map-zoom --fixtures auth-queue-rationale
+bun run benchmark:provenance-blog -- --distractor-scale 3 --conditions default-compaction,rgb-editable-context,decant-map-zoom
 DECANT_E2E_CHILD_MODEL="<provider>/<child-model>" bun run benchmark:provenance-blog -- --conditions subagent-rlm-transcript-search,subagent-map-zoom
 ```
 
 Blog fixtures cover basic rationale lookup, correction chains, false provenance, related-work reuse, sub-agent synthesis, and a `/blame`-style line-to-rationale task. The `/blame` condition only runs for fixtures with an explicit blame target.
 
+Use `--distractor-scale N` to multiply generated decoy sessions across transcript, default-compaction, and Decant-seeded conditions. This is useful for testing whether Decant's routing advantage grows with larger stale/irrelevant prior-chat volume.
+
 ## Conditions
 
 - `full-transcript`: the answer prompt receives the whole synthetic prior transcript bundle. This is the expensive upper-bound baseline.
 - `keyword-snippets`: the answer prompt receives naive keyword snippets with distractors. This is the cheap retrieval baseline.
+- `default-compaction`: old transcript logs are pasted into a normal OpenCode session, two unrelated turns push them out of the recent tail, normal OpenCode compaction is forced, then the answer turn uses no tools and relies only on the compacted session context.
 - `rlm-transcript-search`: prior transcripts are stored on disk under `recall/transcripts/`; the answering agent uses RLM-style transcript search with `grep`/`read` and optional read-only `bash`.
 - `rgb-editable-context`: prior transcripts are stored on disk first. The agent uses read/grep/bash over that raw context, writes `recall/rgb-context.md`, then a fresh answer turn receives only that rewritten evidence file.
 - `subagent-rlm-transcript-search`: the parent delegates to a sub-agent, and the child uses RLM-style transcript search over transcript files.
