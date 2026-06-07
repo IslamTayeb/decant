@@ -1,101 +1,51 @@
 # decant
 
-decant is an OpenCode plugin prototype for making an agent's context easier to see, shrink, and revisit.
+OpenCode plugin prototype for agent context maps.
 
-The simple idea: turn a long chat into a small **context map** of topics. Active work can stay full. Old useful work can become a summary. Noise can be hidden. If the agent needs detail later, it can zoom back into the right topic instead of rereading the whole session.
+decant turns a long agent chat into topics that can be shown at different fidelities: full text, summary, compressed, placeholder, or hidden. The point is to keep current work readable while old work stays recoverable.
 
-## What Exists
+It also experiments with provenance: `/blame <file>:<line>` tries to route from code back to the old agent session/message that explains why the line exists.
 
-- A server plugin that builds sideband context maps from normal OpenCode conversations.
-- A TUI plugin with a sidebar, `/context`, and `/blame`.
-- Topic fidelity controls: `Full`, `Summary`, `Compressed`, `Placeholder`, and `Hidden`.
-- Message-level controls: hide a message, force it full, or force it summarized.
-- Agent tools for context inspection and historical lookup: `view_context`, `set_fidelity`, `session_lookup`, `session_detail`, `message_detail`, and `blame_lookup`.
-- Sandboxed validation scripts and benchmark harnesses for testing the idea without touching normal OpenCode state.
+## What's Here
 
-## Why It Matters
+- `src/server-plugin.ts`: server plugin, context tools, storage, blame lookup.
+- `src/tui-plugin.tsx`: TUI sidebar and commands.
+- `test/`: fast unit/regression tests.
+- `tools/`: sandbox setup, validation, fixture, and artifact scripts.
+- `benchmarks/`: benchmark harnesses and per-benchmark docs.
+- `artifacts/benchmark-runs/`: curated benchmark evidence.
+- `fixtures/`: small demo/validation data.
 
-Long-running agent sessions accumulate stale instructions, abandoned attempts, unrelated work, and old tool output. Default compaction helps fit the window, but it does not give the user or agent much control over *which* parts should stay visible.
-
-decant treats context like a map:
-
-- keep the current task in detail.
-- compress finished work.
-- keep only placeholders for distant topics.
-- hide dead ends.
-- recover old rationale through map-guided zoom or git blame.
-
-## What We Have Tested
-
-- Annotation reliability: assistant turns can produce usable topic metadata without changing the visible conversation.
-- Map navigation: models can choose the right placeholder topic and ask for more detail when needed.
-- Sub-agent lookup: a child agent can inspect a prior session map and bring back focused evidence.
-- Context canaries: decant can remove planted stale context from visible compaction summaries.
-- Provenance QA: decant can route an agent to prior rationale through low-fidelity maps plus selective message zoom.
-- SWE-bench context stress and code-recall benchmarks: current evidence is useful for context hygiene and provenance routing, not a claim of general solve-rate improvement.
-
-Curated benchmark evidence lives in `artifacts/benchmark-runs/`. Raw local runs stay ignored under `benchmarks/*/runs/`.
-
-## Try The Demo
+## Install
 
 ```sh
 npm install
+```
+
+## Fast Dev Checks
+
+```sh
+npm run typecheck
+npm test
+npm run validate:blame-tui
+```
+
+## Disposable Demo
+
+```sh
 npm run setup:test-env
 ```
 
-The setup command prints a launch script for a disposable OpenCode test repo. Run that script, then try:
+That prints a launch script for a disposable OpenCode test repo. Run the script, then try:
 
 ```text
 /context
 /blame src/auth/rate_limiter.ts:42
 ```
 
-## Use In A Real Project
+## Model-Backed Validation
 
-The plugin is not packaged yet. For local testing with a local OpenCode install, link both plugin entrypoints into the target project:
-
-```sh
-cd /path/to/target-project
-mkdir -p .opencode/plugins
-ln -s /path/to/decant/src/server-plugin.ts .opencode/plugins/context-map.ts
-ln -s /path/to/decant/src/tui-plugin.tsx .opencode/plugins/context-map-tui.tsx
-```
-
-OpenCode auto-loads server plugins from `.opencode/plugins`. To load the TUI plugin too, add `.opencode/tui.json`:
-
-```json
-{
-  "plugin": ["./plugins/context-map-tui.tsx"]
-}
-```
-
-Start OpenCode from that target project. The plugin adds:
-
-- Sidebar context preview.
-- `/context` for topic and message fidelity controls.
-- `/blame <file>:<line>` for git-blame-linked historical context.
-- Agent tools: `view_context`, `set_fidelity`, `session_lookup`, `session_detail`, `message_detail`, and `blame_lookup`.
-
-## Development
-
-Install dependencies once:
-
-```sh
-npm install
-```
-
-Fast checks that do not require a live model:
-
-```sh
-npm run typecheck
-npm test
-npm run validate:blame-tui
-npm run validate:blame-tui-live
-npm run setup:test-env
-npm run artifacts:export
-```
-
-Model-backed validations require an OpenCode-accessible model:
+Use a GPT-family model for live validation and public evidence runs.
 
 ```sh
 export DECANT_E2E_MODEL="<provider>/<model>"
@@ -104,25 +54,36 @@ npm run validate:long-session
 npm run evaluate:compaction
 ```
 
-Benchmarks also require `DECANT_E2E_MODEL`:
+## Manual Plugin Load
+
+The plugin is not packaged. After local checks pass, link the entrypoints into a target project:
 
 ```sh
-export DECANT_E2E_MODEL="<provider>/<model>"
-npm run benchmark:context-canaries
-npm run benchmark:code-recall
-npm run benchmark:provenance-qa
-npm run benchmark:swebench-context
+cd /path/to/target-project
+mkdir -p .opencode/plugins
+ln -s /path/to/decant/src/server-plugin.ts .opencode/plugins/context-map.ts
+ln -s /path/to/decant/src/tui-plugin.tsx .opencode/plugins/context-map-tui.tsx
 ```
 
-`benchmark:provenance-blog` can also use `DECANT_E2E_CHILD_MODEL` for child-agent runs. Raw benchmark outputs stay ignored under `benchmarks/*/runs/`; export the curated public allowlist with `npm run artifacts:export`.
+Add `.opencode/tui.json` if you want the TUI plugin:
 
-## Repo Shape
+```json
+{
+  "plugin": ["./plugins/context-map-tui.tsx"]
+}
+```
 
-- `src/`: plugin code.
-- `test/`: fast unit/regression tests.
-- `tools/`: validation, fixture generation, inspection, and artifact export scripts.
-- `benchmarks/`: benchmark harnesses.
-- `artifacts/benchmark-runs/`: curated exported benchmark evidence.
-- `fixtures/`: small seeded demo/validation data.
+Start OpenCode from the target project. Sideband maps are written to `~/.opencode/context-maps/<session-id>.json`.
 
-Sideband context maps are written to `~/.opencode/context-maps/<session-id>.json`.
+## Benchmarks
+
+Benchmark details live in each `benchmarks/*/README.md`. Raw runs stay ignored under `benchmarks/*/runs/`; curated public artifacts live under `artifacts/benchmark-runs/`.
+
+Common commands:
+
+```sh
+npm run benchmark:memory-infra
+npm run benchmark:provenance-qa
+npm run benchmark:code-recall
+npm run artifacts:export
+```
