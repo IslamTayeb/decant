@@ -148,6 +148,7 @@ type RunStats = {
   topic_count: number;
   decoys_per_topic: number;
   memory_artifact_chars: number;
+  raw_log_chars: number;
   carried_context_chars_per_query: number;
   carried_context_chars_total: number;
   current_carried_context_chars_total: number;
@@ -372,6 +373,7 @@ async function runCondition(
   let server: Awaited<ReturnType<typeof startServer>> | undefined;
   let client: ReturnType<typeof createOpencodeClient> | undefined;
   let memoryArtifact = "";
+  let rawLogChars = 0;
   let prepMessages: SessionMessage[] = [];
   let prepSession: string | undefined;
   const queryStats: QueryStats[] = [];
@@ -431,22 +433,6 @@ async function runCondition(
         );
       assert.ok(summary, "default compaction did not create a summary");
       memoryArtifact = messageText(summary).trim();
-    } else if (condition === "rgb-context") {
-      const editor = await prompt(
-        client,
-        worktree,
-        prepSession,
-        buildRgbContextPrompt(
-          topics.length,
-          options.artifactBudgetChars,
-          options.irregularFacts,
-        ),
-        rgbSystemPrompt(),
-        {},
-        options.promptTimeoutMs,
-      );
-      memoryArtifact = messageText(editor).trim();
-      assert.ok(memoryArtifact, "RGB context editor returned empty context");
     }
 
     prepMessages = await listSessionMessages(client, worktree, prepSession);
@@ -457,9 +443,15 @@ async function runCondition(
     if (memoryArtifact) {
       await fs.writeFile(path.join(conditionDir, "memory-artifact.md"), memoryArtifact);
     }
+    if (condition === "rgb-context") {
+      rawLogChars = await writeRgbRawLog(worktree, conditionDir, prepMessages);
+    }
 
     for (const query of queries) {
       console.log(`memory-infra: ${condition} ${query.id}`);
+      if (condition === "rgb-context") {
+        await prepareRgbEditableContext(worktree, query.id);
+      }
       const querySession = isSameSessionContinuation(condition)
         ? prepSession
         : await createSession(
@@ -467,7 +459,7 @@ async function runCondition(
             worktree,
             `memory infra ${condition} ${query.id}`,
           );
-      const input = buildQueryPrompt(condition, query, memoryArtifact);
+      const input = buildQueryPrompt(condition, query, memoryArtifact, worktree);
       const before = await listSessionMessages(client, worktree, querySession);
       const beforeIDs = new Set(before.map(sessionMessageID));
       await prompt(
@@ -488,6 +480,9 @@ async function runCondition(
       queryStats.push(stats);
       const queryDir = path.join(conditionDir, "queries", query.id);
       await fs.mkdir(queryDir, { recursive: true });
+      if (condition === "rgb-context") {
+        await archiveRgbEditableContext(worktree, query.id, queryDir);
+      }
       await fs.writeFile(
         path.join(queryDir, "messages.json"),
         `${JSON.stringify(messages, null, 2)}\n`,
@@ -504,6 +499,7 @@ async function runCondition(
       options,
       startedAt,
       memoryArtifact,
+      rawLogChars,
       prepMessages,
       queryMessages,
       queryStats,
@@ -530,6 +526,7 @@ async function runCondition(
       options,
       startedAt,
       memoryArtifact,
+      rawLogChars,
       prepMessages,
       queryMessages,
       queryStats,
@@ -830,48 +827,84 @@ function seedSystemPrompt() {
   ].join(" ");
 }
 
-function rgbSystemPrompt() {
+function rgbFileAgentSystemPrompt() {
   return [
-    "You are an RGB-style editable context maintainer.",
-    "Rewrite the long prior conversation into a compact future-use memory context.",
-    "Future questions are unknown, so preserve exact useful facts for every real topic.",
-    "Drop distractors and stale details except when naming what to avoid.",
+    "You are an RGB-agent file-memory runner for a memory-infra benchmark.",
+    "Use only read, grep, and bash over the provided editable context file, raw log, and scratch directory.",
+    "Do not use Decant tools.",
+    "Do not edit source files, benchmark files, or recall/log.txt.",
+    "You may rewrite, trim, annotate, or otherwise edit the provided context.txt copy inside the scratch directory.",
+    "Use bash/python3 only for search, extraction, or editing files inside the provided scratch directory.",
+    "After any tool use, answer with compact JSON only.",
   ].join(" ");
 }
 
-function buildRgbContextPrompt(
-  topicCount: number,
-  budgetChars?: number,
-  irregularFacts = false,
+function rgbFileAgentTools() {
+  return {
+    ...noTools(),
+    read: true,
+    grep: true,
+    bash: true,
+  };
+}
+
+function buildRgbFileAgentPrompt(
+  worktree: string,
+  query: Query,
+  outputContract: string,
 ) {
-  const lines = [
-    `Create one maintained memory context for ${topicCount} real topics.`,
-    "Do not assume the future query target.",
-    "For each real topic, include title, file, rollout flag, protective test, accepted design, rejected design, and the why sentence.",
-    "Exclude records explicitly labeled DISTRACTOR.",
-    "Return markdown only; do not call tools.",
-  ];
-  if (irregularFacts) {
-    lines.splice(
-      2,
-      0,
-      "The facts are intentionally irregular: do not compress them with round-number formulas or inferred suffix rules. Preserve exact per-topic strings.",
-    );
-  }
-  if (budgetChars) {
-    lines.splice(
-      2,
-      0,
-      `Hard budget: keep the context under ${budgetChars} characters. If you must compress, preserve the highest-signal exact identifiers and omit low-salience details.`,
-    );
-  }
-  return lines.join("\n");
+  const logPath = rgbLogPath(worktree);
+  const scratchDir = rgbScratchDir(worktree, query.id);
+  const contextPath = rgbEditableContextPath(worktree, query.id);
+  const taskInstruction =
+    query.kind === "current"
+      ? [
+          "This is a current-work packet. The current packet below is the source of truth.",
+          "The context file and raw log are old memory. Do not use old rollout flags, old decisions, or stale facts for this answer.",
+          "You may edit context.txt down to an irrelevant-memory note if that helps keep the final answer clean.",
+        ]
+      : [
+          "This is an old-memory recall question.",
+          "Search context.txt or the raw log for the exact historical topic and exact strings requested below.",
+          "You may edit context.txt into a smaller evidence file before answering.",
+          "Prefer targeted grep/read calls before broader bash/python3 parsing.",
+        ];
+  return [
+    `Raw historical log: ${logPath}`,
+    `Editable context file: ${contextPath}`,
+    `Scratch directory: ${scratchDir}`,
+    "",
+    "Rules:",
+    "- Do not modify recall/log.txt.",
+    "- You may edit context.txt and create scratch files inside the scratch directory.",
+    "- Do not edit files outside the scratch directory.",
+    "- Do not answer from general knowledge.",
+    "- End with only the compact JSON object requested below.",
+    "",
+    ...taskInstruction,
+    "",
+    query.text,
+    outputContract,
+  ].join("\n");
+}
+
+function rgbLogPath(worktree: string) {
+  return path.join(worktree, "recall", "log.txt");
+}
+
+function rgbScratchDir(worktree: string, queryID: string) {
+  return path.join(worktree, "recall", "rgb-work", queryID);
+}
+
+function rgbEditableContextPath(worktree: string, queryID: string) {
+  return path.join(rgbScratchDir(worktree, queryID), "context.txt");
 }
 
 function buildQueryPrompt(
   condition: ConditionID,
   query: Query,
   memoryArtifact: string,
+  worktree: string,
 ): { text: string; system: string; tools: Record<string, boolean> } {
   if (query.kind === "current") {
     const outputContract = [
@@ -908,9 +941,9 @@ function buildQueryPrompt(
     }
     if (condition === "rgb-context") {
       return {
-        system: jsonSystemPrompt(),
-        tools: noTools(),
-        text: textWithArtifact("Maintained RGB context"),
+        system: rgbFileAgentSystemPrompt(),
+        tools: rgbFileAgentTools(),
+        text: buildRgbFileAgentPrompt(worktree, query, outputContract),
       };
     }
     const decantTools =
@@ -984,17 +1017,9 @@ function buildQueryPrompt(
   }
   if (condition === "rgb-context") {
     return {
-      system: jsonSystemPrompt(),
-      tools: noTools(),
-      text: [
-        "Maintained RGB context:",
-        "```md",
-        memoryArtifact,
-        "```",
-        "",
-        query.text,
-        outputContract,
-      ].join("\n"),
+      system: rgbFileAgentSystemPrompt(),
+      tools: rgbFileAgentTools(),
+      text: buildRgbFileAgentPrompt(worktree, query, outputContract),
     };
   }
   if (condition === "decant-direct") {
@@ -1110,6 +1135,9 @@ function queryRoutePolicyPassed(
     ["view_context", "set_fidelity", "session_lookup", "session_detail", "message_detail"].includes(tool),
   ).length;
   if (query.kind === "current") return contextToolCount === 0;
+  if (condition === "rgb-context") {
+    return toolNames.some((tool) => ["read", "grep", "bash"].includes(tool));
+  }
   if (!isDecantCondition(condition)) return contextToolCount === 0;
   if (condition === "decant-archive-continuation") {
     return (
@@ -1145,6 +1173,7 @@ function buildRunStats({
   options,
   startedAt,
   memoryArtifact,
+  rawLogChars,
   prepMessages,
   queryMessages,
   queryStats,
@@ -1155,6 +1184,7 @@ function buildRunStats({
   options: Options;
   startedAt: number;
   memoryArtifact: string;
+  rawLogChars: number;
   prepMessages: SessionMessage[];
   queryMessages: SessionMessage[];
   queryStats: QueryStats[];
@@ -1172,7 +1202,7 @@ function buildRunStats({
   const currentTokens = combineTokenBuckets(
     currentStats.map((query) => query.tokens),
   );
-  const carriedContextChars = isDecantCondition(condition)
+  const carriedContextChars = isDecantCondition(condition) || condition === "rgb-context"
     ? 0
     : memoryArtifact.length;
   const queryCount = queryStats.length;
@@ -1192,6 +1222,7 @@ function buildRunStats({
     topic_count: topicCount,
     decoys_per_topic: options.decoysPerTopic,
     memory_artifact_chars: memoryArtifact.length,
+    raw_log_chars: rawLogChars,
     carried_context_chars_per_query: carriedContextChars,
     carried_context_chars_total: carriedContextChars * queryCount,
     current_carried_context_chars_total:
@@ -1229,6 +1260,48 @@ async function prepareWorktree(worktree: string) {
   await fs.writeFile(
     path.join(worktree, "README.md"),
     "# Memory infra benchmark\n\nSynthetic workspace for memory-only queries.\n",
+  );
+}
+
+async function writeRgbRawLog(
+  worktree: string,
+  conditionDir: string,
+  messages: SessionMessage[],
+) {
+  const recallDir = path.join(worktree, "recall");
+  await fs.mkdir(recallDir, { recursive: true });
+  const log = messages
+    .map((message, index) => {
+      const role = message.info?.role ?? message.role ?? "unknown";
+      const id = sessionMessageID(message) ?? `message-${index + 1}`;
+      return [
+        `## message ${index + 1}`,
+        `id: ${id}`,
+        `role: ${role}`,
+        messageText(message),
+        "",
+      ].join("\n");
+    })
+    .join("\n");
+  await fs.writeFile(rgbLogPath(worktree), log);
+  await fs.writeFile(path.join(conditionDir, "raw-log.txt"), log);
+  return log.length;
+}
+
+async function prepareRgbEditableContext(worktree: string, queryID: string) {
+  const scratchDir = rgbScratchDir(worktree, queryID);
+  await fs.mkdir(scratchDir, { recursive: true });
+  await fs.copyFile(rgbLogPath(worktree), rgbEditableContextPath(worktree, queryID));
+}
+
+async function archiveRgbEditableContext(
+  worktree: string,
+  queryID: string,
+  queryDir: string,
+) {
+  await fs.copyFile(
+    rgbEditableContextPath(worktree, queryID),
+    path.join(queryDir, "context.txt"),
   );
 }
 
@@ -1674,12 +1747,12 @@ function renderAnalysisMarkdown(analysis: Analysis) {
       ? [`- Artifact budget chars: ${analysis.config.artifactBudgetChars}`]
       : []),
     "",
-    "| Condition | Pass | Query Pass | Recall Pass | Current Pass | Prep Input | Query Input | Recall Input | Current Input | Avg Query Input | Max Query Input | Query Total Tok | Carried Chars/Query | Carried Chars Total | Current Carried Chars | Prep Cost | Query Cost | Unneeded Tools | Route |",
-    "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+    "| Condition | Pass | Query Pass | Recall Pass | Current Pass | Prep Input | Query Input | Recall Input | Current Input | Avg Query Input | Max Query Input | Query Total Tok | Raw Log Chars | Carried Chars/Query | Carried Chars Total | Current Carried Chars | Prep Cost | Query Cost | Unneeded Tools | Route |",
+    "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
   ];
   for (const row of analysis.rows) {
     lines.push(
-      `| ${row.condition} | ${String(row.pass)} | ${row.query_passes}/${row.query_total} | ${row.recall_passes}/${row.recall_total} | ${row.current_passes}/${row.current_total} | ${row.prep_tokens.input.toLocaleString()} | ${row.query_tokens.input.toLocaleString()} | ${row.recall_query_tokens.input.toLocaleString()} | ${row.current_query_tokens.input.toLocaleString()} | ${row.avg_query_input_tokens.toLocaleString()} | ${row.max_query_input_tokens.toLocaleString()} | ${row.query_tokens.total.toLocaleString()} | ${row.carried_context_chars_per_query.toLocaleString()} | ${row.carried_context_chars_total.toLocaleString()} | ${row.current_carried_context_chars_total.toLocaleString()} | $${row.prep_estimated_cost_usd.toFixed(2)} | $${row.query_estimated_cost_usd.toFixed(2)} | ${row.unnecessary_context_tool_calls.toLocaleString()} | ${String(row.route_passed)} |`,
+      `| ${row.condition} | ${String(row.pass)} | ${row.query_passes}/${row.query_total} | ${row.recall_passes}/${row.recall_total} | ${row.current_passes}/${row.current_total} | ${row.prep_tokens.input.toLocaleString()} | ${row.query_tokens.input.toLocaleString()} | ${row.recall_query_tokens.input.toLocaleString()} | ${row.current_query_tokens.input.toLocaleString()} | ${row.avg_query_input_tokens.toLocaleString()} | ${row.max_query_input_tokens.toLocaleString()} | ${row.query_tokens.total.toLocaleString()} | ${row.raw_log_chars.toLocaleString()} | ${row.carried_context_chars_per_query.toLocaleString()} | ${row.carried_context_chars_total.toLocaleString()} | ${row.current_carried_context_chars_total.toLocaleString()} | $${row.prep_estimated_cost_usd.toFixed(2)} | $${row.query_estimated_cost_usd.toFixed(2)} | ${row.unnecessary_context_tool_calls.toLocaleString()} | ${String(row.route_passed)} |`,
     );
   }
   lines.push("", "## Query Details", "");
@@ -1717,6 +1790,7 @@ function renderAnalysisCsv(analysis: Analysis) {
       "avg_query_input",
       "max_query_input",
       "query_total_tokens",
+      "raw_log_chars",
       "carried_context_chars_per_query",
       "carried_context_chars_total",
       "current_carried_context_chars_total",
@@ -1742,6 +1816,7 @@ function renderAnalysisCsv(analysis: Analysis) {
       String(row.avg_query_input_tokens),
       String(row.max_query_input_tokens),
       String(row.query_tokens.total),
+      String(row.raw_log_chars),
       String(row.carried_context_chars_per_query),
       String(row.carried_context_chars_total),
       String(row.current_carried_context_chars_total),

@@ -773,10 +773,11 @@ async function runFixtureCondition(
 
     let editorMessages: SessionMessage[] = [];
     let rgbContext = "";
-    if (
-      condition === "rgb-editable-context" ||
-      condition === "decant-guided-rgb-editable"
-    ) {
+    if (condition === "rgb-editable-context") {
+      await prepareRgbFileAgentContext(worktree, conditionDir);
+    }
+
+    if (condition === "decant-guided-rgb-editable") {
       const decantGuided = condition === "decant-guided-rgb-editable";
       const editorSessionID = await createSession(
         client,
@@ -844,6 +845,9 @@ async function runFixtureCondition(
         path.join(conditionDir, "compacted-session-messages.json"),
         `${JSON.stringify(messages, null, 2)}\n`,
       );
+    }
+    if (condition === "rgb-editable-context") {
+      rgbContext = await archiveRgbFileAgentContext(worktree, conditionDir);
     }
     const childMessages = await collectChildMessages(
       client,
@@ -1183,6 +1187,54 @@ async function readRgbContext(worktree: string) {
   return await fs
     .readFile(path.join(worktree, "recall", "rgb-context.md"), "utf8")
     .catch(() => "");
+}
+
+function rgbFileAgentRawLogPath(worktree: string) {
+  return path.join(worktree, "recall", "log.txt");
+}
+
+function rgbFileAgentScratchDir(worktree: string) {
+  return path.join(worktree, "recall", "rgb-work");
+}
+
+function rgbFileAgentContextPath(worktree: string) {
+  return path.join(rgbFileAgentScratchDir(worktree), "context.txt");
+}
+
+async function prepareRgbFileAgentContext(
+  worktree: string,
+  conditionDir: string,
+) {
+  const transcriptDir = path.join(worktree, "recall", "transcripts");
+  const files = (await fs.readdir(transcriptDir))
+    .filter((file) => file.endsWith(".md"))
+    .sort();
+  const chunks: string[] = [];
+  for (const file of files) {
+    const content = await fs.readFile(path.join(transcriptDir, file), "utf8");
+    chunks.push([`## transcript ${file}`, content.trim(), ""].join("\n"));
+  }
+  const log = chunks.join("\n");
+  await fs.mkdir(path.dirname(rgbFileAgentRawLogPath(worktree)), {
+    recursive: true,
+  });
+  await fs.mkdir(rgbFileAgentScratchDir(worktree), { recursive: true });
+  await fs.writeFile(rgbFileAgentRawLogPath(worktree), log);
+  await fs.writeFile(rgbFileAgentContextPath(worktree), log);
+  await fs.writeFile(path.join(conditionDir, "raw-log.txt"), log);
+}
+
+async function archiveRgbFileAgentContext(
+  worktree: string,
+  conditionDir: string,
+) {
+  const context = await fs
+    .readFile(rgbFileAgentContextPath(worktree), "utf8")
+    .catch(() => "");
+  await fs.writeFile(path.join(conditionDir, "rgb-context.txt"), context);
+  await fs.writeFile(path.join(conditionDir, "rgb-context.md"), context);
+  await archiveRawTranscripts(worktree, conditionDir);
+  return context;
 }
 
 async function archiveRawTranscripts(worktree: string, conditionDir: string) {
@@ -1780,14 +1832,21 @@ function buildPromptForCondition(
   if (condition === "rgb-editable-context") {
     return {
       system:
-        "Answer with compact JSON only. Use only the provided RGB-agent rewritten context as prior memory. Do not use decant/session tools, transcript files, grep, read, or bash.",
-      tools: {},
+        "Answer with compact JSON only. You are an RGB-agent file-memory runner. Use only read, grep, and bash over the provided text context and scratch directory. Do not use decant/session tools. Do not edit repository source files, raw logs, or transcript files.",
+      tools: { read: true, grep: true, bash: true, apply_patch: false },
       text: [
+        `Raw historical log: ${rgbFileAgentRawLogPath(worktree)}`,
+        `Editable context file: ${rgbFileAgentContextPath(worktree)}`,
+        `Scratch directory: ${rgbFileAgentScratchDir(worktree)}`,
+        "",
+        "Rules:",
+        "- Search the editable context file or raw log for exact evidence before answering.",
+        "- You may rewrite, trim, or annotate the editable context file and create scratch files only inside the scratch directory.",
+        "- Do not modify recall/log.txt, recall/transcripts, source files, or benchmark files.",
+        "- Cite exact session_id and message_id values from the evidence.",
+        "- End with only the compact JSON object requested below.",
+        "",
         `Question: ${fixture.question}`,
-        "RGB-agent rewritten context:",
-        "```md",
-        rgbContext.trim(),
-        "```",
         answerContract,
       ].join("\n"),
     };

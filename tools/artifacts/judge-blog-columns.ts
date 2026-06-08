@@ -190,6 +190,7 @@ const provenanceFixtureOrder = [
 const provenanceConditionLabels = new Map([
   ["default-compaction", "Default Compaction"],
   ["rlm-transcript-search", "RGB-agent"],
+  ["rgb-editable-context", "RGB-agent"],
   ["decant-map-zoom", "Decant"],
 ]);
 
@@ -200,7 +201,7 @@ const codeRecallFixtureOrder = [
 ];
 
 const codeRecallConditionLabels = new Map([
-  ["default-compaction", "Default"],
+  ["code-only", "Default"],
   ["rlm-transcript-search", "RGB-agent"],
   ["decant-only", "Decant"],
 ]);

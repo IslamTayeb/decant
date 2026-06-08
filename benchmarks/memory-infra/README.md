@@ -13,8 +13,10 @@ Conditions:
 - `default-opencode-continuation`: the historical session is compacted with
   vanilla OpenCode and future queries continue in that same session, without a
   pasted summary artifact.
-- `rgb-context`: future queries receive one RGB-style maintained memory context
-  produced before the future questions are known.
+- `rgb-context`: future queries receive an editable `.txt` copy of the raw
+  old-session log under `recall/rgb-work/<query-id>/context.txt` and can use
+  `read`, `grep`, and `bash` before answering. The old log is not pasted into
+  the prompt.
 - `decant-map`: future queries receive no carried memory text and must route
   through Decant session/topic/message tools.
 - `decant-direct`: future recall queries use one `session_lookup` call with
@@ -27,6 +29,7 @@ The main metrics split memory maintenance from later query cost:
 
 - prep input/cost
 - query input/cost
+- raw log characters available to RGB-agent
 - carried context characters per query
 - average and max query input
 - route/tool policy

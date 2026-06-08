@@ -41,7 +41,7 @@ Use `--distractor-scale N` to multiply generated decoy sessions across transcrip
 - `keyword-snippets`: the answer prompt receives naive keyword snippets with distractors. This is the cheap retrieval baseline.
 - `default-compaction`: old transcript logs are pasted into a normal OpenCode session, two unrelated turns push them out of the recent tail, normal OpenCode compaction is forced, then the answer turn uses no tools and relies only on the compacted session context.
 - `rlm-transcript-search`: prior transcripts are stored on disk under `recall/transcripts/`; the answering agent uses RLM-style transcript search with `grep`/`read` and optional read-only `bash`.
-- `rgb-editable-context`: prior transcripts are stored on disk first. The agent uses read/grep/bash over that raw context, writes `recall/rgb-context.md`, then a fresh answer turn receives only that rewritten evidence file.
+- `rgb-editable-context`: prior transcripts are copied into `recall/log.txt` and an editable `recall/rgb-work/context.txt`. The answer turn can use read/grep/bash over that file memory, edit the context copy, and then answer.
 - `subagent-rlm-transcript-search`: the parent delegates to a sub-agent, and the child uses RLM-style transcript search over transcript files.
 - `subagent-rgb-editable-context`: the parent delegates to an RGB sub-agent. The child uses read/grep/bash over transcript files, writes `recall/rgb-context.md`, and returns focused evidence to the parent.
 - `decant-map-zoom`: prior sessions are real OpenCode sessions with decant enabled. The answering agent must use `session_lookup`, `session_detail`, and `message_detail`.
@@ -50,7 +50,7 @@ Use `--distractor-scale N` to multiply generated decoy sessions across transcrip
 - `subagent-decant-guided-rlm`: the parent delegates to a hybrid child that uses decant session tools plus RLM-style transcript search.
 - `decant-blame-lookup`: the answer starts from `blame_lookup`, then zooms through the mapped session and message evidence. This is a prototype demo path, not a product-proven claim.
 
-Note: the `rlm-*` names here mean transcript-file search inspired by RLM-style externalized context. The `rgb-editable-context` conditions are closer to the RGB-agent pattern: file-based memory, read/grep/bash over raw logs, and a rewritten context file fed to the next answer turn. They still do not implement recursive LM calls.
+Note: the `rlm-*` names here mean transcript-file search inspired by RLM-style externalized context. The `rgb-editable-context` condition is closer to the RGB-agent pattern: file-based memory, read/grep/bash over a raw log plus an editable context file, with the final answer produced in the same turn. The subagent and guided RGB variants still use the older rewritten-context handoff.
 
 ## Scoring
 
